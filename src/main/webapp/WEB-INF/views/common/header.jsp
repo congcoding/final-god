@@ -55,7 +55,10 @@ nav.navbar-light{
 		      </li>
 		      <li class="nav-item">
 		        <a class="nav-link" href="#">Link</a>
-		      </li>		    
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" href="#">관리자</a>
+		      </li>				    
 		    </ul>
 		    
 		 	<button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
