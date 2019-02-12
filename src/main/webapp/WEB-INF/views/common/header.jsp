@@ -53,12 +53,12 @@ nav.navbar-light{
 		      <li class="nav-item active">
 		        <a class="nav-link" href="${pageContext.request.contextPath}">Home <span class="sr-only">(current)</span></a>
 		      </li>
-		      <li class="nav-item">
-		        <a class="nav-link" href="#">Link</a>
-		      </li>
+		      <li>				    
+		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
+		      </li>		    
 		      <li class="nav-item">
 		        <a class="nav-link" href="#">관리자</a>
-		      </li>				    
+		      </li>
 		    </ul>
 		    
 		 	<button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
