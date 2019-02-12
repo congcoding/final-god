@@ -61,7 +61,7 @@ nav.navbar-light{
 		 	<button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
 		 	&nbsp;  
 		    <button class="btn btn-outline-success" type="button" 
-	     	  		onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원가입</button>
+	     	  		onclick="location.href='${pageContext.request.contextPath}/NewFile.do'">회원가입</button>
 		  
 		  </div>
 		</nav>
