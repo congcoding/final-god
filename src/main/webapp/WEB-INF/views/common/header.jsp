@@ -54,7 +54,7 @@ nav.navbar-light{
 		        <a class="nav-link" href="${pageContext.request.contextPath}">Home <span class="sr-only">(current)</span></a>
 		      </li>
 		      <li class="nav-item">
-		        <a class="nav-link" href="#">Link</a>
+		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
 		    </ul>
 		    
