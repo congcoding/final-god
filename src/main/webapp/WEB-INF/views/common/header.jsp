@@ -57,7 +57,7 @@ nav.navbar-light{
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
 		      <li class="nav-item">
-		        <a class="nav-link" href="#">관리자</a>
+		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
 		      </li>
 		    </ul>
 		    
