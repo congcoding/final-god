@@ -246,7 +246,6 @@
     	<scope>provided</scope>
     </dependency>
     
-      
     <!-- selenium 설치 -->
     <dependency>
     <groupId>org.seleniumhq.selenium</groupId>
