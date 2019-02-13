@@ -15,6 +15,11 @@
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
+<script>
+$(function(){
+	$("#dashBoard").addClass("active");	
+});
+</script>
 
 <!-- Page Wrapper -->
   <div id="wrapper">
