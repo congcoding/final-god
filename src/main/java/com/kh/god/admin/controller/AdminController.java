@@ -31,8 +31,6 @@ public class AdminController {
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("list",list);
 		
-		
-		
 		model.addAttribute("totalContents",totalContents);
 		
 		return "admin/boardList";
