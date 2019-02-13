@@ -24,11 +24,12 @@ nav.navbar-light{
 .navbar-light .navbar-nav .active>.nav-link{
 	color : white;
 }
-.btn-outline-success{
+
+.header-btn{
 	color : white;
 	border-color: white;
 }
-.btn-outline-success:hover {
+.header-btn:hover {
     background-color: #117a8b;
     border-color: white;
 }
@@ -57,15 +58,15 @@ nav.navbar-light{
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
 		      <li class="nav-item">
-		        <a class="nav-link" href="#">관리자</a>
+		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
 		      </li>
 		    </ul>
 		    
 		    
-		 	<button class="btn btn-outline-success" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
+		 	<button class="btn btn-outline-success header-btn" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
 		 	&nbsp;  
-		    <button class="btn btn-outline-success" type="button" 
-	     	  		onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">회원가입</button>
+		    <button class="btn btn-outline-success header-btn" type="button" 
+	     	  		onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
 		  
 		  </div>
 		</nav>
