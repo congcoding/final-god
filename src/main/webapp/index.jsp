@@ -7,36 +7,16 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
+<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/home.css" />
 
 <style>
-section#menu-content{
-	background: linear-gradient(to top, 
-				transparent 0, transparent 70%,
-				#32aeb8 70%, #32aeb8 100%);
-}
-div#menu-content{
-    padding: 50px;
-    overflow: auto;
-    margin: 0 auto;
-    max-width: 912px;
-}
-div#search-container{
-	display: table;
-    padding: 100px 0;
-    margin: 0 auto;
-}
-.card{
-	width: 250px;
-    height: 250px;
-    float: left;
-    margin: 10px;
-}
+
 </style>
 <section id="menu-content">
 	<div id="menu-content">
 	   <div id="search-container">
 		   <form class="form-inline my-2 my-lg-0">
-		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
 		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		   </form>
 		</div>
@@ -108,6 +88,46 @@ div#search-container{
 			</a>
 		</div>
 	</div>	
-</section>	
 	
+	<div id="content">
+	
+	</div>
+</section>	
+<script>
+//21897f5bf48b00dcb812e4f648ac8393
+function getLocation(){
+	if(navigator.geolocation){
+		navigator.geolocation.getCurrentPosition(function(position) {
+			var lon = position.coords.latitude; //y
+			var lat = position.coords.longitude; //x
+		
+			$.ajax({
+				//https://developers.kakao.com/docs/restapi/local#좌표-행정구역정보-변환
+			    url: 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x='+lat+'&y='+lon,
+			    type: 'GET',
+			    cache: false,
+			    contentType : 'application/json;charset=UTF-8',
+			    crossOrigin: true,
+			    headers:{'Authorization' : 'KakaoAK 4c6d6939204abedb25e64dcf1adfaaf2'},
+			    success: function(data) {
+			    	console.log(data.documents[0].address_name);
+			    	var address=data.documents[0].address_name;
+			    	$("#search").val(address);
+			    },error:function(request,status,error){
+			        alert("다시 시도해주세요.\n" + "code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+			    }
+			});
+		}, function(error){
+			console.log(error);
+		}, {
+			enableHighAccuracy:false,
+			maximumAge:0,
+			timeout : Infinity
+		});
+	} else {
+		alert("GPS를 지원하지 않습니다.");
+	}
+}
+getLocation();
+</script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
