@@ -32,6 +32,14 @@ div#search-container{
     margin: 10px;
 }
 </style>
+<script>
+function categoryList(item){
+	var categoryNo = $(item).attr("name");
+    location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
+	console.log("카테고리번호 왔니? [", categoryNo, "]");
+}
+</script>
+
 <section id="menu-content">
 	<div id="menu-content">
 	   <div id="search-container">
@@ -44,9 +52,9 @@ div#search-container{
 	
 	<%-- <img src="${pageContext.request.contextPath }/resources/images/logo-spring.png" id="center-image" alt="스프링로고" /> --%>
 		<!-- 치킨 / 보쌈,족발  / 피자 / 한식 /중식/일식/분식/ -->
-		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
+		<div class="card bg-white text-black">
+			<a onclick="categoryList(this);" name="1">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/chicken.png" >
 			  <div class="card-img-overlay">
 			    <h5 class="card-title">치킨</h5>
 			  </div>
@@ -54,17 +62,8 @@ div#search-container{
 		</div>
 		
 		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
-			  <div class="card-img-overlay">
-			    <h5 class="card-title">보쌈,족발</h5>
-			  </div>
-			</a>
-		</div>
-		
-		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
+			<a onclick="categoryList(this);" name="2">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/pizza.png" >
 			  <div class="card-img-overlay">
 			    <h5 class="card-title">피자</h5>
 			  </div>
@@ -72,18 +71,35 @@ div#search-container{
 		</div>
 		
 		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
+			<a onclick="categoryList(this);" name="3">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/jokbal_bossam.png" >
+			  <div class="card-img-overlay">
+			    <h5 class="card-title">보쌈,족발</h5>
+			  </div>
+			</a>
+		</div>
+		
+		<div class="card bg-white text-white">
+			<a onclick="categoryList(this);" name="4">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/snack.png" >
+			  <div class="card-img-overlay">
+			    <h5 class="card-title">분식</h5>
+			  </div>
+			</a>
+		</div>
+		
+		<div class="card bg-white text-white">
+			<a onclick="categoryList(this);" name="5">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/chinese.png" >
 			  <div class="card-img-overlay">
 			    <h5 class="card-title">중식</h5>
 			  </div>
 			</a>
 		</div>
 		
-		
 		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
+			<a onclick="categoryList(this);" name="6">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/japanese.png" >
 			  <div class="card-img-overlay">
 			    <h5 class="card-title">일식</h5>
 			  </div>
@@ -91,22 +107,14 @@ div#search-container{
 		</div>
 		
 		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
+			<a onclick="categoryList(this);" name="7">
+			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/korean.png" >
 			  <div class="card-img-overlay">
 			    <h5 class="card-title">한식</h5>
 			  </div>
 			</a>
 		</div>
 	
-		<div class="card bg-white text-white">
-			<a href="#">
-			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/.png" >
-			  <div class="card-img-overlay">
-			    <h5 class="card-title">분식</h5>
-			  </div>
-			</a>
-		</div>
 	</div>	
 </section>	
 	
