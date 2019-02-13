@@ -28,9 +28,9 @@
 
 	
 	<!-- 바로 이동 만들어주기 -->
-	<beans:bean name="/NewFile.do" 
+	<beans:bean name="/chooseEnrollType.do" 
 				class="org.springframework.web.servlet.mvc.ParameterizableViewController">
-		<beans:property name="viewName" value="/common/NewFile"/>
+		<beans:property name="viewName" value="/common/chooseEnrollType"/>
 	</beans:bean>
 		
 		
