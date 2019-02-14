@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="storeInfo">
+	<select id="selectStoreInfoList" resultMap="storeInfoMap">
+	select A.*, 
+		(select count(*) 
+		from storeInfo 
+		where categoryno = A.categoryno) categorycount 
+	from storeInfo A 
+	where categoryno = #{categoryno} 
+	order by storegrade desc
+	</select>
+	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
+	
+	<select id="selectStoreInfoTotalContents" resultType="_int" >
+		SELECT COUNT(*) FROM STOREINFO
+	</select>
+</mapper>

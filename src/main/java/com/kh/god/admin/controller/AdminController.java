@@ -30,6 +30,7 @@ public class AdminController {
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("list",list);
+		
 		model.addAttribute("totalContents",totalContents);
 		
 		return "admin/boardList";
