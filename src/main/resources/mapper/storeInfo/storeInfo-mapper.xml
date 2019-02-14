@@ -13,6 +13,6 @@
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
 	
 	<select id="selectStoreInfoTotalContents" resultType="_int" >
-		SELECT COUNT(*) FROM STOREINFO
+		SELECT COUNT(*) FROM STOREINFO WHERE CATEGORYNO = #{categoryno}
 	</select>
 </mapper>

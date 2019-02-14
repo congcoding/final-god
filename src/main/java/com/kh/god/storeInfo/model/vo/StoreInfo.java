@@ -9,19 +9,19 @@ public class StoreInfo implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String storeNo;
-	private String storeName;
-	private String storeTel;
-	private String storeAddress;
-	private String storeGrade;
-	private int categoryNo;
-	private String storeIntro;
-	private String personalDay;
-	private String operatingHours;
-	private String pmsFlag;
-	private String closeFlag;
-	private int deliveryMinPrice;
-	private String sellerId;
+	private String storeNo;			// 사업자번호 PK
+	private String storeName;		// 상호명
+	private String storeTel;		// 매장 전화번호
+	private String storeAddress;	// 매장 주소
+	private String storeGrade;		// 매장 등급
+	private int categoryNo;			// 카테고리 코드
+	private String storeIntro;		// 매장 설명
+	private String personalDay;		// 휴무일
+	private String operatingHours;	// 영업 시간
+	private String pmsFlag;			// 관리자 허가 여부
+	private String closeFlag;		// 매장 폐업 여부
+	private int deliveryMinPrice;	// 최소 배달 금액
+	private String sellerId;		// 사업자가입 ID
 	
 	public StoreInfo() {
 		super();
