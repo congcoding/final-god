@@ -39,28 +39,18 @@ select#selectMonth, select#selectDay{ width : 65px;}
 
 </style>
 
+
 <div id="MemberEnroll-container">
-	<h2>개인 회원 가입</h2>
+	<h2>사업자 회원 가입</h2>
 	<br />
 	<hr />	
 	<br />
 	
-	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" 
+	<form name="sellerEnrollFrm" action="${pageContext.request.contextPath}/seller/sellerEnrollEnd.do" 
 		  method="post" 
 		  onsubmit="return validate();" >
 		<!-- 프로필 사진 -->
-		<div id=inputProfile>
-			<img src="" alt=""/>
-		</div>
-		<div class="input-group mb-3">
-  			<div class="custom-file">
-    		<input type="file" class="custom-file-input" id="inputGroupFile02">
-    			<label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
-  			</div>
-  			<div class="input-group-append">
-    			<span class="input-group-text" id="inputGroupFileAddon02">Upload</span>
-  			</div>
-		</div>
+		
 		
 		
 		
@@ -70,7 +60,12 @@ select#selectMonth, select#selectDay{ width : 65px;}
     		<div>
       			<input type="text" class="form-control" id="inputMemberId" placeholder="6~16자 영문,숫자">
     		</div>
+    		<!-- 중복 관련 체크  -->
+    		<span class="guide ok">이 아이디는 사용 가능합니다.</span>
+    		<span class="guide error">이 아이디는 사용할 수 없습니다.</span>
+    		<input type="hidden" name="idDuplicateCheck" id="idDuplicateCheck" value="0" />
   		</div>	
+  		
 		<!-- 비밀번호 -->
 		<div class="form-group row">
     		<label for="inputPassword" class="col-sm-3">비밀번호</label>
@@ -95,44 +90,8 @@ select#selectMonth, select#selectDay{ width : 65px;}
     		</div>
   		</div>		
   		
-		<!-- 생년월일 -->
-		<div class="form-group row">
-			<label for="selectBirth" class="col-sm-3">생년월일</label>	
-			<select class="form-control selectBirth" id="selectYear" > 
-  				<option selected="selected" disabled="disabled">년</option>
-  				<c:forEach var="year" begin="1935" end = "2004">
-  					<option value="year">${year }</option>
-  				</c:forEach>
-			</select>
-			&nbsp;
-			<select class="form-control selectBirth" id="selectMonth" > 
-  				<option selected="selected" disabled="disabled">월</option>
-  				<c:forEach var="month" begin="01" end = "12">
-  					<option value="month">${month }</option>
-  				</c:forEach>
-			</select>
-			&nbsp;
-			<select class="form-control selectBirth" id="selectDay" > 
-  				<option selected="selected" disabled="disabled">일</option>
-  				<c:forEach var="day" begin="1" end = "31">
-  					<option value="day">${day }</option>
-  				</c:forEach>
-			</select>
-		</div>
 		
-		<!-- 성별 -->
-  		<div class="form-group row">
-	  		<label for="checkGender" class="col-sm-3">성별</label>
-	  		<div class="form-check form-check-inline" id="checkGender">
-	  			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender1" value="M">
-	  			<label class="form-check-label col-form-label" for="gender1">남자</label>
-			</div>
-			<div class="form-check form-check-inline">
-	  			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender2" value="F">
-	  			<label class="form-check-label col-form-label" for="gender2">여자</label>
-			</div>
-  		</div>
-		
+	
 		<!-- 이메일 -->
 		<div class="form-group row">
     		<label for="inputEmail" class="col-sm-3">이메일</label>
@@ -173,16 +132,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		</div>
 			
 		
-		<!-- 주소 api -->
-		<div class="form-group row">
-			<label for="address" class="col-sm-3">주소</label>	
-			<input class = "form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
-		</div>
-		
-		<!-- 취향 -->
-		<!-- 프로필 사진 -->
-		
-		<hr />
+	
 		
 		<input type="submit" class="btn btn-outline-success" value="가입하기" >
 	
@@ -190,14 +140,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 </div>
 
 <script>
-/* select창에서 선택한 이메일 주소를 input이메일주소창으로 넣어주기 */
-$("#selectEmailAddress").on("change",function(){
-	$('#inputEmailAddress').val($('#selectEmailAddress').val());	
-});
-/* input이메일 주소창에 수정이 있으면 select이메일 창의 값을 직접입력으로 변경 */
-$("#inputEmailAddress").on("focus",function(){
-	$('#selectEmailAddress').val('etc');
-});
+
 
 function validate(){ /* 유효성 검사 */
 	
@@ -259,38 +202,14 @@ $("#memberId_").on("keyup",function(){
 });
 
 
-function execDaumPostcode(){
-	console.log('함수호출');
-	
-    var popUpAddress = 
-	new daum.Postcode({
-	    oncomplete:function(data){
-	         var fullRoadAddr = data.roadAddress;
-	         var extraRoadAddr = '';
-	         
-	         if(data.bname !=='' &&/[동|로|가]$/g.test(data.bname)){
-	            extraRoadAddr += data.bname;
-	         }
-	         if(data.buildingName !=='' &&data.apartment === 'Y'){
-	            extraRoadAddr += (extraRoadAddr !== ''?','+data.buildingName : data.build);
-	         }
-	         if(extraRoadAddr !== ''){
-	            extraRoadAddr = '(' + extraRoadAddr +')';
-	         }
-	         if(fullRoadAddr !== ''){
-	            fullRoadAddr += extraRoadAddr;
-	         }
-	         document.getElementById("address").value = fullRoadAddr;
-	     }
-   	}).open({
-   	    popupName: 'postcodePopup' //팝업 이름을 설정(영문,한글,숫자 모두 가능, 영문 추천)
-   	});
-   
-}
 
 
 
 
 </script>
+
+
+
+
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	
