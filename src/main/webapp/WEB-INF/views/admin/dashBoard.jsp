@@ -322,7 +322,7 @@ $(function(){
   <script src="${pageContext.request.contextPath}/resources/js/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="${pageContext.request.contextPath}/resources/js/sb-admin-2.js"></script>
+  <script src="${pageContext.request.contextPath }/resources/js/sb-admin-2.js"></script>s
 
   <!-- Page level plugins -->
   <script src="vendor/chart.js/Chart.min.js"></script>
