@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 public class Seller {
 
-	private String selllerId ;
+	private String sellerId ;
 	private String sellerName;
 	private String email;
 	private String phone;
