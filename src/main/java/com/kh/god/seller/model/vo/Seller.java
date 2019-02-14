@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,7 +15,7 @@ import lombok.ToString;
 @ToString
 public class Seller {
 
-	private String selllerId ;
+	private String sellerId;
 	private String sellerName;
 	private String email;
 	private String phone;
@@ -24,6 +23,4 @@ public class Seller {
 	private String delFlag;
 	private String blackFlag;
 	private String password;
-	
-	
 }

@@ -11,7 +11,4 @@ public class SellerServiceImpl implements SellerService {
 	@Autowired
 	SellerDao sellerDao;
 	
-	
-	
-	
 }

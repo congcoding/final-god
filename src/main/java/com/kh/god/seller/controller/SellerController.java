@@ -21,12 +21,10 @@ public class SellerController {
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
 	
-	
 	@RequestMapping("/seller/sellerEnroll.do")
 	public String sellerEnroll() {
 		
 		return "seller/sellerEnroll";
 	}
-	
 
 }
