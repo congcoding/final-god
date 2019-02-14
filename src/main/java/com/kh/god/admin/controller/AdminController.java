@@ -1,6 +1,7 @@
 package com.kh.god.admin.controller;
 
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,8 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.god.admin.model.service.AdminService;
+import com.kh.god.admin.model.vo.QnaBoard;
 
 @Controller
 public class AdminController {
@@ -35,15 +38,18 @@ public class AdminController {
 		
 		return "admin/boardList";
 	}
-	
+
 	@RequestMapping("/admin/dashBoard.do")
-	public String dashBoard() {
-		return "admin/dashBoard";
+	public void dashBoard() {
+	
 	}
 
 	@RequestMapping("/admin/memberList.do")
-	public String memberList() {
-		return "admin/memberList";
+	public void memberList() {
 	}
 	
+	@RequestMapping("/admin/eventForm.do")
+	public void eventForm() {
+		
+	}
 }

@@ -26,13 +26,13 @@ public class StoreInfoController {
 								  @RequestParam(value = "categoryNo") int categoryNo, 
 								  ModelAndView mav) {
 		
-		System.out.println(categoryNo);
+		System.out.println("categoryNo = " + categoryNo);
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("매장 목록페이지");
 		}
 		
-		int numPerPage = 10;
+		int numPerPage = 6;
 		
 		// 업무로직
 		// 1. 게시글리스트 (페이징 적용된 것)
@@ -40,8 +40,8 @@ public class StoreInfoController {
 		List<Map<String, String>> list = storeInfoService.selectStoreInfoList(cPage, numPerPage, categoryNo);
 
 		// 2. 전체컨텐츠수
-		int totalContents = storeInfoService.selectStoreInfoTotalContents();
-
+		int totalContents = storeInfoService.selectStoreInfoTotalContents(categoryNo);
+		
 		mav.addObject("list", list);
 		mav.addObject("categoryNo", categoryNo);
 		mav.addObject("cPage", cPage);

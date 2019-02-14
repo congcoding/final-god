@@ -18,10 +18,10 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	public List<Map<String, String>> selectStoreInfoList(int cPage, int numPerPage, int categoryNo) {
 		return storeInfoDao.selectStoreInfoList(cPage, numPerPage, categoryNo);
 	}
-	
+
 	@Override
-	public int selectStoreInfoTotalContents() {
-		return storeInfoDao.selectStoreInfoTotalContents();
+	public int selectStoreInfoTotalContents(int categoryNo) {
+		return storeInfoDao.selectStoreInfoTotalContents(categoryNo);
 	}
 
 
