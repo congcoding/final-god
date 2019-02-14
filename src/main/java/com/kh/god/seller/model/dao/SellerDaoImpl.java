@@ -6,11 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class SellerDaoImpl implements SellerDao {
-	
+
 	@Autowired
 	SqlSessionTemplate sqlSession;
-	
-	
-	
 
 }
