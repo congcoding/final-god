@@ -1,10 +1,13 @@
 package com.kh.god.seller.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -22,7 +25,9 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.insertSeller(s);
 	}
 	
-	
-	
+	public List<StoreInfo> myStore(String sellerId) {
+		List<StoreInfo> store = sellerDao.myStore(sellerId);
+		return store;
+	}
 	
 }

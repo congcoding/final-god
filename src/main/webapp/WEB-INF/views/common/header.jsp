@@ -96,6 +96,9 @@ nav.navbar-light{
 		  <c:if test="${memberLoggedIn == null}">
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do'">로그아웃</button>
+		    &nbsp;  
+		 	<button class="btn btn-outline-success header-btn" type="button" 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=seller1'">내가게</button> 
 		  </c:if>
 		</c:if>
 		
@@ -103,6 +106,7 @@ nav.navbar-light{
 		</nav>
 		</div>
    </header>
+
    	<!-- 로그인모달 : https://getbootstrap.com/docs/4.1/components/modal/#live-demo -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
@@ -162,5 +166,4 @@ nav.navbar-light{
 		
 	
 	</script>
-   
    <section id="content">

@@ -1,6 +1,7 @@
 package com.kh.god.seller.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
@@ -32,7 +34,6 @@ public class SellerController {
 	
 	@Autowired
 	BCryptPasswordEncoder bcryptPasswordEncoder;
-	
 	
 	@RequestMapping("/seller/sellerEnroll.do")
 	public String sellerEnroll() {
@@ -138,7 +139,21 @@ public class SellerController {
 		model.addAttribute("s", s);
 		
 		return "seller/sellerView";
+	}
 		
+	//내 가게 
+	@RequestMapping("/seller/goMyShop.do")
+	public String goMyShop(@RequestParam("sellerId") String sellerId,Model model ) {
+		List<StoreInfo> store = sellerService.myStore(sellerId);
+
+		//메뉴 뽑기
+		//페이지바 만들기
+		model.addAttribute("store", store);
+		//model.addAttribute("menu", menu);
+
+		
+		return "seller/goMyStore";
+
 	}
 
 }

@@ -12,5 +12,5 @@
     <insert id="insertSeller" >
     	insert into seller values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
     </insert>
-	
+
 </mapper>
