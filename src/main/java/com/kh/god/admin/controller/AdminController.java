@@ -30,9 +30,20 @@ public class AdminController {
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("list",list);
+		
 		model.addAttribute("totalContents",totalContents);
 		
 		return "admin/boardList";
 	}
+	
+	@RequestMapping("/admin/dashBoard.do")
+	public String dashBoard() {
+		return "admin/dashBoard";
+	}
 
+	@RequestMapping("/admin/memberList.do")
+	public String memberList() {
+		return "admin/memberList";
+	}
+	
 }
