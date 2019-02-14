@@ -16,7 +16,6 @@
 function categoryList(item){
 	var categoryNo = $(item).attr("name");
     location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
-	console.log("카테고리번호 왔니? [", categoryNo, "]");
 }
 </script>
 

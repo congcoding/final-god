@@ -65,7 +65,10 @@ nav.navbar-light{
 		    </ul>
 		    
 		    
-		 	<button class="btn btn-outline-success header-btn" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
+		    <button class="btn btn-outline-success header-btn" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
+		    &nbsp;  
+		 	<button class="btn btn-outline-success header-btn" type="button" 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=seller1'">내가게</button> 
 		 	&nbsp;  
 		    <button class="btn btn-outline-success header-btn" type="button" 
 	     	  		onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
@@ -73,5 +76,7 @@ nav.navbar-light{
 		  </div>
 		</nav>
    </header>
-   
+   <script>
+
+   </script>
    <section id="content">

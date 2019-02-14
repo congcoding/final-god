@@ -15,4 +15,8 @@
 	<select id="selectStoreInfoTotalContents" resultType="_int" >
 		SELECT COUNT(*) FROM STOREINFO
 	</select>
+	
+	<select id="getMyStore" resultType="storeInfo">
+	select * from storeinfo where sellerId = #{sellerId}
+	</select>
 </mapper>

@@ -8,7 +8,7 @@
 	String status = String.valueOf(response.getStatus());
 	System.out.println("Status@errorPage="+status);
 	
-	String msg = exception!=null?exception.getMessage():status;
+	String msg = exception!=null?exception.getMessage():status; 
 	
 %>
 <!DOCTYPE html>
