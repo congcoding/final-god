@@ -245,6 +245,13 @@
     	<version>1.18.4</version>
     	<scope>provided</scope>
     </dependency>
+    
+    <!-- selenium 설치 -->
+    <dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>3.3.1</version>
+	</dependency>
              
    </dependencies>
    
