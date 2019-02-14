@@ -3,8 +3,8 @@
    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <groupId>com.kh</groupId>
-   <artifactId>spring</artifactId>
-   <name>01_HelloSpring</name>
+   <artifactId>god</artifactId>
+   <name>GodOfDelivery</name>
    <packaging>war</packaging>
    <version>1.0.0-BUILD-SNAPSHOT</version>
    
@@ -245,6 +245,13 @@
     	<version>1.18.4</version>
     	<scope>provided</scope>
     </dependency>
+    
+    <!-- selenium 설치 -->
+    <dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>3.3.1</version>
+	</dependency>
              
    </dependencies>
    

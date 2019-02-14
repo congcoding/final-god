@@ -14,6 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class Seller {
+
 	private String sellerId;
 	private String sellerName;
 	private String email;
