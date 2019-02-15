@@ -156,6 +156,8 @@ public class AdminController {
 		model.addAttribute("totalContents",totalContents);
 		
 		return "admin/sellerList";
+		
+		//push 테스트
 	}
 	
 }
