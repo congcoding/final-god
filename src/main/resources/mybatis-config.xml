@@ -20,6 +20,9 @@
 		
 		<typeAlias type="com.kh.god.seller.model.vo.Seller"
 				   alias="seller"/>
+				   
+		<typeAlias type="com.kh.god.menu.model.vo.Menu"
+				   alias="menu"/>
 		
 		<typeAlias type="com.kh.god.common.typehandler.StringArrayTypeHandler" alias="strArrTypeHandler"/>
 	

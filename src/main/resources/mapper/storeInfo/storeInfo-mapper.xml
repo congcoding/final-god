@@ -19,4 +19,10 @@
 	<select id="getMyStore" resultType="storeInfo">
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
+	
+	<select id="myStoreMenu" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where sellerId = #{sellerId}
+    </select>
 </mapper>
