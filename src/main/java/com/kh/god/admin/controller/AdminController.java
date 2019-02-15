@@ -85,8 +85,6 @@ public class AdminController {
 			//file upload
 			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/event");
 			
-			logger.debug("saveDirectory="+saveDirectory);
-			List<Event> attachList = new ArrayList<>();
 			int eventNo = adminService.getLastEventNo();
 			
 			

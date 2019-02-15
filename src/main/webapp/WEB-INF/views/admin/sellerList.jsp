@@ -21,6 +21,9 @@ div#member{margin-left : -40px; width : 450px; height : 50px; text-align : cente
 div#seller{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
 input#boardTitle{font-weight : bold;}
 div#pageBar{margin:35px auto;}
+table#tbl-seller thead tr th{text-align:center;}
+table#tbl-seller tbody tr td{text-align:center;}
+table#tbl-seller tbody tr td input{text-align:center;}
 </style>
 <script>
 $(function(){
@@ -60,7 +63,7 @@ function fn_goSellerList(){
 			<div id="member" class="alert-light" onclikc="fn_goMemberList();">일반회원</div> <div id="seller" class="alert-info" onclick="fn_goSellerForm();">판매자</div>
 		  </div>
 		  
-          <table class="table">
+          <table class="table" id="tbl-seller">
 			  <thead>
 			    <tr>
 			      <th scope="col">아이디</th>
@@ -68,31 +71,50 @@ function fn_goSellerList(){
 			      <th scope="col">이메일</th>
 			      <th scope="col">전화번호</th>
 			      <th scope="col">블랙리스트</th>
+			      
 			    </tr>
 			  </thead>
-			  <tbody>
-				  <c:if test="${not empty seller }">
-				  	<c:forEach items="${seller }" var="seller">
-					    <tr>
-					      <td name="sellerId" id="sellerId">${seller.sellerId }</td>
-					      <td name="sellerName" id="sellerName">${seller.sellerName }</td>
-					      <td name="email" id="email">${seller.email }</td>
-					      <td name="phone" id="phone">${seller.phone }</td>
-					      <c:if test="${seller.blackFlag }==Y">
-					      	<td name="blackFlag" id="blackFlag" class="table-danger">${seller.blackFlag }</td>
+			  <c:if test="${not empty seller }">
+				<c:forEach items="${seller }" var="seller">
+			  	<tbody>
+					  <c:if test="${seller['BLACKFLAG'] eq 'Y'}">
+					    <tr class="table-danger">
+					  </c:if>
+					  <c:if test="${seller['BLACKFLAG'] eq 'N'}">
+					   <tr>
+					  </c:if>
+					      <td name="sellerId" id="sellerId">${seller['SELLERID'] }</td>
+					      <td name="sellerName" id="sellerName">${seller['SELLERNAME'] }</td>
+					      <td name="email" id="email">${seller['EMAIL'] }</td>
+					      <td name="phone" id="phone">${seller['PHONE'] }</td>
+					      <c:if test="${seller['BLACKFLAG'] eq 'Y' }">
+					      	<td>
+					      		<input type="checkbox" class="form-check-input" value="Y" name="blackFlag" id="bFlag1" checked />
+					      		<input type="button" class="btn btn-info" value="해제" onclick="bFlagCheck('${seller['SELLERID'] }');" />
+					      	</td>
 					      </c:if>
-					      <c:if test="${seller.blackFlag }==N">
-					      	<td name="blackFlag" id="blackFlag">${seller.blackFlag }</td>
+					      <c:if test="${seller['BLACKFLAG'] eq 'N' }">
+					         <td>
+					         	<input type="checkbox" class="form-check-input" value="N" name="blackFlag" id="bFlag2" />
+					         	<input type="button" class="btn btn-secondary" value="등록" onclick="bFlagCheck('${seller['SELLERID'] }');" />
+					         </td>
 					      </c:if>
 					    </tr>
-				    </c:forEach>
-				   </c:if>
-			  </tbody>
+			  	</tbody>
+				</c:forEach>
+			  </c:if>
+				   
+			<c:if test="${empty seller}">
+				<tbody>
+					<tr>
+						<td colspan="6">등록된 정보가 없습니다</td>
+					</tr>
+				</tbody>
+			</c:if>
 			 
 		</table>
-	
 		<div id="pageBar">
-			<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"qnaboard.do") %>
+			<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"sellerList.do") %>
 		</div>
 
         </div>
