@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="member">
 	
+	<insert id="insertMember" parameterType="member">
+		INSERT INTO shy.member (memberId, memberName, birth, gender, email, address, phone, favorite, oldFile, renamedFile, memberGrade, totalAmount, enrolldate, delFlag, blackFlag, password) 
+		VALUES(#{memberId},#{memberName},#{birth},#{gender},#{email},#{address},#{phone},#{favorite,typeHandler=com.kh.god.common.typehandler.StringArrayTypeHandler},#{oldFile},#{renamedFile},default,default,sysdate,default,default,#{password})
+	</insert>											
+	
+ 	<resultMap type="member" id="memberMap">
+		<result column="favorite" property="favorite" typeHandler="strArrTypeHandler"/>
+	</resultMap>
+
+	<select id="selectOneMember" parameterType = "string" resultMap="memberMap">
+		SELECT * FROM MEMBER WHERE MEMBERID = #{memberId}
+	</select>
+	
+	
 </mapper>

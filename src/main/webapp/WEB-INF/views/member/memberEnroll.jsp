@@ -10,7 +10,6 @@
 </jsp:include>
 
 <style>
-
 div#MemberEnroll-container{
     margin: 150px auto 0;
 	width : 800px;
@@ -42,12 +41,11 @@ div#inputProfile{
 	margin-top: 8px;
 }
 input#inputProfileFile{opacity: 0;}
-
 input#gender1, input#gender2{width : 30px;}
 input#gender2 {margin-left:50px;}
 select#selectYear{ width : 100px;}
 select#selectMonth, select#selectDay{ width : 65px;}
-
+.checkFavorite{width:30px !important}
 </style>
 		
 
@@ -134,6 +132,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<!-- 성별 -->
   		<div class="form-group row">
   			<input type="hidden" name="gender"/>
+  			
 	  		<label for="checkGender" class="col-sm-3">성별</label>
 	  		<div class="form-check form-check-inline">
 	  			<input class="form-check-input" type="radio" id="gender1" value="M" name="genderCheck">
@@ -190,11 +189,23 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<!-- 주소 api -->
 		<div class="form-group row">
 			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
-			<input class = "form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
+			<input class ="form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
 		</div>
 		
 		<!-- 취향 -->
-		
+		<div class="form-group row">
+			<label class="col-sm-3">취향</label>
+			
+			<div class="form-inline">						  			
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite0" value="1"><label for="favorite0" class="form-check-label col-form-label">치킨</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite1" value="2"><label for="favorite1" class="form-check-label col-form-label">피자</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite2" value="3"><label for="favorite2" class="form-check-label col-form-label">족발/보쌈</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite3" value="4"><label for="favorite3" class="form-check-label col-form-label">분식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="5"><label for="favorite4" class="form-check-label col-form-label">중식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="6"><label for="favorite4" class="form-check-label col-form-label">일식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="7"><label for="favorite4" class="form-check-label col-form-label">한식</label>&nbsp;
+			</div>
+		</div>
 		<hr />
 		
 		<input type="submit" class="btn btn-outline-success" value="가입하기" >

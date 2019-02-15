@@ -44,7 +44,7 @@ public class MemberController {
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder; 
 	
-	
+	/** 회원 가입페이지 이동 : memberEnroll */
 	@RequestMapping("/member/memberEnroll.do")
 	public String memberEnroll() {	
 
@@ -55,14 +55,13 @@ public class MemberController {
 	}
 	
 
+	/** 회원 가입 : insertMember */
 	@RequestMapping("/member/memberEnrollEnd.do")
-	public ModelAndView insertMember(Member m,
-							   @RequestParam (name="upFile",required = false) MultipartFile upFiles,	
-							   HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView insertMember(Member m, @RequestParam (name="upFile",required = false) MultipartFile upFiles,	
+							   		 HttpServletRequest request, ModelAndView mav) {
 		
 		logger.debug("회원등록 요청");		
 		logger.debug("fileName= "+ upFiles.getOriginalFilename());
-		logger.debug("size1= "+upFiles.getSize());
 		
 		try {
 			//1. 파일 업로드
@@ -73,9 +72,11 @@ public class MemberController {
 			if(!upFiles.isEmpty()) {
 				//파일명 (업로드용) 
 				String oldFile = upFiles.getOriginalFilename();
-				
+				m.setOldFile(oldFile);
+
 				//파일명(서버저장용)
 				String renamedFile = Utils.getRenamedFileName(oldFile);
+				m.setRenamedFile(renamedFile);
 				
 	    		//실제 파일 저장
 	    		try {
@@ -85,29 +86,32 @@ public class MemberController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-	    		
-	    		
-			}
+	    		    		
+			}       
 			
-	        //System.out.println("암호화 전 : "+m.getPassword());
-	        String temp = m.getPassword();
-	        
-	        //BCrypt 방식 암호화
+			//BCrypt 방식 암호화
+	        String temp = m.getPassword();	        
 	        m.setPassword(bCryptPasswordEncoder.encode(temp));
-	        //System.out.println("암호화 후 : "+m.getPassword());
+	       
+	        //중간확인
 	        System.out.println("memberController@member="+m);
 	     
-			/*
-			 * int result = memberService.insertMember(m);
-			 * 
-			 * String loc="/"; String msg ="";
-			 * 
-			 * if(result>0) msg="회원가입성공"; else msg="회원가입실패!";
-			 * 
-			 * req.setAttribute("loc", loc); req.setAttribute("msg", msg);
-			 * 
-			 * return "common/msg";
-			 */
+	        //회원가입 진행
+	        int result = memberService.insertMember(m);
+	        String loc="/"; 
+	        String msg ="";
+
+			if(result>0) {
+				msg = "회원가입성공"; 
+				loc = "/member/membeView.do?memberId="+m.getMemberId(); 				
+			}else {
+				msg="회원가입실패!";
+			}
+
+			request.setAttribute("loc", loc);
+			request.setAttribute("msg", msg);
+			 
+			 
 		}catch(Exception e) {
 	    	logger.error("게시물 등록 에러", e);
 	    }
@@ -115,18 +119,51 @@ public class MemberController {
         return mav;
      }
 
-	
-	
-	/**
-	 * ModelAndView(2.0) 
-	 *  - Model과 view단 정보를 하나의 객체에서 관리
-	 *  
-	 * ModelMap(2.0) : 일반클래스
-	 * 	- Model 객체관리, view 단은 문자열로 리턴
-	 * ----------------------------------------
-	 * Model(2.5) : 인터페이스
-	 *  - Model 객체관리, view 단은 문자열로 리턴
-	 */
+
+	/** 회원 정보 조회 : memberView */
+	@RequestMapping("/member/memberView.do")
+	public String memberView(@RequestParam String memberId, Model model) {	
+		if(logger.isDebugEnabled()) { 
+			logger.debug("회원'정보' 페이지 요청"); 		
+		}
+			
+		Member m = memberService.selectOneMember(memberId);
+		
+		model.addAttribute("m",m);
+		
+		String view = "member/memberView";
+				
+		return view; 
+	}
+		
+	/** 회원 정보 수정 : memberUpdate */
+	@RequestMapping("/member/memberUpdate.do")
+	public String memberUpdate(Member m, Model model) {	
+		if(logger.isDebugEnabled()) { 
+			logger.debug("회원정보 업데이트 요청"); 		
+		}
+		
+		 int result = memberService.updateMember(m);
+		
+		 String loc = "/";
+	     String msg = ""; 
+	     String view = "common/msg"; 
+	     
+	     if(result>0) {
+	    	 msg = "회원정보 수정완료";
+	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();
+	     }
+	     else {
+	    	 msg = "회원정보 수정실패";
+	     }
+	        
+	        model.addAttribute("loc", loc);
+	        model.addAttribute("msg", msg);
+	         
+	    return view;
+	}
+
+	/** 일반회원 로그인 : memberLogin */
 	@RequestMapping(value = "/member/memberLogin.do", method = RequestMethod.POST)
     public ModelAndView memberLogin(@RequestParam String memberId, @RequestParam String password,
                               ModelAndView mav, HttpSession session) {
@@ -145,8 +182,6 @@ public class MemberController {
             //비밀번호 비교
             System.out.println(password);
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
-                //세션 = 상태유지
-                //session.setAttribute("memberLoggedIn",m);  // 세션에 직접 지정하는 방법
                 mav.addObject("memberLoggedIn",m);
                 view = "redirect:/";
             }else {
@@ -177,48 +212,6 @@ public class MemberController {
 	}
 
 	
-	@RequestMapping("/member/memberView.do")
-	public String memberView(@RequestParam String memberId, Model model) {	
-		if(logger.isDebugEnabled()) { 
-			logger.debug("회원'정보' 페이지 요청"); 		
-		}
-			
-		Member m = memberService.selectOneMember(memberId);
-		
-		model.addAttribute("m",m);
-		
-		String view = "member/memberView";
-				
-		return view; 
-	}
-		
-	@RequestMapping("/member/memberUpdate.do")
-	public String memberUpdate(Member m, Model model) {	
-		if(logger.isDebugEnabled()) { 
-			logger.debug("회원정보 업데이트 요청"); 		
-		}
-		
-		 int result = memberService.updateMember(m);
-		
-		 String loc="/";
-	     String msg ="";
-	     String view = "common/msg"; 
-	     
-	     if(result>0) {
-	    	 msg = "회원정보 수정완료";
-	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();
-	     }
-	     else {
-	    	 msg = "회원정보 수정실패";
-	     }
-	        
-	        model.addAttribute("loc", loc);
-	        model.addAttribute("msg", msg);
-	         
-	    return view;
-	}
-
-	
 	
 	/**
 	 * @ResponseBody 어노테이션을 이용하여
@@ -243,4 +236,5 @@ public class MemberController {
 	
 	
 }
+
 
