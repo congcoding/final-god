@@ -1,5 +1,7 @@
 package com.kh.god.member.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,15 +19,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
+import com.kh.god.common.util.Utils;
 
 
+/*******************final 프로젝트 *******************/
 @Controller
 @SessionAttributes(value = {"memberLoggedIn"}) //value = 문자열 배열로 여러개 넣을수도잇음!
-
 public class MemberController {
 
 	Logger logger = Logger.getLogger(getClass());
@@ -38,7 +44,7 @@ public class MemberController {
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder; 
 	
-	
+	/** 회원 가입페이지 이동 : memberEnroll */
 	@RequestMapping("/member/memberEnroll.do")
 	public String memberEnroll() {	
 
@@ -49,78 +55,115 @@ public class MemberController {
 	}
 	
 
+	/** 회원 가입 : insertMember */
 	@RequestMapping("/member/memberEnrollEnd.do")
-	public String insertMember(Member m, HttpServletRequest req) {
-		if(logger.isDebugEnabled())
-			logger.debug("회원등록 요청");
-
-
-        System.out.println("암호화 전 : "+m.getPassword());
-        String temp = m.getPassword();
-        
-        //BCrypt 방식 암호화
-        m.setPassword(bCryptPasswordEncoder.encode(temp));
-        System.out.println("암호화 후 : "+m.getPassword());
-        System.out.println("memberController@member="+m);
-        int result = memberService.insertMember(m);
-        
-        String loc="/";
-        String msg ="";
-        
-        if(result>0) msg="회원가입성공";
-        else msg="회원가입실패!";
-        
-        req.setAttribute("loc", loc);
-        req.setAttribute("msg", msg);
-         
-        return "common/msg"; 
-     }
-	
-/**	
-	@RequestMapping(value = "/member/memberLogin.do", method = RequestMethod.POST)
-	public String memberLogin(@RequestParam String memberId, @RequestParam String password, 
-							  Model model, HttpSession session) {
-		Member m = memberService.selectOneMember(memberId);
-		System.out.println(m);
+	public ModelAndView insertMember(Member m, @RequestParam (name="upFile",required = false) MultipartFile upFiles,	
+							   		 HttpServletRequest request, ModelAndView mav) {
 		
-		String msg = "";
-		String loc = "/";
-		String view = "common/msg";
-		//로그인 처리 
-		if(m == null) {
-			msg = "아이디가 존재하지 않습니다.";
-		}else {
-			//비밀번호 비교
-			System.out.println(password);
-			if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
-				//세션 = 상태유지
-				//session.setAttribute("memberLoggedIn",m);  // 세션에 직접 지정하는 방법
-				model.addAttribute("memberLoggedIn",m);
-				view = "redirect:/";
+		logger.debug("회원등록 요청");		
+		logger.debug("fileName= "+ upFiles.getOriginalFilename());
+		
+		try {
+			//1. 파일 업로드
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
+			logger.debug(saveDirectory);
+			
+			//2. multipartFile 처리
+			if(!upFiles.isEmpty()) {
+				//파일명 (업로드용) 
+				String oldFile = upFiles.getOriginalFilename();
+				m.setOldFile(oldFile);
+
+				//파일명(서버저장용)
+				String renamedFile = Utils.getRenamedFileName(oldFile);
+				m.setRenamedFile(renamedFile);
+				
+	    		//실제 파일 저장
+	    		try {
+	    			upFiles.transferTo(new File(saveDirectory+"/"+renamedFile));
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    		    		
+			}       
+			
+			//BCrypt 방식 암호화
+	        String temp = m.getPassword();	        
+	        m.setPassword(bCryptPasswordEncoder.encode(temp));
+	       
+	        //중간확인
+	        System.out.println("memberController@member="+m);
+	     
+	        //회원가입 진행
+	        int result = memberService.insertMember(m);
+	        String loc="/"; 
+	        String msg ="";
+
+			if(result>0) {
+				msg = "회원가입성공"; 
+				loc = "/member/membeView.do?memberId="+m.getMemberId(); 				
 			}else {
-				msg = "비밀번호가 틀렸습니다.";
-			}				
+				msg="회원가입실패!";
+			}
+
+			request.setAttribute("loc", loc);
+			request.setAttribute("msg", msg);
+			 
+			 
+		}catch(Exception e) {
+	    	logger.error("게시물 등록 에러", e);
+	    }
+        
+        return mav;
+     }
+
+
+	/** 회원 정보 조회 : memberView */
+	@RequestMapping("/member/memberView.do")
+	public String memberView(@RequestParam String memberId, Model model) {	
+		if(logger.isDebugEnabled()) { 
+			logger.debug("회원'정보' 페이지 요청"); 		
 		}
+			
+		Member m = memberService.selectOneMember(memberId);
 		
-		model.addAttribute("loc", loc);
-	    model.addAttribute("msg", msg);
+		model.addAttribute("m",m);
 		
+		String view = "member/memberView";
+				
 		return view; 
 	}
+		
+	/** 회원 정보 수정 : memberUpdate */
+	@RequestMapping("/member/memberUpdate.do")
+	public String memberUpdate(Member m, Model model) {	
+		if(logger.isDebugEnabled()) { 
+			logger.debug("회원정보 업데이트 요청"); 		
+		}
+		
+		 int result = memberService.updateMember(m);
+		
+		 String loc = "/";
+	     String msg = ""; 
+	     String view = "common/msg"; 
+	     
+	     if(result>0) {
+	    	 msg = "회원정보 수정완료";
+	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();
+	     }
+	     else {
+	    	 msg = "회원정보 수정실패";
+	     }
+	        
+	        model.addAttribute("loc", loc);
+	        model.addAttribute("msg", msg);
+	         
+	    return view;
+	}
 
-*/	
-	
-	
-	/**
-	 * ModelAndView(2.0) 
-	 *  - Model과 view단 정보를 하나의 객체에서 관리
-	 *  
-	 * ModelMap(2.0) : 일반클래스
-	 * 	- Model 객체관리, view 단은 문자열로 리턴
-	 * ----------------------------------------
-	 * Model(2.5) : 인터페이스
-	 *  - Model 객체관리, view 단은 문자열로 리턴
-	 */
+	/** 일반회원 로그인 : memberLogin */
 	@RequestMapping(value = "/member/memberLogin.do", method = RequestMethod.POST)
     public ModelAndView memberLogin(@RequestParam String memberId, @RequestParam String password,
                               ModelAndView mav, HttpSession session) {
@@ -139,8 +182,6 @@ public class MemberController {
             //비밀번호 비교
             System.out.println(password);
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
-                //세션 = 상태유지
-                //session.setAttribute("memberLoggedIn",m);  // 세션에 직접 지정하는 방법
                 mav.addObject("memberLoggedIn",m);
                 view = "redirect:/";
             }else {
@@ -171,85 +212,6 @@ public class MemberController {
 	}
 
 	
-	@RequestMapping("/member/memberView.do")
-	public String memberView(@RequestParam String memberId, Model model) {	
-		if(logger.isDebugEnabled()) { 
-			logger.debug("회원'정보' 페이지 요청"); 		
-		}
-			
-		Member m = memberService.selectOneMember(memberId);
-		
-		model.addAttribute("m",m);
-		
-		String view = "member/memberView";
-				
-		return view; 
-	}
-		
-	@RequestMapping("/member/memberUpdate.do")
-	public String memberUpdate(Member m, Model model) {	
-		if(logger.isDebugEnabled()) { 
-			logger.debug("회원정보 업데이트 요청"); 		
-		}
-		
-		 int result = memberService.updateMember(m);
-		
-		 String loc="/";
-	     String msg ="";
-	     String view = "common/msg"; 
-	     
-	     if(result>0) {
-	    	 msg = "회원정보 수정완료";
-	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();
-	     }
-	     else {
-	    	 msg = "회원정보 수정실패";
-	     }
-	        
-	        model.addAttribute("loc", loc);
-	        model.addAttribute("msg", msg);
-	         
-	    return view;
-	}
-
-	
-	
-	//ajax 사용해서 아이디 중복체크
-	/*
-	 * @RequestMapping("/member/checkIdDuplicate.do") 
-	 * public void checkIdDuplicate(@RequestParam("memberId") String memberId,
-	 * HttpServletResponse response) {
-	 * 
-	 * logger.debug("ID중복체크 : "+memberId); Member m =
-	 * memberService.selectOneMember(memberId); boolean isUsable = m == null? true:
-	 * false;
-	 * 
-	 * try { response.getWriter().print(isUsable); } catch (IOException e) {
-	 * e.printStackTrace(); }
-	 * 
-	 * }
-	 */
-
-	
-	
-	/**jsonView 사용해서 아이디 중복체크
-	 * BeanNameViewResolver 를 이용해 jsonView라는 뷰 클래스 지정 
-	 */
-	
-	/*
-	 * @RequestMapping("/member/checkIdDuplicate.do") 
-	 * public String checkIdDuplicate(@RequestParam("memberId") String memberId, Model model) {
-	 * //처리된 값을 받아둘 model 객체 선ㅇ너
-	 * 
-	 * logger.debug("ID중복체크 : "+memberId); Member m =
-	 * memberService.selectOneMember(memberId); boolean isUsable = m == null?
-	 * true:false; model.addAttribute("isUsable", isUsable);
-	 * 
-	 * return "jsonView"; //BeanNameViewResolver에 의해 처리될 bean 객체
-	 * 
-	 * }
-	 */
-	 
 	
 	/**
 	 * @ResponseBody 어노테이션을 이용하여
@@ -274,3 +236,5 @@ public class MemberController {
 	
 	
 }
+
+

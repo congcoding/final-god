@@ -156,9 +156,8 @@ nav.navbar-light{
 		
 		if(chk === "mem"){
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/member/memberLogin.do" );
-			
+			$("#loginFrm").submit();			
 		}else{
-			
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/seller/sellerLogin.do" );
 			$("#loginFrm").submit();
 		}

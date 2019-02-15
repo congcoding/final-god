@@ -28,5 +28,18 @@ public interface AdminDao {
 	int countSellerList();
 
 	Event eventView(int eventNo);
+	
+	int changeSellerbFlagtoN(String sellerId);
+
+	int changeSellerbFlagtoY(String sellerId);
+
+	List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId);
+
+	int countMemberQNAList(String memberId);
+
+	List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId);
+
+	int countSellrQNAList(String sellerId);
+>>>>>>> 5171ec7cf583703d5a3541cc212af2931641206d
 
 }

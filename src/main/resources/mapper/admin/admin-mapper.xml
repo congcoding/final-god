@@ -44,8 +44,31 @@
 		select count(*) as cnt from seller
 	</select>
 	
+
 	<select id="eventView" resultType="event">
 		select * from event where eventNo = #{eventNo}
+	</select>
+
+	<update id="changeSellerbFlagtoN">
+		update seller set blackFlag='N' where sellerId = #{sellerId }
+	</update>
+	
+	<update id="changeSellerbFlagtoY">
+		update seller set blackFlag='Y' where sellerId = #{sellerId }
+	</update>
+	
+	<select id="selectMemberQNAList" resultType="member">
+		select * from member where memberId = #{memberId }
+	</select>
+	<select id="countMemberQNAList" resultType="member">
+		select count(*) as cnt from member where memberId = #{memberId }
+	</select>
+	
+	<select id="selectSellerQNAList" resultType="seller">
+		select * from seller where sellerId = #{sellerId }
+	</select>
+	<select id="countSellerQNAList" resultType="member">
+		select count(*) as cnt from seller where sellerId = #{sellerId }
 	</select>
 	
 </mapper>

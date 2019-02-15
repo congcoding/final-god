@@ -70,5 +70,36 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectOne("admin.eventView", eventNo);
 	}
 	
+	public int changeSellerbFlagtoN(String sellerId) {
+		return sqlSession.update("admin.changeSellerbFlagtoN",sellerId);
+	}
+
+	@Override
+	public int changeSellerbFlagtoY(String sellerId) {
+		return sqlSession.update("admin.changeSellerbFlagtoY",sellerId);
+	}
+
+	@Override
+	public List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectMemberQNAList",memberId,rowBounds);
+	}
+
+	@Override
+	public int countMemberQNAList(String memberId) {
+		return sqlSession.selectOne("admin.countMemberQNAList",memberId);
+	}
+
+	@Override
+	public List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectSellerQNAList",sellerId,rowBounds);
+	}
+
+	@Override
+	public int countSellrQNAList(String sellerId) {
+		return sqlSession.selectOne("admin.countSellerQNAList",sellerId);
+	}
+	
 
 }
