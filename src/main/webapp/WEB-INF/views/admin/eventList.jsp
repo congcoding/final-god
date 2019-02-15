@@ -62,7 +62,7 @@ function fn_goEventForm(){
 				<c:forEach items="${list }" var="b">
 			<tr>
 				<td>${b['EVENTNO'] }</td>
-				<td><a href="${pageContext.request.contextPath }/admin/eventView.do?evnetNo=${b['EVENTNO'] } " >${b["EVENTTITLE"] }</a></td>
+				<td><a href="${pageContext.request.contextPath }/admin/eventView.do?eventNo=${b['EVENTNO'] } " >${b["EVENTTITLE"] }</a></td>
 				<td><fmt:formatDate value="${b['STARTDATE']}" type="date" /> </td>
 				<td><fmt:formatDate value="${b['ENDDATE']}" type="date" /> </td>
 				<td>${b['AMOUNT'] }</td>

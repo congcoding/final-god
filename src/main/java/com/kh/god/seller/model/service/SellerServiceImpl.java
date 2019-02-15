@@ -1,10 +1,12 @@
 package com.kh.god.seller.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -29,5 +31,23 @@ public class SellerServiceImpl implements SellerService {
 		List<StoreInfo> store = sellerDao.myStore(sellerId);
 		return store;
 	}
+
+//	@Override
+//	public List<Menu> myStoreMenu(String sellerId) {
+//		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
+//		return menu;
+//	}
+	
+	@Override
+	public List<Map<String, String>> myStoreMenu(int cPage, int numPerPage, String sellerId) {
+		return sellerDao.myStoreMenu(cPage, numPerPage, sellerId);
+	}
+
+	@Override
+	public int selectSellerMenuTotalContents(String sellerId) {
+		return sellerDao.selectSellerMenuTotalContents(sellerId);
+	}
+
+
 	
 }

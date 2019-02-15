@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -135,25 +136,120 @@ public class SellerController {
 		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 		
 		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+	
 		
 		model.addAttribute("s", s);
 		
 		return "seller/sellerView";
 	}
 		
+//	//내 가게 
+//	@RequestMapping("/seller/goMyShop.do")
+//	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+//		
+//		if(logger.isDebugEnabled()) {
+//			logger.debug("내 가게 보기 요청!"); 
+//		}
+//		
+//		List<StoreInfo> store = sellerService.myStore(sellerId);
+//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
+//		
+//		System.out.println("메뉴 나오라" + menu);
+//		
+//		//메뉴 뽑기
+//		//페이지바 만들기
+//		model.addAttribute("store", store);
+//		model.addAttribute("menu", menu);
+//
+//		
+//		
+//		return "seller/goMyStore";
+//
+//	}
+	
 	//내 가게 
 	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId,Model model ) {
+	public ModelAndView goMyShop(@RequestParam("sellerId") String sellerId, 
+								 @RequestParam(value = "cPage", defaultValue = "1") int cPage,
+								 ModelAndView mav) {
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("내 가게 보기 요청!"); 
+		}
+		
+		int numPerPage = 10;
+		
+		// 업무로직
+		// 1. 내 가게 현황
 		List<StoreInfo> store = sellerService.myStore(sellerId);
-
+		
+		// 2. 메뉴 보기 (페이징 적용된 것)
+		List<Map<String, String>> menu = sellerService.myStoreMenu(numPerPage, cPage, sellerId);
+		System.out.println("메뉴 나오라" + menu);
+		
+		// 3. 전체 메뉴 수
+		int totalContents = sellerService.selectSellerMenuTotalContents(sellerId);
+		
 		//메뉴 뽑기
 		//페이지바 만들기
-		model.addAttribute("store", store);
-		//model.addAttribute("menu", menu);
-
+		mav.addObject("store", store);
+		mav.addObject("menu", menu);
+		mav.addObject("cPage", cPage);
+		mav.addObject("numPerPage", numPerPage);
+		mav.addObject("totalContents", totalContents);
 		
-		return "seller/goMyStore";
-
+		mav.setViewName("seller/goMyStore");
+		
+		return mav;
+		
 	}
+	
+	@RequestMapping(value = "/seller/checkPresentPwd.do" , method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String , Object> checkPresentPwd(HttpSession session , @RequestParam("password") String password , Model model) {
+		logger.debug("password"+password);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		
+		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+		
+		String msg = "";
+		int result = 0 ;
+		
+		if(s == null) {
+			
+			msg = "비밀번호를 다시 확인해 주십시오.";
+			
+		}else {
+			
+			if(bcryptPasswordEncoder.matches(password, s.getPassword())) {
+				
+				msg = "비밀번호 확인 완료";
+				result = 1;
+			}else {
+				msg = "비밀번호가 일치 하지 않습니다.";
+			}
+			
+		}
+		
+		map.put("result" , result);
+		map.put("msg" , msg);
+		
+		logger.debug("여기까지는 왔냐?"+ map);
+		
+		return map;
+	}
+	
+	@RequestMapping(value = "/seller/sellerUpdate.do" )
+	public String sellerUpdate(HttpSession session , Model model) {
+	
+		
+		return "seller/sellerView";
+	}
+	
+
+	
 
 }

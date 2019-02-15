@@ -22,7 +22,7 @@ input#boardTitle{font-weight : bold;}
 </style>
 <script>
 function fn_goAskingForm(){
-	location.href = "${pageContext.request.contextPath}/admin/AskingForm.do";
+	location.href = "${pageContext.request.contextPath}/admin/askingForm.do";
 }
 function fn_goQnaList(){
 	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
