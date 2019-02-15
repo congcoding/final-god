@@ -26,6 +26,10 @@
 				   
 		<typeAlias type="com.kh.god.admin.model.vo.QnaBoard"
 				   alias="qnaBoard"/>	
+
+		<typeAlias type="com.kh.god.seller.model.vo.Seller"
+				   alias="seller"/>
+
 	
 	</typeAliases>
 	

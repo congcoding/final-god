@@ -10,19 +10,70 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/home.css" />
 
 <style>
+section#menu-content{
+	background: linear-gradient(to top, 
+				transparent 0, transparent 78%,
+				#32aeb8 78%, #32aeb8 100%);
+}
+div#menu-content{
+    padding: 50px;
+    overflow: auto;
+    margin: 0 auto;
+    max-width: 912px;
+}
 
+div#search-container{
+	display: table;
+    padding: 50px 0 35px 0;
+    margin: 0 auto;
+}
+.card{
+	width: 250px;
+    height: 250px;
+    float: left;
+    margin: 10px;
+}
 </style>
 <script>
 function categoryList(item){
 	var categoryNo = $(item).attr("name");
     location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
-	console.log("카테고리번호 왔니? [", categoryNo, "]");
 }
 </script>
 
 <section id="menu-content">
 	<div id="menu-content">
-	   <div id="search-container">
+	
+		<div id="event-container">
+			<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+			  <ol class="carousel-indicators">
+			    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+			    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+			    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+			  </ol>
+			  <div class="carousel-inner">
+			    <div class="carousel-item active">
+			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_01.png" alt="First slide">
+			    </div>
+			    <div class="carousel-item">
+			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_02.png" alt="Second slide">
+			    </div>
+			    <div class="carousel-item">
+			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_03.png" alt="Third slide">
+			    </div>
+			  </div>
+			  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Previous</span>
+			  </a>
+			  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="sr-only">Next</span>
+			  </a>
+			</div>
+		</div>
+		
+	   	<div id="search-container">
 		   <form class="form-inline my-2 my-lg-0">
 		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
 		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -41,7 +92,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="2">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/pizza.png" >
 			  <div class="card-img-overlay">
@@ -50,7 +101,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="3">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/jokbal_bossam.png" >
 			  <div class="card-img-overlay">
@@ -59,7 +110,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="4">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/snack.png" >
 			  <div class="card-img-overlay">
@@ -68,7 +119,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="5">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/chinese.png" >
 			  <div class="card-img-overlay">
@@ -77,7 +128,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="6">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/japanese.png" >
 			  <div class="card-img-overlay">
@@ -86,7 +137,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="7">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/korean.png" >
 			  <div class="card-img-overlay">
