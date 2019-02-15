@@ -122,12 +122,11 @@ $(function() {
 			  </div>
 			</div>
 			
-			<input type="text" class="form-control" id="startDatepicker" placeholder="이벤트 시작일" style="width:180px; display:inline-block" />
+			<input type="text" class="form-control" name="startDate" id="startDatepicker" placeholder="이벤트 시작일" style="width:180px; display:inline-block" />
 			&nbsp;
 			-
 			&nbsp;
-			<input type="text" class="form-control" id="endDatepicker" placeholder="이벤트 종료일" style="width:180px; display:inline-block" />
-			
+			<input type="text" class="form-control" name="endDate" id="endDatepicker" placeholder="이벤트 종료일" style="width:180px; display:inline-block" />		
 			
 			<br />
 			<input type="submit" class="btn btn-outline-success" value="저장" >
