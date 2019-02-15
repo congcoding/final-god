@@ -9,10 +9,9 @@
 </jsp:include>
 
 <style>
-div#board-container{width:400px; margin:0 auto; text-align:center;}
-div#board-container input,div#board-container button{margin-bottom:15px;}
-/* 부트스트랩 : 파일라벨명 정렬*/
-div#board-container label.custom-file-label{text-align:left;}
+div#board-container input{width:400px; margin:0 auto; text-align:center;}
+div#board-container div{width:400px; margin:0 auto; }
+
 table#tbl-board tr th{text-align:center;}
 table#tbl-board tr td{text-align:center;}
 a {text-decoration:none;}
@@ -38,7 +37,7 @@ function fn_goQnaList(){
  	<div id="board-container">
 		<input type="text" class="form-control" placeholder="제목" name="boardTitle" id="boardTitle" value="${board.boardTitle }" required>
 		<br />
-		<textarea class="form-control" name="boardContent" placeholder="내용" style="height:105px;" required>${board.boardContent }</textarea>
+		<div class="form-control" name="boardContent" placeholder="내용" style="border:none; height:300px;" required>${board.boardContent }</div>
 	</div>
 
 
