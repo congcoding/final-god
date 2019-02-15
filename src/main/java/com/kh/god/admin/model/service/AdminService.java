@@ -27,4 +27,16 @@ public interface AdminService {
 
 	int countSellerList();
 
+	int changeSellerbFlagtoN(String sellerId);
+
+	int changeSellerbFlagtoY(String sellerId);
+
+	List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId);
+
+	int countMemberQNAList(String memberId);
+
+	List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId);
+
+	int countSellerQNAList(String sellerId);
+
 }

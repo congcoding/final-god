@@ -158,4 +158,38 @@ public class AdminController {
 		return "admin/sellerList";
 	}
 	
+	@RequestMapping("/admin/sellerBlackList.do")
+	public String blackListChange(@RequestParam String sellerId, @RequestParam String bFlag) {
+		int result = 0;
+		if((bFlag).equals("Y")) {
+			result = adminService.changeSellerbFlagtoN(sellerId);
+		}else {
+			result = adminService.changeSellerbFlagtoY(sellerId);
+		}
+		
+		
+		return "redirect:/admin/sellerList.do";
+	}
+	
+	@RequestMapping("/admin/askingList.do")
+	public String askingList(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam String memberId, @RequestParam String sellerId, Model model) {
+		int numPerPage = 6;
+		List<Map<String,String>> list = null;
+		int totalContents = 0;
+		if(memberId != null) {
+			list = adminService.selectMemberQNAList(cPage,numPerPage,memberId);
+			totalContents = adminService.countMemberQNAList(memberId);
+			
+		}else if(sellerId != null) {
+			list = adminService.selectSellerQNAList(cPage,numPerPage,sellerId);
+			totalContents = adminService.countSellerQNAList(sellerId);
+		}
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("list",list);
+		model.addAttribute("totalContents",totalContents);
+		return "admin/askingList";
+	}
+	
 }

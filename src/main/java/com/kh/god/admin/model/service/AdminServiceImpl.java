@@ -61,4 +61,34 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.countSellerList();
 	}
 
+	@Override
+	public int changeSellerbFlagtoN(String sellerId) {
+		return adminDao.changeSellerbFlagtoN(sellerId);
+	}
+
+	@Override
+	public int changeSellerbFlagtoY(String sellerId) {
+		return adminDao.changeSellerbFlagtoY(sellerId);
+	}
+
+	@Override
+	public List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId) {
+		return adminDao.selectMemberQNAList(cPage,numPerPage,memberId);
+	}
+
+	@Override
+	public int countMemberQNAList(String memberId) {
+		return adminDao.countMemberQNAList(memberId);
+	}
+
+	@Override
+	public List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId) {
+		return adminDao.selectSellerQNAList(cPage,numPerPage,sellerId);
+	}
+
+	@Override
+	public int countSellerQNAList(String sellerId) {
+		return adminDao.countSellrQNAList(sellerId);
+	}
+
 }
