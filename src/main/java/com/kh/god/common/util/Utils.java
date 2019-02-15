@@ -14,42 +14,89 @@ public class Utils {
 		int endPage = startPage + pageBarSize - 1; 
 		int pageNo = startPage;
 		String pageBar = "<nav><ul class=\'pagination justify-content-center\'>";
-
-		//[이전]section
-		if(pageNo == 1) {
-			
-		}
-		else {
-			pageBar += "<li class='page-itme'><a class='page-link' href='"+loc+
-								 "?cPage="+(pageNo-1)+
-								 "&numPerPage="+numPerPage+"'>PREVIOUS</a><li>";
-		}
 		
-		//[페이지]section
-		while(pageNo<=endPage && pageNo<=totalPage) {
-			if(cPage == pageNo) {
-				pageBar += "<li class='page-item disabled'> <a class='page-link'>"+pageNo+"</a></li>";
+		
+		
+		if(loc.contains("storeInfoList.do")) {
+			//[이전]section
+			if(pageNo == 1) {
+				
 			}
+			else {
+				pageBar += "<li class='page-itme'><a class='page-link' href='"+loc+
+									 "&cPage="+(pageNo-1)+
+									 "&numPerPage="+numPerPage+"'>PREVIOUS</a><li>";
+			}
+			
+			//[페이지]section
+			while(pageNo<=endPage && pageNo<=totalPage) {
+				if(cPage == pageNo) {
+					pageBar += "<li class='page-item disabled'> <a class='page-link'>"+pageNo+"</a></li>";
+				}
+				else {
+					pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
+							   "&cPage="+pageNo+
+							   "&numPerPage="+numPerPage+"'>"+
+							   pageNo+"</a></li>";
+				}
+				pageNo++;
+			}
+
+			//[다음]section
+			if(pageNo > totalPage) {
+				
+			} 
+			else {
+				pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
+						   "&cPage="+pageNo+
+						   "&numPerPage="+numPerPage+"'>NEXT</a></li>";
+			}
+			
+			pageBar += "</ul></nav>";
+			
+			
+			
+			
+		}else {
+			//[이전]section
+			if(pageNo == 1) {
+				
+			}
+			else {
+				pageBar += "<li class='page-itme'><a class='page-link' href='"+loc+
+									 "?cPage="+(pageNo-1)+
+									 "&numPerPage="+numPerPage+"'>PREVIOUS</a><li>";
+			}
+			
+			//[페이지]section
+			while(pageNo<=endPage && pageNo<=totalPage) {
+				if(cPage == pageNo) {
+					pageBar += "<li class='page-item disabled'> <a class='page-link'>"+pageNo+"</a></li>";
+				}
+				else {
+					pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
+							   "?cPage="+pageNo+
+							   "&numPerPage="+numPerPage+"'>"+
+							   pageNo+"</a></li>";
+				}
+				pageNo++;
+			}
+
+			//[다음]section
+			if(pageNo > totalPage) {
+				
+			} 
 			else {
 				pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
 						   "?cPage="+pageNo+
-						   "&numPerPage="+numPerPage+"'>"+
-						   pageNo+"</a></li>";
+						   "&numPerPage="+numPerPage+"'>NEXT</a></li>";
 			}
-			pageNo++;
-		}
-
-		//[다음]section
-		if(pageNo > totalPage) {
 			
-		} 
-		else {
-			pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
-					   "?cPage="+pageNo+
-					   "&numPerPage="+numPerPage+"'>NEXT</a></li>";
+			pageBar += "</ul></nav>";
+			
+			
 		}
 		
-		pageBar += "</ul></nav>";
 		return pageBar;
      
         

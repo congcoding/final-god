@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="seller">
+
+	<resultMap type="seller" id="sellerMap">
+      <result column="hobby" property="hobby" typeHandler="strArrTypeHandler"/>
+    </resultMap>
+	<select id="selectOneSeller" resultType="seller" resultMap="sellerMap">
+      select * from seller where sellerid= #{sellerId}
+    </select>
+    
+    <insert id="insertSeller" >
+    	insert into seller values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
+    </insert>
+
+</mapper>

@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -26,6 +26,10 @@ function fn_goQnaList(){
 	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
 }
 </script>
+
+<section id="board-container" class="container">
+<!-- 전체 게시글 출력 -->
+	
 <div id="head-container">
 	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goBoardForm();">1:1문의</div>
 </div>
@@ -62,6 +66,7 @@ function fn_goQnaList(){
 		int numPerPage = (int)request.getAttribute("numPerPage");
 		int cPage = (int)request.getAttribute("cPage");
 	%>
+
 	<div id="pageBar">
 	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"qnaboard.do") %>
 	</div>

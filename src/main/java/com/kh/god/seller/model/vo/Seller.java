@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,6 +23,4 @@ public class Seller {
 	private String delFlag;
 	private String blackFlag;
 	private String password;
-	
-	
 }
