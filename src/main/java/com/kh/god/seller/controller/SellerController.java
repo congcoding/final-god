@@ -135,6 +135,7 @@ public class SellerController {
 		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 		
 		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+	
 		
 		model.addAttribute("s", s);
 		
@@ -155,5 +156,53 @@ public class SellerController {
 		return "seller/goMyStore";
 
 	}
+	
+	@RequestMapping(value = "/seller/checkPresentPwd.do" , method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String , Object> checkPresentPwd(HttpSession session , @RequestParam("password") String password , Model model) {
+		logger.debug("password"+password);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		
+		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+		
+		String msg = "";
+		int result = 0 ;
+		
+		if(s == null) {
+			
+			msg = "비밀번호를 다시 확인해 주십시오.";
+			
+		}else {
+			
+			if(bcryptPasswordEncoder.matches(password, s.getPassword())) {
+				
+				msg = "비밀번호 확인 완료";
+				result = 1;
+			}else {
+				msg = "비밀번호가 일치 하지 않습니다.";
+			}
+			
+		}
+		
+		map.put("result" , result);
+		map.put("msg" , msg);
+		
+		logger.debug("여기까지는 왔냐?"+ map);
+		
+		return map;
+	}
+	
+	@RequestMapping(value = "/seller/sellerUpdate.do" )
+	public String sellerUpdate(HttpSession session , Model model) {
+	
+		
+		return "seller/sellerView";
+	}
+	
+
+	
 
 }
