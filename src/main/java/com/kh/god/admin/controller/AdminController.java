@@ -25,6 +25,7 @@ import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
+import com.kh.god.seller.model.vo.Seller;
 
 @Controller
 public class AdminController {
@@ -136,4 +137,27 @@ public class AdminController {
 		model.addAttribute("board",b);
 		return "admin/boardView";
 	}
+	
+	@RequestMapping("/admin/allMemberList.do")
+	public String allMemberList() {
+		return "/admin/allMemberList";
+	}
+	
+	@RequestMapping("/admin/sellerList.do")
+	public String selletList(@RequestParam(value="cPage",defaultValue="1") int cPage,Model model) {
+		
+		int numPerPage = 6;
+		
+		List<Map<String,String>> seller = adminService.selectSellerAllList(cPage,numPerPage);
+		
+		int totalContents = adminService.countSellerList();
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("seller",seller);
+		model.addAttribute("totalContents",totalContents);
+		
+		return "admin/sellerList";
+	}
+	
 }

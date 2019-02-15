@@ -18,6 +18,8 @@ table#tbl-board tr td{text-align:center;}
 a {text-decoration:none;}
 div#head-container{margin:70px auto; width : 900px; height:50px;}
 div#qna{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;display: table-cell;vertical-align: middle;}
+div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
+input#boardTitle{font-weight : bold;}
 </style>
 <script>
 function fn_goAskingForm(){
@@ -28,13 +30,15 @@ function fn_goQnaList(){
 }
 </script>
 
+
 <div id="head-container">
 	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingForm();">1:1문의</div>
 </div>
 
  	<div id="board-container">
 		<input type="text" class="form-control" placeholder="제목" name="boardTitle" id="boardTitle" value="${board.boardTitle }" required>
-		<textarea class="form-control" name="boardContent" placeholder="내용" required>${board.boardContent }</textarea>
+		<br />
+		<textarea class="form-control" name="boardContent" placeholder="내용" style="height:105px;" required>${board.boardContent }</textarea>
 	</div>
 
 

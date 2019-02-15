@@ -34,5 +34,15 @@
 		select * from qnaboard where boardNo = #{boardNo }
 	</select>
 	
+	<select id="selectSellerAllList" resultMap="sellerMap">
+		select * from seller
+	</select>
+	<resultMap type="map" id="sellerMap">
+	</resultMap>
+	
+	<select id="countSellerList" resultType="_int">
+		select count(*) as cnt from seller
+	</select>
+	
 </mapper>
 

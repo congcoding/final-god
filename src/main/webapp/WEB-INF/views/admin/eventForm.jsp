@@ -63,7 +63,7 @@ $(function(){
 		<form name="eventFrm" action="${pageContext.request.contextPath }/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 			<input type="text" class="form-control" placeholder="제목" name="eventTitle" id="eventTitle" required>
 			<div class="input-group" style="width:200px; display:inline-block; margin-left:-70px;">
-				  <select class="custom-select" name="discount" id="inputGroupSelect04 disount" style="width:200px;">
+				  <select class="custom-select" name="discount" id="disount" style="width:200px;">
 				    <option selected>할인</option>
 				    <option value="1000">1000원 할인</option>
 				    <option value="2000">2000원 할인</option>
