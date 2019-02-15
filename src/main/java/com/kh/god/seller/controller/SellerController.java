@@ -83,7 +83,7 @@ public class SellerController {
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
 			ModelAndView mav , HttpSession session) {
 		if(logger.isDebugEnabled())
-			logger.debug("로그인 요청!");
+			logger.debug("판매자 로그인 요청!");
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
