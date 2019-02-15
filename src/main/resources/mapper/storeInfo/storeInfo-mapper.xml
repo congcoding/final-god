@@ -19,4 +19,16 @@
 	<select id="getMyStore" resultType="storeInfo">
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
+	
+   <select id="menuList"  resultType="menu">
+   	select * from menu where storeno = #{storeNo}
+   </select>
+   
+   <select id="storeInfoList"  resultType="storeInfo">
+   	   select * from storeinfo where storeno = #{storeNo}
+   </select>
+   
+   <select id="menuCount"  resultType="menu">
+   	  select * from menu where storeno = #{storeNo}
+   </select>
 </mapper>
