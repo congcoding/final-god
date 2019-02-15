@@ -4,7 +4,6 @@ package com.kh.god.admin.controller;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,8 +83,6 @@ public class AdminController {
 			//file upload
 			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/event");
 			
-			logger.debug("saveDirectory="+saveDirectory);
-			List<Event> attachList = new ArrayList<>();
 			int eventNo = adminService.getLastEventNo();
 			
 			
