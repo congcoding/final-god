@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.Seller;
 
 public interface AdminService {
 
@@ -21,5 +22,9 @@ public interface AdminService {
 	int insertEvent(Event event);
 
 	QnaBoard qnaBoardView(int boardNo);
+
+	List<Map<String, String>> selectSellerAllList(int cPage, int numPerPage);
+
+	int countSellerList();
 
 }

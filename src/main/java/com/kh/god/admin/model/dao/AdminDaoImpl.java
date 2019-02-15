@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.Seller;
 
 @Repository
 public class AdminDaoImpl implements AdminDao {
@@ -51,6 +52,17 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public QnaBoard qnaBoardView(int boardNo) {
 		return sqlSession.selectOne("admin.qnaBoardView",boardNo);
+	}
+
+	@Override
+	public List<Map<String, String>> selectSellerAllList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectSellerAllList",null,rowBounds);
+	}
+
+	@Override
+	public int countSellerList() {
+		return sqlSession.selectOne("admin.countSellerList");
 	}
 	
 

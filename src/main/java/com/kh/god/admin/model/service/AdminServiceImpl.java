@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.god.admin.model.dao.AdminDao;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.Seller;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -48,6 +49,16 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public QnaBoard qnaBoardView(int boardNo) {
 		return adminDao.qnaBoardView(boardNo);
+	}
+
+	@Override
+	public List<Map<String, String>> selectSellerAllList(int cPage, int numPerPage) {
+		return adminDao.selectSellerAllList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countSellerList() {
+		return adminDao.countSellerList();
 	}
 
 }

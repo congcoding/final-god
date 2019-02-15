@@ -49,7 +49,7 @@
 
       <!-- Nav Item - Tables -->
       <li class="nav-item" id="memberList">
-        <a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">
+        <a class="nav-link" href="${pageContext.request.contextPath}/admin/allMemberList.do">
           <i class="fas fa-fw fa-table"></i>
           <span>회원 관리</span></a>
       </li>

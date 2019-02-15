@@ -88,6 +88,7 @@ $(function() {
          <div id="board-container">
 		<form name="eventFrm" action="${pageContext.request.contextPath }/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 			<input type="text" class="form-control" placeholder="제목" name="eventTitle" id="eventTitle" required>
+
 			<div class="input-group" style="width:200px; display:inline-block; ">
 				  <select class="custom-select" name="discount" id="discount" style="width:200px;">
 				    <option selected>할인</option>
