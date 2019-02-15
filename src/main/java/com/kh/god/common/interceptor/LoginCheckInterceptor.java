@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.seller.model.vo.Seller;
 
 /**
  * 로그인하지 않고, 
@@ -34,7 +35,14 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 //			return false;
 //		}
 		
+		if(memberLoggedIn == null) {
+			Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+			
+		}
+		
 		return super.preHandle(request, response, handler); //이 값은 항상 트루
 	}
+	
+
 	
 }

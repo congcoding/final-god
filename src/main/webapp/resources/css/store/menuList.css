@@ -1,0 +1,25 @@
+@charset "UTF-8";
+#menuTable{
+	width: 61%;
+    position: relative;
+    left: 9%;
+    top: -179px;
+}
+#cart{
+	top:0px;
+	width: 30%;
+	position: relative;
+	    left: 70%;
+}
+
+#navi{
+	    width: 88%;
+    position: relative;
+    left: 10%;
+}
+#sellerInformation{
+		width: 61%;
+    position: relative;
+    left: 9%;
+    top: -179px;
+}
