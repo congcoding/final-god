@@ -34,7 +34,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <a class="collapse-item" id="sellerAsking" href="login.html">판매자 신청 현황</a>
             <a class="collapse-item" id="adControl" href="register.html">광고 관리</a>
-            <a class="collapse-item" id="eventControl" href="${pageContext.request.contextPath }/admin/eventForm.do">이벤트 관리</a>
+            <a class="collapse-item" id="eventControl" href="${pageContext.request.contextPath }/admin/eventList.do">이벤트 관리</a>
             <a class="collapse-item" id="qnaControl" href="404.html">문의 관리</a>
           </div>
         </div>
@@ -49,7 +49,7 @@
 
       <!-- Nav Item - Tables -->
       <li class="nav-item" id="memberList">
-        <a class="nav-link" href="${pageContext.request.contextPath}/admin/memberList.do">
+        <a class="nav-link" href="${pageContext.request.contextPath}/admin/allMemberList.do">
           <i class="fas fa-fw fa-table"></i>
           <span>회원 관리</span></a>
       </li>

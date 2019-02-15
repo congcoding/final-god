@@ -20,23 +20,13 @@ div#pageBar{margin:35px auto;}
 </style>
 <script>
 function fn_goAskingList(){
-	
-	var list = new Array();
-	<c:forEach items="${sellerLoggedIn }" var="sellerLoggedIn">
-		list.push("${sellerLoggedIn.sellerId}");
-	</c:forEach>
-		var list2 = new Array();
-		<c:foreach items="${memberLoggedIn }" var="memberLoggedIn">
-			list.push("${memberLoggedIn.memberId}");
-		</c:foreach>
-	
-	if(list[0] == "" && list2[0] == ""){
+	if(memberLoggedIn != null){
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?memberId="+memberLoggedIn.memberId;	
+	}else if(sellerLoggedIn != null){
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?sellerId="+memberLoggedIn.sellerId;
+	}else if(sellerLoggedIn == null && memberLoggedIn == null){
 		alert("로그인 후 이용 가능합니다.");
 		return;
-	}else if(list2[0] != null){
-		location.href = "${pageContext.request.contextPath}/admin/askingList.do?memberId="+list2[0];	
-	}else if(list[0] != null){
-		location.href = "${pageContext.request.contextPath}/admin/askingList.do?sellerId="+list[0];
 	}
 }
 function fn_goQnaList(){
@@ -48,21 +38,21 @@ function fn_goQnaList(){
 <!-- 전체 게시글 출력 -->
 	
 <div id="head-container">
-	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingList();">1:1문의</div>
+	<div id="qna" class="alert-light" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div>
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->
 	<table id="tbl-board" class="table table-borderless table-hover">
 		<thead class="thead-light">
 			<tr>
-				<th>자주 묻는 질문</th>
+				<th>내가 한 질문</th>
 			</tr>
 		</thead>
 		<c:if test="${not empty list}">
 			<c:forEach items="${list }" var="b">
 		<tbody>
 		<tr>
-			<td><a href="${pageContext.request.contextPath }/admin/boardView.do?boardNo=${b['BOARDNO'] } ">${b["BOARDTITLE"] }</a></td>
+			<td><a href="${pageContext.request.contextPath }/admin/askingView.do?boardNo=${b['BOARDNO'] } ">${b["BOARDTITLE"] }</a></td>
 		</tr>
 		</tbody>
 			</c:forEach>
@@ -70,12 +60,13 @@ function fn_goQnaList(){
 		<c:if test="${empty list}">
 		<tbody>
 			<tr>
-				<td colspan="4">등록된 정보가 없습니다</td>
+				<td colspan="4">질문이존재하지 않습니다!</td>
 			</tr>
 		</tbody>
 		</c:if>
 	
 	 </table>
+	 <input type="submit" class="btn btn-outline-success" value="문의하러가기" >
 	 
 	
 	<%

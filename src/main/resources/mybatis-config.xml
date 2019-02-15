@@ -8,7 +8,7 @@
 		<setting name="mapUnderscoreToCamelCase" value="true"/>
 	</settings>
 	
-	<typeAliases>				   
+	<typeAliases>				   						
 		<typeAlias type="com.kh.god.common.typehandler.StringArrayTypeHandler"
 				   alias="strArrTypeHandler"/>
 				   
@@ -17,11 +17,18 @@
 				   
 		<typeAlias type="com.kh.god.storeInfo.model.vo.StoreInfo"
 				   alias="storeInfo"/>
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.Event"
+				   alias="event"/>	 
 		
+		<typeAlias type="com.kh.god.admin.model.vo.Ad"
+				   alias="ad"/>	  
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.QnaBoard"
+				   alias="qnaBoard"/>	
+
 		<typeAlias type="com.kh.god.seller.model.vo.Seller"
 				   alias="seller"/>
-		
-		<typeAlias type="com.kh.god.common.typehandler.StringArrayTypeHandler" alias="strArrTypeHandler"/>
 	
 	</typeAliases>
 	
