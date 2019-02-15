@@ -64,6 +64,11 @@ public class AdminDaoImpl implements AdminDao {
 	public int countSellerList() {
 		return sqlSession.selectOne("admin.countSellerList");
 	}
+
+	@Override
+	public Event eventView(int eventNo) {
+		return sqlSession.selectOne("admin.eventView", eventNo);
+	}
 	
 
 }

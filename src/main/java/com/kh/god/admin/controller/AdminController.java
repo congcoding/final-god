@@ -86,7 +86,6 @@ public class AdminController {
 			
 			int eventNo = adminService.getLastEventNo();
 			
-			
 			String oSmall = upFiles[0].getOriginalFilename();
 			String oBig = upFiles[1].getOriginalFilename();
 			String rSmall = Utils.getRenamedEventFileName(oSmall,"s",eventNo);
@@ -157,7 +156,14 @@ public class AdminController {
 		
 		return "admin/sellerList";
 		
-		//push 테스트
 	}
+	
+	@RequestMapping("/admin/eventView.do")
+	public String eventView(@RequestParam(name="eventNo") int eventNo, Model model) {
+		Event e = adminService.eventView(eventNo);
+		model.addAttribute("event", e);
+		return "admin/eventView";
+	}
+	
 	
 }

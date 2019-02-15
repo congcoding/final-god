@@ -44,5 +44,9 @@
 		select count(*) as cnt from seller
 	</select>
 	
+	<select id="eventView" resultType="event">
+		select * from event where eventNo = #{eventNo}
+	</select>
+	
 </mapper>
 

@@ -27,4 +27,6 @@ public interface AdminDao {
 
 	int countSellerList();
 
+	Event eventView(int eventNo);
+
 }

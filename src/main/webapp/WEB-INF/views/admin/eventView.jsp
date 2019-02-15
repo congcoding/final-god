@@ -15,6 +15,13 @@
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
+<style>
+div#event-container{width:700px; margin:30px auto; text-align:center;}
+div#event-container input{margin-bottom:15px;}
+#tblEvent th{width:150px; vertical-align:middle}
+#tblEvent td{width:550px;}
+</style>
+
 <script>
 $(function(){
 	$("#collapsePages").addClass("show");	
@@ -43,19 +50,50 @@ function fileDownload(oName, rName){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <div id="board-container">
-			<input type="text" class="form-control" placeholder="제목" name="boardTitle" id="boardTitle" value="${board.boardTitle }" required>
-		
-			<c:forEach items="${attachmentList}" var="a" varStatus="vs">
-				<button type="button" 
-						class="btn btn-outline-success btn-block"
-						onclick="fileDownload('${a.originalFileName}','${a.renamedFileName }');">
-					첨부파일${vs.count} - ${a.originalFileName }
-				</button>
-			</c:forEach>
+          <div id="event-container">
+			<form name="eventFrm" action="${pageContext.request.contextPath }/admin/updateEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
+				<table class="table table-bordered" id="tblEvent">
+					<tr>
+						<th>이벤트 제목</th>
+						<td>${event.eventTitle }</td>
+					</tr>
+					<tr>
+						<th>이벤트 내역</th>
+						<c:if test="${event.discount < 1.0}">
+							<td>${100-(event.discount*100)}% 할인</td>
+						</c:if>
+						<c:if test="${event.discount > 1.0}">
+							<td>${event.discount }원 할인</td>
+						</c:if>
+						
+					</tr>
+					<tr>
+						<th>쿠폰 개수</th>
+						<td>${event.amount }</td>
+					</tr>
+					<tr>
+						<th>이벤트 시작일</th>
+						<td>${event.startDate }</td>
+					</tr>
+					<tr>
+						<th>이벤트 종료일</th>
+						<td>${event.endDate }</td>
+					</tr>
+					<tr>
+						<th>썸네일</th>
+						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventSmall }" width="500px" /></td>
+					</tr>
+					<tr>
+						<th>컨텐츠</th>
+						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventBig }" width="500px" /></td>
+					</tr>
+					
+				</table>
 			
-		    <textarea class="form-control" name="boardContent" placeholder="내용" required>${board.boardContent }</textarea>
-		</div>
+				<br />
+				<input type="submit" class="btn btn-outline-success" value="수정/삭제" >
+			</form>
+		  </div>
 
         </div>
         <!-- /.container-fluid -->

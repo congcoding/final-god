@@ -27,4 +27,6 @@ public interface AdminService {
 
 	int countSellerList();
 
+	Event eventView(int eventNo);
+
 }

@@ -61,4 +61,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.countSellerList();
 	}
 
+	@Override
+	public Event eventView(int eventNo) {
+		return adminDao.eventView(eventNo);
+	}
+
 }
