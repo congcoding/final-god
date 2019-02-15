@@ -12,4 +12,37 @@
 		select count(*) as cnt from qnaboard
 	</select>
 	
+	<select id="selectEventList" resultMap = "eventMap">
+		select * from event order by eventNo desc
+	</select>
+	<resultMap type="map" id="eventMap">
+	</resultMap>
+	
+	<select id="countEventList" resultType="_int">
+		select count(*) as cnt from event
+	</select>
+	
+	<select id="getLastEventNo" resultType="_int">
+		select last_number from user_sequences where sequence_name='SEQ_EVENT_EVENTNO'
+	</select>
+	
+	<insert id="insertEvent" parameterType="event">
+		insert into event values(seq_event_eventno.nextval, #{eventTitle}, #{discount}, #{eventBig}, #{startDate}, #{endDate}, #{amount}, #{eventSmall})
+	</insert>
+	
+	<select id="qnaBoardView" resultType="qnaBoard">
+		select * from qnaboard where boardNo = #{boardNo }
+	</select>
+	
+	<select id="selectSellerAllList" resultMap="sellerMap">
+		select * from seller
+	</select>
+	<resultMap type="map" id="sellerMap">
+	</resultMap>
+	
+	<select id="countSellerList" resultType="_int">
+		select count(*) as cnt from seller
+	</select>
+	
 </mapper>
+
