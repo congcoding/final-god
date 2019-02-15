@@ -19,8 +19,8 @@ div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; 
 div#pageBar{margin:35px auto;}
 </style>
 <script>
-function fn_goBoardForm(){
-	location.href = "${pageContext.request.contextPath}/admin/boardForm.do";
+function fn_goAskingForm(){
+	location.href = "${pageContext.request.contextPath}/admin/AskingForm.do";
 }
 function fn_goQnaList(){
 	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
@@ -31,7 +31,7 @@ function fn_goQnaList(){
 <!-- 전체 게시글 출력 -->
 	
 <div id="head-container">
-	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goBoardForm();">1:1문의</div>
+	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingForm();">1:1문의</div>
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->

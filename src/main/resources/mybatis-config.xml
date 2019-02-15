@@ -17,6 +17,15 @@
 				   
 		<typeAlias type="com.kh.god.storeInfo.model.vo.StoreInfo"
 				   alias="storeInfo"/>
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.Event"
+				   alias="event"/>	 
+		
+		<typeAlias type="com.kh.god.admin.model.vo.Ad"
+				   alias="ad"/>	  
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.QnaBoard"
+				   alias="qnaBoard"/>	
 	
 	</typeAliases>
 	

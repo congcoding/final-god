@@ -8,6 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.admin.model.vo.Event;
+import com.kh.god.admin.model.vo.QnaBoard;
+
 @Repository
 public class AdminDaoImpl implements AdminDao {
 	@Autowired
@@ -22,6 +25,32 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public int countBoardList() {
 		return sqlSession.selectOne("admin.countBoardList");
+	}
+
+	@Override
+	public List<Map<String, String>> selectEventList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventList() {
+		return sqlSession.selectOne("admin.countEventList");
+	}
+
+	@Override
+	public int getLastEventNo() {
+		return sqlSession.selectOne("admin.getLastEventNo");
+	}
+
+	@Override
+	public int insertEvent(Event event) {
+		return sqlSession.insert("admin.insertEvent",event);
+	}
+
+	@Override
+	public QnaBoard qnaBoardView(int boardNo) {
+		return sqlSession.selectOne("admin.qnaBoardView",boardNo);
 	}
 	
 

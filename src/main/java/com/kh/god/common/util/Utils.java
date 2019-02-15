@@ -65,7 +65,18 @@ public class Utils {
 		
 		return sdf.format(new Date())+"_"+rndNum+"."+ext;
 	}
+
 	
+	public static String getRenamedEventFileName(String fName,String bs, int eventNo) {
+		//확장자 분리
+		String ext = fName.substring(fName.lastIndexOf(".")+1);
+		if(bs.equals("s")) {
+			return eventNo+"_Small."+ext;
+		}else {
+			return eventNo+"_Big."+ext;
+		}
+		
+	}
 	
 
 }
