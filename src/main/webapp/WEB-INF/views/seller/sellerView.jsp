@@ -3,12 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-
-<fmt:requestEncoding value="UTF-8" />
+<fmt:requestEncoding value="UTF-8"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="" name=""/>
+	<jsp:param value="" name="pageTitle"/>
 </jsp:include>
-
 <style>
 
 div#MemberEnroll-container{
@@ -91,26 +89,20 @@ span#passworderror3{
 
 </style>
 
-
 <div id="MemberEnroll-container">
-	<h2>사업자 회원 가입</h2>
+	<h2>사업자 정보 수정</h2>
 	<br />
 	<hr />	
 	<br />
-	
-	<form name="sellerEnrollFrm" action="${pageContext.request.contextPath}/seller/sellerEnrollEnd.do" 
+	<form name="sellerEnrollFrm" action="${pageContext.request.contextPath}/seller/sellerUpdate.do" 
 		  method="post" 
 		  onsubmit="return validate();" >
-		<!-- 프로필 사진 -->
-		
-		
-		
-		
+	
 		<!-- 아이디 -->
 		<div class="form-group row">
     		<label for="inputSellerId" class="col-sm-3">아이디</label>
     		<div>
-      			<input type="text" class="form-control" id="inputSellerId" name="sellerId" placeholder="6~16자 영문,숫자">
+      			<input type="text" class="form-control" id="inputSellerId" value="${sellerId}" disabled="disabled">
     		</div>
     		<!-- 중복 관련 체크  -->
     		<span class="guide ok" id="ok">이 아이디는 사용 가능합니다.</span>
@@ -331,6 +323,5 @@ $("#selectEmailAddress").on("change", function(){
 
 
 
-
-
+		
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	

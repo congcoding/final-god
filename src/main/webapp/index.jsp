@@ -38,7 +38,6 @@ div#search-container{
 function categoryList(item){
 	var categoryNo = $(item).attr("name");
     location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
-	console.log("카테고리번호 왔니? [", categoryNo, "]");
 }
 </script>
 
@@ -93,7 +92,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="2">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/pizza.png" >
 			  <div class="card-img-overlay">
@@ -102,7 +101,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="3">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/jokbal_bossam.png" >
 			  <div class="card-img-overlay">
@@ -111,7 +110,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="4">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/snack.png" >
 			  <div class="card-img-overlay">
@@ -120,7 +119,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="5">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/chinese.png" >
 			  <div class="card-img-overlay">
@@ -129,7 +128,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="6">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/japanese.png" >
 			  <div class="card-img-overlay">
@@ -138,7 +137,7 @@ function categoryList(item){
 			</a>
 		</div>
 		
-		<div class="card bg-white text-white">
+		<div class="card bg-white text-black">
 			<a onclick="categoryList(this);" name="7">
 			  <img class="card-img" src="${pageContext.request.contextPath }/resources/images/korean.png" >
 			  <div class="card-img-overlay">

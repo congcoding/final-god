@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface StoreInfoService {
 
-	int selectStoreInfoTotalContents();
+	int selectStoreInfoTotalContents(int categoryNo);
 
 	List<Map<String, String>> selectStoreInfoList(int cPage, int numPerPage, int categoryNo);
 

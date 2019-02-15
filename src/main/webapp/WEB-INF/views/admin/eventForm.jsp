@@ -16,8 +16,6 @@
 
 <!-- datepicker http://www.nextree.co.kr/p9887/ -->
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<link rel="stylesheet" href="/resources/demos/style.css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <style>
@@ -38,11 +36,6 @@ $(function(){
 
 /* textarea에도 required속성을 적용가능하지만, 공백이 입력된 경우 대비 유효성검사를 실시함. */
 function validate(){
-	var content = $("[name=boardContent]").val();
-	if(content.trim().length==0){
-		alert("내용을 입력하세요");
-		return false;
-	}
 	return true;
 }
 
@@ -93,10 +86,10 @@ $(function() {
 
           <!-- Page Heading -->
          <div id="board-container">
-		<form name="boardFrm" action="${pageContext.request.contextPath}/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
+		<form name="eventFrm" action="${pageContext.request.contextPath }/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 			<input type="text" class="form-control" placeholder="제목" name="eventTitle" id="eventTitle" required>
 			<div class="input-group" style="width:200px; display:inline-block; ">
-				  <select class="custom-select" id="inputGroupSelect04" style="width:200px;">
+				  <select class="custom-select" name="discount" id="discount" style="width:200px;">
 				    <option selected>할인</option>
 				    <option value="1000">1000원 할인</option>
 				    <option value="2000">2000원 할인</option>
@@ -116,7 +109,7 @@ $(function() {
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="eventSmall" multiple>
-			    <label class="custom-file-label" for="upFile1">파일을 선택하세요</label>
+			    <label class="custom-file-label" for="eventSmall">파일을 선택하세요</label>
 			  </div>
 			</div>
 			<div class="input-group mb-3" style="padding:0px;">
@@ -125,7 +118,7 @@ $(function() {
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="eventBig" multiple>
-			    <label class="custom-file-label" for="upFile2">파일을 선택하세요</label>
+			    <label class="custom-file-label" for="eventBig">파일을 선택하세요</label>
 			  </div>
 			</div>
 			

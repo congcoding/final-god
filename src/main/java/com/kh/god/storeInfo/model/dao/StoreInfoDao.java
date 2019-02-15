@@ -7,7 +7,7 @@ public interface StoreInfoDao {
 
 	List<Map<String, String>> selectStoreInfoList(int cPage, int numPerPage, int categoryNo);
 
-	int selectStoreInfoTotalContents();
+	int selectStoreInfoTotalContents(int categoryNo);
 
 
 }

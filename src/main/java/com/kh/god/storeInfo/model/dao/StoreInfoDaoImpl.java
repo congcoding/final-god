@@ -21,8 +21,8 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	}
 
 	@Override
-	public int selectStoreInfoTotalContents() {
-		return sqlSession.selectOne("storeInfo.selectStoreInfoTotalContents");
+	public int selectStoreInfoTotalContents(int categoryNo) {
+		return sqlSession.selectOne("storeInfo.selectStoreInfoTotalContents", categoryNo);
 	}
 
 }
