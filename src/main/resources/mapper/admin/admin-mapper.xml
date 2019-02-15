@@ -27,7 +27,7 @@
 	</select>
 	
 	<insert id="insertEvent" parameterType="event">
-		insert into event values(seq_event_eventno.nextval, #{eventTitle}, #{discount}, #{eventBig},default, default,#{amount},#{eventSmall})
+		insert into event values(seq_event_eventno.nextval, #{eventTitle}, #{discount}, #{eventBig}, #{startDate}, #{endDate}, #{amount}, #{eventSmall})
 	</insert>
 	
 	<select id="qnaBoardView" resultType="qnaBoard">

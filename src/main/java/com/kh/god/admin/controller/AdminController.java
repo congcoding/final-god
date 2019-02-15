@@ -2,10 +2,9 @@ package com.kh.god.admin.controller;
 
 
 import java.io.File;
-
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -80,6 +78,7 @@ public class AdminController {
 	
 	@RequestMapping("/admin/insertEvent.do")
 	public ModelAndView insertEvent(@RequestParam(name="eventTitle") String eventTitle,@RequestParam(name="amount") int amount,
+									@RequestParam(name="startDate") Date startDate, @RequestParam(name="endDate") Date endDate,
 									@RequestParam(name="discount") String discount,@RequestParam(name="upFile",required=false) MultipartFile[] upFiles, HttpServletRequest request, ModelAndView mav) {
 	
 
@@ -109,6 +108,8 @@ public class AdminController {
 			event.setEventTitle(eventTitle);
 			event.setDiscount(discount);
 			event.setAmount(amount);
+			event.setStartDate(startDate);
+			event.setEndDate(endDate);
 			event.setEventBig(rBig);
 			event.setEventSmall(rSmall);
 		

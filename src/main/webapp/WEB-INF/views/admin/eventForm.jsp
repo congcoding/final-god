@@ -13,13 +13,18 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="이벤트 등록" name="pageTitle"/>
 </jsp:include>
+
+<!-- datepicker http://www.nextree.co.kr/p9887/ -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 <style>
 div#board-container{width:400px; margin:30px auto; text-align:center;}
 div#board-container input{margin-bottom:15px;}
 /* 부트스트랩 : 파일라벨명 정렬*/
 div#board-container label.custom-file-label{text-align:left;}
-
 </style>
+
 <script>
 
 $(function(){
@@ -43,6 +48,27 @@ $(function(){
         $(this).next(".custom-file-label").html(fileName);
     });
 });
+
+//datepicker
+$(function() {
+    $("#startDatepicker").datepicker({
+    	changeMonth: true, 
+        dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+    	dateFormat: "yy-mm-dd"
+    });
+    
+    $("#endDatepicker").datepicker({
+    	changeMonth: true, 
+        dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+        dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
+        monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
+        monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],
+    	dateFormat: "yy-mm-dd"
+    });
+});
 </script>
  <!-- Page Wrapper -->
   <div id="wrapper">
@@ -62,8 +88,9 @@ $(function(){
          <div id="board-container">
 		<form name="eventFrm" action="${pageContext.request.contextPath }/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 			<input type="text" class="form-control" placeholder="제목" name="eventTitle" id="eventTitle" required>
-			<div class="input-group" style="width:200px; display:inline-block; margin-left:-70px;">
-				  <select class="custom-select" name="discount" id="disount" style="width:200px;">
+
+			<div class="input-group" style="width:200px; display:inline-block; ">
+				  <select class="custom-select" name="discount" id="discount" style="width:200px;">
 				    <option selected>할인</option>
 				    <option value="1000">1000원 할인</option>
 				    <option value="2000">2000원 할인</option>
@@ -72,8 +99,8 @@ $(function(){
 				    <option value="0.8">20% 할인</option>
 				  </select>
 			</div>
-			<div style="width:100px; display:inline-block; margin-left:23px;" >
-		    <input type="number" name="amount" id="amount" min="10"placeholder = "쿠폰 수량" style="height:38px;"/>
+			<div style="width:160px; display:inline-block; margin-left:30px;" >
+		    <input type="number" class="form-control" name="amount" id="amount" min="10"placeholder = "쿠폰 수량" />
 		    </div>
 		
 			<!-- input:file소스 : https://getbootstrap.com/docs/4.1/components/input-group/#custom-file-input -->
@@ -95,6 +122,12 @@ $(function(){
 			    <label class="custom-file-label" for="eventBig">파일을 선택하세요</label>
 			  </div>
 			</div>
+			
+			<input type="text" class="form-control" name="startDate" id="startDatepicker" placeholder="이벤트 시작일" style="width:180px; display:inline-block" />
+			&nbsp;
+			-
+			&nbsp;
+			<input type="text" class="form-control" name="endDate" id="endDatepicker" placeholder="이벤트 종료일" style="width:180px; display:inline-block" />		
 			
 			<br />
 			<input type="submit" class="btn btn-outline-success" value="저장" >
