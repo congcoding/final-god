@@ -4,9 +4,11 @@ import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
+@NoArgsConstructor
 public class QnaBoard {
 	
 	private int boardNo;
