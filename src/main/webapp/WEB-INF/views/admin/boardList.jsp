@@ -19,8 +19,25 @@ div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; 
 div#pageBar{margin:35px auto;}
 </style>
 <script>
-function fn_goBoardForm(){
-	location.href = "${pageContext.request.contextPath}/admin/boardForm.do";
+function fn_goAskingList(){
+	
+	var list = new Array();
+	<c:forEach items="${sellerLoggedIn }" var="sellerLoggedIn">
+		list.push("${sellerLoggedIn.sellerId}");
+	</c:forEach>
+		var list2 = new Array();
+		<c:foreach items="${memberLoggedIn }" var="memberLoggedIn">
+			list.push("${memberLoggedIn.memberId}");
+		</c:foreach>
+	
+	if(list[0] == "" && list2[0] == ""){
+		alert("로그인 후 이용 가능합니다.");
+		return;
+	}else if(list2[0] != null){
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?memberId="+list2[0];	
+	}else if(list[0] != null){
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?sellerId="+list[0];
+	}
 }
 function fn_goQnaList(){
 	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
@@ -31,7 +48,7 @@ function fn_goQnaList(){
 <!-- 전체 게시글 출력 -->
 	
 <div id="head-container">
-	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goBoardForm();">1:1문의</div>
+	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingList();">1:1문의</div>
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->

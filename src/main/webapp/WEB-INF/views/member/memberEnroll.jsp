@@ -10,7 +10,6 @@
 </jsp:include>
 
 <style>
-
 div#MemberEnroll-container{
     margin: 150px auto 0;
 	width : 800px;
@@ -21,23 +20,34 @@ div.form-group input{
 	width : 280px;
 }
 div#inputProfile{
-	border: 1px solid;
-    background-size: cover;
-    width: 150px;
-    height: 150px;
-    z-index: 100;
     position: absolute;
-    left: 71%;
-    top: 27%;
+    z-index: 1;       
+    left: 69%;
+    top: 244px;
 }
+.imgProfile-wrapper{
+	width: 150px;
+    height : 150px;
+    padding: 3px;
+    border: 1px solid #ced4da;
+}
+.profile{
+	background-image: url("${pageContext.request.contextPath }/resources/images/outbox.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	border : 1px solid #ced4da;
+	width : 120px;
+	overflow: hidden;
+	margin-top: 8px;
+}
+input#inputProfileFile{opacity: 0;}
 input#gender1, input#gender2{width : 30px;}
 input#gender2 {margin-left:50px;}
 select#selectYear{ width : 100px;}
 select#selectMonth, select#selectDay{ width : 65px;}
-
-
-
+.checkFavorite{width:30px !important}
 </style>
+		
 
 <div id="MemberEnroll-container">
 	<h2>개인 회원 가입</h2>
@@ -45,43 +55,41 @@ select#selectMonth, select#selectDay{ width : 65px;}
 	<hr />	
 	<br />
 	
-	<form name="memberEnrollFrm" action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" 
+	<form name="memberEnrollFrm" 
+		  action="${pageContext.request.contextPath}/member/memberEnrollEnd.do" 
 		  method="post" 
-		  onsubmit="return validate();" >
+		  onsubmit="return validate();" 
+		  enctype="multipart/form-data">
+
 		<!-- 프로필 사진 -->
-		<div id=inputProfile>
-			<img src="" alt=""/>
-		</div>
-		<div class="input-group mb-3">
-  			<div class="custom-file">
-    		<input type="file" class="custom-file-input" id="inputGroupFile02">
-    			<label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02">Choose file</label>
+		<div id=inputProfile>	
+			<div class="imgProfile-wrapper">
+				<img id="imgProfile" src="${pageContext.request.contextPath }/resources/images/avatar.png" style="width:100%; height:100%">				
   			</div>
-  			<div class="input-group-append">
-    			<span class="input-group-text" id="inputGroupFileAddon02">Upload</span>
-  			</div>
-		</div>
-		
-		
+  			<div class="profile custom-file">
+    			<input type="file" id="inputProfileFile" name="upFile">		
+  			</div>				
+		</div>		
 		
 		<!-- 아이디 -->
 		<div class="form-group row">
-    		<label for="inputMemberId" class="col-sm-3">아이디</label>
+    		<label for="inputMemberId" class="col-sm-3">아이디<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberId" placeholder="6~16자 영문,숫자">
+      			<input type="text" class="form-control" id="inputMemberId" name="memberId" required>
     		</div>
   		</div>	
+  		
 		<!-- 비밀번호 -->
 		<div class="form-group row">
-    		<label for="inputPassword" class="col-sm-3">비밀번호</label>
+    		<label for="inputPassword" class="col-sm-3">비밀번호<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="password" class="form-control" id="inputPassword" placeholder="6~16자 영문,숫자">
+      			<input type="password" class="form-control" id="inputPassword" name = "password" required>
     		</div>
   		</div>
   		<div class="form-group row">
-    		<label for="checkPassword" class="col-sm-3">비밀번호 확인</label>
+    		<label for="checkPassword" class="col-sm-3">비밀번호 확인<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="password" class="form-control" id="checkPassword" placeholder="Password Check">
+      			<input type="password" class="form-control" id="checkPassword">
     		</div>
   		</div>
   		
@@ -89,57 +97,61 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		
 		<!-- 이름 -->
 		<div class="form-group row">
-    		<label for="inputMemberName" class="col-sm-3">이름</label>
+    		<label for="inputMemberName" class="col-sm-3">이름<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberName">
+      			<input type="text" class="form-control" id="inputMemberName" name="memberName" >
     		</div>
   		</div>		
   		
 		<!-- 생년월일 -->
 		<div class="form-group row">
+			<input type="hidden" name="birth" />
 			<label for="selectBirth" class="col-sm-3">생년월일</label>	
-			<select class="form-control selectBirth" id="selectYear" > 
+			<select class="form-control selectBirth" id="selectYear">  
   				<option selected="selected" disabled="disabled">년</option>
   				<c:forEach var="year" begin="1935" end = "2004">
-  					<option value="year">${year }</option>
+  					<option>${year }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectMonth" > 
+			<select class="form-control selectBirth" id="selectMonth"> 
   				<option selected="selected" disabled="disabled">월</option>
   				<c:forEach var="month" begin="01" end = "12">
-  					<option value="month">${month }</option>
+  					<option>${month }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectDay" > 
+			<select class="form-control selectBirth" id="selectDay"> 
   				<option selected="selected" disabled="disabled">일</option>
   				<c:forEach var="day" begin="1" end = "31">
-  					<option value="day">${day }</option>
+  					<option>${day }</option>
   				</c:forEach>
 			</select>
 		</div>
 		
 		<!-- 성별 -->
   		<div class="form-group row">
+  			<input type="hidden" name="gender"/>
+  			
 	  		<label for="checkGender" class="col-sm-3">성별</label>
-	  		<div class="form-check form-check-inline" id="checkGender">
-	  			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender1" value="M">
+	  		<div class="form-check form-check-inline">
+	  			<input class="form-check-input" type="radio" id="gender1" value="M" name="genderCheck">
 	  			<label class="form-check-label col-form-label" for="gender1">남자</label>
 			</div>
 			<div class="form-check form-check-inline">
-	  			<input class="form-check-input" type="radio" name="inlineRadioOptions" id="gender2" value="F">
+	  			<input class="form-check-input" type="radio" id="gender2" value="F" name="genderCheck" checked>
 	  			<label class="form-check-label col-form-label" for="gender2">여자</label>
 			</div>
   		</div>
 		
 		<!-- 이메일 -->
 		<div class="form-group row">
-    		<label for="inputEmail" class="col-sm-3">이메일</label>
+			<input type="hidden" name="email" />
+    		<label for="inputEmail" class="col-sm-3">이메일<span style="color:red;">&nbsp;*</span></label>
     		<div class="form-inline">
-      			<input type="email" class="form-control">
+      			<input type="text" class="form-control" id="inputEmailAddress1">
       			&nbsp;@&nbsp;
-      			<input type="email" class="form-control" id="inputEmailAddress" >
+      			<input type="text" class="form-control" id="inputEmailAddress2" >
       			&nbsp;
       			<select class="form-control" id="selectEmailAddress" >
       				 <option value="">선택하세요</option>
@@ -156,112 +168,135 @@ select#selectMonth, select#selectDay{ width : 65px;}
 	
 		<!-- 핸드폰 번호 -->
 		<div class="form-group row">
-			<label for="selectPhone" class="col-sm-3">핸드폰 번호</label>	
+			<input type="hidden" name="phone" />
+			<label for="phone1" class="col-sm-3">핸드폰 번호<span style="color:red;">&nbsp;*</span></label>	
 			<div class="form-inline">
-				<select class="form-control selectPhone" id="selectPhone" > 
+				<select class="form-control selectPhone" id="phone1"> 
 	  				<option selected="selected">010</option>
 	  				<option>019</option>
 	  				<option>016</option>
 				</select>
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" maxlength="4" style="width: 80px;"
-					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
+				<input class="form-control selectPhone" type="text" id="phone2" 
+					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" maxlength="4" style="width: 80px;" 
-					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
+				<input class="form-control selectPhone" type="text" id="phone3"
+					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
 			</div>
 		</div>
 			
 		
 		<!-- 주소 api -->
 		<div class="form-group row">
-			<label for="address" class="col-sm-3">주소</label>	
-			<input class = "form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
+			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
+			<input class ="form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
 		</div>
 		
 		<!-- 취향 -->
-		<!-- 프로필 사진 -->
-		
+		<div class="form-group row">
+			<label class="col-sm-3">취향</label>
+			
+			<div class="form-inline">						  			
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite0" value="1"><label for="favorite0" class="form-check-label col-form-label">치킨</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite1" value="2"><label for="favorite1" class="form-check-label col-form-label">피자</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite2" value="3"><label for="favorite2" class="form-check-label col-form-label">족발/보쌈</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite3" value="4"><label for="favorite3" class="form-check-label col-form-label">분식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="5"><label for="favorite4" class="form-check-label col-form-label">중식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="6"><label for="favorite4" class="form-check-label col-form-label">일식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="7"><label for="favorite4" class="form-check-label col-form-label">한식</label>&nbsp;
+			</div>
+		</div>
 		<hr />
 		
 		<input type="submit" class="btn btn-outline-success" value="가입하기" >
 	
 	</form>
+	
 </div>
 
 <script>
-/* select창에서 선택한 이메일 주소를 input이메일주소창으로 넣어주기 */
-$("#selectEmailAddress").on("change",function(){
-	$('#inputEmailAddress').val($('#selectEmailAddress').val());	
-});
-/* input이메일 주소창에 수정이 있으면 select이메일 창의 값을 직접입력으로 변경 */
-$("#inputEmailAddress").on("focus",function(){
-	$('#selectEmailAddress').val('etc');
-});
 
-function validate(){ /* 유효성 검사 */
+/* 유효성 검사 */
+function validate(){ 
 	
-	if($("#memberId_").val().trim().length < 4){
+	//아이디 글자수 확인
+	if($("#inputMemberId").val().trim().length < 4){
 	      alert("아이디는 4글자 이상 입력해주세요");
 	      return false;	      
  	}
-	//아이디 중복 검사
-	if($("#idDuplicateCheck").val()==0){
-			alert("아이디 중복검사를 해주세요");
-			return false;
-	}
  	
-	if($("#password_").val() != $("#password2").val()){
+ 	//비밀번호 일치 여부 검사
+	if($("#inputPassword").val() != $("#checkPassword").val()){
 	      alert("비밀번호가 일치하지 않습니다.");
 	      return false;
 	}
-	
+ 	
+ 	/*생년월일 처리*/
+ 	if($('#selectYear').val() != null && $('#selectMonth').val() != null && $('#selectDay').val() != null){
+ 		var year = $('#selectYear').val();
+ 		var month =  $('#selectMonth').val();
+ 		var day = $('#selectDay').val();
+ 			
+ 		if($('#selectMonth').val().length == 1){
+ 			month = '0'+$('#selectMonth').val();
+ 		}
+ 		if($('#selectDay').val().length == 1){
+ 			day = '0'+$('#selectDay').val();
+ 		}
+ 		
+ 	  	var birth	= year + month + day; 	  
+ 	  	$('[name="birth"]').val(birth);	 
+ 	}
+ 	
+ 	/*성별 처리*/
+ 	$("input[name=gender]").val($("input[name=genderCheck]:checked").val());
+ 	
+ 	/*이메일 처리*/
+ 	$("input[name=email]").val($('#inputEmailAddress1').val()+'@'+$('#inputEmailAddress2').val());
+ 	
+ 	/*핸드폰 번호 처리*/
+ 	$("input[name=phone]").val($('#phone1').val()+$('#phone2').val()+$('#phone3').val());
+ 	
+ 
+
 	return true;
 }
 
 
-$("#memberId_").on("keyup",function(){
 
-	   var memberId = $(this).val();	   
-	   //아이디 4글자 이상 작성했을 시 에만 중복여부 검사요청
-	   if(memberId.trim().length<4){
-	      $(".guide").hide();
-	      $("#idDuplicateCheck").val(0);
-	      return;
-	   }
-	   
-	   //ajax요청
-	   $.ajax({
-	      url : "${pageContext.request.contextPath}/member/checkIdDuplicate.do",
-	      method : "get",
-	      data: {memberId : memberId}, //{}: 객체형태  // "memberId="+memberId+"&age=": 직렬화된 형태도 가능
-	      success : function(data){
-	         //console.log(data);
-	         //console.log(JSON.stringify(data));
-	         //console.log(JSON.parse(JSON.stringify(data)));
-	         
-	        /*  if(data === "true"){  --> ajax 사용할때는 text로 왔었다  */
-	       	 if(data.isUsable == true){  //jsonView는 객체로 뱉는중(boolean 으로 뱉고있다. jquery 가 바꿔줌)
-	        	 $(".guide.error").hide();
-	        	 $(".guide.ok").show();
-	        	 $("#idDuplicateCheck").val(1);	        	
-	         }else{ //false
-	        	 $(".guide.error").show();
-	        	 $(".guide.ok").hide();
-	        	 $("#idDuplicateCheck").val(0);
-	         }
-	      },
-	      error : function(){
-	         console.log("ajax요청 에러");
-	      }
-	   });
-	   
+/* 이미지 파일 첨부시 미리보기 */
+function readURL(input) {
+ 
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+ 
+        reader.onload = function (e) {
+            $('#imgProfile').attr('src', e.target.result);
+        }
+ 
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+ /*이미지파일 미리보기 URL 넣기*/
+$("#inputProfileFile").change(function(){
+    readURL(this);
+});
+
+/* select창에서 선택한 이메일 주소를 input이메일주소창으로 넣어주기 */
+$("#selectEmailAddress").on("change",function(){
+	$('#inputEmailAddress2').val($('#selectEmailAddress').val());	
+});
+
+/* input이메일 주소창에 수정이 있으면 select이메일 창의 값을 직접입력으로 변경 */
+$("#inputEmailAddress2").on("focus",function(){
+	$('#selectEmailAddress').val('etc');
 });
 
 
-function execDaumPostcode(){
-	console.log('함수호출');
-	
+
+/*다음 주소 API 관련 함수*/
+function execDaumPostcode(){	
     var popUpAddress = 
 	new daum.Postcode({
 	    oncomplete:function(data){
@@ -285,7 +320,7 @@ function execDaumPostcode(){
    	}).open({
    	    popupName: 'postcodePopup' //팝업 이름을 설정(영문,한글,숫자 모두 가능, 영문 추천)
    	});
-   
+  
 }
 
 

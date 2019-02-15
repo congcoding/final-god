@@ -86,6 +86,22 @@ span#passworderror3{
     top: 4px;
     display: none;
 }
+#inputPassword{
+	display: inline;
+}
+#presentpwd-btn{
+	margin-bottom: 5px;
+	position : relative;
+}
+#presentPasswordOk{
+	position: relative;
+	display: none;
+	left: 16px;
+    top: 4px;
+}
+#newpassword-div{
+	display: none;
+}
 
 </style>
 
@@ -94,41 +110,59 @@ span#passworderror3{
 	<br />
 	<hr />	
 	<br />
-	<form name="sellerEnrollFrm" action="${pageContext.request.contextPath}/seller/sellerUpdate.do" 
-		  method="post" 
-		  onsubmit="return validate();" >
+
 	
 		<!-- 아이디 -->
 		<div class="form-group row">
     		<label for="inputSellerId" class="col-sm-3">아이디</label>
     		<div>
-      			<input type="text" class="form-control" id="inputSellerId" value="${sellerId}" disabled="disabled">
+      			<input type="text" class="form-control" id="inputSellerId" value="${s.sellerId}" disabled="disabled">
     		</div>
-    		<!-- 중복 관련 체크  -->
-    		<span class="guide ok" id="ok">이 아이디는 사용 가능합니다.</span>
-    		<span class="guide error" id="error">이 아이디는 사용할 수 없습니다.</span>
-    		<span class="guide error" id="error2">특수 문자를 제거해 주세요.</span>
-    		<input type="hidden" name="idDuplicateCheck" id="idDuplicateCheck" value="0" />
   		</div>	
   		
 		<!-- 비밀번호 -->
-		<div class="form-group row">
+		<div class="form-group row" >
     		<label for="inputPassword" class="col-sm-3">비밀번호</label>
     		<div>
-      			<input type="password"  name="password" class="form-control" id="inputPassword" placeholder="6~16자 영문,숫자">
+				<button class="btn btn-outline-success" id="update-password" onclick="showPwd();">변경하기</button>
+    		</div>
+  		</div>
+  		<div id="newpassword-div" >
+  		<div class="form-group row">
+    		<label for="inputPassword" class="col-sm-3">현재 비밀번호</label>
+    		<div>
+      			<input type="password"  class="form-control" id="presentPassword" placeholder="6~16자 영문,숫자"> 
+      			<input type="hidden" id="resultCheck" />
+    		</div>
+    		<span class="guide ok" id="presentPasswordOk"></span>
+  		</div>
+		<div class="form-group row">
+    		<label for="inputPassword" class="col-sm-3">새 비밀번호</label>
+    		<div>
+      			<input type="password"   class="form-control" name="password" disabled="disabled" id="inputPassword"  placeholder="6~16자 영문,숫자">
     		</div>
     		<span class="guide error" id="passworderror3">특수문자를 제거해 주세요.</span>
   		</div>
   		<div class="form-group row">
-    		<label for="checkPassword" class="col-sm-3">비밀번호 확인</label>
+    		<label for="checkPassword" class="col-sm-3">새 비밀번호 확인</label>
     		<div>
-      			<input type="password" class="form-control" id="checkPassword" placeholder="Password Check">
+      			<input type="password" class="form-control" id="checkPassword" disabled="disabled" placeholder="Password Check">
     		</div>
     		<span class="guide error" id="passworderror">비밀번호가 일치하지 않습니다.</span>
     		<span class="guide error" id="passworderror2">특수문자를 제거해 주세요.</span>
   		</div>
+  		<div class="form-group row">
+    		<label for="checkPassword" class="col-sm-3">새 비밀번호 확인</label>
+    		<div>
+      			<input type="button" class="" value="수정">
+    		</div>
+  		</div>
+  		</div>
   		
 		<hr />
+			<form name="sellerUpdateFrm" 
+		  method="post" 
+		  onsubmit="return validate();" >
 		
 		<!-- 이름 -->
 		<div class="form-group row">
@@ -194,6 +228,8 @@ span#passworderror3{
 
 function validate(){ /* 유효성 검사 */
 	
+	$("#sellerUpdateFrm").attr("action", "${pageContext.request.contextPath}/seller/sellerUpdate.do");
+	
 	if($("#inputSellerId").val().trim().length < 7){
 	      alert("아이디는 6글자 이상 입력해주세요");
 	      return false;	      
@@ -202,11 +238,7 @@ function validate(){ /* 유효성 검사 */
 	      return false;	
  		
  	}
-	//아이디 중복 검사
-	if($("#idDuplicateCheck").val()==0){
-			alert("아이디 중복검사를 해주세요");
-			return false;
-	}
+	
  	
 	if($("#password_").val() != $("#password2").val()){
 	      alert("비밀번호가 일치하지 않습니다.");
@@ -221,7 +253,7 @@ function validate(){ /* 유효성 검사 */
 	
 	
 	return true;
-}
+};
 
 
 $("#inputSellerId").on("keyup",function(){
@@ -315,6 +347,52 @@ $("#selectEmailAddress").on("change", function(){
 	
 });
 
+
+function showPwd(){
+
+	$("#newpassword-div").toggle();
+};
+
+$("#presentPassword").on("keyup" , function(){
+	
+var presentpwd = $(this).val();
+	
+	console.log(presentpwd);
+	
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/checkPresentPwd.do",
+		method : "post",
+		data : {password : presentpwd},
+		success : function(data){
+			console.log(data);
+			
+			if(data.result === 1) {
+				
+				$("#resultCheck").val(data.result);
+				$("#presentPasswordOk").text(data.msg);	
+				$("#presentPasswordOk").css("color" , "green");	
+				$("#inputPassword").removeAttr("disabled");
+				$("#checkPassword").removeAttr("disabled");
+				$("#presentPasswordOk").show();	
+			
+			}else{
+				$("#resultCheck").val(data.result);
+				$("#presentPasswordOk").text(data.msg);	
+				$("#presentPasswordOk").css("color" , "red");	
+				$("#presentPasswordOk").show();	
+			}
+		
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+			
+		}
+	
+	});
+	
+	
+	});
 
 
 
