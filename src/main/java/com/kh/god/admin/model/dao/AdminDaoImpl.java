@@ -66,6 +66,10 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
+	public Event eventView(int eventNo) {
+		return sqlSession.selectOne("admin.eventView", eventNo);
+	}
+	
 	public int changeSellerbFlagtoN(String sellerId) {
 		return sqlSession.update("admin.changeSellerbFlagtoN",sellerId);
 	}
@@ -110,6 +114,11 @@ public class AdminDaoImpl implements AdminDao {
 	public List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
 		return sqlSession.selectList("admin.selectMemberAllList",null,rowBounds);
+	}
+
+	@Override
+	public int deleteEvent(int eventNo) {
+		return sqlSession.delete("admin.deleteEvent", eventNo);
 	}
 	
 

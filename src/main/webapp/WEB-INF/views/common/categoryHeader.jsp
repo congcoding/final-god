@@ -17,7 +17,6 @@
 <!-- 주소api -->
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <style>
-
 nav.navbar-light{
 	background : #117a8b;
 }
@@ -43,9 +42,6 @@ nav.navbar-light{
 #modal-checkbox{
 	padding-right: 252px;
 }
-#modal-checkbox>span{
-	visibility: hidden;
-}
 .loginbtn{
 	background : none;
 	border : none;
@@ -53,8 +49,22 @@ nav.navbar-light{
 .loginbtn:hover{
 	color : white;
 }
-
-
+#category-nav{
+     position: relative;
+    top: 88px;
+    width: 89%;
+    left: 7%;
+    pointer:cursor;
+}
+#search-container{
+    position: relative;
+    top: 72px;
+    left: 39%;
+}
+hr{
+    top: 102px;
+    position: relative;
+}
 
 </style>
 </head>
@@ -72,7 +82,7 @@ nav.navbar-light{
 		      <li class="nav-item active">
 		        <a class="nav-link" href="${pageContext.request.contextPath}">Home <span class="sr-only">(current)</span></a>
 		      </li>
-		      <li class="nav-item">				    
+		      <li>				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
 		      <li class="nav-item">
@@ -90,17 +100,12 @@ nav.navbar-light{
 	     		onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
 		 </c:if>
 		</c:if>
-		
-		<!-- member 로그인후  -->
 		<c:if test="${memberLoggedIn != null}">
 		  <c:if test="${sellerLoggedIn == null}">
-		  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
-			<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+			<a href="#">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
 			<button class="btn btn-outline-sucess" type="button" onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
 		  </c:if>
 		</c:if>
-		
-		<!-- seller 로그인후  -->
 		<c:if test="${sellerLoggedIn != null}">
 		  <c:if test="${memberLoggedIn == null}">
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;
@@ -137,12 +142,12 @@ nav.navbar-light{
 			    <input type="password" class="form-control" name="password" placeholder="비밀번호" required>
 	      </div>
 	      <!-- 3 -->
+	            
 	      
 	      <div class="modal-footer">
-	      	<div id="modal-checkbox" style="padding-right :80px">
+	      	<div id="modal-checkbox">
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
-	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
@@ -151,6 +156,41 @@ nav.navbar-light{
 	  </div>
 	</div>
 	
+	<!-- 검색창 -->
+    <div id="search-container">
+		   <form class="form-inline my-2 my-lg-0">
+		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		   </form>
+    </div>
+	
+	<!-- 카테고리란 -->
+	<ul class="nav nav-pills nav-fill" id="category-nav">
+	  <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="1" id="chicken">치킨</a>
+	  </li>
+	    <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="2" id="pizza">피자</a>
+	  </li>
+	    <li class="nav-item">
+	    <a class="nav-link"onclick="categoryList(this);" name="3" id="bossam">보쌈/족발</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="4" id="bunsik">분식</a>
+	  </li>
+	    <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="5" id="china">중식</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="6" id="japan">일식</a>
+	  </li>
+	  <li class="nav-item">
+	    <a class="nav-link" onclick="categoryList(this);" name="7" id="korea">한식</a>
+	  </li>
+	</ul>
+	
+	<hr>
+
 	<script>
 	function NoMultiChk(chk){
 		var obj = document.getElementsByName("login");
@@ -164,22 +204,100 @@ nav.navbar-light{
 	function check(){
 		var chk = $("[name='login']:checked").val();
 		
-		if(chk == undefined) {
-			$("#modal-checkbox>span").css("visibility", "visible");
-			return false;
-		}
-		
 		if(chk === "mem"){
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/member/memberLogin.do" );
-			$("#loginFrm").submit();			
+			
 		}else{
+			
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/seller/sellerLogin.do" );
 			$("#loginFrm").submit();
 		}
-		
-		
 	}
-		
+	
+	function categoryList(item){
+		var categoryNo = $(item).attr("name");
+	    location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
+	}
+
+	//치킨눌렀을 시
+	$("#chicken").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").addClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").removeClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").removeClass("active");
+	});
+	//피자
+	$("#pizza").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").addClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").removeClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").removeClass("active");
+	});
+	//보쌈
+	$("#bossam").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").addClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").removeClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").removeClass("active");
+	});
+	//분식
+		$("#bunsik").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").addClass("active");
+		$("#china").removeClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").removeClass("active");
+	});
+	//중식
+		$("#china").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").addClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").removeClass("active");
+	});
+	//일식
+		$("#japan").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").removeClass("active");
+		$("#japan").addClass("active");
+		$("#korea").removeClass("active");
+	});
+	//한식
+		$("#korea").on("click", function(){
+		$("#all").removeClass("active");
+		$("#chicken").removeClass("active");
+		$("#pizza").removeClass("active");
+		$("#bossam").removeClass("active");
+		$("#bunsik").removeClass("active");
+		$("#china").removeClass("active");
+		$("#japan").removeClass("active");
+		$("#korea").addClass("active");
+	});
 	
 	</script>
    <section id="content">
+
+

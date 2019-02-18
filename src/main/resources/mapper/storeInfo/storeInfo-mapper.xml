@@ -19,4 +19,27 @@
 	<select id="getMyStore" resultType="storeInfo">
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
+	
+	<select id="myStoreMenu" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.sellerId = #{sellerId}
+    </select>
+
+   <select id="menuList"  resultType="menu">
+   	select * from menu where storeno = #{storeNo}
+   </select>
+   
+   <select id="storeInfoList"  resultType="storeInfo">
+   	   select * from storeinfo where storeno = #{storeNo}
+   </select>
+	
+   <select id="menuCount"  resultType="_int">
+   	  select count(*) from menu where storeno = #{storeNo}
+   </select>
+ 
+   <select id="getAttachment" resultType="attachment">
+   	select * from menuAttachment where storeNo = #{storeNo}
+   </select>  
+
 </mapper>

@@ -27,6 +27,8 @@ public interface AdminService {
 
 	int countSellerList();
 
+	Event eventView(int eventNo);
+	
 	int changeSellerbFlagtoN(String sellerId);
 
 	int changeSellerbFlagtoY(String sellerId);
@@ -44,5 +46,7 @@ public interface AdminService {
 	int countMemberList();
 
 	List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage);
+
+	int deleteEvent(int eventNo);
 
 }

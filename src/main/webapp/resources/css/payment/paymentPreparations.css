@@ -1,0 +1,45 @@
+@charset "UTF-8";
+#container{
+	width: 50%;
+    margin-top: 6%;
+}
+#totalPrice{
+	border-top: 2px dotted black;
+}
+#totalPriceSpan{
+	    color: red;
+}
+#cart{
+    position: relative;
+    width: 20%;
+    top: -810px;
+    margin-left: 60%;
+   
+}
+.checkOut{
+	background-color: #fff8eb;
+}
+
+#container{
+    width:100%;
+    height:100%;
+}
+ 
+#container #deliveryInformation{ 
+    width:647px;
+    height:300px;
+    margin:0 auto;
+    margin-left: 25%;
+}
+#orderEndBtn{
+	width:100%;
+}
+#telWarning{
+	color:red;	
+    display: none;
+}
+#addressWarning{
+	color:red;	
+    display: none;
+	
+}

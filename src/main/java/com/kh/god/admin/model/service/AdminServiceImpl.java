@@ -62,6 +62,10 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
+	public Event eventView(int eventNo) {
+		return adminDao.eventView(eventNo);
+	}
+	
 	public int changeSellerbFlagtoN(String sellerId) {
 		return adminDao.changeSellerbFlagtoN(sellerId);
 	}
@@ -104,6 +108,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage) {
 		return adminDao.selectMemberAllList(cPage,numPerPage);
+	}
+
+	@Override
+	public int deleteEvent(int eventNo) {
+		return adminDao.deleteEvent(eventNo);
 	}
 
 }

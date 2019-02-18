@@ -44,6 +44,11 @@
 		select count(*) as cnt from seller
 	</select>
 	
+
+	<select id="eventView" resultType="event">
+		select * from event where eventNo = #{eventNo}
+	</select>
+
 	<update id="changeSellerbFlagtoN">
 		update seller set blackFlag='N' where sellerId = #{sellerId }
 	</update>
@@ -78,9 +83,14 @@
 	<select id="selectMemberAllList" resultMap="memberMap">
 		select * from member where delflag = 'N'
 	</select>
-	
+
 	<resultMap type="map" id="memberMap">
 	</resultMap>
+	
+	<delete id="deleteEvent" parameterType="_int">
+		delete event where eventNo=#{eventNo}
+	</delete>
+
 	
 </mapper>
 
