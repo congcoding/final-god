@@ -1,6 +1,7 @@
 package com.kh.god.seller.model.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class SellerDaoImpl implements SellerDao {
 	public List<StoreInfo> myStore(String sellerId) {
 		
 		return sqlSession.selectList("storeInfo.getMyStore", sellerId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo) {
+		
+		return sqlSession.selectList("storeInfo.storeInfoList",storeNo);
 	}
 
 }
