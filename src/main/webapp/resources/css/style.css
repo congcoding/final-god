@@ -1,9 +1,5 @@
 @CHARSET "UTF-8";
-body {
-	font-family:"휴먼모음T";
-}
 
-div, aside, footer {padding:10px;}
 
 /********** 전체컨테이너 **********/
 div#container	{padding:0;}
@@ -11,6 +7,7 @@ div#container	{padding:0;}
 /********** header **********/
 header div#header-container {height:100px;}
 header div#header-container h2 	{margin:30px 10px 0px 10px;}
+
 
 
 /********** content **********/

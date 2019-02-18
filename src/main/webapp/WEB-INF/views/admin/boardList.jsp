@@ -1,4 +1,4 @@
-﻿<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
@@ -12,24 +12,38 @@ input#btn-add{float:right; margin: 0 0 15px;}
 table#tbl-board tr th{text-align:center;}
 table#tbl-board tr td{text-align:center;}
 a {text-decoration:none;}
-table#tbl-board{margin-left: 300px; width : 500px; margin-top:10px;}
-div#container{margin-top:80px; margin-left : 50px; width : 900px; height:50px;}
-div#qnacontainer{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;}
-div#asking{margin-top:-50px; margin-left : 600px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;}
+table#tbl-board{ width : 500px; margin:-35px auto;}
+div#head-container{margin:70px auto; width : 900px; height:50px;}
+div#qna{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;display: table-cell;vertical-align: middle;}
+div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
+div#pageBar{margin:35px auto;}
 </style>
 <script>
-function fn_goBoardForm(){
-	location.href = "${pageContext.request.contextPath}/admin/boardForm.do";
+function fn_goAskingList(){
+	if("${memberLoggedIn }" != ""){
+		var memberId= "${memberLoggedIn.memberId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+memberId;	
+	}else if("${sellerLoggedIn }" != ""){
+		var sellerId = "${sellerLoggedIn.sellerId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+sellerId;
+	}else if("${sellerLoggedIn }" == "" && "${memberLoggedIn }" == ""){
+		alert("로그인 후 이용 가능합니다.");
+		return;
+	}
 }
 function fn_goQnaList(){
-	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
+	location.href = "${pageContext.request.contextPath}/admin/qnaboard.do";
 }
 </script>
+
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->
-	<div id="container">
-	<div id="qnacontainer" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goBoardForm();">1:1문의</div>
-	</div>
+	
+<div id="head-container">
+	<div id="qna" class="alert-info" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingList();">1:1문의</div>
+</div>
+<section id="board-container" class="container">
+<!-- 전체 게시글 출력 -->
 	<table id="tbl-board" class="table table-borderless table-hover">
 		<thead class="thead-light">
 			<tr>
@@ -61,8 +75,10 @@ function fn_goQnaList(){
 		int numPerPage = (int)request.getAttribute("numPerPage");
 		int cPage = (int)request.getAttribute("cPage");
 	%>
-	
+
+	<div id="pageBar">
 	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"qnaboard.do") %>
+	</div>
 		
 	<!-- 페이지바  -->
 </section> 

@@ -12,4 +12,88 @@
 		select count(*) as cnt from qnaboard
 	</select>
 	
+	<select id="selectEventList" resultMap = "eventMap">
+		select * from event order by eventNo desc
+	</select>
+	<resultMap type="map" id="eventMap">
+	</resultMap>
+	
+	<select id="countEventList" resultType="_int">
+		select count(*) as cnt from event
+	</select>
+	
+	<select id="getLastEventNo" resultType="_int">
+		select last_number from user_sequences where sequence_name='SEQ_EVENT_EVENTNO'
+	</select>
+	
+	<insert id="insertEvent" parameterType="event">
+		insert into event values(seq_event_eventno.nextval, #{eventTitle}, #{discount}, #{eventBig}, #{startDate}, #{endDate}, #{amount}, #{eventSmall})
+	</insert>
+	
+	<select id="qnaBoardView" resultType="qnaBoard">
+		select * from qnaboard where boardNo = #{boardNo }
+	</select>
+	
+	<select id="selectSellerAllList" resultMap="sellerMap">
+		select * from seller
+	</select>
+	<resultMap type="map" id="sellerMap">
+	</resultMap>
+	
+	<select id="countSellerList" resultType="_int">
+		select count(*) as cnt from seller
+	</select>
+	
+
+	<select id="eventView" resultType="event">
+		select * from event where eventNo = #{eventNo}
+	</select>
+
+	<update id="changeSellerbFlagtoN">
+		update seller set blackFlag='N' where sellerId = #{sellerId }
+	</update>
+	
+	<update id="changeSellerbFlagtoY">
+		update seller set blackFlag='Y' where sellerId = #{sellerId }
+	</update>
+	
+	<select id="selectQNAList" resultType="qnaBoard">
+		select * from qnaboard where boardWriter = #{boardWriter } order by boardno desc
+	</select>
+	<select id="countQNAList" resultType="_int">
+		select count(*) as cnt from qnaboard where boardWriter = #{boardWriter }
+	</select>
+	
+	<insert id="insertAsking" parameterType="qnaBoard">
+		insert into qnaboard(boardNo, boardTitle,boardContent,boardWriter,category) values(seq_qnaboard_boardno.nextval,#{boardTitle },#{boardContent },#{boardWriter },'asking')
+	</insert>
+	
+	<select id="boardRefList" resultType="qnaBoard">
+		select * from qnaboard where boardlevel = 2
+	</select>
+	
+	<select id="qnaBoardRefView" resultType="qnaBoard">
+		select * from qnaboard where boardNo = #{boardNo }
+	</select>
+	
+	<select id="countMemberList">
+		select count(*) as cnt from member where delflag = 'N'
+	</select>
+	
+	<select id="selectMemberAllList" resultMap="memberMap">
+		select * from member where delflag = 'N'
+	</select>
+
+	<resultMap type="map" id="memberMap">
+	</resultMap>
+	
+	<delete id="deleteEvent" parameterType="_int">
+		delete event where eventNo=#{eventNo}
+	</delete>
+	
+	<update id="updateEvent" parameterType="event">
+		update event set eventTitle=#{eventTitle}, discount=#{discount}, amount=#{amount}, startDate=#{startDate}, endDate=#{endDate}, eventSmall=#{eventSmall}, eventBig=#{eventBig} where eventNo=#{eventNo}
+	</update>
+	
 </mapper>
+
