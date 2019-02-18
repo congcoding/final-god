@@ -54,25 +54,28 @@
 	</tbody>
 </table>
 <!-- 페이지바 부분 -->
-<%--    <%
+
       int totalContents = (int)request.getAttribute("totalContents");
       int numPerPage = (int)request.getAttribute("numPerPage");
       int cPage = (int)request.getAttribute("cPage");
-   %>
+
    <nav aria-label="Page navigation example">
   	<ul class="pagination justify-content-center">
-   <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "boardList.do")%>   
+  	
+<%-- <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do")%> --%>   
     </ul>
-   </nav> --%>
+   </nav>
 
    
 <script>
 
 $(".storeName").on("click", function(){
 	 if($(".boxEvent").css("display") == "none"){   
-	        jQuery('.boxEvent').show();  
+	        jQuery('.boxEvent').show();
+	        $(".storeName").css("color", "red");
 	    } else {  
-	        jQuery('.boxEvent').hide();  
+	        jQuery('.boxEvent').hide();
+	        $(".storeName").css("color", "black");
 	    } 
 })
 
