@@ -274,7 +274,7 @@ public class SellerController {
     		@RequestParam("tel1") String tel1,
     		@RequestParam("tel2") String tel2,
     		@RequestParam("address1") String address1,
-    		@RequestParam("address2") String address2,) {
+    		@RequestParam("address2") String address2) {
     	System.out.println("@@startChooseAmPm="+startChooseAmPm);
     	return ":/redirect";
     }
