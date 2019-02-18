@@ -17,6 +17,7 @@
 <!-- 주소api -->
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <style>
+
 nav.navbar-light{
 	background : #117a8b;
 }
@@ -41,6 +42,9 @@ nav.navbar-light{
 }
 #modal-checkbox{
 	padding-right: 252px;
+}
+#modal-checkbox>span{
+	visibility: hidden;
 }
 .loginbtn{
 	background : none;
@@ -135,9 +139,10 @@ nav.navbar-light{
 	      <!-- 3 -->
 	      
 	      <div class="modal-footer">
-	      	<div id="modal-checkbox">
+	      	<div id="modal-checkbox" style="padding-right :80px">
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
+	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
@@ -159,6 +164,11 @@ nav.navbar-light{
 	function check(){
 		var chk = $("[name='login']:checked").val();
 		
+		if(chk == undefined) {
+			$("#modal-checkbox>span").css("visibility", "visible");
+			return false;
+		}
+		
 		if(chk === "mem"){
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/member/memberLogin.do" );
 			$("#loginFrm").submit();			
@@ -166,6 +176,8 @@ nav.navbar-light{
 			$("#loginFrm").attr("action","${pageContext.request.contextPath}/seller/sellerLogin.do" );
 			$("#loginFrm").submit();
 		}
+		
+		
 	}
 		
 	

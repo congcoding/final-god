@@ -34,31 +34,24 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+	public List<Menu> myStoreMenu(String sellerId) {
+		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
+		return menu;
+	}
+
+	@Override
 	public List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo) {
 		List<Map<String, Object>> getStoreInfoBystoreNo = sellerDao.getStoreInfoBystoreNo(storeNo);
 		return getStoreInfoBystoreNo;
 	}
-//	@Override
-//	public List<Menu> myStoreMenu(String sellerId) {
-//		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
-//		return menu;
-//	}
-	
-	@Override
-	public List<Map<String, String>> myStoreMenu(int cPage, int numPerPage, String sellerId) {
-		return sellerDao.myStoreMenu(cPage, numPerPage, sellerId);
-	}
 
-	@Override
-	public int selectSellerMenuTotalContents(String sellerId) {
-		return sellerDao.selectSellerMenuTotalContents(sellerId);
-	}
 
 	@Override
 	public List<Attachment> getAttachment(String storeNo) {
 		// TODO Auto-generated method stub
 		return sellerDao.getAttachment(storeNo);
 	}
+
 
 
 	
