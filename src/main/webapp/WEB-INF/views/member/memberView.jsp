@@ -52,11 +52,44 @@ select#selectMonth, select#selectDay{ width : 65px;}
 <script>
 
 $(function(){
+	//프로필사진
+	if('${m.renamedFile}' != null){
+		$('#imgProfile').attr('src',
+							  "${pageContext.request.contextPath }/resources/upload/member/${m.renamedFile}");
+	}else{
+		$('#imgProfile').attr('src',"${pageContext.request.contextPath }/resources/images/avatar.png");
+	}
+	
+	
+	//생년월일
+	var birth = '${m.birth}';
+	var year = birth.substr(0,4);
+	var month = birth.substr(4,2);
+	var day = birth.substr(6,2);
+	
+	if(month.substr(0,1) == 0){
+		month = month.substr(1,1);
+	}
+	if(day.substr(0,1) == 0){
+		day = day.substr(1,1);
+	}
+
+	$('#selectYear').val(year);
+	$('#selectMonth').val(month);
+	$('#selectDay').val(day);
+	
+	//핸드폰
 	var phoneArr = '${m.phone}'.split('-');
 	$('#phone1').val(phoneArr[0]);
 	$('#phone2').val(phoneArr[1]);
 	$('#phone3').val(phoneArr[2]);
 	
+	//이메일
+	var emailArr = '${m.email}'.split('@');
+	$('#inputEmailAddress1').val(emailArr[0]);
+	$('#inputEmailAddress2').val(emailArr[1]);
+	
+	//취향
 	<c:forEach items = "${m.favorite}" var="favorite" varStatus="vs">
 		$('input:checkbox[name="favorite"]').each(function() {
 		    if(this.value == "${favorite}")
@@ -86,7 +119,7 @@ $(function(){
 		<!-- 프로필 사진 -->
 		<div id=inputProfile>	
 			<div class="imgProfile-wrapper">
-				<img id="imgProfile" src="${pageContext.request.contextPath }/resources/images/avatar.png" style="width:100%; height:100%">				
+				<img id="imgProfile" style="width:100%; height:100%">				
   			</div>
   			<div class="profile custom-file">
     			<input type="file" id="inputProfileFile" name="upFile">		
@@ -121,7 +154,8 @@ $(function(){
 		<div class="form-group row">
     		<label for="inputMemberName" class="col-sm-3">이름</label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberName" name="memberName" value="${m.memberName }" readonly>
+      			<input type="text" class="form-control" id="inputMemberName" name="memberName" 
+      				   value="${m.memberName }" readonly>
     		</div>
   		</div>		
   		
@@ -129,21 +163,21 @@ $(function(){
 		<div class="form-group row">
 			<input type="hidden" name="birth" />
 			<label for="selectBirth" class="col-sm-3">생년월일</label>	
-			<select class="form-control selectBirth" id="selectYear">  
+			<select class="form-control selectBirth" id="selectYear" disabled>  
   				<option selected="selected" disabled="disabled">년</option>
   				<c:forEach var="year" begin="1935" end = "2004">
   					<option>${year }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectMonth"> 
+			<select class="form-control selectBirth" id="selectMonth" disabled> 
   				<option selected="selected" disabled="disabled">월</option>
-  				<c:forEach var="month" begin="01" end = "12">
+  				<c:forEach var="month" begin="1" end = "12">
   					<option>${month }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectDay"> 
+			<select class="form-control selectBirth" id="selectDay" disabled> 
   				<option selected="selected" disabled="disabled">일</option>
   				<c:forEach var="day" begin="1" end = "31">
   					<option>${day }</option>
@@ -176,7 +210,7 @@ $(function(){
 		<!-- 핸드폰 번호 -->
 		<div class="form-group row">
 			<input type="hidden" name="phone" />
-			<label for="phone1" class="col-sm-3">핸드폰 번호<span style="color:red;">&nbsp;*</span></label>	
+			<label for="phone1" class="col-sm-3">핸드폰 번호</label>	
 			<div class="form-inline">
 				<select class="form-control selectPhone" id="phone1"> 
 	  				<option>010</option>
@@ -195,8 +229,9 @@ $(function(){
 		
 		<!-- 주소 api -->
 		<div class="form-group row">
-			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
-			<input class = "form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
+			<label for="address" class="col-sm-3">주소</label>	
+			<input class = "form-control" type="text" name="address" id="address" 
+				   value="${m.address }" onclick="execDaumPostcode();"/>		
 		</div>
 		
 		<!-- 취향 -->

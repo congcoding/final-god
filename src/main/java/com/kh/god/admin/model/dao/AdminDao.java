@@ -40,6 +40,5 @@ public interface AdminDao {
 	List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId);
 
 	int countSellrQNAList(String sellerId);
->>>>>>> 5171ec7cf583703d5a3541cc212af2931641206d
 
 }
