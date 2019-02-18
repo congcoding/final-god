@@ -20,6 +20,7 @@ div#event-container{width:700px; margin:30px auto; text-align:center;}
 div#event-container input{margin-bottom:15px;}
 #tblEvent th{width:150px; vertical-align:middle}
 #tblEvent td{width:550px;}
+#tblEvent td img:hover{cursor:pointer;}
 </style>
 
 <script>
@@ -28,10 +29,9 @@ $(function(){
 	$("#eventControl").addClass("active");	
 	$("#toDoList").addClass("active");	
 });
-function fileDownload(oName, rName){
-	//한글파일명이 있을 수 있으므로, 명시적으로 encoding
-	oName = encodeURIComponent(oName);
-	location.href="${pageContext.request.contextPath}/board/fileDownload.do?oName="+oName+"&rName="+rName;
+
+function fileDownload(fileName){
+	location.href="${pageContext.request.contextPath}/admin/eventFileDownload.do?fileName="+fileName;
 }
 </script>
 
@@ -81,17 +81,18 @@ function fileDownload(oName, rName){
 					</tr>
 					<tr>
 						<th>썸네일</th>
-						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventSmall }" width="500px" /></td>
+						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventSmall }" width="500px" onclick="fileDownload('${event.eventSmall}')"/></td>
 					</tr>
 					<tr>
 						<th>컨텐츠</th>
-						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventBig }" width="500px" /></td>
+						<td><img src="${pageContext.request.contextPath }/resources/upload/event/${event.eventBig }" width="500px" onclick="fileDownload('${event.eventBig}')"/></td>
 					</tr>
 					
 				</table>
 			
 				<br />
-				<input type="submit" class="btn btn-outline-success" value="수정/삭제" >
+				<input type="button" id="updateEvent" class="btn btn-outline-success" value="수정" >
+				<input type="button" id="deleteEvent" class="btn btn-outline-success" value="삭제" >
 			</form>
 		  </div>
 
@@ -122,3 +123,13 @@ function fileDownload(oName, rName){
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
 
+<script>
+$("#updateEvent").on("click", function(){
+	
+});
+
+$("#deleteEvent").on("click", function(){
+	if(!confirm("정말 삭제하시겠습니까?")) return;
+	location.href="${pageContext.request.contextPath}/admin/deleteEvent.do?eventNo="+${event.eventNo};
+});
+</script>

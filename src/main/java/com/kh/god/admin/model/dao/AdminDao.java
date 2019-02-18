@@ -41,4 +41,6 @@ public interface AdminDao {
 
 	int countSellrQNAList(String sellerId);
 
+	int deleteEvent(int eventNo);
+
 }

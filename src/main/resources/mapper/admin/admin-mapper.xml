@@ -71,5 +71,9 @@
 		select count(*) as cnt from seller where sellerId = #{sellerId }
 	</select>
 	
+	<delete id="deleteEvent" parameterType="_int">
+		delete event where eventNo=#{eventNo}
+	</delete>
+	
 </mapper>
 

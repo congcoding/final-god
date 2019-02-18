@@ -100,6 +100,11 @@ public class AdminDaoImpl implements AdminDao {
 	public int countSellrQNAList(String sellerId) {
 		return sqlSession.selectOne("admin.countSellerQNAList",sellerId);
 	}
+
+	@Override
+	public int deleteEvent(int eventNo) {
+		return sqlSession.delete("admin.deleteEvent", eventNo);
+	}
 	
 
 }

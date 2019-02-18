@@ -1,13 +1,19 @@
 package com.kh.god.admin.controller;
 
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,6 +203,78 @@ public class AdminController {
 		model.addAttribute("list",list);
 		model.addAttribute("totalContents",totalContents);
 		return "admin/askingList";
+	}
+	
+	@RequestMapping("/admin/eventFileDownload.do")
+	public void fileDownload(@RequestParam String fileName, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+		
+		//파일 입출력 준비
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/event");
+		
+		//입력 스트림
+		File f = new File(saveDirectory+"/"+fileName);
+		FileInputStream fis = new FileInputStream(f);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		
+		//출력스트림
+		ServletOutputStream sos = response.getOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(sos);
+		
+		//전송할 파일명작성
+		String resFileName = "";
+		
+		//요청브라우저에 따른 분기를 처리
+		boolean isMSIE = request.getHeader("user-agent").indexOf("MSIE") != -1 //요청브라우저를 가져오는 key
+						|| request.getHeader("user-agent").indexOf("Trident") != -1; //IE10 이전(MSIE), 이후(Trident)
+		if(isMSIE) {
+			//utf-8인코딩처리를 명시적으로 해줌
+			resFileName = URLEncoder.encode(fileName, "UTF-8");
+			//+로 처리된 공백을 다시 한 번 %20(공백의미)로 치환
+			resFileName = resFileName.replaceAll("\\+", "%20");
+		}else {
+			resFileName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1"); //톰캣 기본 인코딩타입			
+		}
+		
+		//파일전송
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment;filename="+resFileName);
+		
+		//파일쓰기
+		int read = -1;
+		while((read=bis.read()) != -1) {
+			bos.write(read);
+		}
+		bos.close();
+		bis.close();
+	}
+	
+	@RequestMapping("/admin/deleteEvent.do")
+	public ModelAndView deleteEvent(@RequestParam("eventNo") int eventNo, HttpServletRequest request, ModelAndView mav){
+		
+		Event e = adminService.eventView(eventNo);
+		int result = adminService.deleteEvent(eventNo);
+
+		String loc = "/admin/eventList.do";
+		String msg = "";
+		
+		if(result>0) {
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/event");
+			File eventSmall = new File(saveDirectory+"/"+e.getEventSmall());
+			File eventBig = new File(saveDirectory+"/"+e.getEventBig());
+			System.out.println(eventSmall+"/"+eventBig);
+			eventSmall.delete();
+			eventBig.delete();
+			msg = "이벤트 삭제 성공";
+		}
+		else {
+			msg = "이벤트 삭제 실패";
+		}
+		
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName("common/msg");
+		
+		return mav;
 	}
 	
 }

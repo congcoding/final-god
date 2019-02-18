@@ -41,4 +41,6 @@ public interface AdminService {
 
 	int countSellerQNAList(String sellerId);
 
+	int deleteEvent(int eventNo);
+
 }

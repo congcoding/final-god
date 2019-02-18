@@ -95,4 +95,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.countSellrQNAList(sellerId);
 	}
 
+	@Override
+	public int deleteEvent(int eventNo) {
+		return adminDao.deleteEvent(eventNo);
+	}
+
 }
