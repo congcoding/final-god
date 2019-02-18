@@ -249,7 +249,33 @@ public class SellerController {
 		return "seller/sellerView";
 	}
 	
-
+    @RequestMapping("/seller/goMyStoreOrder.do")
+    public String goMyStoreOrder(){
+    	return "seller/MyStoreOrder";
+    }
 	
+    @RequestMapping("/seller/goUpdateMyStore.do")
+    public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
+    	//' ' 제거 
+    	storeNo = storeNo.replace("'", "");
+  
+    	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);    	
+    	model.addAttribute("store", store);
+    	return "seller/updateMyStoreInfo";
+    }
 
+    //내 가게 정보수정
+    @RequestMapping("/seller/updateStore.do")
+    public String updateStore(@RequestParam("startChooseAmPm") String startChooseAmPm,
+    		@RequestParam("startTime") String startTime,
+    		@RequestParam("endChooseAmPm") String endChooseAmPm,
+    		@RequestParam("endTime") String endTime,
+    		@RequestParam("locationStartNum") String locationStartNum,
+    		@RequestParam("tel1") String tel1,
+    		@RequestParam("tel2") String tel2,
+    		@RequestParam("address1") String address1,
+    		@RequestParam("address2") String address2) {
+    	System.out.println("@@startChooseAmPm="+startChooseAmPm);
+    	return ":/redirect";
+    }
 }

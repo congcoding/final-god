@@ -23,14 +23,18 @@ table{
 .storeName{
 	width: 400px;
 	cursor:pointer;
+    margin-bottom: 27%;
+}
+.storeName:hover {
+   text-decoration: underline; 
 }
 .boxEvent{
-	top: 15px;
+	top: -93px;
     position: relative;
     background-color: rgb(224,224,224);
     height: 49px;
     text-align: center;
- 
+    display:none;
 	
 }
 
@@ -49,4 +53,28 @@ table{
     left: 726px;
     width: 523px;
 }
+.storeOrder{
+	    position: relative;
+    left: -39%;
+    top: 12px;
+}
+.orderCount{
+	position: relative;
+    left: 285%;
+    top: -8px;
+}
+.statistics{
+	position: relative;
+    left: 11%;
+    top: -30px;
+}
+.storeUpdate{
+	    position: relative;
+    left: 10%;
+    top: -30px;
+}
+.storeReview{
+	    position: relative;
+    top: -30px;
+    left: 10%;
 }

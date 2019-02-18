@@ -7,13 +7,13 @@
 }
 #cart{
 	top:0px;
-	width: 30%;
+	width: 24%;
 	position: relative;
 	    left: 70%;
 }
 
 #navi{
-	    width: 88%;
+	    width: 84%;
     position: relative;
     left: 10%;
 }
@@ -22,4 +22,25 @@
     position: relative;
     left: 9%;
     top: -179px;
+}
+#menu-container{
+    position: relative;
+    top: 25px;
+    left: -3%;
+        width: 83%;
+
+}
+.card{
+	width: 65%;
+    margin-left: 122px;
+    margin-top: 144px;
+}
+img{
+	width:93px;
+}
+#last-container{
+	    margin-left: 230px;
+}
+.introduce{
+	font-weight: bold;
 }

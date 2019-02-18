@@ -15,6 +15,8 @@ public interface SellerService {
 	
 	List<StoreInfo> myStore(String sellerId);
 
+	List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo);
+
 	List<Map<String, String>> myStoreMenu(int numPerPage, int cPage, String sellerId);
 
 	int selectSellerMenuTotalContents(String sellerId);
