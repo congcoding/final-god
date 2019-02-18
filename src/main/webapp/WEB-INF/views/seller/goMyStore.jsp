@@ -37,22 +37,23 @@
 </table>
 
 <table class="table table-bordered">
-		  <thead>
-		    <tr>
-		      <th scope="col">번호</th>
-		      <th scope="col">메뉴명</th>
-		      <th scope="col">메뉴가격</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		    <tr>
-		      <th scope="row">1</th>
-		      <td>Mark</td>
-		      <td>Otto</td>
-		    </tr>
-		  </tbody>
-	</table>
-
+	<thead>
+		<tr>
+			<th scope="col">번호</th>
+			<th scope="col">메뉴명</th>
+			<th scope="col">메뉴가격</th>
+		</tr>
+	</thead>
+	<tbody>
+		<c:forEach items="${menu}" var="menu" varStatus="vs">
+			<tr>
+				<th scope="row">${vs.count}</th>
+				<td>${menu.menuName}</td>
+				<td>${menu.menuPrice}</td>
+			</tr>
+		</c:forEach>
+	</tbody>
+</table>
 <!-- 페이지바 부분 -->
 <%--    <%
       int totalContents = (int)request.getAttribute("totalContents");

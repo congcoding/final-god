@@ -99,7 +99,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<div class="form-group row">
     		<label for="inputMemberName" class="col-sm-3">이름<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberName" name="memberName" >
+      			<input type="text" class="form-control" id="inputMemberName" name="memberName" required>
     		</div>
   		</div>		
   		
@@ -177,10 +177,10 @@ select#selectMonth, select#selectDay{ width : 65px;}
 	  				<option>016</option>
 				</select>
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" id="phone2" 
+				<input class="form-control selectPhone" type="text" id="phone2" required
 					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" id="phone3"
+				<input class="form-control selectPhone" type="text" id="phone3" required
 					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
 			</div>
 		</div>
@@ -232,6 +232,7 @@ function validate(){
 	}
  	
  	/*생년월일 처리*/
+ 	var birth = null;
  	if($('#selectYear').val() != null && $('#selectMonth').val() != null && $('#selectDay').val() != null){
  		var year = $('#selectYear').val();
  		var month =  $('#selectMonth').val();
@@ -244,7 +245,7 @@ function validate(){
  			day = '0'+$('#selectDay').val();
  		}
  		
- 	  	var birth	= year + month + day; 	  
+ 	  	birth = year + month + day; 	  
  	  	$('[name="birth"]').val(birth);	 
  	}
  	
@@ -255,10 +256,8 @@ function validate(){
  	$("input[name=email]").val($('#inputEmailAddress1').val()+'@'+$('#inputEmailAddress2').val());
  	
  	/*핸드폰 번호 처리*/
- 	$("input[name=phone]").val($('#phone1').val()+$('#phone2').val()+$('#phone3').val());
+	$("input[name=phone]").val($('#phone1').val()+"-"+$('#phone2').val()+"-"+$('#phone3').val());
  	
- 
-
 	return true;
 }
 

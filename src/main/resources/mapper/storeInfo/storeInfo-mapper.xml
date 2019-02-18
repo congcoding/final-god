@@ -20,6 +20,12 @@
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
 	
+	<select id="myStoreMenu" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where sellerId = #{sellerId}
+    </select>
+
    <select id="menuList"  resultType="menu">
    	select * from menu where storeno = #{storeNo}
    </select>
@@ -32,4 +38,5 @@
    	  select count(*) from menu where storeno = #{storeNo}
    </select>
    
+
 </mapper>
