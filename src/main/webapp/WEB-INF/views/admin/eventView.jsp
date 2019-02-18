@@ -125,7 +125,7 @@ function fileDownload(fileName){
 
 <script>
 $("#updateEvent").on("click", function(){
-	
+	location.href="${pageContext.request.contextPath}/admin/updateEvent.do?eventNo="+${event.eventNo};
 });
 
 $("#deleteEvent").on("click", function(){

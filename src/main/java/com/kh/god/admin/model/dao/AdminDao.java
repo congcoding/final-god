@@ -49,4 +49,6 @@ public interface AdminDao {
 
 	int deleteEvent(int eventNo);
 
+	int updateEvent(Event event);
+
 }

@@ -28,7 +28,6 @@ import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
-import com.kh.god.seller.model.vo.Seller;
 
 @Controller
 public class AdminController {
@@ -340,5 +339,71 @@ public class AdminController {
 		
 		return mav;
 	}
+	
+	@RequestMapping("/admin/updateEvent.do")
+	public String updateEvent(@RequestParam("eventNo") int eventNo, Model model){
+		Event e = adminService.eventView(eventNo);
+		model.addAttribute("event", e);
+		return "admin/eventUpdate";
+	}
+	
+	@RequestMapping("/admin/updateEventEnd.do")
+	public ModelAndView updateEvent(@RequestParam(name="eventNo") int eventNo, @RequestParam(name="eventTitle") String eventTitle,
+			@RequestParam(name="amount") int amount, @RequestParam(name="startDate") Date startDate, @RequestParam(name="endDate") Date endDate,
+			@RequestParam(name="discount") String discount, @RequestParam(name="eventSmall") String eventSmall, @RequestParam(name="eventBig") String eventBig,
+			@RequestParam(name="upFile",required=false) MultipartFile[] upFiles, HttpServletRequest request, ModelAndView mav) {
+
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/event");
+		String rSmall = eventSmall;
+		String rBig = eventBig;
+		
+		if(!upFiles[0].getOriginalFilename().equals("")) {
+			String oSmall = upFiles[0].getOriginalFilename();
+			rSmall = Utils.getRenamedEventFileName(oSmall,"s",eventNo);
+			try {
+				upFiles[0].transferTo(new File(saveDirectory+"/"+rSmall));
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}	
+		}
+		
+		if(!upFiles[1].getOriginalFilename().equals("")) {
+			String oBig = upFiles[1].getOriginalFilename();
+			rBig = Utils.getRenamedEventFileName(oBig,"b",eventNo);
+			try {
+				upFiles[1].transferTo(new File(saveDirectory+"/"+rBig));
+			} catch (IllegalStateException | IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		Event event = new Event();
+		event.setEventNo(eventNo);
+		event.setEventTitle(eventTitle);
+		event.setDiscount(discount);
+		event.setAmount(amount);
+		event.setStartDate(startDate);
+		event.setEndDate(endDate);
+		event.setEventBig(rBig);
+		event.setEventSmall(rSmall);
+		
+		int result = adminService.updateEvent(event);
+		
+		//view
+		
+		String msg = "";
+		if(result>0) {
+			msg="이벤트 수정 성공";
+		}else {
+			msg = "이벤트 수정 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/eventView.do?eventNo="+eventNo);
+		mav.setViewName("common/msg");
+		
+		return mav;
+
+}
 	
 }

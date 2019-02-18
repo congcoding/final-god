@@ -90,7 +90,10 @@
 	<delete id="deleteEvent" parameterType="_int">
 		delete event where eventNo=#{eventNo}
 	</delete>
-
+	
+	<update id="updateEvent" parameterType="event">
+		update event set eventTitle=#{eventTitle}, discount=#{discount}, amount=#{amount}, startDate=#{startDate}, endDate=#{endDate}, eventSmall=#{eventSmall}, eventBig=#{eventBig} where eventNo=#{eventNo}
+	</update>
 	
 </mapper>
 

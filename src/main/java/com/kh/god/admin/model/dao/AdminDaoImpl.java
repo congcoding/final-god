@@ -120,6 +120,11 @@ public class AdminDaoImpl implements AdminDao {
 	public int deleteEvent(int eventNo) {
 		return sqlSession.delete("admin.deleteEvent", eventNo);
 	}
+
+	@Override
+	public int updateEvent(Event event) {
+		return sqlSession.update("admin.updateEvent", event);
+	}
 	
 
 }

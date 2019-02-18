@@ -115,4 +115,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.deleteEvent(eventNo);
 	}
 
+	@Override
+	public int updateEvent(Event event) {
+		return adminDao.updateEvent(event);
+	}
+
 }

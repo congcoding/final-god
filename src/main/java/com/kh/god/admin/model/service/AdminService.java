@@ -49,4 +49,6 @@ public interface AdminService {
 
 	int deleteEvent(int eventNo);
 
+	int updateEvent(Event event);
+
 }
