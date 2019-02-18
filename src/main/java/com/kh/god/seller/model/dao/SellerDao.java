@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.Attachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 public interface SellerDao {
@@ -15,8 +16,10 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
-	List<Map<String, String>> myStoreMenu(int cPage, int numPerPage, String sellerId);
+	List<Menu> myStoreMenu(String sellerId);
 
-	int selectSellerMenuTotalContents(String sellerId);
+	List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo);
+
+	List<Attachment> getAttachment(String storeNo);
 
 }

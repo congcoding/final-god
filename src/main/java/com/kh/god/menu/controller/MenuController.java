@@ -31,11 +31,11 @@ public class MenuController {
 		
 		List<Menu> menuList = menuService.menuList(storeNo);
 		List<StoreInfo> storeInfo = menuService.storeInfoList(storeNo);
-		//int menuCount = menuService.menuCount(storeNo);
-		
-		model.addAttribute(menuList);
-		model.addAttribute(storeInfo);
-		
+		int menuTotalCount = menuService.menuCount(storeNo);
+		model.addAttribute("menuTotalCount",menuTotalCount);
+		model.addAttribute("menuList",menuList);
+		model.addAttribute("storeInfo",storeInfo);
+		System.out.println("@@@"+storeInfo);
 		return "storeInfo/MenuListByStore";	
 	}
 	

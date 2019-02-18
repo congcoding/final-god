@@ -1,9 +1,13 @@
 package com.kh.god.seller.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -17,12 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.common.util.Utils;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.Attachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
@@ -84,7 +92,7 @@ public class SellerController {
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
 			ModelAndView mav , HttpSession session) {
 		if(logger.isDebugEnabled())
-			logger.debug("판매자 로그인 요청!");
+			logger.debug("로그인 요청!");
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
@@ -143,65 +151,27 @@ public class SellerController {
 		return "seller/sellerView";
 	}
 		
-//	//내 가게 
-//	@RequestMapping("/seller/goMyShop.do")
-//	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
-//		
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("내 가게 보기 요청!"); 
-//		}
-//		
-//		List<StoreInfo> store = sellerService.myStore(sellerId);
-//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
-//		
-//		System.out.println("메뉴 나오라" + menu);
-//		
-//		//메뉴 뽑기
-//		//페이지바 만들기
-//		model.addAttribute("store", store);
-//		model.addAttribute("menu", menu);
-//
-//		
-//		
-//		return "seller/goMyStore";
-//
-//	}
-	
 	//내 가게 
 	@RequestMapping("/seller/goMyShop.do")
-	public ModelAndView goMyShop(@RequestParam("sellerId") String sellerId, 
-								 @RequestParam(value = "cPage", defaultValue = "1") int cPage,
-								 ModelAndView mav) {
+	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
 		}
 		
-		int numPerPage = 10;
-		
-		// 업무로직
-		// 1. 내 가게 현황
 		List<StoreInfo> store = sellerService.myStore(sellerId);
 		
-		// 2. 메뉴 보기 (페이징 적용된 것)
-		List<Map<String, String>> menu = sellerService.myStoreMenu(numPerPage, cPage, sellerId);
-		System.out.println("메뉴 나오라" + menu);
+		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
-		// 3. 전체 메뉴 수
-		int totalContents = sellerService.selectSellerMenuTotalContents(sellerId);
+		System.out.println("메뉴 나오라" + menu);
 		
 		//메뉴 뽑기
 		//페이지바 만들기
-		mav.addObject("store", store);
-		mav.addObject("menu", menu);
-		mav.addObject("cPage", cPage);
-		mav.addObject("numPerPage", numPerPage);
-		mav.addObject("totalContents", totalContents);
-		
-		mav.setViewName("seller/goMyStore");
-		
-		return mav;
-		
+		model.addAttribute("store", store);
+		model.addAttribute("menu", menu);
+
+		return "seller/goMyStore";
+
 	}
 	
 	@RequestMapping(value = "/seller/checkPresentPwd.do" , method = RequestMethod.POST)
@@ -251,5 +221,83 @@ public class SellerController {
 	
 
 	
+
+    @RequestMapping("/seller/goUpdateMyStore.do")
+    public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
+    	//' ' 제거 
+    	storeNo = storeNo.replace("'", "");
+  
+    	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);   
+    	List<Attachment> attachment = sellerService.getAttachment(storeNo);
+    	model.addAttribute("store", store);
+    	model.addAttribute("attachment", attachment);
+
+    	return "seller/updateMyStoreInfo";
+    }
+
+    //내 가게 정보수정
+    /*@RequestMapping("/seller/updateStore.do")
+    public String updateStore(@RequestParam("startChooseAmPm") String startChooseAmPm,
+    		@RequestParam("startTime") String startTime,
+    		@RequestParam("endChooseAmPm") String endChooseAmPm,
+    		@RequestParam("endTime") String endTime,
+    		@RequestParam("locationStartNum") String locationStartNum,
+    		@RequestParam("tel1") String tel1,
+    		@RequestParam("tel2") String tel2,
+    		@RequestParam("address1") String address1,
+    		@RequestParam(name="address2" , required = false) String address2,
+    		@RequestParam("thumbImg") MultipartFile upFiles,
+    		HttpServletRequest request, StoreInfo storeInfo
+    		) {
+    	
+    	//파일
+    	try {
+			// 1. 파일업로드 (실제경로를 얻어내는 방법은 세션-서블릿-리얼패스)
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/storeInfo/thumbNail");
+
+			logger.debug("saveDirectory = " + saveDirectory);
+
+			List<Attachment> attachList = new ArrayList<>();
+
+			// MultipartFile 처리
+				if (!upFiles.isEmpty()) {
+					// 사용자가 업로드한 파일명 구하기
+					String originalFileName = upFiles.getOriginalFilename();
+
+					// 서버저장용 파일명
+					String renamedFileName = Utils.getRenamedFileName(originalFileName);
+					logger.debug("renamedFileName = " + renamedFileName);
+
+					// 실제서버에 파일저장
+					try {
+						upFiles.transferTo(new File(saveDirectory + "/" + renamedFileName));
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+
+					// 첨부파일객체 생성. 리스트 추가
+					Attachment attach = new Attachment();
+					attach.setOriginalFileName(originalFileName);
+					attach.setRenamedFileName(renamedFileName);
+					attachList.add(attach);
+				}
+    	} catch (Exception e) {
+		logger.error("썸네일 등록 에러", e);
+		
+	}
+    	
+    	String operatingHours = startChooseAmPm+startTime+"시 ~"+endChooseAmPm+endTime;
+    	String storeTel = locationStartNum+"-"+tel1+"-"+tel2;
+    	String storeAddress = "";
+    	if(!address2.equals("")) {
+    		storeAddress = address1+" "+address2;
+    	} else {
+    		storeAddress = address1;
+    	}
+    	
+    	//int updateThumb = sellerService.updateStoreInfo();
+
+    	return ":/redirect";
+    }*/
 
 }
