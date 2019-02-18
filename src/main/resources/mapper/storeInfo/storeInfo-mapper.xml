@@ -41,6 +41,9 @@
    <select id="menuCount"  resultType="_int">
    	  select count(*) from menu where storeno = #{storeNo}
    </select>
-   
+ 
+   <select id="getAttachment" resultType="attachment">
+   	select * from menuAttachment where storeNo = #{storeNo}
+   </select>  
 
 </mapper>

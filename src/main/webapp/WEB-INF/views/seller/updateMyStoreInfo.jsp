@@ -92,7 +92,7 @@
     </div> 
     <div id="personalday-container">   
   		<label for="inputEmail3" class="col-sm-2 col-form-label">휴무일</label>
-        <input type="num" class="form-control" value="${store.personalDay}" id="storeName" placeholder="고객들에게 보여질 정보에 소개될 휴무일 입니다">  
+        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 보여질 정보에 소개될 휴무일 입니다">  
         </c:forEach>    
 	</div>
 	<br>
@@ -103,7 +103,11 @@
 		  <div id="preview">
 		  <img id="image_section" style="width:300px;height:300px;" src="#" alt="your image" />
 		  </div>
-	      <input type="file" id="imgInput" class="form-control-file" >
+		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb" name="thumb">
+		 		<c:forEach items="${attachment}" var="attachment">
+		    	<option selected onclick="preview('${attachment.renamedFileName}')">${attachment.originalFileName}</option>
+		    	</c:forEach>
+		  </select>
 	</div>
 
  

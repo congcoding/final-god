@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.Attachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -49,6 +50,12 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public int selectSellerMenuTotalContents(String sellerId) {
 		return sqlSession.selectOne("storeInfo.selectSellerMenuTotalContents", sellerId);
+	}
+
+	@Override
+	public List<Attachment> getAttachment(String storeNo) {
+		System.out.println("@@@@@@storeNo="+storeNo);
+		return sqlSession.selectList("storeInfo.getAttachment",storeNo);
 	}
 
 
