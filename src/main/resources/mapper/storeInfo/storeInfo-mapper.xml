@@ -33,10 +33,6 @@
    <select id="storeInfoList"  resultType="storeInfo">
    	   select * from storeinfo where storeno = #{storeNo}
    </select>
-   
-    <select id="selectSellerMenuTotalContents" resultType="_int">
-		SELECT COUNT(*) FROM MENU WHERE STORENO = #{storeNo}
-   </select>
 	
    <select id="menuCount"  resultType="_int">
    	  select count(*) from menu where storeno = #{storeNo}

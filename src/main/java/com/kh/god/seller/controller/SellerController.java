@@ -84,7 +84,7 @@ public class SellerController {
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
 			ModelAndView mav , HttpSession session) {
 		if(logger.isDebugEnabled())
-			logger.debug("판매자 로그인 요청!");
+			logger.debug("로그인 요청!");
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
@@ -143,65 +143,27 @@ public class SellerController {
 		return "seller/sellerView";
 	}
 		
-//	//내 가게 
-//	@RequestMapping("/seller/goMyShop.do")
-//	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
-//		
-//		if(logger.isDebugEnabled()) {
-//			logger.debug("내 가게 보기 요청!"); 
-//		}
-//		
-//		List<StoreInfo> store = sellerService.myStore(sellerId);
-//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
-//		
-//		System.out.println("메뉴 나오라" + menu);
-//		
-//		//메뉴 뽑기
-//		//페이지바 만들기
-//		model.addAttribute("store", store);
-//		model.addAttribute("menu", menu);
-//
-//		
-//		
-//		return "seller/goMyStore";
-//
-//	}
-	
 	//내 가게 
 	@RequestMapping("/seller/goMyShop.do")
-	public ModelAndView goMyShop(@RequestParam("sellerId") String sellerId, 
-								 @RequestParam(value = "cPage", defaultValue = "1") int cPage,
-								 ModelAndView mav) {
+	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
 		}
 		
-		int numPerPage = 10;
-		
-		// 업무로직
-		// 1. 내 가게 현황
 		List<StoreInfo> store = sellerService.myStore(sellerId);
 		
-		// 2. 메뉴 보기 (페이징 적용된 것)
-		List<Map<String, String>> menu = sellerService.myStoreMenu(numPerPage, cPage, sellerId);
-		System.out.println("메뉴 나오라" + menu);
+		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
-		// 3. 전체 메뉴 수
-		int totalContents = sellerService.selectSellerMenuTotalContents(sellerId);
+		System.out.println("메뉴 나오라" + menu);
 		
 		//메뉴 뽑기
 		//페이지바 만들기
-		mav.addObject("store", store);
-		mav.addObject("menu", menu);
-		mav.addObject("cPage", cPage);
-		mav.addObject("numPerPage", numPerPage);
-		mav.addObject("totalContents", totalContents);
-		
-		mav.setViewName("seller/goMyStore");
-		
-		return mav;
-		
+		model.addAttribute("store", store);
+		model.addAttribute("menu", menu);
+
+		return "seller/goMyStore";
+
 	}
 	
 	@RequestMapping(value = "/seller/checkPresentPwd.do" , method = RequestMethod.POST)
@@ -249,33 +211,7 @@ public class SellerController {
 		return "seller/sellerView";
 	}
 	
-    @RequestMapping("/seller/goMyStoreOrder.do")
-    public String goMyStoreOrder(){
-    	return "seller/MyStoreOrder";
-    }
-	
-    @RequestMapping("/seller/goUpdateMyStore.do")
-    public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
-    	//' ' 제거 
-    	storeNo = storeNo.replace("'", "");
-  
-    	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);    	
-    	model.addAttribute("store", store);
-    	return "seller/updateMyStoreInfo";
-    }
 
-    //내 가게 정보수정
-    @RequestMapping("/seller/updateStore.do")
-    public String updateStore(@RequestParam("startChooseAmPm") String startChooseAmPm,
-    		@RequestParam("startTime") String startTime,
-    		@RequestParam("endChooseAmPm") String endChooseAmPm,
-    		@RequestParam("endTime") String endTime,
-    		@RequestParam("locationStartNum") String locationStartNum,
-    		@RequestParam("tel1") String tel1,
-    		@RequestParam("tel2") String tel2,
-    		@RequestParam("address1") String address1,
-    		@RequestParam("address2") String address2) {
-    	System.out.println("@@startChooseAmPm="+startChooseAmPm);
-    	return ":/redirect";
-    }
+	
+
 }

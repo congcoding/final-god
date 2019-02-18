@@ -48,37 +48,38 @@
 		<c:forEach items="${menu}" var="menu" varStatus="vs">
 			<tr>
 				<th scope="row">${vs.count}</th>
-				<td>${menu.menuName}</td>
-				<td>${menu.menuPrice}</td>
+				<td><c:out value="${menu.menuName}"/></td>
+				<td><c:out value="${menu.menuPrice}"/> </td>
 			</tr>
 		</c:forEach>
 	</tbody>
 </table>
 <!-- 페이지바 부분 -->
-
+<%-- 	<%
       int totalContents = (int)request.getAttribute("totalContents");
       int numPerPage = (int)request.getAttribute("numPerPage");
       int cPage = (int)request.getAttribute("cPage");
-
+      int storeNo = (int)request.getAttribute("storeNo");
+      
+     %>
    <nav aria-label="Page navigation example">
   	<ul class="pagination justify-content-center">
   	
-	<%-- <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do")%> --%>
+	<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do?storeNo="+storeNo)%>
     </ul>
-   </nav>
+   </nav> --%>
 
-<form>
-	<input type="hidden" value="">
-</form>
    
 <script>
 function boxEvent(item){
 	var no = $(item).attr("no");
 	console.log(no);
 	if($(".boxEvent[no="+no+"]").css("display") == "none"){   
-        jQuery(".boxEvent[no="+no+"]").show();  
+        jQuery(".boxEvent[no="+no+"]").show();
+       	$(".storeName[no="+no+"]").css("color", "red");
     } else {  
         jQuery(".boxEvent[no="+no+"]").hide();  
+       	$(".storeName[no="+no+"]").css("color", "black");
     } 
 }
 

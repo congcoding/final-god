@@ -15,10 +15,8 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
-	List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo);
-	
-	List<Map<String, String>> myStoreMenu(int cPage, int numPerPage, String sellerId);
+	List<Menu> myStoreMenu(String sellerId);
 
-	int selectSellerMenuTotalContents(String sellerId);
+	List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo);
 
 }
