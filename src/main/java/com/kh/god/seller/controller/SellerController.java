@@ -28,7 +28,7 @@ import com.kh.god.common.util.Utils;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
-import com.kh.god.storeInfo.model.vo.Attachment;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -220,6 +220,13 @@ public class SellerController {
 	}
 	
 
+	@RequestMapping(value = "/seller/goMyStoreOrder.do" )
+	public String goMyStoreOrder() {
+	
+		
+		return "seller/MyStoreOrder";
+	}
+	
 	
 
     @RequestMapping("/seller/goUpdateMyStore.do")
@@ -228,9 +235,11 @@ public class SellerController {
     	storeNo = storeNo.replace("'", "");
   
     	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);   
-    	List<Attachment> attachment = sellerService.getAttachment(storeNo);
+    	List<MenuAttachment> attachment = sellerService.getAttachment(storeNo);
+    	List<MenuAttachment> thumbAttachment = sellerService.getthumbAttachment(storeNo);
     	model.addAttribute("store", store);
     	model.addAttribute("attachment", attachment);
+    	model.addAttribute("thumbAttachment", thumbAttachment);
 
     	return "seller/updateMyStoreInfo";
     }

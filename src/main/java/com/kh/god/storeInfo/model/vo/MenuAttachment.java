@@ -13,11 +13,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Attachment {
+public class MenuAttachment {
 	private String menuCode;
 	private String originalFileName;
 	private String renamedFileName;
 	private Date menuUploadDate;
 	private String storeNo;
 	private String status;
+	private String thumbFlag;
 }

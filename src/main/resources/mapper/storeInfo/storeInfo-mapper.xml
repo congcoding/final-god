@@ -38,8 +38,12 @@
    	  select count(*) from menu where storeno = #{storeNo}
    </select>
  
-   <select id="getAttachment" resultType="attachment">
+   <select id="getAttachment" resultType="menuAttachment">
    	select * from menuAttachment where storeNo = #{storeNo}
    </select>  
+   
+   <select id="getthumbAttachment" resultType="menuAttachment">
+       	select * from menuAttachment where storeNo = #{storeNo} and thumbFlag = 'Y'
+   </select>
 
 </mapper>
