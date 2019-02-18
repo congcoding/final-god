@@ -55,16 +55,18 @@
 	</tbody>
 </table>
 <!-- 페이지바 부분 -->
-<%--    <%
+
       int totalContents = (int)request.getAttribute("totalContents");
       int numPerPage = (int)request.getAttribute("numPerPage");
       int cPage = (int)request.getAttribute("cPage");
-   %>
+
    <nav aria-label="Page navigation example">
   	<ul class="pagination justify-content-center">
-   <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "boardList.do")%>   
+  	
+<%-- <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do")%> --%>   
     </ul>
-   </nav> --%>
+   </nav>
+
 <form>
 	<input type="hidden" value="">
 </form>
@@ -85,6 +87,7 @@ function storeUpdae(item){
 	var no = $(item).attr("no");
 	console.log($(".storeName[no="+no+"]").val());
 }
+
 $(".boxEvent").on("click",function(){
 	var no = $(this).attr("no");
 	console.log(no);
