@@ -11,7 +11,9 @@
     <ul class="navbar-nav bg-gradient-god sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Divider -->
-      <hr class="sidebar-divider my-0"><hr /><hr />
+      <br />
+      <br />
+      <hr class="sidebar-divider my-0">
       <!-- Nav Item - Dashboard -->
      
     
