@@ -36,6 +36,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo) {
+		
+		return sqlSession.selectList("storeInfo.storeInfoList",storeNo);
+	}
+
 	public List<Map<String, String>> myStoreMenu(int cPage, int numPerPage, String sellerId) {
 		RowBounds rowBounds = new RowBounds((cPage-1) * numPerPage, numPerPage);
 		return sqlSession.selectList("storeInfo.myStoreMenu", sellerId, rowBounds);

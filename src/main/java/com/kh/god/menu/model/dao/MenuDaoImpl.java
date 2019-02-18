@@ -27,7 +27,8 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public int menuCount(String storeNo) {
-		return sqlSession.selectOne("storeInfo.menuCount", storeNo);
+		int menuCount = sqlSession.selectOne("storeInfo.menuCount", storeNo);
+		return menuCount;
 	}
 	
 

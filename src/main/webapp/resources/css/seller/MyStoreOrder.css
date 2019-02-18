@@ -1,0 +1,38 @@
+@charset "UTF-8";
+#orderTable{
+    margin-top: 3%;
+    width: 80%;
+    margin-left: 10%;
+}
+th{
+	width: 8%;
+}
+#title{
+    margin-top: 8%;
+    margin-left: 11%;
+}
+.orderAddress{
+    width: 23%;
+}
+
+#list-tab{
+    width: 13%;
+    margin-left: 44%;
+    margin-top: 31px;
+}
+#orderWaitng{
+	margin-left: -21%;
+    margin-top: 32px;
+}  
+.btn btn-info{
+    margin-left: 6%;
+}
+#orderAcception{
+	position: relative;
+	left:-30%
+}
+#orderCancel{
+	position: relative;
+    left:45%;
+    top: -38px;
+}

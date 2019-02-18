@@ -93,24 +93,27 @@ public class MemberController {
 	        String temp = m.getPassword();	        
 	        m.setPassword(bCryptPasswordEncoder.encode(temp));
 	       
-	        //중간확인
-	        System.out.println("memberController@member="+m);
+	        
 	     
 	        //회원가입 진행
 	        int result = memberService.insertMember(m);
 	        String loc="/"; 
 	        String msg ="";
+	        String view = "/common/msg";
 
+	        //중간확인
+	        System.out.println("memberController@member="+result);
+	        
 			if(result>0) {
 				msg = "회원가입성공"; 
-				loc = "/member/membeView.do?memberId="+m.getMemberId(); 				
+				loc = "/member/memberView.do?memberId="+m.getMemberId(); 				
 			}else {
 				msg="회원가입실패!";
 			}
 
-			request.setAttribute("loc", loc);
-			request.setAttribute("msg", msg);
-			 
+			mav.addObject("loc", loc);
+			mav.addObject("msg", msg);
+			mav.setViewName(view);
 			 
 		}catch(Exception e) {
 	    	logger.error("게시물 등록 에러", e);
@@ -123,13 +126,14 @@ public class MemberController {
 	/** 회원 정보 조회 : memberView */
 	@RequestMapping("/member/memberView.do")
 	public String memberView(@RequestParam String memberId, Model model) {	
+		System.out.println("도착");	
 		if(logger.isDebugEnabled()) { 
 			logger.debug("회원'정보' 페이지 요청"); 		
 		}
-			
+		
 		Member m = memberService.selectOneMember(memberId);
 		
-		model.addAttribute("m",m);
+		model.addAttribute("m", m);
 		
 		String view = "member/memberView";
 				
@@ -156,7 +160,7 @@ public class MemberController {
 	     else {
 	    	 msg = "회원정보 수정실패";
 	     }
-	        
+	     	
 	        model.addAttribute("loc", loc);
 	        model.addAttribute("msg", msg);
 	         
@@ -168,7 +172,7 @@ public class MemberController {
     public ModelAndView memberLogin(@RequestParam String memberId, @RequestParam String password,
                               ModelAndView mav, HttpSession session) {
       if(logger.isDebugEnabled()) {
-         logger.debug("로그인 요청");
+         logger.debug("회원 로그인 요청");
       }
         Member m = memberService.selectOneMember(memberId);
         
@@ -185,7 +189,7 @@ public class MemberController {
                 mav.addObject("memberLoggedIn",m);
                 view = "redirect:/";
             }else {
-                msg = "비밀번호가 틀렸습니다.";
+            	msg = "비밀번호를 잘못 입력하셨습니다.";
             }                
         }
         

@@ -3,12 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
-<jsp:include page="/WEB-INF/views/common/header.jsp">
+<jsp:include page="/WEB-INF/views/common/categoryHeader.jsp">
 	<jsp:param value="고객센터" name="pageTitle"/>
 </jsp:include>
 <style>
 div.row{
-	margin-top: 80px;
+	
+	    margin-top: 168px;
+    margin-left: 92px;
 }
 
 li#storeNo{
@@ -16,7 +18,31 @@ li#storeNo{
 }
 </style>
 <script>
-var storeNo = $
+$(document).ready(function(){
+	var categoryNo = ${categoryNo};
+	if(categoryNo==1){
+		$("#chicken").addClass("active");
+	} else if(categoryNo==2){
+		$("#pizza").addClass("active");
+
+	} else if(categoryNo==3){
+		$("#bossam").addClass("active");
+
+	} else if(categoryNo==4){
+		$("#bunsik").addClass("active");
+
+	} else if(categoryNo==5){
+		$("#china").addClass("active");
+
+	} else if(categoryNo==6){
+		$("#japan").addClass("active");
+
+	} else if(categoryNo==7){
+		$("#korea").addClass("active");
+
+	}
+	
+});
 </script>
 <section id="storeInfo-container" class="container">
 	<!-- 전체 게시글 출력 -->

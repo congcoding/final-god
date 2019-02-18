@@ -32,6 +32,11 @@ public class SellerServiceImpl implements SellerService {
 		return store;
 	}
 
+	@Override
+	public List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo) {
+		List<Map<String, Object>> getStoreInfoBystoreNo = sellerDao.getStoreInfoBystoreNo(storeNo);
+		return getStoreInfoBystoreNo;
+	}
 //	@Override
 //	public List<Menu> myStoreMenu(String sellerId) {
 //		List<Menu> menu = sellerDao.myStoreMenu(sellerId);

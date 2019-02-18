@@ -86,12 +86,17 @@ nav.navbar-light{
 	     		onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
 		 </c:if>
 		</c:if>
+		
+		<!-- member 로그인후  -->
 		<c:if test="${memberLoggedIn != null}">
 		  <c:if test="${sellerLoggedIn == null}">
-			<a href="#">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+		  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
+			<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
 			<button class="btn btn-outline-sucess" type="button" onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do'">로그아웃</button>
 		  </c:if>
 		</c:if>
+		
+		<!-- seller 로그인후  -->
 		<c:if test="${sellerLoggedIn != null}">
 		  <c:if test="${memberLoggedIn == null}">
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;

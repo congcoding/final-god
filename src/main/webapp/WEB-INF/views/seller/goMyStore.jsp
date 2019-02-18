@@ -15,19 +15,20 @@
   <tr style="vertical-align:top">
     <td id="left">
     <c:if test="${not empty store}">
-    	<c:forEach items="${store}" var="store">
-    		<div class="storeName" onclick="boxEvent();">${store.storeName}</div>
-	    	<div class="boxEvent">
-	    		<a href="#">주문내역</a>
+    	<c:forEach items="${store}" var="store" varStatus="status">
+    		<div class="storeName" onclick="boxEvent(this);" no="${status.count}">${store.storeName}</div>
+	    	<div class="boxEvent" no="${status.count}">
+	    		<a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do" class="storeOrder">주문내역</a>
+	    		<span class="badge badge-primary badge-pill orderCount">14</span>
 	    		&nbsp;
 	    		&nbsp;
-	    		<a href="#">내 가게 통계</a>
+	    		<a href="#" class="statistics">내 가게 통계</a>
 	    		&nbsp;
 	    		&nbsp;
-	    		<a href="#">내 가게 수정</a>
+	    		<a href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}" class="storeUpdate" >내 가게 수정</a>
 	    		&nbsp;
 	    		&nbsp;
-	    		<a href="#">리뷰관리</a>
+	    		<a href="#" class="storeReview">리뷰</a>
 	    	</div>
     	</c:forEach> 	
     </c:if>
@@ -66,17 +67,30 @@
     </ul>
    </nav>
 
+<form>
+	<input type="hidden" value="">
+</form>
    
 <script>
+function boxEvent(item){
+	var no = $(item).attr("no");
+	console.log(no);
+	if($(".boxEvent[no="+no+"]").css("display") == "none"){   
+        jQuery(".boxEvent[no="+no+"]").show();  
+    } else {  
+        jQuery(".boxEvent[no="+no+"]").hide();  
+    } 
+}
 
-$(".storeName").on("click", function(){
-	 if($(".boxEvent").css("display") == "none"){   
-	        jQuery('.boxEvent').show();
-	        $(".storeName").css("color", "red");
-	    } else {  
-	        jQuery('.boxEvent').hide();
-	        $(".storeName").css("color", "black");
-	    } 
+function storeUpdae(item){
+	/* /seller/goUpdateMyStore.do */
+	var no = $(item).attr("no");
+	console.log($(".storeName[no="+no+"]").val());
+}
+
+$(".boxEvent").on("click",function(){
+	var no = $(this).attr("no");
+	console.log(no);
 })
 
 </script>
