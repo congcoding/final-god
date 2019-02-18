@@ -76,25 +76,40 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId) {
+	public int insertAsking(QnaBoard board) {
+		return sqlSession.insert("admin.insertAsking",board);
+	}
+
+	@Override
+	public List<Map<String, String>> selectQNAList(int cPage, int numPerPage, String boardWriter) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectMemberQNAList",memberId,rowBounds);
+		return sqlSession.selectList("admin.selectQNAList",boardWriter,rowBounds);
 	}
 
 	@Override
-	public int countMemberQNAList(String memberId) {
-		return sqlSession.selectOne("admin.countMemberQNAList",memberId);
+	public int countQNAList(String boardWriter) {
+		return sqlSession.selectOne("admin.countQNAList",boardWriter);
 	}
 
 	@Override
-	public List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId) {
+	public List<QnaBoard> boardRefList() {
+		return sqlSession.selectList("admin.boardRefList");
+	}
+
+	@Override
+	public QnaBoard qnaBoardRefView(int boardNo) {
+		return sqlSession.selectOne("admin.qnaBoardRefView",boardNo);
+	}
+
+	@Override
+	public int countMemberList() {
+		return sqlSession.selectOne("admin.countMemberList");
+	}
+
+	@Override
+	public List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectSellerQNAList",sellerId,rowBounds);
-	}
-
-	@Override
-	public int countSellrQNAList(String sellerId) {
-		return sqlSession.selectOne("admin.countSellerQNAList",sellerId);
+		return sqlSession.selectList("admin.selectMemberAllList",null,rowBounds);
 	}
 	
 

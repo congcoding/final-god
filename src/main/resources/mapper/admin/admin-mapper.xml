@@ -52,19 +52,35 @@
 		update seller set blackFlag='Y' where sellerId = #{sellerId }
 	</update>
 	
-	<select id="selectMemberQNAList" resultType="member">
-		select * from member where memberId = #{memberId }
+	<select id="selectQNAList" resultType="qnaBoard">
+		select * from qnaboard where boardWriter = #{boardWriter } order by boardno desc
 	</select>
-	<select id="countMemberQNAList" resultType="member">
-		select count(*) as cnt from member where memberId = #{memberId }
+	<select id="countQNAList" resultType="_int">
+		select count(*) as cnt from qnaboard where boardWriter = #{boardWriter }
 	</select>
 	
-	<select id="selectSellerQNAList" resultType="seller">
-		select * from seller where sellerId = #{sellerId }
+	<insert id="insertAsking" parameterType="qnaBoard">
+		insert into qnaboard(boardNo, boardTitle,boardContent,boardWriter,category) values(seq_qnaboard_boardno.nextval,#{boardTitle },#{boardContent },#{boardWriter },'asking')
+	</insert>
+	
+	<select id="boardRefList" resultType="qnaBoard">
+		select * from qnaboard where boardlevel = 2
 	</select>
-	<select id="countSellerQNAList" resultType="member">
-		select count(*) as cnt from seller where sellerId = #{sellerId }
+	
+	<select id="qnaBoardRefView" resultType="qnaBoard">
+		select * from qnaboard where boardNo = #{boardNo }
 	</select>
+	
+	<select id="countMemberList">
+		select count(*) as cnt from member where delflag = 'N'
+	</select>
+	
+	<select id="selectMemberAllList" resultMap="memberMap">
+		select * from member where delflag = 'N'
+	</select>
+	
+	<resultMap type="map" id="memberMap">
+	</resultMap>
 	
 </mapper>
 

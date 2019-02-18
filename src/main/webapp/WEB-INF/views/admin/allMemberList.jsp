@@ -25,10 +25,10 @@ $(function(){
 	$("#memberList").addClass("active");	
 });
 
-function fn_goMemberForm(){
+function fn_goMemberList(){
 	location.href = "${pageContext.request.contextPath}/admin/memberList.do";
 };
-function fn_goSellerForm(){
+function fn_goSellerList(){
 	location.href = "${pageContext.request.contextPath}/admin/sellerList.do";
 };
 
@@ -50,7 +50,7 @@ function fn_goSellerForm(){
 
           <!-- Page Heading -->
           <div id="head-container">
-			<div id="member" class="alert-light" onclikc="fn_goMemberList();">일반회원</div> <div id="seller" class="alert-light" onclick="fn_goSellerForm();">판매자</div>
+			<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div> <div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
 		  </div>
 
         </div>

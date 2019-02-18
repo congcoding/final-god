@@ -21,17 +21,26 @@ div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; 
 input#boardTitle{font-weight : bold;}
 </style>
 <script>
-function fn_goAskingForm(){
-	location.href = "${pageContext.request.contextPath}/admin/askingForm.do";
+function fn_goAskingList(){
+	if("${memberLoggedIn }" != ""){
+		var memberId= "${memberLoggedIn.memberId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+memberId;	
+	}else if("${sellerLoggedIn }" != ""){
+		var sellerId = "${sellerLoggedIn.sellerId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+sellerId;
+	}else if("${sellerLoggedIn }" == "" && "${memberLoggedIn }" == ""){
+		alert("로그인 후 이용 가능합니다.");
+		return;
+	}
 }
 function fn_goQnaList(){
-	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
+	location.href = "${pageContext.request.contextPath}/admin/qnaboard.do";
 }
 </script>
 
 
 <div id="head-container">
-	<div id="qna" class="alert-info" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingForm();">1:1문의</div>
+	<div id="qna" class="alert-info" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-light" onclick="fn_goAskingList();">1:1문의</div>
 </div>
 
  	<div id="board-container">

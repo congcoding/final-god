@@ -54,10 +54,6 @@ public class AdminController {
 	
 	}
 
-	@RequestMapping("/admin/memberList.do")
-	public void memberList() {
-	}
-	
 	@RequestMapping("/admin/eventForm.do")
 	public void eventForm() {
 	}
@@ -172,24 +168,91 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/askingList.do")
-	public String askingList(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam String memberId, @RequestParam String sellerId, Model model) {
-		int numPerPage = 6;
+	public String askingList(@RequestParam(value="cPage",defaultValue="1") int cPage,@RequestParam(value="boardWriter") String boardWriter, Model model) {
+		int numPerPage = 5;
 		List<Map<String,String>> list = null;
 		int totalContents = 0;
-		if(memberId != null) {
-			list = adminService.selectMemberQNAList(cPage,numPerPage,memberId);
-			totalContents = adminService.countMemberQNAList(memberId);
-			
-		}else if(sellerId != null) {
-			list = adminService.selectSellerQNAList(cPage,numPerPage,sellerId);
-			totalContents = adminService.countSellerQNAList(sellerId);
-		}
+		
+		list = adminService.selectQNAList(cPage,numPerPage,boardWriter);
+		totalContents = adminService.countQNAList(boardWriter);
+	
+		List<QnaBoard> boardRefList = adminService.boardRefList();
 		
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("list",list);
+		model.addAttribute("boardRefList",boardRefList);
 		model.addAttribute("totalContents",totalContents);
 		return "admin/askingList";
+	}
+	
+	@RequestMapping("/admin/askingForm.do")
+	public String askingForm(Model model, @RequestParam(value="boardWriter") String boardWriter) {
+		
+		model.addAttribute("boardWriter",boardWriter);
+		
+		return "admin/askingForm";
+	}
+	
+	@RequestMapping("/admin/insertAsking.do")
+	public ModelAndView insertAsking(@RequestParam(name="boardTitle") String boardTitle,@RequestParam(name="boardWriter") String boardWriter, @RequestParam(name="boardContent") String boardContent, ModelAndView mav) {
+		QnaBoard board = new QnaBoard();
+		board.setBoardTitle(boardTitle);
+		board.setBoardWriter(boardWriter);
+		board.setBoardContent(boardContent);
+		
+		int result = adminService.insertAsking(board);
+		
+		String msg = "";
+		if(result>0) {
+			msg="문의를 완료하였습니다!";
+		}else {
+			msg = "문의 실패ㅠ";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/askingList.do?boardWriter="+boardWriter);
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/admin/askingView.do")
+	public String askingView(@RequestParam(name="boardNo") int boardNo, Model model) {
+		QnaBoard b = adminService.qnaBoardView(boardNo);
+		List<QnaBoard> boardRefList = adminService.boardRefList();
+		model.addAttribute("board",b);
+		model.addAttribute("boardRefList",boardRefList);
+		return "admin/askingView";
+	}
+	
+	@RequestMapping("/admin/answeringView.do")
+	public String asnweringView(@RequestParam(name="boardNo") int boardNo,@RequestParam(name="boardRef") int boardRef, Model model) {
+		QnaBoard b = adminService.qnaBoardView(boardRef);
+		QnaBoard bRef = adminService.qnaBoardRefView(boardNo);
+		logger.debug(b);
+		logger.debug(bRef);
+		
+		model.addAttribute("board",b);
+		model.addAttribute("boardRef",bRef);
+		return "admin/answeringView";
+	}
+	
+	@RequestMapping("/admin/memberList.do")
+	public String memberList(@RequestParam(value="cPage",defaultValue="1") int cPage,Model model) {
+		
+		int numPerPage = 6;
+		
+		List<Map<String,String>> member = adminService.selectMemberAllList(cPage,numPerPage);
+		
+		int totalContents = adminService.countMemberList();
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("member",member);
+		model.addAttribute("totalContents",totalContents);
+		
+		return "admin/memberList";
 	}
 	
 }

@@ -72,23 +72,38 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId) {
-		return adminDao.selectMemberQNAList(cPage,numPerPage,memberId);
+	public int insertAsking(QnaBoard board) {
+		return adminDao.insertAsking(board);
 	}
 
 	@Override
-	public int countMemberQNAList(String memberId) {
-		return adminDao.countMemberQNAList(memberId);
+	public List<Map<String, String>> selectQNAList(int cPage, int numPerPage, String boardWriter) {
+		return adminDao.selectQNAList(cPage,numPerPage,boardWriter);
 	}
 
 	@Override
-	public List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId) {
-		return adminDao.selectSellerQNAList(cPage,numPerPage,sellerId);
+	public int countQNAList(String boardWriter) {
+		return adminDao.countQNAList(boardWriter);
 	}
 
 	@Override
-	public int countSellerQNAList(String sellerId) {
-		return adminDao.countSellrQNAList(sellerId);
+	public List<QnaBoard> boardRefList() {
+		return adminDao.boardRefList();
+	}
+
+	@Override
+	public QnaBoard qnaBoardRefView(int boardNo) {
+		return adminDao.qnaBoardRefView(boardNo);
+	}
+
+	@Override
+	public int countMemberList() {
+		return adminDao.countMemberList();
+	}
+
+	@Override
+	public List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage) {
+		return adminDao.selectMemberAllList(cPage,numPerPage);
 	}
 
 }
