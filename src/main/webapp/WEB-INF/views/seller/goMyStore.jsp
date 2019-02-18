@@ -63,7 +63,7 @@
    <nav aria-label="Page navigation example">
   	<ul class="pagination justify-content-center">
   	
-<%-- <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do")%> --%>   
+	<%-- <%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do")%> --%>
     </ul>
    </nav>
 
