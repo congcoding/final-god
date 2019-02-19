@@ -1,46 +1,61 @@
 @charset "UTF-8";
-#menuTable{
-	width: 61%;
-    position: relative;
-    left: 9%;
-    top: -179px;
-}
-#cart{
-	top:0px;
-	width: 24%;
-	position: relative;
-	    left: 70%;
-}
 
-#navi{
-	    width: 84%;
-    position: relative;
-    left: 10%;
-}
-#sellerInformation{
-		width: 61%;
-    position: relative;
-    left: 9%;
-    top: -179px;
-}
+
 #menu-container{
     position: relative;
+    width: 83%;
     top: 25px;
     left: -3%;
-        width: 83%;
-
 }
+
+/* 매장 메뉴, 정보, 리뷰 탭 */
+#MenuNavi{
+    position: relative;
+    width : 61%;
+    margin-bottom: 10px;
+}
+
+/* 메뉴 테이블 div */
+#menuTable{
+    position: relative;
+	width: 61%;
+	margin-bottom: 100px;
+}
+div#menu-container table thead th{
+	border-top : none;
+}
+
+/* 가게정보 div */
+#sellerInformation{
+    position: relative;
+    width: 61%;
+}
+
+
+/* 주문표 div */
+#cart{
+	position: absolute;
+	width: 400px;
+	top: 0px;
+	left: 70%;
+	margin-left: 100px;
+}
+
+
 .card{
 	width: 65%;
     margin-left: 122px;
     margin-top: 144px;
 }
+
 img{
 	width:93px;
 }
+
 #last-container{
 	    margin-left: 230px;
 }
+
 .introduce{
 	font-weight: bold;
 }

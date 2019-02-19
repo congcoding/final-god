@@ -15,5 +15,15 @@
 		SELECT * FROM MEMBER WHERE MEMBERID = #{memberId}
 	</select>
 	
+	<update id="updateMember" parameterType="member">
+		UPDATE MEMBER
+		SET email = #{email}, address = #{address}, phone = #{phone},
+			favorite = #{favorite,typeHandler=com.kh.god.common.typehandler.StringArrayTypeHandler},
+			oldFile = #{oldFile}, renamedFile = #{renamedFile} 
+			<if test="password != '' " >
+				,password = #{password}
+			</if>
+		WHERE memberId = #{memberId}
+	</update>
 	
 </mapper>

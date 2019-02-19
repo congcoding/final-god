@@ -42,5 +42,9 @@
    	  select count(*) from menu where storeno = #{storeNo}
    </select>
    
+   <select id="selectOneMenu" resultType="menu">
+   		select * from menu where menuCode = #{menuCode}
+   </select>
+   
 
 </mapper>

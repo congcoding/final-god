@@ -3,6 +3,7 @@ package com.kh.god.member.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.common.util.Utils;
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
-import com.kh.god.seller.model.vo.Seller;
-import com.kh.god.storeInfo.model.vo.StoreInfo;
-import com.kh.god.common.util.Utils;
+import com.kh.god.menu.model.vo.Menu;
 
 
 /*******************final 프로젝트 *******************/
@@ -100,9 +100,6 @@ public class MemberController {
 	        String loc="/"; 
 	        String msg ="";
 	        String view = "/common/msg";
-
-	        //중간확인
-	        System.out.println("memberController@member="+result);
 	        
 			if(result>0) {
 				msg = "회원가입성공"; 
@@ -122,6 +119,73 @@ public class MemberController {
         return mav;
      }
 
+	
+	/** 회원 정보 수정 : memberUpdate */
+	@RequestMapping("/member/memberUpdate.do")
+	public ModelAndView memberUpdate(Member m, @RequestParam (name="upFile",required = false) MultipartFile upFiles,	
+	   		 						 HttpServletRequest request, ModelAndView mav) {	
+		if(logger.isDebugEnabled()) { 
+			logger.debug("회원정보 업데이트 요청"); 	
+			logger.debug(m);
+			logger.debug(m.getRenamedFile());		
+		}
+		
+		try {
+			//1. 파일 업로드
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/member");
+			
+			//2. multipartFile 처리
+			if(!upFiles.isEmpty()) {
+				//파일명 (업로드용) 
+				String oldFile = upFiles.getOriginalFilename();
+				m.setOldFile(oldFile);
+
+				//파일명(서버저장용)
+				String renamedFile = Utils.getRenamedFileName(oldFile);
+				m.setRenamedFile(renamedFile);
+				
+	    		//실제 파일 저장
+	    		try {
+	    			upFiles.transferTo(new File(saveDirectory+"/"+renamedFile));
+				} catch (IllegalStateException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	    		    		
+			}       
+			
+		//BCrypt 방식 암호화
+		String temp = m.getPassword();
+		System.out.println("password-----------------------------"+temp);
+		if(temp.length() != 0) {
+			m.setPassword(bCryptPasswordEncoder.encode(temp));
+		}
+	 
+		 int result = memberService.updateMember(m);
+		
+		 String loc = "/";
+	     String msg = ""; 
+	     String view = "common/msg"; 
+	     
+	     if(result>0) {
+	    	 msg = "회원정보 수정완료";
+	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();	    	 
+	     }
+	     else {
+	    	 msg = "회원정보 수정실패";
+	     }
+	     
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+			 
+		}catch(Exception e) {
+	    	logger.error("게시물 등록 에러", e);
+	    }
+     
+		return mav;
+	}
 
 	/** 회원 정보 조회 : memberView */
 	@RequestMapping("/member/memberView.do")
@@ -138,33 +202,6 @@ public class MemberController {
 		String view = "member/memberView";
 				
 		return view; 
-	}
-		
-	/** 회원 정보 수정 : memberUpdate */
-	@RequestMapping("/member/memberUpdate.do")
-	public String memberUpdate(Member m, Model model) {	
-		if(logger.isDebugEnabled()) { 
-			logger.debug("회원정보 업데이트 요청"); 		
-		}
-		
-		 int result = memberService.updateMember(m);
-		
-		 String loc = "/";
-	     String msg = ""; 
-	     String view = "common/msg"; 
-	     
-	     if(result>0) {
-	    	 msg = "회원정보 수정완료";
-	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();
-	     }
-	     else {
-	    	 msg = "회원정보 수정실패";
-	     }
-	     	
-	        model.addAttribute("loc", loc);
-	        model.addAttribute("msg", msg);
-	         
-	    return view;
 	}
 
 	/** 일반회원 로그인 : memberLogin */
@@ -183,11 +220,14 @@ public class MemberController {
         if(m == null) {
             msg = "아이디가 존재하지 않습니다.";
         }else {
-            //비밀번호 비교
-            System.out.println(password);
+            //비밀번호 비교             
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
-                mav.addObject("memberLoggedIn",m);
-                view = "redirect:/";
+                
+            	
+            	mav.addObject("memberLoggedIn",m);
+                
+            	
+            	view = "redirect:/";
             }else {
             	msg = "비밀번호를 잘못 입력하셨습니다.";
             }                
@@ -215,8 +255,6 @@ public class MemberController {
 		return "redirect:/";
 	}
 
-	
-	
 	/**
 	 * @ResponseBody 어노테이션을 이용하여
 	 * 리턴된 객체럴 jsonString으로 자동변환하여 전송
@@ -237,6 +275,7 @@ public class MemberController {
 		 return map; //BeanNameViewResolver에 의해 처리될 bean 객체 
 	 
 	 }
+	 
 	
 	
 }
