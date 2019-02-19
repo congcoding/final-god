@@ -69,15 +69,13 @@
    		update menuAttachment set thumbFlag='Y' where renamedfilename=#{newThumb}
    </update>
    
-<<<<<<< HEAD
    <select id="selectOneMenu" resultType="menu">
    		select * from menu where menuCode = #{menuCode}
    </select>
    
-=======
    <update id="updateStoreInfo">
    	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
    </update>
->>>>>>> 4fa140eaaa3778828b2da20c66abfa061ae3ec84
+
 
 </mapper>
