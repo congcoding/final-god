@@ -58,6 +58,22 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.getthumbAttachment(storeNo);
 	}
 
+	@Override
+	public int oldThumbNail(String nowThumb) {
+		// TODO Auto-generated method stub
+		return sellerDao.oldThumbNail(nowThumb);	}
+
+	@Override
+	public int changeThmbNail(String newThumb) {
+		// TODO Auto-generated method stub
+		return sellerDao.changeThmbNail(newThumb);
+	}
+
+	@Override
+	public int updateStoreInfo(Map<String, Object> map) {
+		return sellerDao.updateStoreInfo(map);
+	}
+
 
 
 	

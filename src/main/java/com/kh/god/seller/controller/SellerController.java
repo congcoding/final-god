@@ -229,6 +229,7 @@ public class SellerController {
 	
 	
 
+	
     @RequestMapping("/seller/goUpdateMyStore.do")
     public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
     	//' ' 제거 
@@ -245,57 +246,24 @@ public class SellerController {
     }
 
     //내 가게 정보수정
-    /*@RequestMapping("/seller/updateStore.do")
-    public String updateStore(@RequestParam("startChooseAmPm") String startChooseAmPm,
-    		@RequestParam("startTime") String startTime,
-    		@RequestParam("endChooseAmPm") String endChooseAmPm,
-    		@RequestParam("endTime") String endTime,
-    		@RequestParam("locationStartNum") String locationStartNum,
-    		@RequestParam("tel1") String tel1,
-    		@RequestParam("tel2") String tel2,
-    		@RequestParam("address1") String address1,
+    @RequestMapping("/seller/updateStoreInfo.do")
+    public String updateStore(@RequestParam(name="startChooseAmPm" , required = false) String startChooseAmPm,
+    		@RequestParam(name="startTime" , required = false) String startTime,
+    		@RequestParam(name="endChooseAmPm" , required = false) String endChooseAmPm,
+    		@RequestParam(name="endTime" , required = false) String endTime,
+    		@RequestParam(name="locationStartNum" , required = false) String locationStartNum,
+    		@RequestParam(name="tel1" , required = false) String tel1,
+    		@RequestParam(name="tel2" , required = false) String tel2,
+    		@RequestParam(name="address1" , required = false) String address1,
     		@RequestParam(name="address2" , required = false) String address2,
-    		@RequestParam("thumbImg") MultipartFile upFiles,
-    		HttpServletRequest request, StoreInfo storeInfo
+    		@RequestParam(name="personalday" , required = false) String personalday,
+    		@RequestParam(name="nowThumb" , required = false) String nowThumb,
+    		@RequestParam(name="newThumb" , required = false) String newThumb,
+    		@RequestParam(name="storeNo") String storeNo  		
+	
     		) {
-    	
-    	//파일
-    	try {
-			// 1. 파일업로드 (실제경로를 얻어내는 방법은 세션-서블릿-리얼패스)
-			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/storeInfo/thumbNail");
 
-			logger.debug("saveDirectory = " + saveDirectory);
-
-			List<Attachment> attachList = new ArrayList<>();
-
-			// MultipartFile 처리
-				if (!upFiles.isEmpty()) {
-					// 사용자가 업로드한 파일명 구하기
-					String originalFileName = upFiles.getOriginalFilename();
-
-					// 서버저장용 파일명
-					String renamedFileName = Utils.getRenamedFileName(originalFileName);
-					logger.debug("renamedFileName = " + renamedFileName);
-
-					// 실제서버에 파일저장
-					try {
-						upFiles.transferTo(new File(saveDirectory + "/" + renamedFileName));
-					} catch (IllegalStateException | IOException e) {
-						e.printStackTrace();
-					}
-
-					// 첨부파일객체 생성. 리스트 추가
-					Attachment attach = new Attachment();
-					attach.setOriginalFileName(originalFileName);
-					attach.setRenamedFileName(renamedFileName);
-					attachList.add(attach);
-				}
-    	} catch (Exception e) {
-		logger.error("썸네일 등록 에러", e);
-		
-	}
-    	
-    	String operatingHours = startChooseAmPm+startTime+"시 ~"+endChooseAmPm+endTime;
+    	String operatingHours = startChooseAmPm+startTime+"시 ~ "+endChooseAmPm+endTime+"시";
     	String storeTel = locationStartNum+"-"+tel1+"-"+tel2;
     	String storeAddress = "";
     	if(!address2.equals("")) {
@@ -304,9 +272,30 @@ public class SellerController {
     		storeAddress = address1;
     	}
     	
+		Map<String , Object> map = new HashMap<>();
+		map.put("storeNo",storeNo);
+		map.put("operatingHours",operatingHours);
+		map.put("storeTel",storeTel);
+		map.put("storeAddress",storeAddress);
+		map.put("personalday",personalday);
+
+    	//업데이트
+    	int result = sellerService.updateStoreInfo(map);
+    	System.out.println(result>0?"수정성공":"실패임다");
+    	
+    	if(!nowThumb.equals(newThumb)) {
+    		//썸네일을 바꾼 경우
+    		//전에 했던 썸네일 Flag=N으로 업데이트 
+    		int oldThumbNail = sellerService.oldThumbNail(nowThumb);
+    		//뉴 썸네일 Flag=Y로 업데이트
+    		int changeThmbNail = sellerService.changeThmbNail(newThumb);
+    	}
+    	
+    	System.out.println("storeNo=>"+storeNo);
+
     	//int updateThumb = sellerService.updateStoreInfo();
 
-    	return ":/redirect";
-    }*/
+    	return "seller/goUpdateMyStore.do";
+    }
 
 }

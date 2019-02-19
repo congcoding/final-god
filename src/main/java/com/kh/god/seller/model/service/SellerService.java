@@ -24,4 +24,10 @@ public interface SellerService {
 
 	List<MenuAttachment> getthumbAttachment(String storeNo);
 
+	int oldThumbNail(String nowThumb);
+
+	int changeThmbNail(String newThumb);
+
+	int updateStoreInfo(Map<String, Object> map);
+
 }

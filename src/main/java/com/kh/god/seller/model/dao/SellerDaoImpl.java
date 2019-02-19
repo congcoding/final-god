@@ -47,7 +47,6 @@ public class SellerDaoImpl implements SellerDao {
 
 	@Override
 	public List<MenuAttachment> getAttachment(String storeNo) {
-		System.out.println("@@@@@@storeNo="+storeNo);
 		return sqlSession.selectList("storeInfo.getAttachment",storeNo);
 	}
 
@@ -55,6 +54,24 @@ public class SellerDaoImpl implements SellerDao {
 	public List<MenuAttachment> getthumbAttachment(String storeNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("storeInfo.getthumbAttachment",storeNo);
+	}
+
+	@Override
+	public int oldThumbNail(String nowThumb) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.oldThumbNail",nowThumb);
+	}
+
+	@Override
+	public int changeThmbNail(String newThumb) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.changeThmbNail",newThumb);
+	}
+
+	@Override
+	public int updateStoreInfo(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.updateStoreInfo",map);
 	}
 
 

@@ -45,5 +45,16 @@
    <select id="getthumbAttachment" resultType="menuAttachment">
        	select * from menuAttachment where storeNo = #{storeNo} and thumbFlag = 'Y'
    </select>
-
+   
+   <update id="oldThumbNail">
+   		update menuAttachment set thumbFlag='N' where renamedfilename=#{nowThumb}
+   </update>
+   
+   <update id="changeThmbNail">
+   		update menuAttachment set thumbFlag='Y' where renamedfilename=#{newThumb}
+   </update>
+   
+   <update id="updateStoreInfo">
+   	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
+   </update>
 </mapper>

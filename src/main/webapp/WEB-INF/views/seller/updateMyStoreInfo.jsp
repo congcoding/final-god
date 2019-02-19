@@ -11,13 +11,14 @@
 <div class="container">
 <h2>가게 정보</h2>
 <br>
-  <form name="updateFrm" action="${pageContext.request.contextPath}/seller/updateStore.do" method="post" enctype="multipart/form-data">
+  <form name="updateFrm" action="${pageContext.request.contextPath}/seller/updateStoreInfo.do" method="post">
     <div class="form-group row">
       <label for="inputEmail3" class="col-sm-2 col-form-label">가게명</label>
       <div class="col-sm-10">
       
       	<c:forEach items="${store}" var="store">
         <input type="text" class="form-control" id="storeName" value="${store.storeName}" readonly>
+      	<input type="hidden" class="form-control" id="storeNo" name="storeNo" value="${store.storeNo}">
       	
       </div>
     </div>
@@ -25,10 +26,20 @@
       <label for="inputEmail3" class="col-sm-2 col-form-label">영업시간</label>
       <div class="col-sm-10">
       <!-- 오전~오후 -->
-   
+      	     <c:set var="start" value="${fn:substring(store.operatingHours, 2, 4)}"></c:set>
+      	     <c:if test="${fn:contains(num,'시')}">
+      	     	 <c:set var="start" value="${fn:substringBefore(num,'시')}"></c:set>
+      	     </c:if>
+      	     
+      	     <c:set var="end" value="${fn:substring(store.operatingHours, 10, 12)}"></c:set>
+	       	     <c:if test="${fn:contains(num,'시')}">
+      	     	 <c:set var="end" value="${fn:substringBefore(num,'시')}"></c:set>
+      	     </c:if> 
+      	     
+      	     
 	        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" name="startChooseAmPm" >
 	        <c:if test="${fn:substring(store.operatingHours, 0, 2) =='오전'}">
-				<option selected value="오전">오전</option>
+				<option value="오전" selected>오전</option>
 		    	<option value="오후">오후</option>
 			</c:if>
 			
@@ -40,18 +51,11 @@
 	 	    </select>
 	 	    <!-- 몇시 -->
        		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="startTime" name="startTime">
+
 		    	
-		    	<c:forEach var="cnt" begin="1" end="12">
-		    	<c:if test="${fn:substring(store.operatingHours, 3, 4)!=cnt}">
-		        	<option value="${cnt}" class="chooseTime">${cnt}</option>
-		    	
-		    	</c:if>
-		    	
-		    	<c:if test="${fn:substring(store.operatingHours, 3, 4)==cnt}">
-		    		<option value="${cnt}" class="chooseTime" selected>${cnt}</option>
-		    	</c:if>
-		    
-		    	</c:forEach>
+ 		    	<c:forEach var="cnt" begin="1" end="12">
+		    		<option value="${cnt}" <c:if test="${startTime==cnt}">selected="selected"</c:if>>${cnt}</option>		    
+		    	</c:forEach> 
 		    	
 	 	    </select>
 	 	    ~
@@ -61,18 +65,10 @@
 		    	<option value="오후">오후</option>
 	 	    </select>
 	 	    <!-- 몇시 -->
-       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="endTime" name="endTime">
-		    	<c:forEach var="cnt" begin="1" end="12">
-		    	<c:if test="${fn:substring(store.operatingHours,11,12)!=cnt}">
-		        	<option value="${cnt}" class="chooseTime">${cnt}</option>
-		    	
-		    	</c:if>
-		    	
-		    	<c:if test="${fn:substring(store.operatingHours, 11, 12)==cnt}">
-		    		<option value="${cnt}" class="chooseTime" selected>${cnt}</option>
-		    	</c:if>
-		    
-		    	</c:forEach>
+       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="endTime" name="endTime">		    	
+ 		    	<c:forEach var="cnt" begin="1" end="12">
+		    		<option value="${cnt}" <c:if test="${startTime==cnt}">selected="selected"</c:if>>${cnt}</option>		    
+		    	</c:forEach> 
 	 	    </select>
       </div>
       
@@ -131,16 +127,17 @@
 <!-- thumbAttachment -->
 		  <c:forEach items="${thumbAttachment}" var="thumbAttachment">
 		  <img id="image_section" style="width:300px;height:300px;" src='${pageContext.request.contextPath}/resources/upload/storeInfo/${thumbAttachment.renamedFileName}' alt="your image" />
+		  <input type="hidden" name="nowThumb" value="${thumbAttachment.renamedFileName}" >
 		  </c:forEach>
 		  </div>
-		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb" name="thumb" >
+		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb"  name="newThumb" >
 		 			<c:forEach items="${attachment}" var="attachment">
 		    			<option value= ${attachment.renamedFileName} id="renameFile">${attachment.originalFileName}</option>
 		    		</c:forEach>
 		  </select>
 	</div>
 
- 
+     
       <div class="btnGroup">
 	       <button type="submit" class="btn btn-primary btn-lg">수정하기</button>
 		   <button type="button" class="btn btn-secondary btn-lg">돌아가기</button>
@@ -160,31 +157,18 @@ $("#updateAddressBtn").on("click", function(){
     }).open();
 })
 
-function readURL(input) {
- 
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
- 
-        reader.onload = function (e) {
-            $('#image_section').attr('src', e.target.result);
-        }
- 
-        reader.readAsDataURL(input.files[0]);
-    }
-}
- 
-$("#thumb").change(function(){
 
-
-    readURL(this);
+//사용자에게 미리 썸네일보여주는 제이쿼리
+$( "#thumb" ).change(function() {
+	 var str = "";
+  $( "select[name=newThumb] option:selected" ).each(function() {
+    str += $( this ).val();
+    console.log(str);
+  });
+ 
+  $("#image_section").attr("src","${pageContext.request.contextPath}/resources/upload/storeInfo/"+str);
+  
 });
-
-$("#renameFile").on("change",function(){
-	console.log(this.val());
-	console.log("함수실행");
-	
-});
-
 
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
