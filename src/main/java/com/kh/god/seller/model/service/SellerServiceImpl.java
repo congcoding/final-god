@@ -1,12 +1,15 @@
 package com.kh.god.seller.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -25,6 +28,7 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.insertSeller(s);
 	}
 	
+	@Override
 	public List<StoreInfo> myStore(String sellerId) {
 		List<StoreInfo> store = sellerDao.myStore(sellerId);
 		return store;
@@ -39,5 +43,46 @@ public class SellerServiceImpl implements SellerService {
 	public int updateSeller(Seller s) {
 		return sellerDao.updateSeller(s);
 	}
+	
+	@Override
+	public List<Menu> myStoreMenu(String sellerId) {
+		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
+		return menu;
+	}
+
+	@Override
+	public List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo) {
+		List<Map<String, Object>> getStoreInfoBystoreNo = sellerDao.getStoreInfoBystoreNo(storeNo);
+		return getStoreInfoBystoreNo;
+	}
+
+	@Override
+	public List<MenuAttachment> getAttachment(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getAttachment(storeNo);
+	}
+
+	@Override
+	public List<MenuAttachment> getthumbAttachment(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getthumbAttachment(storeNo);
+	}
+
+	@Override
+	public int oldThumbNail(String nowThumb) {
+		// TODO Auto-generated method stub
+		return sellerDao.oldThumbNail(nowThumb);	}
+
+	@Override
+	public int changeThmbNail(String newThumb) {
+		// TODO Auto-generated method stub
+		return sellerDao.changeThmbNail(newThumb);
+	}
+
+	@Override
+	public int updateStoreInfo(Map<String, Object> map) {
+		return sellerDao.updateStoreInfo(map);
+	}
+
 	
 }

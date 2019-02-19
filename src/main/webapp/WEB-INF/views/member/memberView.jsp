@@ -46,8 +46,63 @@ input#gender1, input#gender2{width : 30px;}
 input#gender2 {margin-left:50px;}
 select#selectYear{ width : 100px;}
 select#selectMonth, select#selectDay{ width : 65px;}
+.checkFavorite{width:30px !important}
 </style>
 
+<script>
+
+$(function(){
+	//프로필사진
+	if('${m.renamedFile}' != null){
+		$('#imgProfile').attr('src',
+							  "${pageContext.request.contextPath }/resources/upload/member/${m.renamedFile}");
+	}else{
+		$('#imgProfile').attr('src',"${pageContext.request.contextPath }/resources/images/avatar.png");
+	}
+	
+	
+	//생년월일
+	var birth = '${m.birth}';
+	var year = birth.substr(0,4);
+	var month = birth.substr(4,2);
+	var day = birth.substr(6,2);
+	
+	if(month.substr(0,1) == 0){
+		month = month.substr(1,1);
+	}
+	if(day.substr(0,1) == 0){
+		day = day.substr(1,1);
+	}
+
+	$('#selectYear').val(year);
+	$('#selectMonth').val(month);
+	$('#selectDay').val(day);
+	
+	//핸드폰
+	var phoneArr = '${m.phone}'.split('-');
+	$('#phone1').val(phoneArr[0]);
+	$('#phone2').val(phoneArr[1]);
+	$('#phone3').val(phoneArr[2]);
+	
+	//이메일
+	var emailArr = '${m.email}'.split('@');
+	$('#inputEmailAddress1').val(emailArr[0]);
+	$('#inputEmailAddress2').val(emailArr[1]);
+	
+	//취향
+	<c:forEach items = "${m.favorite}" var="favorite" varStatus="vs">
+		$('input:checkbox[name="favorite"]').each(function() {
+		    if(this.value == "${favorite}")
+		           this.checked = true;       
+		});
+	</c:forEach>
+	
+	
+
+});	
+	
+
+</script>
 
 <div id="MemberView-container">
 	<h2>개인 회원 정보</h2>
@@ -64,7 +119,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<!-- 프로필 사진 -->
 		<div id=inputProfile>	
 			<div class="imgProfile-wrapper">
-				<img id="imgProfile" src="${pageContext.request.contextPath }/resources/images/avatar.png" style="width:100%; height:100%">				
+				<img id="imgProfile" style="width:100%; height:100%">				
   			</div>
   			<div class="profile custom-file">
     			<input type="file" id="inputProfileFile" name="upFile">		
@@ -73,21 +128,21 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		
 		<!-- 아이디 -->
 		<div class="form-group row">
-    		<label for="inputMemberId" class="col-sm-3">아이디<span style="color:red;">&nbsp;*</span></label>
+    		<label for="inputMemberId" class="col-sm-3">아이디</label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberId" name="memberId" readonly>
+      			<input type="text" class="form-control" id="inputMemberId" name="memberId" value="${m.memberId }" readonly>
     		</div>
   		</div>	
   		
 		<!-- 비밀번호 -->
 		<div class="form-group row">
-    		<label for="inputPassword" class="col-sm-3">비밀번호 <span style="color:red;">&nbsp;*</span></label>
+    		<label for="inputPassword" class="col-sm-3">비밀번호</label>
     		<div>
       			<input type="password" class="form-control" id="inputPassword" name = "password">
     		</div>
   		</div>
   		<div class="form-group row">
-    		<label for="checkPassword" class="col-sm-3">비밀번호 확인<span style="color:red;">&nbsp;*</span></label>
+    		<label for="checkPassword" class="col-sm-3">비밀번호 확인</label>
     		<div>
       			<input type="password" class="form-control" id="checkPassword">
     		</div>
@@ -97,9 +152,10 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		
 		<!-- 이름 -->
 		<div class="form-group row">
-    		<label for="inputMemberName" class="col-sm-3">이름<span style="color:red;">&nbsp;*</span></label>
+    		<label for="inputMemberName" class="col-sm-3">이름</label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberName" name="memberName">
+      			<input type="text" class="form-control" id="inputMemberName" name="memberName" 
+      				   value="${m.memberName }" readonly>
     		</div>
   		</div>		
   		
@@ -107,21 +163,21 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<div class="form-group row">
 			<input type="hidden" name="birth" />
 			<label for="selectBirth" class="col-sm-3">생년월일</label>	
-			<select class="form-control selectBirth" id="selectYear">  
+			<select class="form-control selectBirth" id="selectYear" disabled>  
   				<option selected="selected" disabled="disabled">년</option>
   				<c:forEach var="year" begin="1935" end = "2004">
   					<option>${year }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectMonth"> 
+			<select class="form-control selectBirth" id="selectMonth" disabled> 
   				<option selected="selected" disabled="disabled">월</option>
-  				<c:forEach var="month" begin="01" end = "12">
+  				<c:forEach var="month" begin="1" end = "12">
   					<option>${month }</option>
   				</c:forEach>
 			</select>
 			&nbsp;
-			<select class="form-control selectBirth" id="selectDay"> 
+			<select class="form-control selectBirth" id="selectDay" disabled> 
   				<option selected="selected" disabled="disabled">일</option>
   				<c:forEach var="day" begin="1" end = "31">
   					<option>${day }</option>
@@ -136,7 +192,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
     		<div class="form-inline">
       			<input type="text" class="form-control" id="inputEmailAddress1">
       			&nbsp;@&nbsp;
-      			<input type="text" class="form-control" id="inputEmailAddress2" >
+      			<input type="text" class="form-control" id="inputEmailAddress2">
       			&nbsp;
       			<select class="form-control" id="selectEmailAddress" >
       				 <option value="">선택하세요</option>
@@ -154,10 +210,10 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<!-- 핸드폰 번호 -->
 		<div class="form-group row">
 			<input type="hidden" name="phone" />
-			<label for="phone1" class="col-sm-3">핸드폰 번호<span style="color:red;">&nbsp;*</span></label>	
+			<label for="phone1" class="col-sm-3">핸드폰 번호</label>	
 			<div class="form-inline">
 				<select class="form-control selectPhone" id="phone1"> 
-	  				<option selected="selected">010</option>
+	  				<option>010</option>
 	  				<option>019</option>
 	  				<option>016</option>
 				</select>
@@ -165,7 +221,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 				<input class="form-control selectPhone" type="text" id="phone2" 
 					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" id="phone3"
+				<input class="form-control selectPhone" type="text" id="phone3" 
 					   maxlength="4" style="width: 80px;" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
 			</div>
 		</div>
@@ -173,20 +229,24 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		
 		<!-- 주소 api -->
 		<div class="form-group row">
-			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
-			<input class = "form-control" type="text" name="address" id="address" onclick="execDaumPostcode();"/>		
+			<label for="address" class="col-sm-3">주소</label>	
+			<input class = "form-control" type="text" name="address" id="address" 
+				   value="${m.address }" onclick="execDaumPostcode();"/>		
 		</div>
 		
 		<!-- 취향 -->
-		<div class="form-check-inline form-check">
-			취향 : &nbsp; 
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite0" value="1"><label for="favorite0" class="form-check-label">치킨</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite1" value="2"><label for="favorite1" class="form-check-label">피자</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite2" value="3"><label for="favorite2" class="form-check-label">족발/보쌈</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite3" value="4"><label for="favorite3" class="form-check-label">분식</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite4" value="5"><label for="favorite4" class="form-check-label">중식</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite4" value="6"><label for="favorite4" class="form-check-label">일식</label>&nbsp;
-			<input type="checkbox" class="form-check-input" name="favorite" id="favorite4" value="7"><label for="favorite4" class="form-check-label">한식</label>&nbsp;
+		<div class="form-group row">
+			<label class="col-sm-3">취향</label>
+			
+			<div class="form-inline">						  			
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite0" value="1"><label for="favorite0" class="form-check-label col-form-label">치킨</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite1" value="2"><label for="favorite1" class="form-check-label col-form-label">피자</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite2" value="3"><label for="favorite2" class="form-check-label col-form-label">족발/보쌈</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite3" value="4"><label for="favorite3" class="form-check-label col-form-label">분식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="5"><label for="favorite4" class="form-check-label col-form-label">중식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="6"><label for="favorite4" class="form-check-label col-form-label">일식</label>&nbsp;
+				<input type="checkbox" class="form-check-input checkFavorite" name="favorite" id="favorite4" value="7"><label for="favorite4" class="form-check-label col-form-label">한식</label>&nbsp;
+			</div>
 		</div>
 		<hr />
 		
@@ -195,7 +255,6 @@ select#selectMonth, select#selectDay{ width : 65px;}
 	</form>
 	
 </div>
-
 
 
 

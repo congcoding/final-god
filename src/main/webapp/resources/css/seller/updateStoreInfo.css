@@ -1,0 +1,65 @@
+@charset "UTF-8";
+.custom-select mb-2 mr-sm-2 mb-sm-0{
+	width: 13%;
+}
+#preview{
+	border:1px solid black;
+	width:300px;
+	height:300px;
+}
+
+#container{
+	    margin-top: 7%;
+}
+.chooseAmPm{
+    width: 12%;
+}
+.locationNum{
+	    width: 12%;
+	
+}
+.storeName{
+		    width: 12%;
+	
+}
+.tel{
+	  height: 52px;
+}
+#tel1{
+	    position: relative;
+    left: 13%;
+    top: -38px;
+}
+#tel2{
+	position: relative;
+    left: 27%;
+    top: -69px;
+}
+#tel3{
+	position: relative;
+    left: 29%;
+    top: -201%;
+}
+#address-container{
+    margin-left: -10px;
+}
+#personalday-container{
+	    margin-left: -10px;
+    margin-top: 12px;v
+}
+#thunbnail-container{
+ position: relative;
+    left: 33%;	
+}
+.btnGroup{
+	margin-top: 22px;
+    margin-left: 75%;
+}
+#address{
+	    visibility: hidden;
+}
+  #updateAddressBtn{
+  position: relative;
+    top: -11px;
+    left: -7%;
+    }

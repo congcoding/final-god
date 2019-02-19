@@ -169,6 +169,9 @@ function getLocation(){
 			    crossOrigin: true,
 			    headers:{'Authorization' : 'KakaoAK 4c6d6939204abedb25e64dcf1adfaaf2'},
 			    success: function(data) {
+			    	console.log(data);
+
+			    	console.log(data.documents[0].region_2depth_name);
 			    	console.log(data.documents[0].address_name);
 			    	var address=data.documents[0].address_name;
 			    	$("#search").val(address);

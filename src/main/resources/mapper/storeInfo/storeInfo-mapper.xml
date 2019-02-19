@@ -28,4 +28,43 @@
 		insert into sattachment(attachmentno , storeno , originalfilename, renamedfilename, uploaddate , downloadcount, status )
 		values (seq_sAttachmentno.nextval , #{storeNo} , #{originalFileName} , #{renamedFileName}, default, 0 ,default  )
 	</insert>
+
+	<select id="myStoreMenu" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.sellerId = #{sellerId}
+    </select>
+
+   <select id="menuList"  resultType="menu">
+   	select * from menu where storeno = #{storeNo}
+   </select>
+   
+   <select id="storeInfoList"  resultType="storeInfo">
+   	   select * from storeinfo where storeno = #{storeNo}
+   </select>
+	
+   <select id="menuCount"  resultType="_int">
+   	  select count(*) from menu where storeno = #{storeNo}
+   </select>
+ 
+   <select id="getAttachment" resultType="menuAttachment">
+   	select * from menuAttachment where storeNo = #{storeNo}
+   </select>  
+   
+   <select id="getthumbAttachment" resultType="menuAttachment">
+       	select * from menuAttachment where storeNo = #{storeNo} and thumbFlag = 'Y'
+   </select>
+   
+   <update id="oldThumbNail">
+   		update menuAttachment set thumbFlag='N' where renamedfilename=#{nowThumb}
+   </update>
+   
+   <update id="changeThmbNail">
+   		update menuAttachment set thumbFlag='Y' where renamedfilename=#{newThumb}
+   </update>
+   
+   <update id="updateStoreInfo">
+   	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
+   </update>
+
 </mapper>

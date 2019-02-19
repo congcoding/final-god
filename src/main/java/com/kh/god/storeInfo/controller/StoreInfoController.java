@@ -95,7 +95,7 @@ public class StoreInfoController {
 	@RequestMapping(value = "/storeinfo/checkBrno.do" ,  method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no ) throws Exception {
-	
+
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		
@@ -214,5 +214,4 @@ public class StoreInfoController {
 		
 		}
 	}
-	
 

@@ -76,7 +76,7 @@ $(function(){
 	$("#memberList").addClass("active");	
 });
 
-function fn_goMemberForm(){
+function fn_goMemberList(){
 	location.href = "${pageContext.request.contextPath}/admin/memberList.do";
 };
 function fn_goSellerList(){
@@ -121,8 +121,8 @@ function bFlagCheck(sellerId,bFlag){
 
 				<!-- Page Heading -->
 				<div id="head-container">
-					<div id="member" class="alert-light" onclikc="fn_goMemberList();">일반회원</div>
-					<div id="seller" class="alert-info" onclick="fn_goSellerForm();">판매자</div>
+					<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div>
+					<div id="seller" class="alert-info" onclick="fn_goSellerList();">판매자</div>
 				</div>
 
 				<table class="table" id="tbl-seller">

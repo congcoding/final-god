@@ -1,9 +1,13 @@
 package com.kh.god.seller.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -17,11 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.common.util.Utils;
+import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
@@ -145,15 +154,23 @@ public class SellerController {
 		
 	//내 가게 
 	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId,Model model ) {
+	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+		
+		if(logger.isDebugEnabled()) {
+			logger.debug("내 가게 보기 요청!"); 
+		}
+		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
-
+		
+		List<Menu> menu = sellerService.myStoreMenu(sellerId);
+		
+		System.out.println("메뉴 나오라" + menu);
+		
 		//메뉴 뽑기
 		//페이지바 만들기
 		model.addAttribute("store", store);
-		//model.addAttribute("menu", menu);
+		model.addAttribute("menu", menu);
 
-		
 		return "seller/goMyStore";
 
 	}
@@ -249,6 +266,82 @@ public class SellerController {
 		return map;
 	}
 
+	@RequestMapping(value = "/seller/goMyStoreOrder.do" )
+	public String goMyStoreOrder() {
 	
+		
+		return "seller/MyStoreOrder";
+	}
+	
+	
+
+	
+    @RequestMapping("/seller/goUpdateMyStore.do")
+    public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
+    	//' ' 제거 
+    	storeNo = storeNo.replace("'", "");
+  
+    	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);   
+    	List<MenuAttachment> attachment = sellerService.getAttachment(storeNo);
+    	List<MenuAttachment> thumbAttachment = sellerService.getthumbAttachment(storeNo);
+    	model.addAttribute("store", store);
+    	model.addAttribute("attachment", attachment);
+    	model.addAttribute("thumbAttachment", thumbAttachment);
+
+    	return "seller/updateMyStoreInfo";
+    }
+
+    //내 가게 정보수정
+    @RequestMapping("/seller/updateStoreInfo.do")
+    public String updateStore(@RequestParam(name="startChooseAmPm" , required = false) String startChooseAmPm,
+    		@RequestParam(name="startTime" , required = false) String startTime,
+    		@RequestParam(name="endChooseAmPm" , required = false) String endChooseAmPm,
+    		@RequestParam(name="endTime" , required = false) String endTime,
+    		@RequestParam(name="locationStartNum" , required = false) String locationStartNum,
+    		@RequestParam(name="tel1" , required = false) String tel1,
+    		@RequestParam(name="tel2" , required = false) String tel2,
+    		@RequestParam(name="address1" , required = false) String address1,
+    		@RequestParam(name="address2" , required = false) String address2,
+    		@RequestParam(name="personalday" , required = false) String personalday,
+    		@RequestParam(name="nowThumb" , required = false) String nowThumb,
+    		@RequestParam(name="newThumb" , required = false) String newThumb,
+    		@RequestParam(name="storeNo") String storeNo  		
+	
+    		) {
+
+    	String operatingHours = startChooseAmPm+startTime+"시 ~ "+endChooseAmPm+endTime+"시";
+    	String storeTel = locationStartNum+"-"+tel1+"-"+tel2;
+    	String storeAddress = "";
+    	if(!address2.equals("")) {
+    		storeAddress = address1+" "+address2;
+    	} else {
+    		storeAddress = address1;
+    	}
+    	
+		Map<String , Object> map = new HashMap<>();
+		map.put("storeNo",storeNo);
+		map.put("operatingHours",operatingHours);
+		map.put("storeTel",storeTel);
+		map.put("storeAddress",storeAddress);
+		map.put("personalday",personalday);
+
+    	//업데이트
+    	int result = sellerService.updateStoreInfo(map);
+    	System.out.println(result>0?"수정성공":"실패임다");
+    	
+    	if(!nowThumb.equals(newThumb)) {
+    		//썸네일을 바꾼 경우
+    		//전에 했던 썸네일 Flag=N으로 업데이트 
+    		int oldThumbNail = sellerService.oldThumbNail(nowThumb);
+    		//뉴 썸네일 Flag=Y로 업데이트
+    		int changeThmbNail = sellerService.changeThmbNail(newThumb);
+    	}
+    	
+    	System.out.println("storeNo=>"+storeNo);
+
+    	//int updateThumb = sellerService.updateStoreInfo();
+
+    	return "seller/goUpdateMyStore.do";
+    }
 
 }
