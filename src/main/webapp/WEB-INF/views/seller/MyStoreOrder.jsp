@@ -39,12 +39,14 @@
 				  </thead>
 				  <tbody>
 				    <tr>
+				    
 				      <td class="orderMenu">짜장면 * 1</td>
 				      <td class="orderAddress">경기도 부천시 옥산로33 1414동 403호</td>
 				      <td class="orderPhone">010-8434-5390</td>
 				      <td class="orderRequest">벨 누르지말아주세요</td>
 				      <td class="orderWay">결제완료</td>
 				      <td class="orderPrice">21000원</td>
+				     
 				      <td>
 				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">주문접수</button>
 				      <button type="button" id="orderCancel" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>

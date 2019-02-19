@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -72,6 +74,18 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public int updateStoreInfo(Map<String, Object> map) {
 		return sellerDao.updateStoreInfo(map);
+	}
+
+	@Override
+	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.myStoreOrderInfo(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> goMyStoreOrder(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.goMyStoreOrder(storeNo);
 	}
 
 

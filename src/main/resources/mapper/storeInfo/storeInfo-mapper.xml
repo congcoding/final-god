@@ -57,4 +57,13 @@
    <update id="updateStoreInfo">
    	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
    </update>
+   
+   <select id="goMyStoreOrder" resultType="map">
+select M.address,M.phone,C.* from member M,
+(select A.storeno,A.totalPrice,A.orderTime,A.receiveFlag,A.request,B.menuName,B.amount,A.memberID,B.orderno
+from OrderInfo A ,
+(select O.orderno,M.menuname,O.menucode,O.amount
+from menu M, ordermenu O
+where M.menucode = O.menucode) B where A.orderno=B.orderno AND storeno=#{storeNo} and receiveFlag='N' ) C where M.memberid=C.memberid
+   </select>
 </mapper>
