@@ -404,6 +404,36 @@ public class AdminController {
 		
 		return mav;
 
-}
+	}
+	
+	@RequestMapping("/admin/storePMSList.do")
+	public String storePMSList(@RequestParam(value="cPage", defaultValue="1") int cPage, Model model) {
+		
+		int numPerPage = 10;
+		List<Map<String,String>> list = adminService.storePMSList(cPage, numPerPage);
+		int totalContents = adminService.countStorePMSList();
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("list",list);
+		
+		return "/admin/storePMSList";
+	}
+	
+	@RequestMapping("/admin/storeList.do")
+	public String storeList(@RequestParam(value="cPage", defaultValue="1") int cPage, Model model) {
+		
+		int numPerPage = 10;
+		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage);
+		int totalContents = adminService.countStoreList();
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("list",list);
+		
+		return "/admin/storeList";
+	}
 	
 }
