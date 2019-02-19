@@ -29,5 +29,15 @@ public class SellerServiceImpl implements SellerService {
 		List<StoreInfo> store = sellerDao.myStore(sellerId);
 		return store;
 	}
+
+	@Override
+	public int updatePwd(String password) {
+		return sellerDao.updatePwd(password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sellerDao.updateSeller(s);
+	}
 	
 }

@@ -13,4 +13,8 @@ public interface SellerService {
 	
 	List<StoreInfo> myStore(String sellerId);
 
+	int updatePwd(String password);
+
+	int updateSeller(Seller seller);
+
 }

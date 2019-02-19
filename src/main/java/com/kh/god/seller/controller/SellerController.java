@@ -47,7 +47,7 @@ public class SellerController {
 		logger.debug("ID중복체크 : "+ sellerId);
 		Map<String , Object> map = new HashMap<>();
 		Seller s = sellerService.selectOneSeller(sellerId);
-		logger.debug("seller"+ s);
+		//logger.debug("seller"+ s);
 		boolean isUsable = s == null ? true:false;
 		
 		map.put("isUsable", isUsable) ;
@@ -57,7 +57,7 @@ public class SellerController {
 	
 	@RequestMapping("/seller/sellerEnrollEnd.do")
 	public String insertSeller(Seller s , Model model) {
-		logger.debug("sellerinsert"+ s);
+		//logger.debug("sellerinsert"+ s);
 		System.out.println("암화화전 :"+s.getPassword());
 		
 		String temp = s.getPassword();
@@ -136,6 +136,7 @@ public class SellerController {
 		
 		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
 	
+		//System.out.println("@@@@@@@@@"+ s.getPhone());
 		
 		model.addAttribute("s", s);
 		
@@ -190,18 +191,63 @@ public class SellerController {
 		map.put("result" , result);
 		map.put("msg" , msg);
 		
-		logger.debug("여기까지는 왔냐?"+ map);
+		//logger.debug("여기까지는 왔냐?"+ map);
 		
 		return map;
 	}
 	
 	@RequestMapping(value = "/seller/sellerUpdate.do" )
-	public String sellerUpdate(HttpSession session , Model model) {
+	public String sellerUpdate(HttpSession session , Model model , Seller seller) {
+		
+		logger.debug("!!!!!!!!!!!!!!!!!!!!"+seller);
+		
+		int result = sellerService.updateSeller(seller);
+		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+		
+		String loc = "/seller/sellerView.do";
+		String msg = "";
+		
+		
+		if(result>0) {
+			msg ="수정 성공";
+			
+		}else{
+			msg ="수정 실패";
+		}
+		
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+		
 	
 		
-		return "seller/sellerView";
+		return "common/msg";
 	}
 	
+	@RequestMapping(value ="/seller/updatePwd.do" , method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> updatePwd(@RequestParam("password") String password ) {
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		String temp = password;
+		
+		password = bcryptPasswordEncoder.encode(temp);
+		
+		int result = sellerService.updatePwd(password);
+		String msg = "";
+		
+		if(result > 0) {
+			msg ="비밀번호 변경 성공";
+		}else {
+			msg ="비밀번호 변경 실패";
+		}
+		
+		map.put("msg", msg);
+		
+		return map;
+	}
 
 	
 

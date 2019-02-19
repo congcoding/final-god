@@ -19,4 +19,13 @@
 	<select id="getMyStore" resultType="storeInfo">
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
+	
+	<insert id="addStore">
+		insert into storeinfo values(#{storeNo} , #{storeName}, #{storeTel} , #{storeAddress} , default , #{categoryNo} , #{storeIntro}, #{personalDay} , #{operatingHours} , default, default ,#{deliveryMinPrice} , #{sellerId})
+	</insert>
+	
+	<insert id="insertAttachment">
+		insert into sattachment(attachmentno , storeno , originalfilename, renamedfilename, uploaddate , downloadcount, status )
+		values (seq_sAttachmentno.nextval , #{storeNo} , #{originalFileName} , #{renamedFileName}, default, 0 ,default  )
+	</insert>
 </mapper>

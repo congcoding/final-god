@@ -3,13 +3,19 @@ package com.kh.god.storeInfo.model.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.storeInfo.exception.StoreInfoException;
 import com.kh.god.storeInfo.model.dao.StoreInfoDao;
+import com.kh.god.storeInfo.model.vo.SAttachment;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
 public class StoreInfoServiceImpl implements StoreInfoService {
+	
+	Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
 	StoreInfoDao storeInfoDao;
@@ -22,6 +28,35 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	@Override
 	public int selectStoreInfoTotalContents(int categoryNo) {
 		return storeInfoDao.selectStoreInfoTotalContents(categoryNo);
+	}
+
+	@Override
+	public int addStore(StoreInfo s, List<SAttachment> attachList) {
+		int result = 0 ;
+		String storeNo = "" ;
+		
+		result = storeInfoDao.addStore(s);
+		storeNo = s.getStoreNo();
+		logger.debug("사업자번호호호호호호호호호호혹"+storeNo);
+		
+		if(result == 0 ) {
+			throw new StoreInfoException("사업장 등록 오류!");
+		}
+		
+		if(attachList.size() > 0) {
+			for(SAttachment a : attachList) {
+				a.setStoreNo(storeNo);
+				result = storeInfoDao.insertAttachment(a);
+				if(result == 0) {
+					throw new StoreInfoException("첨부파일 등록 오류!");
+				}
+				
+			}
+		}
+		
+		
+		return result;
+		
 	}
 
 

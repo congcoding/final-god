@@ -8,6 +8,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.storeInfo.model.vo.SAttachment;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 @Repository
 public class StoreInfoDaoImpl implements StoreInfoDao {
 	
@@ -24,5 +27,18 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	public int selectStoreInfoTotalContents(int categoryNo) {
 		return sqlSession.selectOne("storeInfo.selectStoreInfoTotalContents", categoryNo);
 	}
+
+	@Override
+	public int addStore(StoreInfo s) {
+		return sqlSession.insert("storeInfo.addStore" , s);
+	}
+
+	@Override
+	public int insertAttachment(SAttachment a ) {
+		return sqlSession.insert("storeInfo.insertAttachment" , a );
+	}
+	
+
+	
 
 }

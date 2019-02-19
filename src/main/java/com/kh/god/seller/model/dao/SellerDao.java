@@ -13,4 +13,8 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
+	int updatePwd(String password);
+
+	int updateSeller(Seller s);
+
 }

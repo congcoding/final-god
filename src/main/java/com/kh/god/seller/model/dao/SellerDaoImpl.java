@@ -32,4 +32,14 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("storeInfo.getMyStore", sellerId);
 	}
 
+	@Override
+	public int updatePwd(String password) {
+		return sqlSession.update("seller.updatePwd" , password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sqlSession.update("seller.updateSeller" , s);
+	}
+
 }

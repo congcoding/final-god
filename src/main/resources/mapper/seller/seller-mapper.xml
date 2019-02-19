@@ -13,4 +13,11 @@
     	insert into seller values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
     </insert>
 
+	<update id="updatePwd">
+		update seller set password = #{password}
+	</update>
+	
+	<update id="updateSeller">
+		update seller set email = #{email} , phone = #{phone}
+	</update>
 </mapper>
