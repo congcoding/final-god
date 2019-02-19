@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.Seller;
-import com.kh.god.storeInfo.model.vo.Attachment;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
@@ -29,11 +29,21 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.insert("seller.insertSeller", s);
 	}
 
+	@Override
 	public List<StoreInfo> myStore(String sellerId) {
-
 		return sqlSession.selectList("storeInfo.getMyStore", sellerId);
 	}
 
+	@Override
+	public int updatePwd(String password) {
+		return sqlSession.update("seller.updatePwd" , password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sqlSession.update("seller.updateSeller" , s);
+	}
+	
 	@Override
 	public List<Menu> myStoreMenu(String sellerId) {
 		return sqlSession.selectList("storeInfo.myStoreMenu", sellerId);
@@ -44,13 +54,29 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("storeInfo.storeInfoList", storeNo);
 	}
 
-
 	@Override
-	public List<Attachment> getAttachment(String storeNo) {
-		System.out.println("@@@@@@storeNo="+storeNo);
+	public List<MenuAttachment> getAttachment(String storeNo) {
 		return sqlSession.selectList("storeInfo.getAttachment",storeNo);
 	}
 
+	@Override
+	public List<MenuAttachment> getthumbAttachment(String storeNo) {
+		return sqlSession.selectList("storeInfo.getthumbAttachment",storeNo);
+	}
 
+	@Override
+	public int oldThumbNail(String nowThumb) {
+		return sqlSession.update("storeInfo.oldThumbNail",nowThumb);
+	}
+
+	@Override
+	public int changeThmbNail(String newThumb) {
+		return sqlSession.update("storeInfo.changeThmbNail",newThumb);
+	}
+
+	@Override
+	public int updateStoreInfo(Map<String, Object> map) {
+		return sqlSession.update("storeInfo.updateStoreInfo",map);
+	}
 
 }
