@@ -3,6 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <fmt:requestEncoding value="UTF-8"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="" name="pageTitle"/>
@@ -102,6 +104,19 @@ span#passworderror3{
 #newpassword-div{
 	display: none;
 }
+#addStore{
+	width: 800px;
+    text-align: left;
+    border: 1px solid lightgray;
+    height: 80px;
+    color: gray;
+    cursor : pointer;
+}
+.filelabel{
+    width: 359px;
+    margin-left: 8px;
+    border-radius: 3px;
+}
 
 </style>
 
@@ -154,21 +169,20 @@ span#passworderror3{
   		<div class="form-group row">
     		<label for="checkPassword" class="col-sm-3">새 비밀번호 확인</label>
     		<div>
-      			<input type="button" class="" value="수정">
+      			<input type="button" class="btn btn-outline-success" onclick="updatePwd()" value="수정">
     		</div>
   		</div>
   		</div>
   		
 		<hr />
 			<form name="sellerUpdateFrm" 
-		  method="post" 
-		  onsubmit="return validate();" >
+		  method="post"  action="${pageContext.request.contextPath}/seller/sellerUpdate.do">
 		
 		<!-- 이름 -->
 		<div class="form-group row">
     		<label for="inputMemberName" class="col-sm-3">이름</label>
     		<div>
-      			<input type="text" class="form-control" name="sellerName" id="inputMemberName">
+      			<input type="text" class="form-control" name="sellerName" id="inputMemberName" value="${s.sellerName}" disabled="disabled">
     		</div>
   		</div>		
   		
@@ -179,9 +193,9 @@ span#passworderror3{
 			<input type="hidden" name="email" />
     		<label for="inputEmail" class="col-sm-3">이메일</label>
     		<div class="form-inline">
-      			<input type="text" class="form-control" id="inputEmailAddress">
+      			<input type="text" class="form-control" id="inputEmailAddress" value="${fn:split(s.email , '@')[0]}" />
       			&nbsp;@&nbsp;
-      			<input type="text" class="form-control" id="inputEmailAddress1" >
+      			<input type="text" class="form-control" id="inputEmailAddress1" value="${fn:split(s.email , '@')[1]}" />
       			&nbsp;
       			<select class="form-control" id="selectEmailAddress" >
       				 <option value="">선택하세요</option>
@@ -201,16 +215,16 @@ span#passworderror3{
 			<input type="hidden" name="phone" />
 			<label for="selectPhone" class="col-sm-3">핸드폰 번호</label>	
 			<div class="form-inline">
-				<select class="form-control selectPhone" id="selectPhone" > 
+				<select class="form-control selectPhone" id="selectPhone" value="${fn:split(s.phone ,'-')[0]}" > 
 	  				<option selected="selected">010</option>
 	  				<option>019</option>
 	  				<option>016</option>
 				</select>
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" id="phone1" maxlength="4" style="width: 80px;"
+				<input class="form-control selectPhone" type="text" id="phone1" maxlength="4" style="width: 80px;" value="${fn:split(s.phone ,'-')[1]}"
 					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
 				&nbsp;-&nbsp;
-				<input class="form-control selectPhone" type="text" id="phone2" maxlength="4" style="width: 80px;" 
+				<input class="form-control selectPhone" type="text" id="phone2" maxlength="4" style="width: 80px;" value="${fn:split(s.phone ,'-')[2]}"
 					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
 			</div>
 		</div>
@@ -218,33 +232,161 @@ span#passworderror3{
 		
 	
 		
-		<input type="submit" class="btn btn-outline-success" value="가입하기" >
+		<input type="submit" class="btn btn-outline-success" onclick="validate();" value="수정하기" >
 	
 	</form>
-</div>
+	
+	<hr />
+	<br />
+	<!-- 리스트로 본인 사업장 보여주기 -->
+	
+	<!-- 사업장 추가 버튼 -->
+	<div id="addStore"  onclick="addStore();" >
+	<br />
+   	&nbsp;&nbsp;<i class="fas fa-plus" style="font-size:28px; display:inline;"></i><h5 style="display: inline;">&nbsp;&nbsp;사업장 추가</h5>
+	</div>
+	<br />
+	<br />
+	
+	
+	<!-- 사업장 정보 출력하기 -->
+	
+	<div id="addStore-container" style="display:none;">
+	<h2>사업장 정보</h2>
+	<br />
+	<hr />	
+	<br />
+	<!-- action="${pageContext.request.contextPath}/seller/addStore.do" -->
+		<div class="form-group row">
+    		<label for="inputSellerId" class="col-sm-3">사업자번호</label>
+    		<div>
+      			<input type="text" class="form-control" id="brno"  >
+    		</div>&nbsp;&nbsp;
+    		<button  class="btn btn-outline-success" id="brno-btn" onclick="brnoChk();" >확인</button>
+    		<input type="hidden" id="brnoCheck" value="0"/>
+  		</div>	
+  		<div id="addStoreNext-container" >
+			<form  enctype="multipart/form-data" method="post" action="${pageContext.request.contextPath }/storeInfo/addStore.do"  >
+				<input type="hidden" name="storeNo" id="storeNo" />
+				<input type="hidden" name="sellerId" value="${s.sellerId}" />
+				
+				<!-- input:file소스 : https://getbootstrap.com/docs/4.1/components/input-group/#custom-file-input -->
+				<!-- 사업자등록증 사본등록 -->
+			<div class="form-group row input-group mb-3">
+			<label for="upfile1" class="col-sm-3">사업자등록증 사본등록</label>
+			  <div class="input-group-prepend form-inline" style="padding:0px;">
+			   <!-- <span class="input-group-text" >첨부파일1</span>  -->
+			  </div>
+			  <div class="custom-file">
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
+			    <label class="custom-file-label filelabel" for="upFile1" style="overflow: hidden; border-radius: 3px;">파일을 선택하세요</label>
+			  </div>
+			</div>
+			
+			<!--영업시곤증 사본등록 -->
+			<div class="form-group row input-group mb-3">
+				<label for="upfile2" class="col-sm-3">영업신고증 사본등록</label>
+			  <div class="input-group-prepend form-inline" style="padding:0px;">
+			    <!-- <span class="input-group-text" >첨부파일2</span> -->
+			  </div>
+			  <div class="custom-file">
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile2" multiple >
+			    <label class="custom-file-label filelabel" for="upFile2" style="overflow: hidden; border-radius: 3px;">파일을 선택하세요</label>
+			  </div>
+			</div>
+			<!--사업장 이름 -->
+			 <div class="form-group row">
+    		<label for="storeName" class="col-sm-3">사업장 이름</label>
+    		<div>
+      			<input type="text" class="form-control" name="storeName" id="storeName"/>
+    		</div>&nbsp;&nbsp;
+  		</div>	
+			
+			<!-- 사업장 종류 selectbox -->
+				<div class="form-group row">
+					<label for="categoryNo" class="col-sm-3">사업장 종류</label>	
+					<div class="form-inline">
+						<select class="form-control" id="categoryNo" name="categoryNo" required="required"> 
+	  						<option selected="selected">선택</option>
+	  						<option value="1">치킨</option>
+	  						<option value="2">피자</option>
+	  						<option value="3">보쌈/족발</option>
+	  						<option value="4">분식</option>
+	  						<option value="5">중식</option>
+	  						<option value="6">일식</option>
+	  						<option value="7">한식</option>
+						</select>
+					</div>
+				</div>
+			 	
+				 <!-- 사업자 전화번호 -->
+			<div class="form-group row">
+				<input type="hidden" name="storeTel" />
+				<label for="selectPhone" class="col-sm-3">사업장 번호</label>	
+			<div class="form-inline">
+				<select class="form-control selectPhone" id="selectStoretel" > 
+	  				<option selected="selected">02</option>
+	  				<option>010</option>
+	  				<option>019</option>
+	  				<option>016</option>
+				</select>
+				&nbsp;-&nbsp;
+				<input class="form-control selectPhone" type="text" id="storetel1" maxlength="4" style="width: 80px;" 
+					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>  
+				&nbsp;-&nbsp;
+				<input class="form-control selectPhone" type="text" id="storetel2" maxlength="4" style="width: 80px;"
+					   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
+			</div>
+			 
+		</div>
+	<!--  주소 api -->
+		<div class="form-group row">
+			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
+			<input class ="form-control" type="text" name="storeAddress" id="storeAddress" onclick="execDaumPostcode();"/>		
+		</div>
+		<!-- storIntro -->
+		<div class="form-group row">
+    		<label for="storeIntro" class="col-sm-3">사업장 소개</label>
+    		<div>
+      			<input type="text" class="form-control" name="storeIntro" id="storeIntro" style="height : 100px;" />
+    		</div>&nbsp;&nbsp;
+  		</div>	
+  		<!-- personalDay -->
+		<div class="form-group row">
+    		<label for="personalDay" class="col-sm-3">휴업일</label>
+    		<div>
+      			<input type="text" class="form-control" name="personalDay" id="personalDay" />
+    		</div>&nbsp;&nbsp;
+  		</div>		
+  		<!-- operatingHours -->
+		<div class="form-group row">
+    		<label for=operatingHours" class="col-sm-3">영업시간</label>
+    	<div>
+      			<input type="text" class="form-control" name="operatingHours" id="operatingHours" />
+    		</div>&nbsp;&nbsp;
+  		</div>		
+  		<!-- deliveryMinPrice -->
+		<div class="form-group row">
+    		<label for=deliveryMinPrice" class="col-sm-3">최소주문금액</label>
+    	<div>
+      			<input type="text" class="form-control" name="deliveryMinPrice" id="deliveryMinPrice" />
+    		</div>&nbsp;&nbsp;
+  		</div>		
+    	
+  		
+				<input type="submit" class="btn btn-outline-success" value="등록하기"  onclick="return validate2();"/>
+		</form>
+  		</div>
+	</div>
+	</div>
+
 
 <script>
 
 
 function validate(){ /* 유효성 검사 */
 	
-	$("#sellerUpdateFrm").attr("action", "${pageContext.request.contextPath}/seller/sellerUpdate.do");
-	
-	if($("#inputSellerId").val().trim().length < 7){
-	      alert("아이디는 6글자 이상 입력해주세요");
-	      return false;	      
- 	}else if( $("#inputSellerId").val().trim().length >16){
- 		alert("아이디는 16글자 이하 입력해주세요");
-	      return false;	
- 		
- 	}
-	
- 	
-	if($("#password_").val() != $("#password2").val()){
-	      alert("비밀번호가 일치하지 않습니다.");
-	      return false;
-	}
-	
+
 	var emailval = $("#inputEmailAddress").val().trim() + "@" + $("#inputEmailAddress1").val().trim();
 	$("[name=email]").val(emailval);
 
@@ -252,6 +394,22 @@ function validate(){ /* 유효성 검사 */
 	$("[name=phone]").val(phoneval);
 	
 	
+	return true;
+
+};
+
+function validate2(){
+	
+	
+	if($("#brnoCheck").val() === "0"){
+		alert("사업자번호를 확인하세요.");
+		return false;
+	}
+
+	
+	var storetelval = $("#selectStoretel").val()+"-"+$("#storetel1").val().trim()+"-"+$("#storetel1").val().trim();
+	$("[name=storeTel]").val(storetelval);
+	 
 	return true;
 };
 
@@ -288,7 +446,7 @@ $("#inputSellerId").on("keyup",function(){
 	       	 if(data.isUsable == true){  //jsonView는 객체로 뱉는중(boolean 으로 뱉고있다. jquery 가 바꿔줌)
 	        	 $("#error").hide();
 	        	 $("#ok").show();
-	        	 $("#idDuplicateCheck").val(1);	        	
+	        	 $("#idDuplicateCheck").val(1);	
 	         }else{ //false
 	        	 $("#error").show();
 	        	 $("#ok").hide();
@@ -365,7 +523,7 @@ var presentpwd = $(this).val();
 		method : "post",
 		data : {password : presentpwd},
 		success : function(data){
-			console.log(data);
+			//console.log(data);
 			
 			if(data.result === 1) {
 				
@@ -394,6 +552,111 @@ var presentpwd = $(this).val();
 	
 	});
 
+function updatePwd(){
+	
+	var password = $("#inputPassword").val();
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/updatePwd.do" ,
+		method : "post",
+		data : {password : password},
+		dataType : "json",
+		success : function(data){
+			console.log(data);
+			
+			alert(data.msg);
+			$("input[type='password']").val("");
+			$("#newpassword-div").hide();
+			
+			
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+		}
+	});
+};
+
+function brnoChk(){
+	var brno = $("#brno").val();
+	
+	
+	console.log(brno);
+	if($("#brno").val().length < 10 || $("#brno").val().length > 11){
+		alert("사업자등록번호 입력형식이 맞지 않습니다.");
+	}else{
+	
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/storeinfo/checkBrno.do",
+		method : "post",
+		data : {brno : brno},
+		dataType :"json",
+		success : function(data){
+			alert(data.msg);
+			
+			if(data.operate === "1"){
+				$("#storeNo").val(data.storeNo);
+				$("#addStoreNext-container").show();
+				$("#brnoCheck").val("1");
+				
+			}else{
+				$("#brnoCheck").val("0");
+			}
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+			alert("새로고침 후 다시 이용해 주세요.");
+		}
+	});
+	}
+};
+
+$("#brno").on("keyup", function(){
+	$(this).val($(this).val().replace(/[^0-9]/g,""));
+});
+
+function execDaumPostcode(){	
+    var popUpAddress = 
+	new daum.Postcode({
+	    oncomplete:function(data){
+	         var fullRoadAddr = data.roadAddress;
+	         var extraRoadAddr = '';
+	         
+	         if(data.bname !=='' &&/[동|로|가]$/g.test(data.bname)){
+	            extraRoadAddr += data.bname;
+	         }
+	         if(data.buildingName !=='' &&data.apartment === 'Y'){
+	            extraRoadAddr += (extraRoadAddr !== ''?','+data.buildingName : data.build);
+	         }
+	         if(extraRoadAddr !== ''){
+	            extraRoadAddr = '(' + extraRoadAddr +')';
+	         }
+	         if(fullRoadAddr !== ''){
+	            fullRoadAddr += extraRoadAddr;
+	         }
+	         document.getElementById("storeAddress").value = fullRoadAddr;
+	     }
+   	}).open({
+   	    popupName: 'postcodePopup' //팝업 이름을 설정(영문,한글,숫자 모두 가능, 영문 추천)
+   	})
+};
+
+function addStore(){
+	$("#addStore-container").show();
+};
+
+$(function(){
+	
+	$("[name=upFile]").on('change' , function(){
+		
+		//var fileName = $(this).val();
+		console.log($(this));
+		var fileName = $(this).prop("files")[0].name ;
+		
+		$(this).next(".custom-file-label").html(fileName);
+	});
+	
+});
 
 
 
