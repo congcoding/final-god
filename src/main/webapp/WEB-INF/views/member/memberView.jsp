@@ -49,60 +49,6 @@ select#selectMonth, select#selectDay{ width : 65px;}
 .checkFavorite{width:30px !important}
 </style>
 
-<script>
-
-$(function(){
-	//프로필사진
-	if('${m.renamedFile}' != null){
-		$('#imgProfile').attr('src',
-							  "${pageContext.request.contextPath }/resources/upload/member/${m.renamedFile}");
-	}else{
-		$('#imgProfile').attr('src',"${pageContext.request.contextPath }/resources/images/avatar.png");
-	}
-	
-	
-	//생년월일
-	var birth = '${m.birth}';
-	var year = birth.substr(0,4);
-	var month = birth.substr(4,2);
-	var day = birth.substr(6,2);
-	
-	if(month.substr(0,1) == 0){
-		month = month.substr(1,1);
-	}
-	if(day.substr(0,1) == 0){
-		day = day.substr(1,1);
-	}
-
-	$('#selectYear').val(year);
-	$('#selectMonth').val(month);
-	$('#selectDay').val(day);
-	
-	//핸드폰
-	var phoneArr = '${m.phone}'.split('-');
-	$('#phone1').val(phoneArr[0]);
-	$('#phone2').val(phoneArr[1]);
-	$('#phone3').val(phoneArr[2]);
-	
-	//이메일
-	var emailArr = '${m.email}'.split('@');
-	$('#inputEmailAddress1').val(emailArr[0]);
-	$('#inputEmailAddress2').val(emailArr[1]);
-	
-	//취향
-	<c:forEach items = "${m.favorite}" var="favorite" varStatus="vs">
-		$('input:checkbox[name="favorite"]').each(function() {
-		    if(this.value == "${favorite}")
-		           this.checked = true;       
-		});
-	</c:forEach>
-	
-	
-
-});	
-	
-
-</script>
 
 <div id="MemberView-container">
 	<h2>개인 회원 정보</h2>
@@ -115,7 +61,10 @@ $(function(){
 		  method="post" 
 		  onsubmit="return validate();" 
 		  enctype="multipart/form-data">
-
+		  
+		<input type="hidden" name="renamedFile" value='${m.renamedFile}' />  
+		
+		
 		<!-- 프로필 사진 -->
 		<div id=inputProfile>	
 			<div class="imgProfile-wrapper">
@@ -256,7 +205,136 @@ $(function(){
 	
 </div>
 
+<script>
+function validate(){ 	
+	
+ 	//비밀번호 일치 여부 검사
+	if($("#inputPassword").val() != $("#checkPassword").val()){
+	      alert("비밀번호가 일치하지 않습니다.");
+	      return false;
+	}
+ 	
+	/*이메일 처리*/
+ 	$("input[name=email]").val($('#inputEmailAddress1').val()+'@'+$('#inputEmailAddress2').val());
+ 	
+ 	/*핸드폰 번호 처리*/
+	$("input[name=phone]").val($('#phone1').val()+"-"+$('#phone2').val()+"-"+$('#phone3').val());
+  	
 
+	return true;
+}
+
+
+
+
+$(function(){
+	//프로필사진
+	if('${m.renamedFile}' != null){
+		$('#imgProfile').attr('src',
+							  "${pageContext.request.contextPath }/resources/upload/member/${m.renamedFile}");
+	}else{
+		$('#imgProfile').attr('src',"${pageContext.request.contextPath }/resources/images/avatar.png");
+	}
+	
+	
+	//생년월일
+	var birth = '${m.birth}';
+	var year = birth.substr(0,4);
+	var month = birth.substr(4,2);
+	var day = birth.substr(6,2);
+	
+	if(month.substr(0,1) == 0){
+		month = month.substr(1,1);
+	}
+	if(day.substr(0,1) == 0){
+		day = day.substr(1,1);
+	}
+
+	$('#selectYear').val(year);
+	$('#selectMonth').val(month);
+	$('#selectDay').val(day);
+	
+	//핸드폰
+	var phoneArr = '${m.phone}'.split('-');
+	$('#phone1').val(phoneArr[0]);
+	$('#phone2').val(phoneArr[1]);
+	$('#phone3').val(phoneArr[2]);
+	
+	//이메일
+	var emailArr = '${m.email}'.split('@');
+	$('#inputEmailAddress1').val(emailArr[0]);
+	$('#inputEmailAddress2').val(emailArr[1]);
+	
+	//취향
+	<c:forEach items = "${m.favorite}" var="favorite" varStatus="vs">
+		$('input:checkbox[name="favorite"]').each(function() {
+		    if(this.value == "${favorite}")
+		           this.checked = true;       
+		});
+	</c:forEach>
+
+});	
+	
+
+/* 이미지 파일 첨부시 미리보기 */
+function readURL(input) {
+ 
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+ 
+        reader.onload = function (e) {
+            $('#imgProfile').attr('src', e.target.result);
+        }
+ 
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+/*이미지파일 미리보기 URL 넣기*/
+$("#inputProfileFile").change(function(){
+    readURL(this);
+});
+
+/* select창에서 선택한 이메일 주소를 input이메일주소창으로 넣어주기 */
+$("#selectEmailAddress").on("change",function(){
+	$('#inputEmailAddress2').val($('#selectEmailAddress').val());	
+});
+
+/* input이메일 주소창에 수정이 있으면 select이메일 창의 값을 직접입력으로 변경 */
+$("#inputEmailAddress2").on("focus",function(){
+	$('#selectEmailAddress').val('etc');
+});
+
+
+/*다음 주소 API 관련 함수*/
+function execDaumPostcode(){	
+    var popUpAddress = 
+	new daum.Postcode({
+	    oncomplete:function(data){
+	         var fullRoadAddr = data.roadAddress;
+	         var extraRoadAddr = '';
+	         
+	         if(data.bname !=='' &&/[동|로|가]$/g.test(data.bname)){
+	            extraRoadAddr += data.bname;
+	         }
+	         if(data.buildingName !=='' &&data.apartment === 'Y'){
+	            extraRoadAddr += (extraRoadAddr !== ''?','+data.buildingName : data.build);
+	         }
+	         if(extraRoadAddr !== ''){
+	            extraRoadAddr = '(' + extraRoadAddr +')';
+	         }
+	         if(fullRoadAddr !== ''){
+	            fullRoadAddr += extraRoadAddr;
+	         }
+	         document.getElementById("address").value = fullRoadAddr;
+	     }
+   	}).open({
+   	    popupName: 'postcodePopup' //팝업 이름을 설정(영문,한글,숫자 모두 가능, 영문 추천)
+   	});
+  
+}
+
+</script>
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	

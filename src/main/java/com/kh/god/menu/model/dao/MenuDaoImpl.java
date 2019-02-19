@@ -30,6 +30,12 @@ public class MenuDaoImpl implements MenuDao {
 		int menuCount = sqlSession.selectOne("storeInfo.menuCount", storeNo);
 		return menuCount;
 	}
+
+	@Override
+	public Menu selectOneMenu(String menuCode) {
+		Menu menu = sqlSession.selectOne("storeInfo.selectOneMenu",menuCode);
+		return menu;
+	}
 	
 
 }

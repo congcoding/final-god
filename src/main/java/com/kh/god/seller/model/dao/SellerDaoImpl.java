@@ -31,11 +31,21 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.insert("seller.insertSeller", s);
 	}
 
+	@Override
 	public List<StoreInfo> myStore(String sellerId) {
-
 		return sqlSession.selectList("storeInfo.getMyStore", sellerId);
 	}
 
+	@Override
+	public int updatePwd(String password) {
+		return sqlSession.update("seller.updatePwd" , password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sqlSession.update("seller.updateSeller" , s);
+	}
+	
 	@Override
 	public List<Menu> myStoreMenu(String sellerId) {
 		return sqlSession.selectList("storeInfo.myStoreMenu", sellerId);
@@ -46,33 +56,33 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("storeInfo.storeInfoList", storeNo);
 	}
 
-
 	@Override
 	public List<MenuAttachment> getAttachment(String storeNo) {
 		return sqlSession.selectList("storeInfo.getAttachment",storeNo);
 	}
 
 	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		return sqlSession.selectList("storeInfo.selectMenuList", storeNo);
+	}
+	
+	@Override
 	public List<MenuAttachment> getthumbAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectList("storeInfo.getthumbAttachment",storeNo);
 	}
 
 	@Override
 	public int oldThumbNail(String nowThumb) {
-		// TODO Auto-generated method stub
 		return sqlSession.update("storeInfo.oldThumbNail",nowThumb);
 	}
 
 	@Override
 	public int changeThmbNail(String newThumb) {
-		// TODO Auto-generated method stub
 		return sqlSession.update("storeInfo.changeThmbNail",newThumb);
 	}
 
 	@Override
 	public int updateStoreInfo(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return sqlSession.update("storeInfo.updateStoreInfo",map);
 	}
 

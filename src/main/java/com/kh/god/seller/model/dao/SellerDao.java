@@ -18,6 +18,10 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
+	int updatePwd(String password);
+
+	int updateSeller(Seller s);
+
 	List<Menu> myStoreMenu(String sellerId);
 
 	List<Map<String, Object>> getStoreInfoBystoreNo(String storeNo);
@@ -35,5 +39,7 @@ public interface SellerDao {
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 
 	List<Map<String, Object>> goMyStoreOrder(String storeNo);
+
+	List<Menu> selectMenuList(String storeNo);
 
 }

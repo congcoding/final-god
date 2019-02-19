@@ -30,11 +30,22 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.insertSeller(s);
 	}
 	
+	@Override
 	public List<StoreInfo> myStore(String sellerId) {
 		List<StoreInfo> store = sellerDao.myStore(sellerId);
 		return store;
 	}
 
+	@Override
+	public int updatePwd(String password) {
+		return sellerDao.updatePwd(password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sellerDao.updateSeller(s);
+	}
+	
 	@Override
 	public List<Menu> myStoreMenu(String sellerId) {
 		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
@@ -47,27 +58,29 @@ public class SellerServiceImpl implements SellerService {
 		return getStoreInfoBystoreNo;
 	}
 
-
 	@Override
+
 	public List<MenuAttachment> getAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.getAttachment(storeNo);
 	}
 
 	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		
+		return sellerDao.selectMenuList(storeNo);
+	}
+
 	public List<MenuAttachment> getthumbAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.getthumbAttachment(storeNo);
 	}
 
 	@Override
 	public int oldThumbNail(String nowThumb) {
-		// TODO Auto-generated method stub
-		return sellerDao.oldThumbNail(nowThumb);	}
+		return sellerDao.oldThumbNail(nowThumb);	
+    }
 
 	@Override
 	public int changeThmbNail(String newThumb) {
-		// TODO Auto-generated method stub
 		return sellerDao.changeThmbNail(newThumb);
 	}
 
