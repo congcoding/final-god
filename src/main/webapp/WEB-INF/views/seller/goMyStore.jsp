@@ -9,31 +9,36 @@
 </jsp:include>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath }/resources/css/store/goMyStore.css" />
-<h2 id="storeStatus">내 가게 현황</h2>
+<!-- <h2 id="storeStatus">내 가게 현황</h2> -->
 <!-- <h2 id="menu">메뉴보기</h2> -->
 
 <table id="container">
 	<tr style="vertical-align: top">
-		<td id="left"><c:if test="${not empty store}">
+		<tr><td><h2 id="storeStatus">내 가게 현황</h2></td></tr>
+		<td id="left">
+			<c:if test="${not empty store}">
 				<c:forEach items="${store}" var="store" varStatus="status">
-					<div class="storeName" onclick="boxEvent(this,'${store.storeNo}');"
-						no="${status.count}">${store.storeName}</div>
+					<div class="storeName" onclick="boxEvent(this,'${store.storeNo}');" no="${status.count}">${store.storeName}</div>
 					<div class="boxEvent" no="${status.count}">
-						<a
-							href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do"
-							class="storeOrder">주문내역</a> <span
-							class="badge badge-primary badge-pill orderCount">14</span>
-						&nbsp; &nbsp; <a href="#" class="statistics">내 가게 통계</a> &nbsp;
-						&nbsp; <a
-							href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}"
-							class="storeUpdate">내 가게 수정</a> &nbsp; &nbsp; <a href="#"
-							class="storeReview">리뷰</a>
+						<a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do"
+						   class="storeOrder">주문내역</a> 
+						<span class="badge badge-primary badge-pill orderCount">14</span>
+						&nbsp; &nbsp; 
+						<a href="#" class="statistics">내 가게 통계</a> 
+						&nbsp; &nbsp; 
+						<a href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}"
+						   class="storeUpdate">내 가게 수정</a> 
+						&nbsp; &nbsp; 
+						<a href="#"
+						   class="storeReview">리뷰</a>
 					</div>
+					<button type="button" class="btn btn-info" onclick="location.href='${pageContext.request.contextPath}/seller/updateMenu.do?storeNo=${store.storeNo}'">메뉴수정</button>
+					<%-- <a href="${pageContext.request.contextPath}/seller/updateMenu.do?storeNo=${store.storeNo}">메뉴수정</a> --%>
 				</c:forEach>
-			</c:if></td>
+			</c:if>
+		</td>
 	</tr>
 </table>
-
 <table class="table table-bordered" id="menuTable">
 	<tr><td colspan="3" style="text-align: center;"><h2>메뉴보기</h2></td></tr>
 	<tr>
@@ -117,4 +122,5 @@
 		console.log(no);
 	});
 </script>
+<br /><br /><br />
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
