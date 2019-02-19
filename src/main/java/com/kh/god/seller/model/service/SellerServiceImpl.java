@@ -48,8 +48,12 @@ public class SellerServiceImpl implements SellerService {
 
 	@Override
 	public List<Attachment> getAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.getAttachment(storeNo);
+	}
+
+	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		return sellerDao.selectMenuList(storeNo);
 	}
 
 

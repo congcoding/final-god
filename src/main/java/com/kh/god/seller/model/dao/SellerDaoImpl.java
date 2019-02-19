@@ -51,6 +51,11 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("storeInfo.getAttachment",storeNo);
 	}
 
+	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		return sqlSession.selectList("storeInfo.selectMenuList", storeNo);
+	}
+
 
 
 }

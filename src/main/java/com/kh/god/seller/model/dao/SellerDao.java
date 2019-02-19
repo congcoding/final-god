@@ -22,4 +22,6 @@ public interface SellerDao {
 
 	List<Attachment> getAttachment(String storeNo);
 
+	List<Menu> selectMenuList(String storeNo);
+
 }

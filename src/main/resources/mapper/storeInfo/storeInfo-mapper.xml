@@ -23,7 +23,7 @@
 	<select id="myStoreMenu" resultType="menu">
 		select m.menuname, m.menuprice
 		from storeinfo s join menu m on s.storeNo = m.storeNo
-		where s.sellerId = #{sellerId}
+		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
    <select id="menuList"  resultType="menu">
@@ -40,6 +40,12 @@
  
    <select id="getAttachment" resultType="attachment">
    	select * from menuAttachment where storeNo = #{storeNo}
-   </select>  
+   </select>
+   
+   <select id="selectMenuList" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.storeNo = #{storeNo}
+   </select>
 
 </mapper>

@@ -161,14 +161,14 @@ public class SellerController {
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
 		
-		List<Menu> menu = sellerService.myStoreMenu(sellerId);
+//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
-		System.out.println("메뉴 나오라" + menu);
+//		System.out.println("메뉴 나오라" + menu);
 		
 		//메뉴 뽑기
 		//페이지바 만들기
 		model.addAttribute("store", store);
-		model.addAttribute("menu", menu);
+//		model.addAttribute("menu", menu);
 
 		return "seller/goMyStore";
 
@@ -299,5 +299,27 @@ public class SellerController {
 
     	return ":/redirect";
     }*/
+    
+    @RequestMapping(value = "/seller/goMyStoreOrder.do" )
+    public String goMyStoreOrder() {
+    
+       
+       return "seller/MyStoreOrder";
+    }
+    
+    @RequestMapping("/seller/selectMenuList.do")
+    @ResponseBody
+    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
+		System.out.println("사업자 번호 왔냐? " + storeNo);
+    	
+		List<Menu> menu = sellerService.selectMenuList(storeNo);
+		
+		System.out.println("메뉴 왔냐? " + menu);
+		
+		model.addAttribute("menu", menu);
+		
+    	return menu;
+    	
+    }
 
 }
