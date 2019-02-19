@@ -125,12 +125,6 @@ public class AdminDaoImpl implements AdminDao {
 	public int updateEvent(Event event) {
 		return sqlSession.update("admin.updateEvent", event);
 	}
-
-	@Override
-	public int countSellrQNAList(String sellerId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 
 }
