@@ -20,10 +20,19 @@
 	select * from storeinfo where sellerId = #{sellerId}
 	</select>
 	
+	<insert id="addStore">
+		insert into storeinfo values(#{storeNo} , #{storeName}, #{storeTel} , #{storeAddress} , default , #{categoryNo} , #{storeIntro}, #{personalDay} , #{operatingHours} , default, default ,#{deliveryMinPrice} , #{sellerId})
+	</insert>
+	
+	<insert id="insertAttachment">
+		insert into sattachment(attachmentno , storeno , originalfilename, renamedfilename, uploaddate , downloadcount, status )
+		values (seq_sAttachmentno.nextval , #{storeNo} , #{originalFileName} , #{renamedFileName}, default, 0 ,default  )
+	</insert>
+
 	<select id="myStoreMenu" resultType="menu">
 		select m.menuname, m.menuprice
 		from storeinfo s join menu m on s.storeNo = m.storeNo
-		where s.sellerId = #{sellerId}
+		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
    <select id="menuList"  resultType="menu">
@@ -33,18 +42,42 @@
    <select id="storeInfoList"  resultType="storeInfo">
    	   select * from storeinfo where storeno = #{storeNo}
    </select>
-   
-    <select id="selectSellerMenuTotalContents" resultType="_int">
-		SELECT COUNT(*) FROM MENU WHERE STORENO = #{storeNo}
-   </select>
 	
    <select id="menuCount"  resultType="_int">
    	  select count(*) from menu where storeno = #{storeNo}
    </select>
+ 
+   <select id="getAttachment" resultType="menuAttachment">
+   	select * from menuAttachment where storeNo = #{storeNo}
+   </select>
    
+   <select id="selectMenuList" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.storeNo = #{storeNo}
+   </select>
+   
+   <select id="getthumbAttachment" resultType="menuAttachment">
+       	select * from menuAttachment where storeNo = #{storeNo} and thumbFlag = 'Y'
+   </select>
+   
+   <update id="oldThumbNail">
+   		update menuAttachment set thumbFlag='N' where renamedfilename=#{nowThumb}
+   </update>
+   
+   <update id="changeThmbNail">
+   		update menuAttachment set thumbFlag='Y' where renamedfilename=#{newThumb}
+   </update>
+   
+<<<<<<< HEAD
    <select id="selectOneMenu" resultType="menu">
    		select * from menu where menuCode = #{menuCode}
    </select>
    
+=======
+   <update id="updateStoreInfo">
+   	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
+   </update>
+>>>>>>> 4fa140eaaa3778828b2da20c66abfa061ae3ec84
 
 </mapper>

@@ -11,6 +11,7 @@
 input#btn-add{float:right; margin: 0 0 15px;}
 table#tbl-board tr th{text-align:center;}
 table#tbl-board tr td{text-align:center;}
+section#board-container{height:700px;}
 a {text-decoration:none;}
 table#tbl-board{ width : 500px; margin:-35px auto;}
 div#head-container{margin:70px auto; width : 900px; height:50px;}
@@ -20,17 +21,29 @@ div#pageBar{margin:35px auto;}
 </style>
 <script>
 function fn_goAskingList(){
-	if(memberLoggedIn != null){
-		location.href = "${pageContext.request.contextPath}/admin/askingList.do?memberId="+memberLoggedIn.memberId;	
-	}else if(sellerLoggedIn != null){
-		location.href = "${pageContext.request.contextPath}/admin/askingList.do?sellerId="+memberLoggedIn.sellerId;
-	}else if(sellerLoggedIn == null && memberLoggedIn == null){
+	if("${memberLoggedIn }" != ""){
+		var memberId= "${memberLoggedIn.memberId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+memberId;	
+	}else if("${sellerLoggedIn }" != ""){
+		var sellerId = "${sellerLoggedIn.sellerId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingList.do?boardWriter="+sellerId;
+	}else if("${sellerLoggedIn }" == "" && "${memberLoggedIn }" == ""){
 		alert("로그인 후 이용 가능합니다.");
 		return;
 	}
 }
 function fn_goQnaList(){
-	location.href = "${pageContext.request.contextPath}/admin/boardList.do";
+	location.href = "${pageContext.request.contextPath}/admin/qnaboard.do";
+}
+function validate(){
+	if("${memberLoggedIn }" != ""){
+		var memberId= "${memberLoggedIn.memberId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingForm.do?boardWriter="+memberId;	
+	}else if("${sellerLoggedIn }" != ""){
+		var sellerId = "${sellerLoggedIn.sellerId }";
+		location.href = "${pageContext.request.contextPath}/admin/askingForm.do?boardWriter="+sellerId;
+	}
+
 }
 </script>
 
@@ -38,7 +51,7 @@ function fn_goQnaList(){
 <!-- 전체 게시글 출력 -->
 	
 <div id="head-container">
-	<div id="qna" class="alert-light" onclikc="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div>
+	<div id="qna" class="alert-light" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div>
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->
@@ -46,14 +59,30 @@ function fn_goQnaList(){
 		<thead class="thead-light">
 			<tr>
 				<th>내가 한 질문</th>
+				<th>답변</th>
 			</tr>
 		</thead>
 		<c:if test="${not empty list}">
 			<c:forEach items="${list }" var="b">
 		<tbody>
 		<tr>
-			<td><a href="${pageContext.request.contextPath }/admin/askingView.do?boardNo=${b['BOARDNO'] } ">${b["BOARDTITLE"] }</a></td>
+			<td><a href="${pageContext.request.contextPath }/admin/askingView.do?boardNo=${b.boardNo } ">${b.boardTitle }</a></td>
+			<td></td>
 		</tr>
+		<c:if test="${not empty boardRefList }">
+			<c:forEach items="${boardRefList }" var="ref">
+				<c:if test="${b.boardNo == ref.boardRef}">
+					<tr>
+						<td></td>
+						<td><a href="${pageContext.request.contextPath }/admin/answeringView.do?boardNo=${ref.boardNo }&boardRef=${ref.boardRef } ">답변보러가기</a></td>
+					</tr>
+				</c:if>
+				<c:if test="${b.boardNo != ref.boardRef}">
+					<td></td>
+					<td>문의중</td>
+				</c:if>
+			</c:forEach>
+		</c:if>
 		</tbody>
 			</c:forEach>
 		</c:if>
@@ -66,7 +95,6 @@ function fn_goQnaList(){
 		</c:if>
 	
 	 </table>
-	 <input type="submit" class="btn btn-outline-success" value="문의하러가기" >
 	 
 	
 	<%
@@ -78,8 +106,8 @@ function fn_goQnaList(){
 	<div id="pageBar">
 	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"qnaboard.do") %>
 	</div>
-		
 	<!-- 페이지바  -->
+	 	<input type="button" class="btn btn-outline-success" style="margin-left:490px;" value="문의하러가기" onclick="validate();" >
 </section> 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>

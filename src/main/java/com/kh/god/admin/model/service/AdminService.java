@@ -33,12 +33,22 @@ public interface AdminService {
 
 	int changeSellerbFlagtoY(String sellerId);
 
-	List<Map<String, String>> selectMemberQNAList(int cPage, int numPerPage, String memberId);
+	int insertAsking(QnaBoard board);
 
-	int countMemberQNAList(String memberId);
+	List<Map<String, String>> selectQNAList(int cPage, int numPerPage, String boardWriter);
 
-	List<Map<String, String>> selectSellerQNAList(int cPage, int numPerPage, String sellerId);
+	int countQNAList(String boardWriter);
 
-	int countSellerQNAList(String sellerId);
+	List<QnaBoard> boardRefList();
+
+	QnaBoard qnaBoardRefView(int boardNo);
+
+	int countMemberList();
+
+	List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage);
+
+	int deleteEvent(int eventNo);
+
+	int updateEvent(Event event);
 
 }
