@@ -344,19 +344,38 @@ public class SellerController {
     	return "seller/goUpdateMyStore.do";
     }
     
-    @RequestMapping("/seller/selectMenuList.do")
-    @ResponseBody
-    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
+//    @RequestMapping("/seller/selectMenuList.do")
+//    @ResponseBody
+//    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
+//		System.out.println("사업자 번호 왔냐? " + storeNo);
+//    	
+//		List<Menu> menu = sellerService.selectMenuList(storeNo);
+//		
+//		System.out.println("메뉴 왔냐? " + menu);
+//		
+//		model.addAttribute("menu", menu);
+//		
+//    	return menu;
+//    	
+//    }
+    
+	@RequestMapping("/seller/updateMenu.do")
+	public String updateMenu(@RequestParam("storeNo") String storeNo, Model model) {
 		System.out.println("사업자 번호 왔냐? " + storeNo);
-    	
+
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
-		
+
 		System.out.println("메뉴 왔냐? " + menu);
-		
+
 		model.addAttribute("menu", menu);
+
+		return "seller/updateMenu";
+	}
+	
+	@RequestMapping("/seller/soldout.do")
+	public String soldOut(@RequestParam("menuCode") String menuCode) {
 		
-    	return menu;
-    	
-    }
+		return menuCode;
+	}
 
 }

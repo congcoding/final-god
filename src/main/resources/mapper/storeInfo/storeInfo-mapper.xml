@@ -52,7 +52,7 @@
    </select>
    
    <select id="selectMenuList" resultType="menu">
-		select m.menuname, m.menuprice
+		select m.menuname, m.menuprice, m.storeNo
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.storeNo = #{storeNo}
    </select>
