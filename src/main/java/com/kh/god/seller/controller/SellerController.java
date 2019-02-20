@@ -105,6 +105,9 @@ public class SellerController {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
+	            //사이드바
+	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            session.setAttribute("storeSideBar", store);
 	            view = "redirect:/";
 	            
 	         } else {
@@ -165,7 +168,6 @@ public class SellerController {
 		
 		//메뉴 뽑기
 		//페이지바 만들기
-		model.addAttribute("storeSideBar", store);
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
 
@@ -290,9 +292,6 @@ public class SellerController {
     	model.addAttribute("store", store);
     	model.addAttribute("attachment", attachment);
     	model.addAttribute("thumbAttachment", thumbAttachment);
-    	
-    	List<StoreInfo> storeSideBar = sellerService.myStore("seller1");
-    	model.addAttribute("storeSideBar", storeSideBar);
 
     	return "seller/updateMyStoreInfo";
     }
