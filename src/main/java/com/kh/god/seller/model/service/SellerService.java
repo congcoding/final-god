@@ -38,9 +38,11 @@ public interface SellerService {
 
 	int updateSeller(Seller seller);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<Menu> selectMenuList(String storeNo);
 
-	int updateSoldout(String menuCode);
+	int updateSoldout(Map<String, Object> map);
 
 	List<Map<String, Object>> orderList1(String storeNo);
 

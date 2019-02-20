@@ -36,11 +36,13 @@ public interface SellerDao {
 
 	int updateStoreInfo(Map<String, Object> map);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 
 	List<Menu> selectMenuList(String storeNo);
 
-	int updateSoldout(String menuCode);
+	int updateSoldout(Map<String, Object> map);
 
 	List<Map<String, Object>> orderList1(String storeNo);
 

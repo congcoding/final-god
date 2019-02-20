@@ -45,7 +45,7 @@ function fn_goQnaList(){
 	<div id="qna" class="alert-light" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div>
 </div>
 
- 		<div id="mine" class="alert-light"> 나의 문의 내용 : </div>
+ 	<div id="mine" class="alert-light"> 나의 문의 내용 : </div>
  		<br />
  	<div id="board-container">
  		

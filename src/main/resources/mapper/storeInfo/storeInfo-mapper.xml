@@ -52,7 +52,7 @@
    </select>
    
    <select id="selectMenuList" resultType="menu">
-		select m.menuName, m.menuPrice, m.menuCode, m.storeNo
+		select m.menuName, m.menuPrice, m.menuCode, m.storeNo, m.soldoutFlag
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.storeNo = #{storeNo}
    </select>
@@ -77,8 +77,15 @@
    		update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
    </update>
    
+   <select id="selectListStorInfo" resultType="storeInfo">
+   		select * from storeinfo where sellerid = #{sellerId}
+   </select>
+
    <update id="updateSoldout">
-   		update menu set soldoutFlag = 'Y' where menuCode = #{menuCode}
+   		update menu set
+   			<if test='soldoutFlag eq "N"'>soldoutFlag = 'Y'</if>
+   			<if test='soldoutFlag eq "Y"'>soldoutFlag = 'N'</if>
+   		where menuCode = #{menuCode}
    </update>
 
    <select id="orderList1" resultType="map">
@@ -111,6 +118,18 @@
 
 	<update id="deliveryEnd">
 	   update orderinfo set deliveryFlag='Y',deliveryEnd=sysdate where orderno=#{orderNo}
+	</update>
+
+	<select id="selectOnebyStoreNo" resultType="storeInfo">
+		select * from storeinfo where storeno = #{storeNo}
+	</select>
+	
+	<select id="selectAttchMentLsit" resultType="SAttachment">
+		select * from sattachment where storeno = #{storeNo}
+	</select>
+	
+	<update id="deleteFile1">
+		update sattachment set status = 'Y' where originalfilename = #{filename}
 	</update>
 
 </mapper>

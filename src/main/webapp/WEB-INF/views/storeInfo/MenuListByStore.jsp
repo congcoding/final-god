@@ -171,6 +171,8 @@ $(document).ready(function() {
         {queue: false, duration: 350});    
     });  
     
+    
+    
     //가게정보숨기기
 	$("#sellerInformation").hide();
     //리뷰숨기기
@@ -179,8 +181,16 @@ $(document).ready(function() {
     cartHtml();
 });
 
+function addOrderNum(){
+	
+	
+}
+
+
 // 주문표 html 
 function cartHtml(){
+	
+	
     console.log("cartHtml 함수실행");
     var cart = JSON.parse(sessionStorage.getItem("cart"));
     
@@ -194,12 +204,14 @@ function cartHtml(){
 		html += "<tr><th>메뉴</th><th>가격</th><th>수량</th></tr>";
 		
     	for (var i=0; i<cart.length; i++){			  
-    		
+    	
 	  		html += "<tr><td>"+cart[i].menuName+"</td>";
 	  		html += "<td>"+cart[i].menuPrice*cart[i].amount+"</td>"
-	  		html += "<td>"+cart[i].amount+"</td></tr>";
-	  		
-	 		sum += cart[i].menuPrice*cart[i].amount;
+	  		html += "<td><button type='button' class='btn-xs add-order-num'>+</button>";
+	  		html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">";
+	  		html += "<button type='button' class='btn-xs minus-order-num'>-</button></td></tr>";
+
+	  		sum += cart[i].menuPrice*cart[i].amount;
 	   	}
     	
     	html += "<tr><td>합계</td><td>"+sum+"</td></tr>"
@@ -207,7 +219,7 @@ function cartHtml(){
 	}else{				
 		html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
 	}//end of if(cart.length)
-    
+
 	$('#tbody-cart').html(html);
 	
 }
@@ -251,7 +263,7 @@ function inputCart(menuName,menuCode,menuPrice){
 			
 			// 로컬 스토리지에 저장
 			sessionStorage.setItem("cart", JSON.stringify(cart));			
-				
+
 			cartHtml();
 			
 		}, //success : 
@@ -259,17 +271,22 @@ function inputCart(menuName,menuCode,menuPrice){
 			console.log("ajax 에러");
 		}
 	});
-	
-	
-	
-	
 }
 
 
-
-
- 
-
+/* 각 메뉴->카트 확인 모달영역 */
+function checkCart(menuName,menuCode,menuPrice){
+	
+//주문하기 버튼을 누르면 폼 전송 (이름,코드,가격)
+$('#checkCart').on('show.bs.modal', function (event) {
+	$(".modal-body").text(item);
+	
+	$("#goPayment").on("click", function(){
+		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?menuName="
+						+item+"&menuCode="+item2+"&menuPrice="+item3;
+	});	
+	
+});
 
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
