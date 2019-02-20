@@ -14,13 +14,14 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/seller/MyStoreOrder.css" rel="stylesheet">
 
 <script>
 $(function(){
 	var storeNo = "${param.storeNo}"
 	$("#collapse"+storeNo).addClass("show");
 	$("#collapse"+storeNo).parent("li").addClass("active");	
-	$("#collapse"+storeNo+">div>a.updateMyStoreInfo").addClass("active");	
+	$("#collapse"+storeNo+">div>a.myStoreOrder").addClass("active");	
 });
 </script>
 
@@ -217,16 +218,16 @@ $(function(){
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form>
+      <form action="${pageContext.request.contextPath }/seller/receiveOrder" method="post">
       <div class="modal-body">
       		<input type="hidden" id="orderNoForReceive" >
-			<button type="button" class="btn btn-info" value="10분~30분">10분~30분</button>
-			<button type="button" class="btn btn-info" value="30분~50분">30분~50분</button>
-			<button type="button" class="btn btn-info" value="50분~60분">50분~60분</button>
-			<button type="button" class="btn btn-info" value="60분 이상">60분 이상</button>
+			<button type="button" class="btn btn-info howLong" value="10분~30분">10분~30분</button>
+			<button type="button" class="btn btn-info howLong" value="30분~50분">30분~50분</button>
+			<button type="button" class="btn btn-info howLong" value="50분~60분">50분~60분</button>
+			<button type="button" class="btn btn-info howLong" value="60분 이상">60분 이상</button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">주문접수</button>
+        <button type="submit" class="btn btn-primary">주문접수</button>
       </div>
       </form>
     </div>
@@ -280,6 +281,7 @@ $(".btnReason").on("click", function(){
 //모달로 orderno 보내기
 function orderNo(item){
 	console.log(item);
+	$("#orderNoForReceive").val(item);
 }
 
 </script>

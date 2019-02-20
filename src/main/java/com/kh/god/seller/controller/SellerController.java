@@ -388,5 +388,11 @@ public class SellerController {
 		
 		return menuCode;
 	}
+	
+	//주문접수 
+	@RequestMapping("/seller/receiveOrder.do")
+	public String receiveOrder() {
+		return "redirece:/";
+	}
 
 }
