@@ -104,5 +104,29 @@ public class SellerServiceImpl implements SellerService {
 		// TODO Auto-generated method stub
 		return sellerDao.orderList1(storeNo);
 	}
+
+	@Override
+	public int receiveOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.receiveOrder(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList2(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList3(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList3(storeNo);
+	}
+
+	@Override
+	public int deliveryEnd(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.deliveryEnd(orderNo);
+	}
 	
 }

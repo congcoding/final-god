@@ -86,8 +86,31 @@
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveflag='N') F where m.memberid=F.memberid and storeno='511-25-93434' and receiveFlag='N'
+		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N'
    </select>
+   
+    <select id="orderList2" resultType="map">
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		from(select orderno,menuname||' '||amount||'개' as list
+		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
+		where O.menucode=M.menucode)) group by orderno) Z
+		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='N'
+    </select>
+    
+    <select id="orderList3" resultType="map">
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		from(select orderno,menuname||' '||amount||'개' as list
+		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
+		where O.menucode=M.menucode)) group by orderno) Z
+		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='Y'
+   </select>
+   
+   <update id="receiveOrder">
+       update orderinfo set receiveFlag='Y',deliverytime=#{howLongChecked} where orderno=#{orderNo}
+   </update>
 
+	<update id="deliveryEnd">
+	   update orderinfo set deliveryFlag='Y',deliveryEnd=sysdate where orderno=#{orderNo}
+	</update>
 
 </mapper>

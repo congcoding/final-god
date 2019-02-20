@@ -44,4 +44,12 @@ public interface SellerDao {
 
 	List<Map<String, Object>> orderList1(String storeNo);
 
+	int receiveOrder(Map<String, Object> map);
+
+	List<Map<String, Object>> orderList2(String storeNo);
+
+	List<Map<String, Object>> orderList3(String storeNo);
+
+	int deliveryEnd(int orderNo);
+
 }

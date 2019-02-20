@@ -102,4 +102,28 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("storeInfo.orderList1",storeNo);
 	}
 
+	@Override
+	public int receiveOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.receiveOrder",map);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storeInfo.orderList2",storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList3(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storeInfo.orderList3",storeNo);
+	}
+
+	@Override
+	public int deliveryEnd(int orderNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.deliveryEnd",orderNo);
+	}
+
 }

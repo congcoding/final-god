@@ -271,9 +271,15 @@ public class SellerController {
 		System.out.println("@@storeNo=>>>>>"+storeNo);
 		//접수대기 오더리스트
 		List<Map<String, Object>> orderList1 = sellerService.orderList1(storeNo);
-		
-		
+		//접수진행 오더리스트
+		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
+		//배달완료 오더리스트
+		List<Map<String, Object>> orderList3 = sellerService.orderList3(storeNo);
+
 		model.addAttribute("orderList1",orderList1);
+		model.addAttribute("orderList2",orderList2);
+		model.addAttribute("orderList3",orderList3);
+
 		
 		return "seller/MyStoreOrder";
 	}
@@ -418,8 +424,33 @@ public class SellerController {
 	
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
-	public String receiveOrder() {
-		return "redirece:/";
+	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
+			@RequestParam String howLongChecked) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("orderNo",orderNo);
+		map.put("howLongChecked",howLongChecked);
+
+		int result = sellerService.receiveOrder(map);
+		System.out.println(result>0?"접수완료":"실패");
+		
+		return "redirect:/";
+	}
+	//배달완료
+	@RequestMapping("/seller/deliveryEnd.do")
+	@ResponseBody
+	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
+			@RequestParam("storeNo") String storeNo) {
+		System.out.println("@@orderNo=>"+orderNo);
+		System.out.println("@@storeNo=>"+storeNo);
+
+		int result = sellerService.deliveryEnd(orderNo);
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
+
+		System.out.println(result>0?"배달완료":"실패");
+		map.put("orderList2", orderList2);
+
+		return map;
 	}
 
 }
