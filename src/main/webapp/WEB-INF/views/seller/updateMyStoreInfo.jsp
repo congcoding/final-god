@@ -7,11 +7,45 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
+
+<!-- Custom fonts for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/seller/updateStoreInfo.css" />
-<div class="container">
+
+<script>
+$(function(){
+	var storeNo = "${param.storeNo}"
+	$("#collapse"+storeNo).addClass("show");
+	$("#collapse"+storeNo).parent("li").addClass("active");	
+	$("#collapse"+storeNo+">div>a.updateMyStoreInfo").addClass("active");	
+});
+</script>
+
+<!-- Page Wrapper -->
+  <div id="wrapper">
+
+	<jsp:include page="/WEB-INF/views/seller/sideBar.jsp"></jsp:include>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          
+          <!-- 여기부터 코드 붙여넣으면 됨 -->
+         	<div class="container">
 <h2>가게 정보</h2>
 <br>
-  <form name="updateFrm" action="${pageContext.request.contextPath}/seller/updateStoreInfo.do" method="post">
+  <form id="updateFrm" method="post">
     <div class="form-group row">
       <label for="inputEmail3" class="col-sm-2 col-form-label">가게명</label>
       <div class="col-sm-10">
@@ -26,50 +60,7 @@
       <label for="inputEmail3" class="col-sm-2 col-form-label">영업시간</label>
       <div class="col-sm-10">
       <!-- 오전~오후 -->
-      	     <c:set var="start" value="${fn:substring(store.operatingHours, 2, 4)}"></c:set>
-      	     <c:if test="${fn:contains(num,'시')}">
-      	     	 <c:set var="start" value="${fn:substringBefore(num,'시')}"></c:set>
-      	     </c:if>
-      	     
-      	     <c:set var="end" value="${fn:substring(store.operatingHours, 10, 12)}"></c:set>
-	       	     <c:if test="${fn:contains(num,'시')}">
-      	     	 <c:set var="end" value="${fn:substringBefore(num,'시')}"></c:set>
-      	     </c:if> 
-      	     
-      	     
-	        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" name="startChooseAmPm" >
-	        <c:if test="${fn:substring(store.operatingHours, 0, 2) =='오전'}">
-				<option value="오전" selected>오전</option>
-		    	<option value="오후">오후</option>
-			</c:if>
-			
-			<c:if test="${fn:substring(store.operatingHours, 0, 2) =='오후'}">
-				<option value="오전">오전</option>
-		    	<option value="오후" selected>오후</option>
-			</c:if>
-		   
-	 	    </select>
-	 	    <!-- 몇시 -->
-       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="startTime" name="startTime">
-
-		    	
- 		    	<c:forEach var="cnt" begin="1" end="12">
-		    		<option value="${cnt}" <c:if test="${startTime==cnt}">selected="selected"</c:if>>${cnt}</option>		    
-		    	</c:forEach> 
-		    	
-	 	    </select>
-	 	    ~
-	 	    <!-- 오전~오후 -->
-	        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="chooseAmPm" name="endChooseAmPm">
-		    	<option selected value="오전">오전</option>
-		    	<option value="오후">오후</option>
-	 	    </select>
-	 	    <!-- 몇시 -->
-       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="endTime" name="endTime">		    	
- 		    	<c:forEach var="cnt" begin="1" end="12">
-		    		<option value="${cnt}" <c:if test="${startTime==cnt}">selected="selected"</c:if>>${cnt}</option>		    
-		    	</c:forEach> 
-	 	    </select>
+        <input type="text" class="form-control" name="operatingHours" value="${store.operatingHours}" id="operatingHours" placeholder="고객들에게 소개될 영업시간 입니다">  
       </div>
       
     </div>
@@ -115,7 +106,7 @@
     </div> 
     <div id="personalday-container">   
   		<label for="inputEmail3" class="col-sm-2 col-form-label">휴무일</label>
-        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 보여질 정보에 소개될 휴무일 입니다">  
+        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 소개될 휴무일 입니다">  
         </c:forEach>    
 	</div>
 	<br>
@@ -139,7 +130,7 @@
 
      
       <div class="btnGroup">
-	       <button type="submit" class="btn btn-primary btn-lg">수정하기</button>
+	       <button type="button" id="updateBtn" class="btn btn-primary btn-lg">수정하기</button>
 		   <button type="button" class="btn btn-secondary btn-lg">돌아가기</button>
       </div>
    
@@ -158,6 +149,7 @@ $("#updateAddressBtn").on("click", function(){
 })
 
 
+
 //사용자에게 미리 썸네일보여주는 제이쿼리
 $( "#thumb" ).change(function() {
 	 var str = "";
@@ -170,5 +162,47 @@ $( "#thumb" ).change(function() {
   
 });
 
+//폼전송
+$("#updateBtn").on("click", function(){
+	 var formData = $("#updateFrm").serialize();
+	//ction="${pageContext.request.contextPath}/seller/updateStoreInfo.do" 
+	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/updateStoreInfo.do",
+		type : 'POST',
+		data:formData,
+		success:function(data){
+			alert("수정이 완료되었습니다.");
+		},error:function(){
+			console.log("에이젝스오류");
+		}
+	});
+})
 </script>
-<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
