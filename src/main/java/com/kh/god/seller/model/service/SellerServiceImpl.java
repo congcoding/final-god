@@ -93,6 +93,11 @@ public class SellerServiceImpl implements SellerService {
 	public int updateSoldout(Map<String, Object> map) {
 		return sellerDao.updateSoldout(map);
 	}
+	
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sellerDao.selectListStorInfo(sellerId);
+	}
 
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
 		// TODO Auto-generated method stub

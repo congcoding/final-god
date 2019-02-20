@@ -3,13 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <jsp:include page="/WEB-INF/views/common/categoryHeader.jsp">
 	<jsp:param value="고객센터" name="pageTitle"/>
 </jsp:include>
+
 <style>
 div.row{
-	
-	    margin-top: 168px;
+ 	margin-top: 168px;
     margin-left: 92px;
 }
 

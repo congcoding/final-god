@@ -14,22 +14,25 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
-<style>
-input#btn-add{float:right; margin: 0 0 15px;}
-table#tbl-event tr th{text-align:center;}
-table#tbl-event tr td{text-align:center;}
-table#tbl-event tr td a {text-decoration:none !important;}
-</style>
+
 <script>
 $(function(){
 	$("#collapsePages").addClass("show");	
-	$("#eventControl").addClass("active");	
+	$("#qnaControl").addClass("active");	
 	$("#toDoList").addClass("active");	
 });
-function fn_goEventForm(){
-	location.href = "${pageContext.request.contextPath}/admin/eventForm.do";
-}
 </script>
+
+<style>
+table#tbl-qnaControl thead tr th {
+	text-align: center;
+}
+
+table#tbl-qnaControl tbody tr td {
+	text-align: center;
+}
+
+</style>
 
 <!-- Page Wrapper -->
   <div id="wrapper">
@@ -46,48 +49,41 @@ function fn_goEventForm(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-         <section id="board-container" class="container">
-
-		<input type="button" value="이벤트 등록" id="btn-add" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
-		<table id="tbl-event" class="table table-striped table-hover">
+         <table id="tbl-qnaControl" class="table table-borderless">
+		<thead class="thead-light">
 			<tr>
-				<th>번호</th>
-				<th>제목</th>
-				<th>시작일</th>
-				<th>마지막일</th>
-				<th>수량</th>
-				<!-- 목록뿌리기 : 파일이있으면 file.png 보여주기 -->
+				<th>질문</th>
+				<th>답변</th>
 			</tr>
-			<c:if test="${not empty list}">
-				<c:forEach items="${list }" var="b">
+		</thead>
+		<c:if test="${not empty list}">
+			<c:forEach items="${list }" var="b">
+		<tbody>
 			<tr>
-				<td>${b['EVENTNO'] }</td>
-				<td><a href="${pageContext.request.contextPath }/admin/eventView.do?eventNo=${b['EVENTNO'] }" >${b["EVENTTITLE"] }</a></td>
-				<td><fmt:formatDate value="${b['STARTDATE']}" type="date" /> </td>
-				<td><fmt:formatDate value="${b['ENDDATE']}" type="date" /> </td>
-				<td>${b['AMOUNT'] }</td>
+				<td>${b.boardTitle }</td>
+				<td><a href="${pageContext.request.contextPath }/admin/qnaAnswer.do?boardNo=${b.boardNo } ">답변하러가기</a></td>
 			</tr>
-				</c:forEach>
-			</c:if>
-			<c:if test="${empty list}">
-				<tr>
-					<td colspan="4">등록된 정보가 없습니다.</td>
-				</tr>
-			</c:if>
-		
-		</table>
+		</tbody>
+			</c:forEach>
+		</c:if>
+		<c:if test="${empty list}">
+		<tbody>
+			<tr>
+				<td colspan="4">질문이존재하지 않습니다!</td>
+			</tr>
+		</tbody>
+		</c:if>
 	
-	<%
-		int totalContents = (int)request.getAttribute("totalContents");
-		int numPerPage = (int)request.getAttribute("numPerPage");
-		int cPage = (int)request.getAttribute("cPage");
+	 </table>
+	 <%
+	int totalContents = (int) request.getAttribute("totalContents");
+	int numPerPage = (int) request.getAttribute("numPerPage");
+	int cPage = (int) request.getAttribute("cPage");
 	%>
-	<div>
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"eventList.do") %>
-	</div>
-		
-	<!-- 페이지바  -->
-</section> 
+	<br /><br />
+	 <div id="pageBar">
+		<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "qnaControl.do")%>
+	 </div>
 
         </div>
         <!-- /.container-fluid -->

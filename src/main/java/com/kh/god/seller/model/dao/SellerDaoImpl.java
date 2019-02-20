@@ -90,7 +90,13 @@ public class SellerDaoImpl implements SellerDao {
 	public int updateSoldout(Map<String, Object> map) {
 		return sqlSession.update("storeInfo.updateSoldout", map);
 	}
-
+	
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sqlSession.selectList("storeInfo.selectListStorInfo" , sellerId);
+	}
+	
+	@Override
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("storeInfo.myStoreOrderInfo",storeNo);

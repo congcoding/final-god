@@ -16,6 +16,12 @@ public interface StoreInfoDao {
 
 	int insertAttachment(SAttachment a);
 
+	StoreInfo selectOnebyStoreNo(String storeNo);
+
+	List<Map<String, String>> selectAttchMentLsit(String storeNo);
+
+	int deleteFile1(String filename);
+
 
 
 }

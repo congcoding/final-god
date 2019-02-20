@@ -36,6 +36,8 @@ public interface SellerDao {
 
 	int updateStoreInfo(Map<String, Object> map);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 
 	List<Menu> selectMenuList(String storeNo);
