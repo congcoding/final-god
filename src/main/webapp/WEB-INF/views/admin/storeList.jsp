@@ -14,21 +14,16 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
+
 <style>
-input#btn-add{float:right; margin: 0 0 15px;}
 table#tbl-event tr th{text-align:center;}
 table#tbl-event tr td{text-align:center;}
-table#tbl-event tr td a {text-decoration:none !important;}
 </style>
+
 <script>
 $(function(){
-	$("#collapsePages").addClass("show");	
-	$("#eventControl").addClass("active");	
-	$("#toDoList").addClass("active");	
+	$("#storeList").addClass("active");	
 });
-function fn_goEventForm(){
-	location.href = "${pageContext.request.contextPath}/admin/eventForm.do";
-}
 </script>
 
 <!-- Page Wrapper -->
@@ -46,48 +41,56 @@ function fn_goEventForm(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-         <section id="board-container" class="container">
-
-		<input type="button" value="이벤트 등록" id="btn-add" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
-		<table id="tbl-event" class="table table-striped table-hover">
+          <h1 class="h3 mb-4 text-gray-800">가게 관리</h1>
+          
+          <table id="tbl-event" class="table table-striped table-hover">
 			<tr>
-				<th>번호</th>
-				<th>제목</th>
-				<th>시작일</th>
-				<th>마지막일</th>
-				<th>수량</th>
-				<!-- 목록뿌리기 : 파일이있으면 file.png 보여주기 -->
+				<th>사업자 번호</th>
+				<th>가게 이름</th>
+				<th>가게 전화번호</th>
+				<th>가게 등급</th>
+				<th>카테고리</th>
+				<th>사장님 아이디</th>
 			</tr>
 			<c:if test="${not empty list}">
-				<c:forEach items="${list }" var="b">
-			<tr>
-				<td>${b['EVENTNO'] }</td>
-				<td><a href="${pageContext.request.contextPath }/admin/eventView.do?eventNo=${b['EVENTNO'] }" >${b["EVENTTITLE"] }</a></td>
-				<td><fmt:formatDate value="${b['STARTDATE']}" type="date" /> </td>
-				<td><fmt:formatDate value="${b['ENDDATE']}" type="date" /> </td>
-				<td>${b['AMOUNT'] }</td>
-			</tr>
+				<c:forEach items="${list }" var="store">
+					<tr>
+						<td>${store.storeNo}</td>
+						<td><a href="${pageContext.request.contextPath }/admin/storeView.do?storeNo=${store.storeNo} " >${store.storeName }</a></td>
+						<td>${store.storeTel }</td>
+						<td>${store.storeGrade }</td>
+						<td>
+							<c:choose>
+								<c:when test="${store.categoryNo=='1'}">치킨</c:when>
+								<c:when test="${store.categoryNo=='2'}">피자</c:when>
+								<c:when test="${store.categoryNo=='3'}">보쌈, 족발</c:when>
+								<c:when test="${store.categoryNo=='4'}">분식</c:when>
+								<c:when test="${store.categoryNo=='5'}">중식</c:when>
+								<c:when test="${store.categoryNo=='6'}">일식</c:when>
+								<c:when test="${store.categoryNo=='7'}">한식</c:when>
+							</c:choose>
+						</td>
+						<td>${store.sellerId }</td>
+					</tr>
 				</c:forEach>
 			</c:if>
 			<c:if test="${empty list}">
 				<tr>
-					<td colspan="4">등록된 정보가 없습니다.</td>
+					<td colspan="4">새로운 가게 신청이 없습니다.</td>
 				</tr>
 			</c:if>
 		
-		</table>
+		  </table>
 	
-	<%
-		int totalContents = (int)request.getAttribute("totalContents");
-		int numPerPage = (int)request.getAttribute("numPerPage");
-		int cPage = (int)request.getAttribute("cPage");
-	%>
-	<div>
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"eventList.do") %>
-	</div>
-		
-	<!-- 페이지바  -->
-</section> 
+		<%
+			int totalContents = (int)request.getAttribute("totalContents");
+			int numPerPage = (int)request.getAttribute("numPerPage");
+			int cPage = (int)request.getAttribute("cPage");
+		%>
+		<div>
+		<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"storeList.do") %>
+		</div>
+          
 
         </div>
         <!-- /.container-fluid -->

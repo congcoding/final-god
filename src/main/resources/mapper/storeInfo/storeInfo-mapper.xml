@@ -30,21 +30,21 @@
 	</insert>
 
 	<select id="myStoreMenu" resultType="menu">
-		select m.menuname, m.menuprice
+		select m.menuName, m.menuPrice
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
    <select id="menuList"  resultType="menu">
-   	select * from menu where storeno = #{storeNo}
+   	select * from menu where storeNo = #{storeNo}
    </select>
    
    <select id="storeInfoList"  resultType="storeInfo">
-   	   select * from storeinfo where storeno = #{storeNo}
+   	   select * from storeinfo where storeNo = #{storeNo}
    </select>
 	
    <select id="menuCount"  resultType="_int">
-   	  select count(*) from menu where storeno = #{storeNo}
+   	  select count(*) from menu where storeNo = #{storeNo}
    </select>
  
    <select id="getAttachment" resultType="menuAttachment">
@@ -52,7 +52,7 @@
    </select>
    
    <select id="selectMenuList" resultType="menu">
-		select m.menuname, m.menuprice
+		select m.menuName, m.menuPrice, m.menuCode, m.storeNo
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.storeNo = #{storeNo}
    </select>
@@ -76,6 +76,18 @@
    <update id="updateStoreInfo">
    	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
    </update>
+   
+   <update id="updateSoldout">
+   		update menu set soldoutFlag = 'Y' where menuCode = #{menuCode}
+   </update>
+
+   <select id="orderList1" resultType="map">
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		from(select orderno,menuname||' '||amount||'개' as list
+		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
+		where O.menucode=M.menucode)) group by orderno) Z
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveflag='N') F where m.memberid=F.memberid and storeno='511-25-93434' and receiveFlag='N'
+   </select>
 
 
 </mapper>
