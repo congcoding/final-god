@@ -33,13 +33,13 @@ public interface SellerService {
 	int updateStoreInfo(Map<String, Object> map);
 
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
-
-	List<Map<String, Object>> goMyStoreOrder(String storeNo);
 	
 	int updatePwd(String password);
 
 	int updateSeller(Seller seller);
 
 	List<Menu> selectMenuList(String storeNo);
+
+	List<Map<String, Object>> orderList1(String storeNo);
 
 }

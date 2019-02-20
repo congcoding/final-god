@@ -38,8 +38,8 @@ public interface SellerDao {
 
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 
-	List<Map<String, Object>> goMyStoreOrder(String storeNo);
-
 	List<Menu> selectMenuList(String storeNo);
+
+	List<Map<String, Object>> orderList1(String storeNo);
 
 }

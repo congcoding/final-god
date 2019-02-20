@@ -96,10 +96,12 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public List<Map<String, Object>> goMyStoreOrder(String storeNo) {
+	public List<Map<String, Object>> orderList1(String storeNo) {
 		// TODO Auto-generated method stub
-		return sellerDao.goMyStoreOrder(storeNo);
+		return sellerDao.orderList1(storeNo);
 	}
+
+
 
 
 

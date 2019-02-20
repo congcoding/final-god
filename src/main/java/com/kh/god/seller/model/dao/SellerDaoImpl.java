@@ -93,10 +93,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public List<Map<String, Object>> goMyStoreOrder(String storeNo) {
+	public List<Map<String, Object>> orderList1(String storeNo) {
 		// TODO Auto-generated method stub
-		return sqlSession.selectList("storeInfo.goMyStoreOrder",storeNo);
+		return sqlSession.selectList("storeInfo.orderList1",storeNo);
 	}
+
 
 
 

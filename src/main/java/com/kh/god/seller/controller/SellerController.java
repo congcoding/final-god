@@ -264,28 +264,13 @@ public class SellerController {
 	}
 
 	@RequestMapping(value = "/seller/goMyStoreOrder.do" )
-	public String goMyStoreOrder(@RequestParam("storeNo") String storeNo, Model model) {
+	public String goMyStoreOrder(@RequestParam("storeNo") String storeNo,Model model) {
 		System.out.println("@@storeNo=>>>>>"+storeNo);
-		List<Map<String, Object>> myStoreOrderInfo = sellerService.goMyStoreOrder(storeNo);
+		//접수대기 오더리스트
+		List<Map<String, Object>> orderList1 = sellerService.orderList1(storeNo);
 		
-		/*
-		 * List<String> orderNo = new ArrayList<>(); Set<String> keyValue =
-		 * myStoreOrderInfo.keySet(); logger.debug("keyValue : "+keyValue);
-		 * Iterator<String> iterator = keyValue.iterator(); while(iterator.hasNext()) {}
-		 */
-
-		/*
-		 * for(int i=0; i<myStoreOrderInfo.size(); i++) { if(orderNo.size()!=0) {
-		 * for(int j=0; j<orderNo.size(); j++) {
-		 * 
-		 * } } else {
-		 * 
-		 * } }
-		 */
-
-		System.out.println(myStoreOrderInfo);
 		
-		model.addAttribute("myStoreOrderInfo",myStoreOrderInfo);
+		model.addAttribute("orderList1",orderList1);
 		
 		return "seller/MyStoreOrder";
 	}

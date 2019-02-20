@@ -13,14 +13,13 @@
 <!-- <h2 id="menu">메뉴보기</h2> -->
 
 <table id="container">
-<<<<<<< HEAD
   <tr style="vertical-align:top">
     <td id="left">
     <c:if test="${not empty store}">
        <c:forEach items="${store}" var="store" varStatus="status">
           <div class="storeName" onclick="boxEvent(this);" no="${status.count}">${store.storeName}</div>
           <div class="boxEvent" no="${status.count}">
-             <a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}" class="storeOrder">주문내역</a>
+             <a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}" class="storeOrder" >주문내역</a>
              <span class="badge badge-primary badge-pill orderCount">14</span>
              &nbsp;
              &nbsp;
@@ -36,7 +35,6 @@
     </c:if>
     </td>
     </tr>
-=======
 	<tr style="vertical-align: top">
 		<tr><td><h2 id="storeStatus">내 가게 현황</h2></td></tr>
 		<td id="left">
@@ -44,7 +42,7 @@
 				<c:forEach items="${store}" var="store" varStatus="status">
 					<div class="storeName" onclick="boxEvent(this,'${store.storeNo}');" no="${status.count}">${store.storeName}</div>
 					<div class="boxEvent" no="${status.count}">
-						<a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do"
+						<a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}"
 						   class="storeOrder">주문내역</a> 
 						<span class="badge badge-primary badge-pill orderCount">14</span>
 						&nbsp; &nbsp; 
@@ -62,7 +60,6 @@
 			</c:if>
 		</td>
 	</tr>
->>>>>>> c40668c844c2b473148eedbc59bc0f90c11cb0e6
 </table>
 <table class="table table-bordered" id="menuTable">
 	<tr><td colspan="3" style="text-align: center;"><h2>메뉴보기</h2></td></tr>
@@ -90,7 +87,6 @@
          </tr>
       </c:forEach>
    </tbody>
-=======
 
 	<%-- <c:forEach items="${menu}" var="menu" varStatus="vs"> --%>
 	<%-- <tr>
@@ -99,7 +95,6 @@
 				<td><c:out value="${menu.menuPrice}" /></td>
 			</tr> --%>
 	<%-- </c:forEach> --%>
->>>>>>> c40668c844c2b473148eedbc59bc0f90c11cb0e6
 </table>
 <!-- 페이지바 부분 -->
 <%--    <%
@@ -118,7 +113,6 @@
 
 
 <script>
-<<<<<<< HEAD
 function boxEvent(item){
    var no = $(item).attr("no");
    console.log(no);
@@ -141,7 +135,6 @@ $(".boxEvent").on("click",function(){
    var no = $(this).attr("no");
    console.log(no);
 })
-=======
 	function boxEvent(item, item2) {
 		var no = $(item).attr("no");
 		console.log(no);
@@ -185,7 +178,6 @@ $(".boxEvent").on("click",function(){
 		var no = $(item).attr("no");
 		console.log($(".storeName[no=" + no + "]").val());
 	};
->>>>>>> c40668c844c2b473148eedbc59bc0f90c11cb0e6
 
 	$(".boxEvent").on("click", function() {
 		var no = $(this).attr("no");

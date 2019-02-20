@@ -115,6 +115,7 @@ $("#updateAddressBtn").on("click", function(){
 })
 
 
+
 //사용자에게 미리 썸네일보여주는 제이쿼리
 $( "#thumb" ).change(function() {
 	 var str = "";
