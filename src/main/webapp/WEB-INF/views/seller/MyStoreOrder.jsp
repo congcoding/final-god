@@ -64,7 +64,7 @@
 				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
 				     
 				      <td>
-				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">주문접수</button>
+				      <button type="button" id="orderAcception" onclick="orderNo(${orderList1.ORDERNO})" class="btn btn-info" data-toggle="modal" data-target="#receiveModal">주문접수</button>
 				      <button type="button" id="orderCancel" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
 				      </td> 
 				    </tr>
@@ -178,7 +178,7 @@
      <!-- 접수모달창 -->
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -187,15 +187,18 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <form>
       <div class="modal-body">
-			<button type="button" class="btn btn-info">10분~30분</button>
-			<button type="button" class="btn btn-info">30분~50분</button>
-			<button type="button" class="btn btn-info">50분~60분</button>
-			<button type="button" class="btn btn-info">60분 이상</button>
+      		<input type="hidden" id="orderNoForReceive" >
+			<button type="button" class="btn btn-info" value="10분~30분">10분~30분</button>
+			<button type="button" class="btn btn-info" value="30분~50분">30분~50분</button>
+			<button type="button" class="btn btn-info" value="50분~60분">50분~60분</button>
+			<button type="button" class="btn btn-info" value="60분 이상">60분 이상</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary">주문접수</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -244,6 +247,11 @@ $("#etc").on("click", function(){
 $(".btnReason").on("click", function(){
 	$("#cancelReason").prop('readonly', true);
 });
+//모달로 orderno 보내기
+function orderNo(item){
+	console.log(item);
+}
+
 </script>
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
