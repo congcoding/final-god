@@ -115,7 +115,7 @@ span#passworderror3{
     		<!-- 중복 관련 체크  -->
     		<span class="guide ok" id="ok">이 아이디는 사용 가능합니다.</span>
     		<span class="guide error" id="error">이 아이디는 사용할 수 없습니다.</span>
-    		<span class="guide error" id="error2">특수 문자를 제거해 주세요.</span>
+    		<span class="guide error" id="error2">특수 문자 및 공백을 제거해 주세요.</span>
     		<input type="hidden" name="idDuplicateCheck" id="idDuplicateCheck" value="0" />
   		</div>	
   		
@@ -125,7 +125,7 @@ span#passworderror3{
     		<div>
       			<input type="password"  name="password" class="form-control" id="inputPassword" placeholder="6~16자 영문,숫자">
     		</div>
-    		<span class="guide error" id="passworderror3">특수문자를 제거해 주세요.</span>
+    		<span class="guide error" id="passworderror3">특수 문자 및 공백을 제거해 주세요.</span>
   		</div>
   		<div class="form-group row">
     		<label for="checkPassword" class="col-sm-3">비밀번호 확인</label>
@@ -133,7 +133,7 @@ span#passworderror3{
       			<input type="password" class="form-control" id="checkPassword" placeholder="Password Check">
     		</div>
     		<span class="guide error" id="passworderror">비밀번호가 일치하지 않습니다.</span>
-    		<span class="guide error" id="passworderror2">특수문자를 제거해 주세요.</span>
+    		<span class="guide error" id="passworderror2">특수 문자 및 공백을  제거해 주세요.</span>
   		</div>
   		
 		<hr />
@@ -234,7 +234,7 @@ function validate(){ /* 유효성 검사 */
 
 $("#inputSellerId").on("keyup",function(){
 		
-		re = /[~!@\#$%^&*\()\-=+_']/gi; 
+		re = /[~!@\#$%^&*\()\-=+_' ']/gi; 
 	
 	   var sellerId = $(this).val();
 	   
@@ -280,7 +280,7 @@ $("#inputSellerId").on("keyup",function(){
 });
 
 $("#inputPassword").on("keyup" , function(){
-	re = /[~!@\#$%^&*\()\-=+_']/gi; 
+	re = /[~!@\#$%^&*\()\-=+_' ']/gi; 
 	var inputPassword = $(this).val();
 
 	
@@ -293,7 +293,7 @@ $("#inputPassword").on("keyup" , function(){
 });
 
 $("#checkPassword").on("keyup" , function(){
-	re = /[~!@\#$%^&*\()\-=+_']/gi; 
+	re = /[~!@\#$%^&*\()\-=+_' ']/gi; 
 	var inputPassword = $("#inputPassword").val();
 	var checkPassword = $(this).val();
 

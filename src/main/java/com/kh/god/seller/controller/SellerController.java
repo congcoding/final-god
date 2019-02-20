@@ -1,13 +1,12 @@
 package com.kh.god.seller.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -21,14 +20,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.god.common.util.Utils;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
-import com.kh.god.storeInfo.model.vo.Attachment;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -56,7 +53,7 @@ public class SellerController {
 		logger.debug("ID중복체크 : "+ sellerId);
 		Map<String , Object> map = new HashMap<>();
 		Seller s = sellerService.selectOneSeller(sellerId);
-		logger.debug("seller"+ s);
+		//logger.debug("seller"+ s);
 		boolean isUsable = s == null ? true:false;
 		
 		map.put("isUsable", isUsable) ;
@@ -66,7 +63,7 @@ public class SellerController {
 	
 	@RequestMapping("/seller/sellerEnrollEnd.do")
 	public String insertSeller(Seller s , Model model) {
-		logger.debug("sellerinsert"+ s);
+		//logger.debug("sellerinsert"+ s);
 		System.out.println("암화화전 :"+s.getPassword());
 		
 		String temp = s.getPassword();
@@ -108,6 +105,9 @@ public class SellerController {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
+	            //사이드바
+	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            session.setAttribute("storeSideBar", store);
 	            view = "redirect:/";
 	            
 	         } else {
@@ -145,6 +145,7 @@ public class SellerController {
 		
 		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
 	
+		//System.out.println("@@@@@@@@@"+ s.getPhone());
 		
 		model.addAttribute("s", s);
 		
@@ -161,14 +162,14 @@ public class SellerController {
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
 		
-		List<Menu> menu = sellerService.myStoreMenu(sellerId);
+//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
-		System.out.println("메뉴 나오라" + menu);
+//		System.out.println("메뉴 나오라" + menu);
 		
 		//메뉴 뽑기
 		//페이지바 만들기
 		model.addAttribute("store", store);
-		model.addAttribute("menu", menu);
+//		model.addAttribute("menu", menu);
 
 		return "seller/goMyStore";
 
@@ -207,86 +208,111 @@ public class SellerController {
 		map.put("result" , result);
 		map.put("msg" , msg);
 		
-		logger.debug("여기까지는 왔냐?"+ map);
+		//logger.debug("여기까지는 왔냐?"+ map);
 		
 		return map;
 	}
 	
 	@RequestMapping(value = "/seller/sellerUpdate.do" )
-	public String sellerUpdate(HttpSession session , Model model) {
+	public String sellerUpdate(HttpSession session , Model model , Seller seller) {
+		
+		logger.debug("!!!!!!!!!!!!!!!!!!!!"+seller);
+		
+		int result = sellerService.updateSeller(seller);
+		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
+		
+		String loc = "/seller/sellerView.do";
+		String msg = "";
+		
+		
+		if(result>0) {
+			msg ="수정 성공";
+			
+		}else{
+			msg ="수정 실패";
+		}
+		
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+		
 	
 		
-		return "seller/sellerView";
+		return "common/msg";
 	}
 	
+	@RequestMapping(value ="/seller/updatePwd.do" , method = RequestMethod.POST )
+	@ResponseBody
+	public Map<String, Object> updatePwd(@RequestParam("password") String password ) {
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		String temp = password;
+		
+		password = bcryptPasswordEncoder.encode(temp);
+		
+		int result = sellerService.updatePwd(password);
+		String msg = "";
+		
+		if(result > 0) {
+			msg ="비밀번호 변경 성공";
+		}else {
+			msg ="비밀번호 변경 실패";
+		}
+		
+		map.put("msg", msg);
+		
+		return map;
+	}
 
+	@RequestMapping(value = "/seller/goMyStoreOrder.do" )
+	public String goMyStoreOrder(@RequestParam("storeNo") String storeNo,Model model) {
+		System.out.println("@@storeNo=>>>>>"+storeNo);
+		//접수대기 오더리스트
+		List<Map<String, Object>> orderList1 = sellerService.orderList1(storeNo);
+		
+		
+		model.addAttribute("orderList1",orderList1);
+		
+		return "seller/MyStoreOrder";
+	}
+	
 	
 
+	
     @RequestMapping("/seller/goUpdateMyStore.do")
     public String goUpdateMyStore(@RequestParam("storeNo") String storeNo, Model model) {
     	//' ' 제거 
     	storeNo = storeNo.replace("'", "");
   
     	List<Map<String, Object>> store = sellerService.getStoreInfoBystoreNo(storeNo);   
-    	List<Attachment> attachment = sellerService.getAttachment(storeNo);
+    	List<MenuAttachment> attachment = sellerService.getAttachment(storeNo);
+    	List<MenuAttachment> thumbAttachment = sellerService.getthumbAttachment(storeNo);
     	model.addAttribute("store", store);
     	model.addAttribute("attachment", attachment);
+    	model.addAttribute("thumbAttachment", thumbAttachment);
 
     	return "seller/updateMyStoreInfo";
     }
 
     //내 가게 정보수정
-    /*@RequestMapping("/seller/updateStore.do")
-    public String updateStore(@RequestParam("startChooseAmPm") String startChooseAmPm,
-    		@RequestParam("startTime") String startTime,
-    		@RequestParam("endChooseAmPm") String endChooseAmPm,
-    		@RequestParam("endTime") String endTime,
-    		@RequestParam("locationStartNum") String locationStartNum,
-    		@RequestParam("tel1") String tel1,
-    		@RequestParam("tel2") String tel2,
-    		@RequestParam("address1") String address1,
+    @RequestMapping("/seller/updateStoreInfo.do")
+    public String updateStore(
+    		@RequestParam(name="operatingHours" , required = false) String operatingHours,
+    		@RequestParam(name="locationStartNum" , required = false) String locationStartNum,
+    		@RequestParam(name="tel1" , required = false) String tel1,
+    		@RequestParam(name="tel2" , required = false) String tel2,
+    		@RequestParam(name="address1" , required = false) String address1,
     		@RequestParam(name="address2" , required = false) String address2,
-    		@RequestParam("thumbImg") MultipartFile upFiles,
-    		HttpServletRequest request, StoreInfo storeInfo
+    		@RequestParam(name="personalday" , required = false) String personalday,
+    		@RequestParam(name="nowThumb" , required = false) String nowThumb,
+    		@RequestParam(name="newThumb" , required = false) String newThumb,
+    		@RequestParam(name="storeNo") String storeNo,
+    		Model model
+	
     		) {
-    	
-    	//파일
-    	try {
-			// 1. 파일업로드 (실제경로를 얻어내는 방법은 세션-서블릿-리얼패스)
-			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/storeInfo/thumbNail");
 
-			logger.debug("saveDirectory = " + saveDirectory);
-
-			List<Attachment> attachList = new ArrayList<>();
-
-			// MultipartFile 처리
-				if (!upFiles.isEmpty()) {
-					// 사용자가 업로드한 파일명 구하기
-					String originalFileName = upFiles.getOriginalFilename();
-
-					// 서버저장용 파일명
-					String renamedFileName = Utils.getRenamedFileName(originalFileName);
-					logger.debug("renamedFileName = " + renamedFileName);
-
-					// 실제서버에 파일저장
-					try {
-						upFiles.transferTo(new File(saveDirectory + "/" + renamedFileName));
-					} catch (IllegalStateException | IOException e) {
-						e.printStackTrace();
-					}
-
-					// 첨부파일객체 생성. 리스트 추가
-					Attachment attach = new Attachment();
-					attach.setOriginalFileName(originalFileName);
-					attach.setRenamedFileName(renamedFileName);
-					attachList.add(attach);
-				}
-    	} catch (Exception e) {
-		logger.error("썸네일 등록 에러", e);
-		
-	}
-    	
-    	String operatingHours = startChooseAmPm+startTime+"시 ~"+endChooseAmPm+endTime;
     	String storeTel = locationStartNum+"-"+tel1+"-"+tel2;
     	String storeAddress = "";
     	if(!address2.equals("")) {
@@ -295,9 +321,99 @@ public class SellerController {
     		storeAddress = address1;
     	}
     	
+		Map<String , Object> map = new HashMap<>();
+		map.put("storeNo",storeNo);
+		map.put("operatingHours",operatingHours);
+		map.put("storeTel",storeTel);
+		map.put("storeAddress",storeAddress);
+		map.put("personalday",personalday);
+
+    	//업데이트
+    	int result = sellerService.updateStoreInfo(map);
+		String msg = "";
+
+    	if(result>0) {
+    		msg="수정이 완료되었습니다";
+    	} else {
+    		msg="수정실패";
+    	}
+    	
+    	if(!nowThumb.equals(newThumb)) {
+    		//썸네일을 바꾼 경우
+    		//전에 했던 썸네일 Flag=N으로 업데이트 
+    		int oldThumbNail = sellerService.oldThumbNail(nowThumb);
+    		//뉴 썸네일 Flag=Y로 업데이트
+    		int changeThmbNail = sellerService.changeThmbNail(newThumb);
+    	}
+    	
+    	System.out.println("storeNo=>"+storeNo);
+
     	//int updateThumb = sellerService.updateStoreInfo();
 
-    	return ":/redirect";
-    }*/
+    	return "common/msg";
+
+    }
+    
+//    @RequestMapping("/seller/selectMenuList.do")
+//    @ResponseBody
+//    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
+//		System.out.println("사업자 번호 왔냐? " + storeNo);
+//    	
+//		List<Menu> menu = sellerService.selectMenuList(storeNo);
+//		
+//		System.out.println("메뉴 왔냐? " + menu);
+//		
+//		model.addAttribute("menu", menu);
+//		
+//    	return menu;
+//    	
+//    }
+    
+	@RequestMapping("/seller/myStoreMenu.do")
+	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("goUpdateMenu() 요청!"); 
+		}
+		
+		System.out.println("사업자 번호 왔냐? " + storeNo);
+		
+		// 메뉴리스트
+		List<Menu> menu = sellerService.selectMenuList(storeNo);
+
+		System.out.println("메뉴 왔냐? " + menu);
+
+		model.addAttribute("menu", menu);
+
+		return "/seller/myStoreMenu";
+	}
+	
+	@RequestMapping("/seller/updateSoldout.do")
+	public ModelAndView updateSoldOut(@RequestParam("menuCode") String menuCode,
+									  ModelAndView mav) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("soldOut() 요청!");
+		}
+
+		System.out.println("메뉴코드 왔냐? " + menuCode);
+
+		int result = sellerService.updateSoldout(menuCode);
+
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "품절 변경 성공";
+			loc = "/seller/updateMenu";
+		} else {
+			msg = "품절 변경 실패";
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+
+		return mav;
+	}
 
 }

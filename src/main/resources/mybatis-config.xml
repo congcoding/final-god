@@ -33,8 +33,12 @@
 		<typeAlias type="com.kh.god.menu.model.vo.Menu"
 				   alias="menu"/>
 				   
-		<typeAlias type="com.kh.god.storeInfo.model.vo.Attachment"
-				   alias="attachment"/>
+		<typeAlias type="com.kh.god.storeInfo.model.vo.MenuAttachment"
+				   alias="menuAttachment"/>
+				   
+		<typeAlias type="com.kh.god.seller.model.vo.OrderInfo"
+				   alias="orderInfo"/>
+				   
 		
 	</typeAliases>
 	

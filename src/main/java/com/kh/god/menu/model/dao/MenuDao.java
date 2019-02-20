@@ -13,4 +13,6 @@ public interface MenuDao {
 
 	int menuCount(String storeNo);
 
+	Menu selectOneMenu(String menuCode);
+
 }

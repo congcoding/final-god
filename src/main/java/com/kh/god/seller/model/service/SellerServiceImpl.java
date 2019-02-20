@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,8 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
-import com.kh.god.storeInfo.model.vo.Attachment;
+import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -28,11 +30,22 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.insertSeller(s);
 	}
 	
+	@Override
 	public List<StoreInfo> myStore(String sellerId) {
 		List<StoreInfo> store = sellerDao.myStore(sellerId);
 		return store;
 	}
 
+	@Override
+	public int updatePwd(String password) {
+		return sellerDao.updatePwd(password);
+	}
+
+	@Override
+	public int updateSeller(Seller s) {
+		return sellerDao.updateSeller(s);
+	}
+	
 	@Override
 	public List<Menu> myStoreMenu(String sellerId) {
 		List<Menu> menu = sellerDao.myStoreMenu(sellerId);
@@ -45,14 +58,51 @@ public class SellerServiceImpl implements SellerService {
 		return getStoreInfoBystoreNo;
 	}
 
-
 	@Override
-	public List<Attachment> getAttachment(String storeNo) {
-		// TODO Auto-generated method stub
+
+	public List<MenuAttachment> getAttachment(String storeNo) {
 		return sellerDao.getAttachment(storeNo);
 	}
 
+	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		
+		return sellerDao.selectMenuList(storeNo);
+	}
 
+	public List<MenuAttachment> getthumbAttachment(String storeNo) {
+		return sellerDao.getthumbAttachment(storeNo);
+	}
 
+	@Override
+	public int oldThumbNail(String nowThumb) {
+		return sellerDao.oldThumbNail(nowThumb);	
+    }
+
+	@Override
+	public int changeThmbNail(String newThumb) {
+		return sellerDao.changeThmbNail(newThumb);
+	}
+
+	@Override
+	public int updateStoreInfo(Map<String, Object> map) {
+		return sellerDao.updateStoreInfo(map);
+	}
+
+	@Override
+	public int updateSoldout(String menuCode) {
+		return sellerDao.updateSoldout(menuCode);
+	}
+
+	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.myStoreOrderInfo(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList1(storeNo);
+	}
 	
 }

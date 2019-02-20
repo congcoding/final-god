@@ -7,17 +7,52 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
+
+<!-- Custom fonts for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<!-- Custom styles for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/seller/updateStoreInfo.css" />
-<div class="container">
+
+<script>
+$(function(){
+	var storeNo = "${param.storeNo}"
+	$("#collapse"+storeNo).addClass("show");
+	$("#collapse"+storeNo).parent("li").addClass("active");	
+	$("#collapse"+storeNo+">div>a.updateMyStoreInfo").addClass("active");	
+});
+</script>
+
+<!-- Page Wrapper -->
+  <div id="wrapper">
+
+	<jsp:include page="/WEB-INF/views/seller/sideBar.jsp"></jsp:include>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          
+          <!-- 여기부터 코드 붙여넣으면 됨 -->
+         	<div class="container">
 <h2>가게 정보</h2>
 <br>
-  <form name="updateFrm" action="${pageContext.request.contextPath}/seller/updateStore.do" method="post" enctype="multipart/form-data">
+  <form id="updateFrm" method="post">
     <div class="form-group row">
       <label for="inputEmail3" class="col-sm-2 col-form-label">가게명</label>
       <div class="col-sm-10">
       
       	<c:forEach items="${store}" var="store">
         <input type="text" class="form-control" id="storeName" value="${store.storeName}" readonly>
+      	<input type="hidden" class="form-control" id="storeNo" name="storeNo" value="${store.storeNo}">
       	
       </div>
     </div>
@@ -25,58 +60,37 @@
       <label for="inputEmail3" class="col-sm-2 col-form-label">영업시간</label>
       <div class="col-sm-10">
       <!-- 오전~오후 -->
-	        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" name="startChooseAmPm" >
-		    	<option selected value="오전">오전</option>
-		    	<option value="오후">오후</option>
-	 	    </select>
-	 	    <!-- 몇시 -->
-       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="startTime" name="startTime">
-		    	<option selected class="chooseTime">1</option>
-		    	<c:forEach var="cnt" begin="1" end="12">
-		    	<option value="${cnt}" class="chooseTime">${cnt}</option>
-		    	</c:forEach>
-	 	    </select>
-	 	    ~
-	 	    <!-- 오전~오후 -->
-	        <select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="chooseAmPm" name="endChooseAmPm">
-		    	<option selected value="오전">오전</option>
-		    	<option value="오후">오후</option>
-	 	    </select>
-	 	    <!-- 몇시 -->
-       		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 chooseAmPm" id="endTime" name="endTime">
-		    	<option selected>1</option>
-		    	<c:forEach var="cnt" begin="1" end="12">
-		    	<option value="${cnt}">${cnt}</option>
-		    	</c:forEach>
-	 	    </select>
+        <input type="text" class="form-control" name="operatingHours" value="${store.operatingHours}" id="operatingHours" placeholder="고객들에게 소개될 영업시간 입니다">  
       </div>
+      
     </div>
     <div class="form-group row">
       <label for="inputPassword3" class="col-sm-2 col-form-label">가게전화번호</label>
       <div class="col-sm-10 tel">
       	<!--지역번호  -->
          	<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="locationStartNum" name="locationStartNum">
-		    	<option selected>02</option>
-		    	<option value="031">031</option>
-		    	<option value="032">032</option>
-		    	<option value="033">033</option>
-		    	<option value="041">041</option>
-		    	<option value="042">042</option>
-		    	<option value="043">043</option>
-		    	<option value="044">044</option>
-		    	<option value="051">051</option>
-		    	<option value="052">052</option>
-		    	<option value="053">053</option>
-   			    <option value="054">054</option>
-   			    <option value="055">055</option>
-   			    <option value="061">061</option>
-   			    <option value="062">062</option>
-   			    <option value="063">063</option>
-   			    <option value="064">064</option>
+
+		    	<option value="02" <c:if test="${fn:substring(store.storeTel, 0, 2)=='02'}">selected="selected"</c:if>>02</option>
+		    	<option value="031"<c:if test="${fn:substring(store.storeTel, 0, 2)=='031'}">selected="selected"</c:if>>031</option>
+		    	<option value="032"<c:if test="${fn:substring(store.storeTel, 0, 2)=='032'}">selected="selected"</c:if>>032</option>
+		    	<option value="033"<c:if test="${fn:substring(store.storeTel, 0, 2)=='033'}">selected="selected"</c:if>>033</option>
+		    	<option value="041"<c:if test="${fn:substring(store.storeTel, 0, 2)=='041'}">selected="selected"</c:if>>041</option>
+		    	<option value="042"<c:if test="${fn:substring(store.storeTel, 0, 2)=='042'}">selected="selected"</c:if>>042</option>
+		    	<option value="043"<c:if test="${fn:substring(store.storeTel, 0, 2)=='043'}">selected="selected"</c:if>>043</option>
+		    	<option value="044"<c:if test="${fn:substring(store.storeTel, 0, 2)=='044'}">selected="selected"</c:if>>044</option>
+		    	<option value="051"<c:if test="${fn:substring(store.storeTel, 0, 2)=='051'}">selected="selected"</c:if>>051</option>
+		    	<option value="052"<c:if test="${fn:substring(store.storeTel, 0, 2)=='052'}">selected="selected"</c:if>>052</option>
+		    	<option value="053"<c:if test="${fn:substring(store.storeTel, 0, 2)=='053'}">selected="selected"</c:if>>053</option>
+   			    <option value="054"<c:if test="${fn:substring(store.storeTel, 0, 2)=='054'}">selected="selected"</c:if>>054</option>
+   			    <option value="055"<c:if test="${fn:substring(store.storeTel, 0, 2)=='055'}">selected="selected"</c:if>>055</option>
+   			    <option value="061"<c:if test="${fn:substring(store.storeTel, 0, 2)=='061'}">selected="selected"</c:if>>061</option>
+   			    <option value="062"<c:if test="${fn:substring(store.storeTel, 0, 2)=='062'}">selected="selected"</c:if>>062</option>
+   			    <option value="063"<c:if test="${fn:substring(store.storeTel, 0, 2)=='063'}">selected="selected"</c:if>>063</option>
+   			    <option value="064"<c:if test="${fn:substring(store.storeTel, 0, 2)=='064'}">selected="selected"</c:if>>064</option>
 	 	    </select>
-	 	   <input type="num" class="form-control storeName"  id="tel1" name="tel1">
+	 	   <input type="num" class="form-control storeName"  id="tel1" name="tel1" value="${fn:substring(store.storeTel, 3, 7)}">
 	 	   <span id="tel2">-</span>
-           <input type="num" class="form-control storeName" id="tel3" name="tel2">    
+           <input type="num" class="form-control storeName" id="tel3" name="tel2" value="${fn:substring(store.storeTel, 8, 12)}">    
       </div>
      </c:forEach>
       
@@ -92,7 +106,7 @@
     </div> 
     <div id="personalday-container">   
   		<label for="inputEmail3" class="col-sm-2 col-form-label">휴무일</label>
-        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 보여질 정보에 소개될 휴무일 입니다">  
+        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 소개될 휴무일 입니다">  
         </c:forEach>    
 	</div>
 	<br>
@@ -101,18 +115,22 @@
 	<h2>대표사진 변경</h2>
 	<div id="thunbnail-container">
 		  <div id="preview">
-		  <img id="image_section" style="width:300px;height:300px;" src="#" alt="your image" />
+<!-- thumbAttachment -->
+		  <c:forEach items="${thumbAttachment}" var="thumbAttachment">
+		  <img id="image_section" style="width:300px;height:300px;" src='${pageContext.request.contextPath}/resources/upload/storeInfo/${thumbAttachment.renamedFileName}' alt="your image" />
+		  <input type="hidden" name="nowThumb" value="${thumbAttachment.renamedFileName}" >
+		  </c:forEach>
 		  </div>
-		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb" name="thumb">
-		 		<c:forEach items="${attachment}" var="attachment">
-		    	<option selected onclick="preview('${attachment.renamedFileName}')">${attachment.originalFileName}</option>
-		    	</c:forEach>
+		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb"  name="newThumb" >
+		 			<c:forEach items="${attachment}" var="attachment">
+		    			<option value= ${attachment.renamedFileName} id="renameFile">${attachment.originalFileName}</option>
+		    		</c:forEach>
 		  </select>
 	</div>
 
- 
+     
       <div class="btnGroup">
-	       <button type="submit" class="btn btn-primary btn-lg">수정하기</button>
+	       <button type="button" id="updateBtn" class="btn btn-primary btn-lg">수정하기</button>
 		   <button type="button" class="btn btn-secondary btn-lg">돌아가기</button>
       </div>
    
@@ -130,21 +148,61 @@ $("#updateAddressBtn").on("click", function(){
     }).open();
 })
 
-function readURL(input) {
+
+
+//사용자에게 미리 썸네일보여주는 제이쿼리
+$( "#thumb" ).change(function() {
+	 var str = "";
+  $( "select[name=newThumb] option:selected" ).each(function() {
+    str += $( this ).val();
+    console.log(str);
+  });
  
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
- 
-        reader.onload = function (e) {
-            $('#image_section').attr('src', e.target.result);
-        }
- 
-        reader.readAsDataURL(input.files[0]);
-    }
-}
- 
-$("#imgInput").change(function(){
-    readURL(this);
+  $("#image_section").attr("src","${pageContext.request.contextPath}/resources/upload/storeInfo/"+str);
+  
 });
+
+//폼전송
+$("#updateBtn").on("click", function(){
+	 var formData = $("#updateFrm").serialize();
+	//ction="${pageContext.request.contextPath}/seller/updateStoreInfo.do" 
+	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/updateStoreInfo.do",
+		type : 'POST',
+		data:formData,
+		success:function(data){
+			alert("수정이 완료되었습니다.");
+		},error:function(){
+			console.log("에이젝스오류");
+		}
+	});
+})
 </script>
-<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+

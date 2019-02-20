@@ -52,6 +52,7 @@ public interface AdminService {
 
 	int deleteEvent(int eventNo);
 
+
 	List<Map<String, String>> qnaControlList(int cPage, int numPerPage);
 
 	int countQnaControlList();
@@ -89,5 +90,16 @@ public interface AdminService {
 	Ad adStoreAdView(int adNo);
 
 	int deleteAd(Map<String, String> map);
+
+	int updateEvent(Event event);
+
+	List<Map<String, String>> storePMSList(int cPage, int numPerPage);
+
+	int countStorePMSList();
+
+	List<Map<String, String>> storeList(int cPage, int numPerPage);
+
+	int countStoreList();
+//	---------------------------------------------------------
 
 }

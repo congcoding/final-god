@@ -38,7 +38,7 @@
 #tel3{
 	position: relative;
     left: 29%;
-    top: -201%;
+    top: -193%;
 }
 #address-container{
     margin-left: -10px;
@@ -63,3 +63,9 @@
     top: -11px;
     left: -7%;
     }
+    
+    #thumb{
+    position: relative;
+    top: 17px;
+    left: 9%;
+}

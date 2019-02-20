@@ -31,6 +31,11 @@ public class MenuServiceImpl implements MenuService {
 		int menuCount = menuDao.menuCount(storeNo);
 		return menuCount;
 	}
+	@Override
+	public Menu selectOneMenu(String menuCode) {
+		Menu menu = menuDao.selectOneMenu(menuCode);
+		return menu;
+	}
 
 
 }

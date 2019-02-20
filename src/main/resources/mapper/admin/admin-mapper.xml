@@ -175,5 +175,27 @@
 	</resultMap>
 	
 	
+	<update id="updateEvent" parameterType="event">
+		update event set eventTitle=#{eventTitle}, discount=#{discount}, amount=#{amount}, startDate=#{startDate}, endDate=#{endDate}, eventSmall=#{eventSmall}, eventBig=#{eventBig} where eventNo=#{eventNo}
+	</update>
+	
+	<select id="selectStorePMSList" resultType="storeInfo">
+		select * from storeInfo where pmsflag='N'
+	</select>
+	
+	<select id="countStorePMSList" resultType="_int">
+		select count(*) from storeInfo where pmsflag='N'
+	</select>
+	
+	<select id="selectStoreList" resultType="storeInfo">
+		select * from storeInfo
+	</select>
+	
+	<select id="countStoreList" resultType="_int">
+		select count(*) from storeInfo
+	</select>
+
+<!-- ============================================== -->
+	
 </mapper>
 
