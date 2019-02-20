@@ -32,7 +32,7 @@
 						<a href="#"
 						   class="storeReview">리뷰</a>
 					</div>
-					<button type="button" class="btn btn-info" onclick="location.href='${pageContext.request.contextPath}/seller/updateMenu.do?storeNo=${store.storeNo}'">메뉴수정</button>
+					<button type="button" class="btn btn-info" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?storeNo=${store.storeNo}'">메뉴수정</button>
 					<%-- <a href="${pageContext.request.contextPath}/seller/updateMenu.do?storeNo=${store.storeNo}">메뉴수정</a> --%>
 				</c:forEach>
 			</c:if>

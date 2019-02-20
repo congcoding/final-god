@@ -84,4 +84,9 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.update("storeInfo.updateStoreInfo",map);
 	}
 
+	@Override
+	public int updateSoldout(String menuCode) {
+		return sqlSession.update("storeInfo.updateSoldout", menuCode);
+	}
+
 }

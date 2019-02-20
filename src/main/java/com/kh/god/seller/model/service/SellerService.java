@@ -36,4 +36,6 @@ public interface SellerService {
 
 	List<Menu> selectMenuList(String storeNo);
 
+	int updateSoldout(String menuCode);
+
 }

@@ -30,21 +30,21 @@
 	</insert>
 
 	<select id="myStoreMenu" resultType="menu">
-		select m.menuname, m.menuprice
+		select m.menuName, m.menuPrice
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
    <select id="menuList"  resultType="menu">
-   	select * from menu where storeno = #{storeNo}
+   	select * from menu where storeNo = #{storeNo}
    </select>
    
    <select id="storeInfoList"  resultType="storeInfo">
-   	   select * from storeinfo where storeno = #{storeNo}
+   	   select * from storeinfo where storeNo = #{storeNo}
    </select>
 	
    <select id="menuCount"  resultType="_int">
-   	  select count(*) from menu where storeno = #{storeNo}
+   	  select count(*) from menu where storeNo = #{storeNo}
    </select>
  
    <select id="getAttachment" resultType="menuAttachment">
@@ -52,7 +52,7 @@
    </select>
    
    <select id="selectMenuList" resultType="menu">
-		select m.menuname, m.menuprice
+		select m.menuName, m.menuPrice, m.menuCode, m.storeNo
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.storeNo = #{storeNo}
    </select>
@@ -75,6 +75,10 @@
    
    <update id="updateStoreInfo">
    	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
+   </update>
+   
+   <update id="updateSoldout">
+   		update menu set soldoutFlag = 'Y' where menuCode = #{menuCode}
    </update>
 
 

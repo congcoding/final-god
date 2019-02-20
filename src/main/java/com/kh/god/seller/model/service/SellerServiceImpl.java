@@ -85,5 +85,10 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.updateStoreInfo(map);
 	}
 
+	@Override
+	public int updateSoldout(String menuCode) {
+		return sellerDao.updateSoldout(menuCode);
+	}
+
 	
 }
