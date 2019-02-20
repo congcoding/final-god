@@ -57,14 +57,17 @@ $(function(){
 	<c:forEach items="${menu}" var="menu" varStatus="vs">
 		<tr>
 			<th scope="row">${vs.count}</th>
-			<td style="display: none;"><c:out value="${menu.menuCode }"/></td>
 			<td><c:out value="${menu.menuName}" /></td>
 			<td><c:out value="${menu.menuPrice}" /></td>
 			<td>
 				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#exampleModal" id="menuUpdate-btn" onclick="location.href='${pageContext.request.contextPath}/seller/updateMenu.do?menuCode=${menu.menuCode}'">수정</button>
 				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="location.href='${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode=${menu.menuCode}'">삭제</button>
-				<%-- <button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}'">품절</button> --%>
-				<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}'">품절</button>
+				<c:if test="${menu.soldoutFlag eq 'N'}">
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}&storeNo=${menu.storeNo }&soldoutFlag=${menu.soldoutFlag }'">품절</button>
+				</c:if>
+				<c:if test="${menu.soldoutFlag eq 'Y'}">
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}&storeNo=${menu.storeNo }&soldoutFlag=${menu.soldoutFlag }'">품절취소</button>
+				</c:if>
 			</td>
 		</tr>
 	</c:forEach>

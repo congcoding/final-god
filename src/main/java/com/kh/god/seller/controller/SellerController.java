@@ -354,49 +354,43 @@ public class SellerController {
 
     }
     
-//    @RequestMapping("/seller/selectMenuList.do")
-//    @ResponseBody
-//    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
-//		System.out.println("사업자 번호 왔냐? " + storeNo);
-//    	
-//		List<Menu> menu = sellerService.selectMenuList(storeNo);
-//		
-//		System.out.println("메뉴 왔냐? " + menu);
-//		
-//		model.addAttribute("menu", menu);
-//		
-//    	return menu;
-//    	
-//    }
-    
 	@RequestMapping("/seller/myStoreMenu.do")
 	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("goUpdateMenu() 요청!"); 
+			logger.debug("myStoreMenu() 요청!"); 
 		}
 		
-		System.out.println("사업자 번호 왔냐? " + storeNo);
+		logger.debug("☆★☆★☆★☆★☆★사업자 번호 왔냐? " + storeNo);
 		
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
 
-		System.out.println("메뉴 왔냐? " + menu);
+		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
 
 		return "/seller/myStoreMenu";
 	}
 	
-	@RequestMapping("/seller/updateSoldout.do")
+	@RequestMapping("/seller/goUpdateMenu.do")
 	public ModelAndView updateSoldOut(@RequestParam("menuCode") String menuCode,
+									  @RequestParam("storeNo") String storeNo,
+									  @RequestParam("soldoutFlag") String soldoutFlag,
 									  ModelAndView mav) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("soldOut() 요청!");
+			logger.debug("updateSoldOut() 요청!");
 		}
-
-		System.out.println("메뉴코드 왔냐? " + menuCode);
-
-		int result = sellerService.updateSoldout(menuCode);
+		
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+		logger.debug("☆★☆★☆★☆★☆★품절여부 왔냐? " + soldoutFlag);
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("soldoutFlag", soldoutFlag);
+		
+		int result = sellerService.updateSoldout(map);
 
 		String loc = "/";
 		String msg = "";
@@ -404,13 +398,15 @@ public class SellerController {
 
 		if (result > 0) {
 			msg = "품절 변경 성공";
-			loc = "/seller/updateMenu";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
 		} else {
 			msg = "품절 변경 실패";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
 		}
 
 		mav.addObject("loc", loc);
 		mav.addObject("msg", msg);
+		mav.addObject("map", map);
 		mav.setViewName(view);
 
 		return mav;

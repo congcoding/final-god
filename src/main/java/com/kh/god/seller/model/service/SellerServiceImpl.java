@@ -88,10 +88,10 @@ public class SellerServiceImpl implements SellerService {
 	public int updateStoreInfo(Map<String, Object> map) {
 		return sellerDao.updateStoreInfo(map);
 	}
-
+	
 	@Override
-	public int updateSoldout(String menuCode) {
-		return sellerDao.updateSoldout(menuCode);
+	public int updateSoldout(Map<String, Object> map) {
+		return sellerDao.updateSoldout(map);
 	}
 
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
@@ -104,5 +104,7 @@ public class SellerServiceImpl implements SellerService {
 		// TODO Auto-generated method stub
 		return sellerDao.orderList1(storeNo);
 	}
+
+
 	
 }

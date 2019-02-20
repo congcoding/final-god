@@ -15,5 +15,6 @@ public class Menu {
 	private int menuPrice;
 	private String storeNo;
 	private int amount = 1;
+	private String soldoutFlag;
 
 }

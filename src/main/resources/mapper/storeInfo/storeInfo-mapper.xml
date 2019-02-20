@@ -52,7 +52,7 @@
    </select>
    
    <select id="selectMenuList" resultType="menu">
-		select m.menuName, m.menuPrice, m.menuCode, m.storeNo
+		select m.menuName, m.menuPrice, m.menuCode, m.storeNo, m.soldoutFlag
 		from storeinfo s join menu m on s.storeNo = m.storeNo
 		where s.storeNo = #{storeNo}
    </select>
@@ -78,7 +78,10 @@
    </update>
    
    <update id="updateSoldout">
-   		update menu set soldoutFlag = 'Y' where menuCode = #{menuCode}
+   		update menu set
+   			<if test='soldoutFlag eq "N"'>soldoutFlag = 'Y'</if>
+   			<if test='soldoutFlag eq "Y"'>soldoutFlag = 'N'</if>
+   		where menuCode = #{menuCode}
    </update>
 
    <select id="orderList1" resultType="map">
