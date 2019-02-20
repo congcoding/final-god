@@ -10,7 +10,7 @@
 
 <script>
 $(function(){
-	console.log("${sellerLoggedIn.sellerId}");
+	$("div.collapse").eq(1).addClass("show");
 });
 </script>
 <!-- Sidebar -->

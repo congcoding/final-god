@@ -17,7 +17,10 @@
 
 <script>
 $(function(){
-	/* $("#memberList").addClass("active"); */	
+	var storeNo = "${param.storeNo}"
+	$("#collapse"+storeNo).addClass("show");
+	$("#collapse"+storeNo).parent("li").addClass("active");	
+	$("#collapse"+storeNo+">div>a.updateMyStoreInfo").addClass("active");	
 });
 </script>
 
