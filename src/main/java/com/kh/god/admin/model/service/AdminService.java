@@ -51,4 +51,12 @@ public interface AdminService {
 
 	int updateEvent(Event event);
 
+	List<Map<String, String>> storePMSList(int cPage, int numPerPage);
+
+	int countStorePMSList();
+
+	List<Map<String, String>> storeList(int cPage, int numPerPage);
+
+	int countStoreList();
+
 }

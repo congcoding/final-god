@@ -120,4 +120,24 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.updateEvent(event);
 	}
 
+	@Override
+	public List<Map<String, String>> storePMSList(int cPage, int numPerPage) {
+		return adminDao.storePMSList(cPage, numPerPage);
+	}
+
+	@Override
+	public int countStorePMSList() {
+		return adminDao.countStorePMSList();
+	}
+
+	@Override
+	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
+		return adminDao.storeList(cPage, numPerPage);
+	}
+
+	@Override
+	public int countStoreList() {
+		return adminDao.countStoreList();
+	}
+
 }

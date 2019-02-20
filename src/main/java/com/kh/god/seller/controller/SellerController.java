@@ -165,6 +165,7 @@ public class SellerController {
 		
 		//메뉴 뽑기
 		//페이지바 만들기
+		model.addAttribute("storeSideBar", store);
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
 
@@ -289,6 +290,9 @@ public class SellerController {
     	model.addAttribute("store", store);
     	model.addAttribute("attachment", attachment);
     	model.addAttribute("thumbAttachment", thumbAttachment);
+    	
+    	List<StoreInfo> storeSideBar = sellerService.myStore("seller1");
+    	model.addAttribute("storeSideBar", storeSideBar);
 
     	return "seller/updateMyStoreInfo";
     }
@@ -305,7 +309,8 @@ public class SellerController {
     		@RequestParam(name="personalday" , required = false) String personalday,
     		@RequestParam(name="nowThumb" , required = false) String nowThumb,
     		@RequestParam(name="newThumb" , required = false) String newThumb,
-    		@RequestParam(name="storeNo") String storeNo  		
+    		@RequestParam(name="storeNo") String storeNo,
+    		Model model
 	
     		) {
 
@@ -347,6 +352,7 @@ public class SellerController {
     	//int updateThumb = sellerService.updateStoreInfo();
 
     	return "common/msg";
+
     }
     
 //    @RequestMapping("/seller/selectMenuList.do")

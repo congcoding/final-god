@@ -125,6 +125,33 @@ public class AdminDaoImpl implements AdminDao {
 	public int updateEvent(Event event) {
 		return sqlSession.update("admin.updateEvent", event);
 	}
+
+	@Override
+	public int countSellrQNAList(String sellerId) {
+		return 0;
+	}
+
+	@Override
+	public List<Map<String, String>> storePMSList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectStorePMSList", null, rowBounds);
+	}
+
+	@Override
+	public int countStorePMSList() {
+		return sqlSession.selectOne("admin.countStorePMSList");
+	}
+
+	@Override
+	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectStoreList", null, rowBounds);
+	}
+
+	@Override
+	public int countStoreList() {
+		return sqlSession.selectOne("admin.countStoreList");
+	}
 	
 
 }
