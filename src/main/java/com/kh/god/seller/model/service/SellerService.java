@@ -1,9 +1,11 @@
 package com.kh.god.seller.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.kh.god.menu.model.vo.Menu;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -30,6 +32,8 @@ public interface SellerService {
 
 	int updateStoreInfo(Map<String, Object> map);
 
+	List<OrderInfo> myStoreOrderInfo(String storeNo);
+	
 	int updatePwd(String password);
 
 	int updateSeller(Seller seller);
@@ -37,5 +41,7 @@ public interface SellerService {
 	List<Menu> selectMenuList(String storeNo);
 
 	int updateSoldout(String menuCode);
+
+	List<Map<String, Object>> orderList1(String storeNo);
 
 }
