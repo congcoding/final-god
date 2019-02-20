@@ -30,7 +30,18 @@ div#head-container {
 
 div#member {
 	margin-left: -40px;
-	width: 450px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div#memberBL {
+	margin-left: -40px;
+	width: 225px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -42,7 +53,19 @@ div#member {
 div#seller {
 	margin-top: -50px;
 	margin-left: 500px;
-	width: 450px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div#sellerBL {
+	margin-top: -50px;
+	margin-left: 500px;
+	width: 225px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -70,6 +93,7 @@ table#tbl-seller tbody tr td {
 table#tbl-seller tbody tr td input {
 	text-align: center;
 }
+
 </style>
 <script>
 $(function(){
@@ -83,7 +107,7 @@ function fn_goSellerList(){
 	location.href = "${pageContext.request.contextPath}/admin/sellerList.do";
 };
 
-function bFlagCheck(sellerId,bFlag){
+function bFlagCheck(memberId,bFlag){
 	if(bFlag=='Y'){
 		if(!confirm("정말 블랙리스트에서 제거하시겠습니까?")){
 			return;
@@ -93,9 +117,14 @@ function bFlagCheck(sellerId,bFlag){
 			return;
 		}
 	}
-
-	location.href = "${pageContext.request.contextPath}/admin/sellerBlackList.do?sellerId="+sellerId+"&bFlag="+bFlag;
+	location.href = "${pageContext.request.contextPath}/admin/memberBlackList.do?memberId="+memberId+"&bFlag="+bFlag+"&page=MList";
 	
+};
+function fn_goSellerBL(){
+	location.href = "${pageContext.request.contextPath}/admin/sellerBList.do";
+};
+function fn_goMemberBL(){
+	location.href = "${pageContext.request.contextPath}/admin/memberBList.do";
 };
 
 </script>
@@ -122,9 +151,11 @@ function bFlagCheck(sellerId,bFlag){
 				<!-- Page Heading -->
 				<div id="head-container">
 					<div id="member" class="alert-info" onclick="fn_goMemberList();">일반회원</div>
+					<div id="memberBL" class="alert-light" onclick="fn_goMemberBL();">일반회원 BL</div>
 					<div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
+					<div id="sellerBL" class="alert-light" onclick="fn_goSellerBL();">판매자 BL</div>
 				</div>
-
+				<br />
 				<table class="table" id="tbl-seller">
 					<thead>
 						<tr>
@@ -137,7 +168,7 @@ function bFlagCheck(sellerId,bFlag){
 						</tr>
 					</thead>
 					<c:if test="${not empty member }">
-						<c:forEach items="${member }" var="seller">
+						<c:forEach items="${member }" var="member">
 							<tbody>
 								<c:if test="${member['BLACKFLAG'] eq 'Y'}">
 									<tr class="table-danger">
@@ -145,7 +176,7 @@ function bFlagCheck(sellerId,bFlag){
 								<c:if test="${member['BLACKFLAG'] eq 'N'}">
 									<tr>
 								</c:if>
-								<td name="sellerId" id="sellerId">${member['MEMBER'] }</td>
+								<td name="sellerId" id="sellerId">${member['MEMBERID'] }</td>
 								<td name="sellerName" id="sellerName">${member['MEMBERNAME'] }</td>
 								<td name="email" id="email">${member['EMAIL'] }</td>
 								<td name="phone" id="phone">${member['PHONE'] }</td>
@@ -178,7 +209,7 @@ function bFlagCheck(sellerId,bFlag){
 
 				</table>
 				<div id="pageBar">
-					<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "sellerList.do")%>
+					<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "memberList.do")%>
 				</div>
 
 			</div>

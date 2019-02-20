@@ -17,7 +17,7 @@ import lombok.ToString;
 public class Ad {
 	
 	private int adNo;
-	private int storeNo;
+	private String storeNo;
 	private int price;
 	private String storeGrade;
 	private Date startDate;

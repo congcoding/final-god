@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.god.menu.model.vo.Menu;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -60,6 +62,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		return sqlSession.selectList("storeInfo.selectMenuList", storeNo);
+	}
+	
+	@Override
 	public List<MenuAttachment> getthumbAttachment(String storeNo) {
 		return sqlSession.selectList("storeInfo.getthumbAttachment",storeNo);
 	}
@@ -82,6 +89,22 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public List<StoreInfo> selectListStorInfo(String sellerId) {
 		return sqlSession.selectList("storeInfo.selectListStorInfo" , sellerId);
+	}
+
+		
+	public int updateSoldout(String menuCode) {
+		return sqlSession.update("storeInfo.updateSoldout", menuCode);
+	}
+
+	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storeInfo.myStoreOrderInfo",storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("storeInfo.orderList1",storeNo);
 	}
 
 }

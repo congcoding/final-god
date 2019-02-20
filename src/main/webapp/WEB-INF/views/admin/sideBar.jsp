@@ -34,10 +34,10 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" id="sellerAsking" href="login.html">판매자 신청 현황</a>
-            <a class="collapse-item" id="adControl" href="register.html">광고 관리</a>
+            <a class="collapse-item" id="storeControl" href="${pageContext.request.contextPath}/admin/storePMSList.do">가게 신청 관리</a>
+            <a class="collapse-item" id="adControl" href="${pageContext.request.contextPath }/admin/adControl.do">광고 관리</a>
             <a class="collapse-item" id="eventControl" href="${pageContext.request.contextPath }/admin/eventList.do">이벤트 관리</a>
-            <a class="collapse-item" id="qnaControl" href="404.html">문의 관리</a>
+            <a class="collapse-item" id="qnaControl" href="${pageContext.request.contextPath }/admin/qnaControl.do">문의 관리</a>
           </div>
         </div>
       </li>
@@ -57,10 +57,10 @@
       </li>
       
       <!-- Nav Item - Tables -->
-      <li class="nav-item" id="sellerList">
-        <a class="nav-link" href="tables.html">
+      <li class="nav-item" id="storeList">
+        <a class="nav-link" href="${pageContext.request.contextPath}/admin/storeList.do">
           <i class="fas fa-fw fa-table"></i>
-          <span>판매자 관리</span></a>
+          <span>가게 관리</span></a>
       </li>
 
       <!-- Divider -->
