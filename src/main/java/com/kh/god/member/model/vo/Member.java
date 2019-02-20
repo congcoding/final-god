@@ -33,7 +33,7 @@ public class Member {
 	private String blackFlag;
 	private String delFlag;	
 	
-
+	
 
 	
 	

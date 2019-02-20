@@ -39,8 +39,6 @@ public interface AdminDao {
 
 	int countQNAList(String boardWriter);
 
-	int countSellrQNAList(String sellerId);
-
 	List<QnaBoard> boardRefList();
 
 	QnaBoard qnaBoardRefView(int boardNo);

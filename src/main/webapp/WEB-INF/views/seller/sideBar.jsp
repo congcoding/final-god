@@ -13,6 +13,7 @@ $(function(){
 	$("div.collapse").eq(1).addClass("show");
 });
 </script>
+
 <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-god sidebar sidebar-dark accordion" id="accordionSidebar">
 

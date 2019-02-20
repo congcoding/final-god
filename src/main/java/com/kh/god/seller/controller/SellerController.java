@@ -1,13 +1,12 @@
 package com.kh.god.seller.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -21,10 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.god.common.util.Utils;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -162,15 +159,15 @@ public class SellerController {
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
 		
-		List<Menu> menu = sellerService.myStoreMenu(sellerId);
+//		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
-		System.out.println("메뉴 나오라" + menu);
+//		System.out.println("메뉴 나오라" + menu);
 		
 		//메뉴 뽑기
 		//페이지바 만들기
 		model.addAttribute("storeSideBar", store);
 		model.addAttribute("store", store);
-		model.addAttribute("menu", menu);
+//		model.addAttribute("menu", menu);
 
 		return "seller/goMyStore";
 
@@ -268,8 +265,13 @@ public class SellerController {
 	}
 
 	@RequestMapping(value = "/seller/goMyStoreOrder.do" )
-	public String goMyStoreOrder() {
-	
+	public String goMyStoreOrder(@RequestParam("storeNo") String storeNo,Model model) {
+		System.out.println("@@storeNo=>>>>>"+storeNo);
+		//접수대기 오더리스트
+		List<Map<String, Object>> orderList1 = sellerService.orderList1(storeNo);
+		
+		
+		model.addAttribute("orderList1",orderList1);
 		
 		return "seller/MyStoreOrder";
 	}
@@ -297,10 +299,8 @@ public class SellerController {
 
     //내 가게 정보수정
     @RequestMapping("/seller/updateStoreInfo.do")
-    public String updateStore(@RequestParam(name="startChooseAmPm" , required = false) String startChooseAmPm,
-    		@RequestParam(name="startTime" , required = false) String startTime,
-    		@RequestParam(name="endChooseAmPm" , required = false) String endChooseAmPm,
-    		@RequestParam(name="endTime" , required = false) String endTime,
+    public String updateStore(
+    		@RequestParam(name="operatingHours" , required = false) String operatingHours,
     		@RequestParam(name="locationStartNum" , required = false) String locationStartNum,
     		@RequestParam(name="tel1" , required = false) String tel1,
     		@RequestParam(name="tel2" , required = false) String tel2,
@@ -314,7 +314,6 @@ public class SellerController {
 	
     		) {
 
-    	String operatingHours = startChooseAmPm+startTime+"시 ~ "+endChooseAmPm+endTime+"시";
     	String storeTel = locationStartNum+"-"+tel1+"-"+tel2;
     	String storeAddress = "";
     	if(!address2.equals("")) {
@@ -332,7 +331,13 @@ public class SellerController {
 
     	//업데이트
     	int result = sellerService.updateStoreInfo(map);
-    	System.out.println(result>0?"수정성공":"실패임다");
+		String msg = "";
+
+    	if(result>0) {
+    		msg="수정이 완료되었습니다";
+    	} else {
+    		msg="수정실패";
+    	}
     	
     	if(!nowThumb.equals(newThumb)) {
     		//썸네일을 바꾼 경우
@@ -345,8 +350,43 @@ public class SellerController {
     	System.out.println("storeNo=>"+storeNo);
 
     	//int updateThumb = sellerService.updateStoreInfo();
-    	
-    	return "seller/goUpdateMyStore.do";
+
+    	return "common/msg";
+
     }
+    
+//    @RequestMapping("/seller/selectMenuList.do")
+//    @ResponseBody
+//    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
+//		System.out.println("사업자 번호 왔냐? " + storeNo);
+//    	
+//		List<Menu> menu = sellerService.selectMenuList(storeNo);
+//		
+//		System.out.println("메뉴 왔냐? " + menu);
+//		
+//		model.addAttribute("menu", menu);
+//		
+//    	return menu;
+//    	
+//    }
+    
+	@RequestMapping("/seller/updateMenu.do")
+	public String updateMenu(@RequestParam("storeNo") String storeNo, Model model) {
+		System.out.println("사업자 번호 왔냐? " + storeNo);
+
+		List<Menu> menu = sellerService.selectMenuList(storeNo);
+
+		System.out.println("메뉴 왔냐? " + menu);
+
+		model.addAttribute("menu", menu);
+
+		return "seller/updateMenu";
+	}
+	
+	@RequestMapping("/seller/soldout.do")
+	public String soldOut(@RequestParam("menuCode") String menuCode) {
+		
+		return menuCode;
+	}
 
 }

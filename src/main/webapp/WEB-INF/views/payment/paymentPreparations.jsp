@@ -96,7 +96,9 @@
 				</table>
 	</form>
 	
-				<!-- 주문표 -->
+		
+		
+		<!-- 주문표 이거 세션에 담긴걸 꺼내는 형식으로!!-->
 			<div id="cart">
 				<table class="table">
 				  <thead class="thead-light">

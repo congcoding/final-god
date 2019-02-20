@@ -34,27 +34,142 @@
 				      <th scope="col">요청사항</th>
 				      <th scope="col">결제수단</th>
 				      <th scope="col">총 가격</th>
+				      <th scope="col">주문시간</th>     
 				     <th scope="col"></th>
 				    </tr>
 				  </thead>
 				  <tbody>
 				    <tr>
-				      <td class="orderMenu">짜장면 * 1</td>
-				      <td class="orderAddress">경기도 부천시 옥산로33 1414동 403호</td>
-				      <td class="orderPhone">010-8434-5390</td>
-				      <td class="orderRequest">벨 누르지말아주세요</td>
+				    <!--${fn:split('1|2|3|4|5', '|') }  -->
+				      <c:forEach items="${orderList1}" var="orderList1">
+				      <td class="orderMenu">
+				      <c:forEach items="${fn:split(orderList1.NAME,'/')}" var="menu">
+				      ${menu}<br>
+				      </c:forEach>
+				      </td>
+				      <td class="orderAddress">${orderList1.ADDRESS}</td>
+				      <td class="orderPhone">${orderList1.PHONE}</td>
+				      <c:if test="${orderList1.REQUEST eq null}">
+				      <td class="orderRequest">${orderList1.REQUEST}</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList1.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
-				      <td class="orderPrice">21000원</td>
+				      </c:if>
+				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <td class="orderWay">만나서결제</td>
+				      </c:if>
+				     
+				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>
+				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
+				     
 				      <td>
 				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">주문접수</button>
 				      <button type="button" id="orderCancel" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
 				      </td> 
 				    </tr>
+				      </c:forEach>
 				  </tbody>
 				</table>
       </div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
+      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">
+		<!-- 접수완료된 오더들 -->
+				<table class="table table-hover" id="orderWaitng">
+				  <thead>
+				    <tr>
+				      <th scope="col">주문메뉴</th>      
+				      <th scope="col">주소</th>
+				      <th scope="col">전화번호</th>
+				      <th scope="col">요청사항</th>
+				      <th scope="col">결제수단</th>
+				      <th scope="col">총 가격</th>
+				      <th scope="col">주문시간</th>     
+				     <th scope="col"></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				    <!--${fn:split('1|2|3|4|5', '|') }  -->
+				      <c:forEach items="${orderList1}" var="orderList1">
+				      <td class="orderMenu">
+				      <c:forEach items="${fn:split(orderList1.NAME,'/')}" var="menu">
+				      ${menu}<br>
+				      </c:forEach>
+				      </td>
+				      <td class="orderAddress">${orderList1.ADDRESS}</td>
+				      <td class="orderPhone">${orderList1.PHONE}</td>
+				      <c:if test="${orderList1.REQUEST eq null}">
+				      <td class="orderRequest">${orderList1.REQUEST}</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList1.PRICEWAY=='Y'}">
+				      <td class="orderWay">결제완료</td>
+				      </c:if>
+				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <td class="orderWay">만나서결제</td>
+				      </c:if>
+				     
+				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>
+				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
+				     
+				      <td>
+				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">배달완료</button>
+				      </td> 
+				    </tr>
+				     </c:forEach>
+				  </tbody>
+				</table>
+
+
+	   </div>
+      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
+		<!-- 배달완료된 오더들 -->
+		<table class="table table-hover" id="orderWaitng">
+				  <thead>
+				    <tr>
+				      <th scope="col">주문메뉴</th>      
+				      <th scope="col">주소</th>
+				      <th scope="col">전화번호</th>
+				      <th scope="col">요청사항</th>
+				      <th scope="col">결제수단</th>
+				      <th scope="col">총 가격</th>
+				      <th scope="col">주문시간</th>     
+				     <th scope="col"></th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				    <tr>
+				    <!--${fn:split('1|2|3|4|5', '|') }  -->
+				      <c:forEach items="${orderList1}" var="orderList1">
+				      <td class="orderMenu">
+				      <c:forEach items="${fn:split(orderList1.NAME,'/')}" var="menu">
+				      ${menu}<br>
+				      </c:forEach>
+				      </td>
+				      <td class="orderAddress">${orderList1.ADDRESS}</td>
+				      <td class="orderPhone">${orderList1.PHONE}</td>
+				      <c:if test="${orderList1.REQUEST eq null}">
+				      <td class="orderRequest">${orderList1.REQUEST}</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList1.PRICEWAY=='Y'}">
+				      <td class="orderWay">결제완료</td>
+				      </c:if>
+				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <td class="orderWay">만나서결제</td>
+				      </c:if>
+				     
+				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>
+				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
+				     
+				      <td>
+				      </td> 
+				    </tr>
+				     </c:forEach>
+				  </tbody>
+				</table>
+
+	  </div>
     </div>
   </div>
 </div>

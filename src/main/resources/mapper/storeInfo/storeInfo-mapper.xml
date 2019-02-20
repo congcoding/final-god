@@ -32,7 +32,7 @@
 	<select id="myStoreMenu" resultType="menu">
 		select m.menuname, m.menuprice
 		from storeinfo s join menu m on s.storeNo = m.storeNo
-		where s.sellerId = #{sellerId}
+		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
    <select id="menuList"  resultType="menu">
@@ -49,7 +49,13 @@
  
    <select id="getAttachment" resultType="menuAttachment">
    	select * from menuAttachment where storeNo = #{storeNo}
-   </select>  
+   </select>
+   
+   <select id="selectMenuList" resultType="menu">
+		select m.menuname, m.menuprice
+		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.storeNo = #{storeNo}
+   </select>
    
    <select id="getthumbAttachment" resultType="menuAttachment">
        	select * from menuAttachment where storeNo = #{storeNo} and thumbFlag = 'Y'
@@ -63,8 +69,21 @@
    		update menuAttachment set thumbFlag='Y' where renamedfilename=#{newThumb}
    </update>
    
+   <select id="selectOneMenu" resultType="menu">
+   		select * from menu where menuCode = #{menuCode}
+   </select>
+   
    <update id="updateStoreInfo">
    	update storeInfo set storetel=#{storeTel},storeaddress = #{storeAddress}, operatinghours=#{operatingHours},personalday=#{personalday} where storeno=#{storeNo}
    </update>
+   
+   <select id="orderList1" resultType="map">
+select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+from(select orderno,menuname||' '||amount||'개' as list
+from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
+where O.menucode=M.menucode)) group by orderno) Z
+where I.orderno=Z.orderno and storeno=#{storeNo} and receiveflag='N') F where m.memberid=F.memberid and storeno='511-25-93434' and receiveFlag='N'
+   </select>
+
 
 </mapper>
