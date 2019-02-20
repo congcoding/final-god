@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
@@ -7,81 +7,19 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
    <jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath }/resources/css/store/goMyStore.css" />
-<!-- <h2 id="storeStatus">내 가게 현황</h2> -->
-<!-- <h2 id="menu">메뉴보기</h2> -->
-
-<table id="container">
-	<tr style="vertical-align: top">
-		<tr><td><h2 id="storeStatus">내 가게 현황</h2></td></tr>
-		<td id="left">
-			<c:if test="${not empty store}">
-				<c:forEach items="${store}" var="store" varStatus="status">
-					<div class="storeName" onclick="boxEvent(this,'${store.storeNo}');" no="${status.count}">${store.storeName}</div>
-					<div class="boxEvent" no="${status.count}">
-						<a href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do"
-						   class="storeOrder">주문내역</a> 
-						<span class="badge badge-primary badge-pill orderCount">14</span>
-						&nbsp; &nbsp; 
-						<a href="#" class="statistics">내 가게 통계</a> 
-						&nbsp; &nbsp; 
-						<a href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}"
-						   class="storeUpdate">내 가게 수정</a> 
-						&nbsp; &nbsp; 
-						<a href="#"
-						   class="storeReview">리뷰</a>
-					</div>
-					<button type="button" class="btn btn-info" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?storeNo=${store.storeNo}'">메뉴수정</button>
-					<%-- <a href="${pageContext.request.contextPath}/seller/updateMenu.do?storeNo=${store.storeNo}">메뉴수정</a> --%>
-				</c:forEach>
-			</c:if>
-		</td>
-	</tr>
-</table>
-<table class="table table-bordered" id="menuTable">
-	<tr><td colspan="3" style="text-align: center;"><h2>메뉴보기</h2></td></tr>
-	<tr>
-		<th scope="col">번호</th>
-		<th scope="col">메뉴명</th>
-		<th scope="col">메뉴가격</th>
-	</tr>
-
-
-	<%-- <c:forEach items="${menu}" var="menu" varStatus="vs"> --%>
-	<%-- <tr>
-				<th scope="row">${vs.count}</th>
-				<td><c:out value="${menu.menuName}" /></td>
-				<td><c:out value="${menu.menuPrice}" /></td>
-			</tr> --%>
-	<%-- </c:forEach> --%>
-</table>
-<!-- 페이지바 부분 -->
-<%-- 	<%
-      int totalContents = (int)request.getAttribute("totalContents");
-      int numPerPage = (int)request.getAttribute("numPerPage");
-      int cPage = (int)request.getAttribute("cPage");
-      int storeNo = (int)request.getAttribute("storeNo");
-      
-     %>
-   <nav aria-label="Page navigation example">
-  	<ul class="pagination justify-content-center">
-  	
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "goMyStore.do?storeNo="+storeNo)%>
-    </ul>
-   </nav> --%>
-
 
 <!-- Custom fonts for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
+
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
+
 <script>
 $(function(){
-	$("#dashBoard").addClass("active");	
+   $("#dashBoard").addClass("active");   
 });
 </script>
 

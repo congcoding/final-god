@@ -370,8 +370,8 @@ public class SellerController {
 //    	
 //    }
     
-	@RequestMapping("/seller/goUpdateMenu.do")
-	public String goUpdateMenu(@RequestParam("storeNo") String storeNo, Model model) {
+	@RequestMapping("/seller/myStoreMenu.do")
+	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("goUpdateMenu() 요청!"); 
 		}
@@ -385,7 +385,7 @@ public class SellerController {
 
 		model.addAttribute("menu", menu);
 
-		return "seller/updateMenu";
+		return "/seller/myStoreMenu";
 	}
 	
 	@RequestMapping("/seller/updateSoldout.do")
