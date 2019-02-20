@@ -90,6 +90,10 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+	public int updateSoldout(String menuCode) {
+		return sellerDao.updateSoldout(menuCode);
+	}
+
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
 		// TODO Auto-generated method stub
 		return sellerDao.myStoreOrderInfo(storeNo);
@@ -100,10 +104,5 @@ public class SellerServiceImpl implements SellerService {
 		// TODO Auto-generated method stub
 		return sellerDao.orderList1(storeNo);
 	}
-
-
-
-
-
 	
 }

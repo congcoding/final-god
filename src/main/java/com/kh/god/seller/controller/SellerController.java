@@ -105,6 +105,9 @@ public class SellerController {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
+	            //사이드바
+	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            session.setAttribute("storeSideBar", store);
 	            view = "redirect:/";
 	            
 	         } else {
@@ -165,7 +168,6 @@ public class SellerController {
 		
 		//메뉴 뽑기
 		//페이지바 만들기
-		model.addAttribute("storeSideBar", store);
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
 
@@ -290,9 +292,6 @@ public class SellerController {
     	model.addAttribute("store", store);
     	model.addAttribute("attachment", attachment);
     	model.addAttribute("thumbAttachment", thumbAttachment);
-    	
-    	List<StoreInfo> storeSideBar = sellerService.myStore("seller1");
-    	model.addAttribute("storeSideBar", storeSideBar);
 
     	return "seller/updateMyStoreInfo";
     }
@@ -370,23 +369,51 @@ public class SellerController {
 //    	
 //    }
     
-	@RequestMapping("/seller/updateMenu.do")
-	public String updateMenu(@RequestParam("storeNo") String storeNo, Model model) {
+	@RequestMapping("/seller/myStoreMenu.do")
+	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
+		if(logger.isDebugEnabled()) {
+			logger.debug("goUpdateMenu() 요청!"); 
+		}
+		
 		System.out.println("사업자 번호 왔냐? " + storeNo);
-
+		
+		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
 
 		System.out.println("메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
 
-		return "seller/updateMenu";
+		return "/seller/myStoreMenu";
 	}
 	
-	@RequestMapping("/seller/soldout.do")
-	public String soldOut(@RequestParam("menuCode") String menuCode) {
-		
-		return menuCode;
+	@RequestMapping("/seller/updateSoldout.do")
+	public ModelAndView updateSoldOut(@RequestParam("menuCode") String menuCode,
+									  ModelAndView mav) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("soldOut() 요청!");
+		}
+
+		System.out.println("메뉴코드 왔냐? " + menuCode);
+
+		int result = sellerService.updateSoldout(menuCode);
+
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "품절 변경 성공";
+			loc = "/seller/updateMenu";
+		} else {
+			msg = "품절 변경 실패";
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+
+		return mav;
 	}
 	
 	//주문접수 
