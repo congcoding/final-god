@@ -15,10 +15,57 @@
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 <style>
-div#head-container{margin:30px auto; width : 900px; height:50px;}
-div#member{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;display: table-cell;vertical-align: middle;}
-div#seller{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
-input#boardTitle{font-weight : bold;}
+div#head-container {
+	margin: 30px auto;
+	width: 900px;
+	height: 50px;
+}
+
+div#member {
+	margin-left: -40px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div#memberBL {
+	margin-left: -40px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div#seller {
+	margin-top: -50px;
+	margin-left: 500px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div#sellerBL {
+	margin-top: -50px;
+	margin-left: 500px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
 </style>
 <script>
 $(function(){
@@ -31,7 +78,12 @@ function fn_goMemberList(){
 function fn_goSellerList(){
 	location.href = "${pageContext.request.contextPath}/admin/sellerList.do";
 };
-
+function fn_goSellerBL(){
+	location.href = "${pageContext.request.contextPath}/admin/sellerBList.do";
+};
+function fn_goMemberBL(){
+	location.href = "${pageContext.request.contextPath}/admin/memberBList.do";
+};
 </script>
 
 <!-- Page Wrapper -->
@@ -50,8 +102,11 @@ function fn_goSellerList(){
 
           <!-- Page Heading -->
           <div id="head-container">
-			<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div> <div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
-		  </div>
+					<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div>
+					<div id="memberBL" class="alert-light" onclick="fn_goMemberBL();">일반회원 BL</div>
+					<div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
+					<div id="sellerBL" class="alert-light" onclick="fn_goSellerBL();">판매자 BL</div>
+				</div>
 
         </div>
         <!-- /.container-fluid -->

@@ -3,9 +3,11 @@ package com.kh.god.admin.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 public interface AdminDao {
 
@@ -48,5 +50,43 @@ public interface AdminDao {
 	List<Map<String, String>> selectMemberAllList(int cPage, int numPerPage);
 
 	int deleteEvent(int eventNo);
+
+	List<Map<String, String>> qnaControlList(int cPage, int numPerPage);
+
+	int countQnaControlList();
+
+	QnaBoard qnaAnswer(int boardNo);
+
+	int insertAnswer(QnaBoard answer);
+
+	List<Map<String, String>> selectSellerBL(int cPage, int numPerPage);
+
+	int countSellerBL();
+
+	int countMemberBL();
+
+	List<Map<String, String>> selectMemberBL(int cPage, int numPerPage);
+
+	int changeMemberbFlagtoN(String memberId);
+
+	int changeMemberbFlagtoY(String memberId);
+
+	List<Map<String, String>> selectAdList(int cPage, int numPerPage);
+
+	int countAdList();
+	
+	List<Map<String, String>> selectAdingList(int cPage, int numPerPage);
+
+	int countAdingList();
+	
+	List<Map<String, String>> selectAdedList(int cPage, int numPerPage);
+
+	int countAdedList();
+
+	StoreInfo adStoreView(String storeNo);
+
+	Ad adStoreAdView(int adNo);
+
+	int deleteAd(Map<String, String> map);
 
 }

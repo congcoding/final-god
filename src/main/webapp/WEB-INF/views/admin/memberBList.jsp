@@ -100,7 +100,7 @@ $(function(){
 	$("#memberList").addClass("active");	
 });
 
-function fn_goMemberForm(){
+function fn_goMemberList(){
 	location.href = "${pageContext.request.contextPath}/admin/memberList.do";
 };
 function fn_goSellerList(){
@@ -117,15 +117,18 @@ function bFlagCheck(memberId,bFlag){
 			return;
 		}
 	}
-	location.href = "${pageContext.request.contextPath}/admin/memberBlackList.do?memberId="+memberId+"&bFlag="+bFlag+"&page=MList";
+	location.href = "${pageContext.request.contextPath}/admin/memberBlackList.do?memberId="+memberId+"&bFlag="+bFlag+"&page=MBList";
 	
 };
+
 function fn_goSellerBL(){
 	location.href = "${pageContext.request.contextPath}/admin/sellerBList.do";
 };
+
 function fn_goMemberBL(){
 	location.href = "${pageContext.request.contextPath}/admin/memberBList.do";
 };
+
 
 </script>
 <%
@@ -150,11 +153,13 @@ function fn_goMemberBL(){
 
 				<!-- Page Heading -->
 				<div id="head-container">
-					<div id="member" class="alert-info" onclick="fn_goMemberList();">일반회원</div>
-					<div id="memberBL" class="alert-light" onclick="fn_goMemberBL();">일반회원 BL</div>
+					<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div>
+					<div id="memberBL" class="alert-info" onclick="fn_goMemberBL();">일반회원 BL</div>
 					<div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
 					<div id="sellerBL" class="alert-light" onclick="fn_goSellerBL();">판매자 BL</div>
 				</div>
+
+				
 				<br />
 				<table class="table" id="tbl-seller">
 					<thead>
@@ -164,52 +169,39 @@ function fn_goMemberBL(){
 							<th scope="col">이메일</th>
 							<th scope="col">전화번호</th>
 							<th scope="col">블랙리스트</th>
-
+							
 						</tr>
 					</thead>
-					<c:if test="${not empty member }">
-						<c:forEach items="${member }" var="member">
+					
+					<c:if test="${not empty list }">
+						<c:forEach items="${list }" var="s">
 							<tbody>
-								<c:if test="${member['BLACKFLAG'] eq 'Y'}">
-									<tr class="table-danger">
-								</c:if>
-								<c:if test="${member['BLACKFLAG'] eq 'N'}">
-									<tr>
-								</c:if>
-								<td name="sellerId" id="sellerId">${member['MEMBERID'] }</td>
-								<td name="sellerName" id="sellerName">${member['MEMBERNAME'] }</td>
-								<td name="email" id="email">${member['EMAIL'] }</td>
-								<td name="phone" id="phone">${member['PHONE'] }</td>
-								<c:if test="${member['BLACKFLAG'] eq 'Y' }">
-									<td><input type="checkbox" class="form-check-input"
-										value="Y" name="blackFlag" id="bFlag1" checked /> <input
-										type="button" class="btn btn-info" value="해제"
-										onclick="bFlagCheck('${member['MEMBERID'] }','${member['BLACKFLAG'] }');" />
+								<tr>
+									<td name="sellerId" id="sellerId">${s.memberId }</td>
+									<td name="sellerName" id="sellerName">${s.memberName }</td>
+									<td name="email" id="email">${s.email }</td>
+									<td name="phone" id="phone">${s.phone }</td>
+									<td>
+										<input type="checkbox" class="form-check-input" value="Y" name="blackFlag" id="bFlag1" checked /> 
+										<input type="button" class="btn btn-info" value="해제" onclick="bFlagCheck('${s.memberId }','${s.blackFlag }');" />
 									</td>
-								</c:if>
-								<c:if test="${member['BLACKFLAG'] eq 'N' }">
-									<td><input type="checkbox" class="form-check-input"
-										value="N" name="blackFlag" id="bFlag2" /> <input
-										type="button" class="btn btn-secondary" value="등록"
-										onclick="bFlagCheck('${member['MEMBERID'] }','${member['BLACKFLAG'] }');" />
-									</td>
-								</c:if>
 								</tr>
 							</tbody>
+							
 						</c:forEach>
-					</c:if>
-
-					<c:if test="${empty member}">
+					 </c:if>
+		
+					<c:if test="${empty list}">
 						<tbody>
 							<tr>
-								<td colspan="6">등록된 정보가 없습니다</td>
+								<td colspan="5">등록된 정보가 없습니다</td>
 							</tr>
 						</tbody>
 					</c:if>
 
 				</table>
 				<div id="pageBar">
-					<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "memberList.do")%>
+					<%=com.kh.god.common.util.Utils.getPerBar(totalContents, cPage, numPerPage, "memberBList.do")%>
 				</div>
 
 			</div>

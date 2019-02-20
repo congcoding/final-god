@@ -11,13 +11,15 @@
 input#btn-add{float:right; margin: 0 0 15px;}
 table#tbl-board tr th{text-align:center;}
 table#tbl-board tr td{text-align:center;}
-section#board-container{height:700px;}
+section#board-container{height:700px; width : 600px; }
 a {text-decoration:none;}
 table#tbl-board{ width : 500px; margin:-35px auto;}
-div#head-container{margin:70px auto; width : 900px; height:50px;}
+div#head-container{margin:70px -180px; width : 900px; height:50px;}
 div#qna{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;display: table-cell;vertical-align: middle;}
 div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
-div#pageBar{margin:35px auto;}
+div#pageBar{margin:35px auto;vertical-align: middle;}
+div#myq{font-weight:bold; text-align : center;}
+div#list{font-weight:bold; color :#404040; }
 </style>
 <script>
 function fn_goAskingList(){
@@ -55,42 +57,30 @@ function validate(){
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->
-	<table id="tbl-board" class="table table-borderless table-hover">
-		<thead class="thead-light">
-			<tr>
-				<th>내가 한 질문</th>
-				<th>답변</th>
-			</tr>
-		</thead>
-		<c:if test="${not empty list}">
-			<c:forEach items="${list }" var="b">
-		<tbody>
-		<tr>
-			<td><a href="${pageContext.request.contextPath }/admin/askingView.do?boardNo=${b.boardNo } ">${b.boardTitle }</a></td>
-			<td></td>
-		</tr>
-		<c:if test="${not empty boardRefList }">
-			<c:forEach items="${boardRefList }" var="ref">
-				<c:if test="${b.boardNo == ref.boardRef}">
-					<tr>
-						<td></td>
-						<td><a href="${pageContext.request.contextPath }/admin/answeringView.do?boardNo=${ref.boardNo }&boardRef=${ref.boardRef } ">답변보러가기</a></td>
-					</tr>
+<div  class="alert-light" id="myq" > 내가 한 질문</div>
+	<br />
+	<c:if test="${not empty list}">
+		<c:forEach items="${list }" var="b">
+			<div class="alert-light list-group-flush" id="list">
+			  <a href="${pageContext.request.contextPath }/admin/askingView.do?boardNo=${b.boardNo }" class="list-group-item list-group-item-action">${b.boardTitle }</a>
+			  <c:if test="${not empty boardRefList }">
+					<c:forEach items="${boardRefList }" var="ref">
+						<c:if test="${b.boardNo == ref.boardRef}">
+			  <div class="p-2 bd-highlight"><a href="${pageContext.request.contextPath }/admin/answeringView.do?boardNo=${ref.boardNo }&boardRef=${ref.boardRef }" class="list-group-item list-group-item-action">&nbsp;&nbsp;RE : ${ref.boardTitle }</a></div>
+						</c:if>
+					 </c:forEach>
 				</c:if>
-				<c:if test="${b.boardNo != ref.boardRef}">
-					<td></td>
-					<td>문의중</td>
-				</c:if>
-			</c:forEach>
+			</div>
+			</c:forEach> 
+			<!-- board List forEach end -->
 		</c:if>
-		</tbody>
-			</c:forEach>
-		</c:if>
+		<!-- boardList end -->
+		
 		<c:if test="${empty list}">
 		<tbody>
-			<tr>
-				<td colspan="4">질문이존재하지 않습니다!</td>
-			</tr>
+			<div class="alert-light list-group-flush">
+				질문이존재하지 않습니다!
+			</div>
 		</tbody>
 		</c:if>
 	
@@ -101,10 +91,11 @@ function validate(){
 		int totalContents = (int)request.getAttribute("totalContents");
 		int numPerPage = (int)request.getAttribute("numPerPage");
 		int cPage = (int)request.getAttribute("cPage");
+		String boardWriter = (String)request.getAttribute("boardWriter");
 	%>
 
 	<div id="pageBar">
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"qnaboard.do") %>
+	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"askingList.do?boardWriter="+boardWriter) %>
 	</div>
 	<!-- 페이지바  -->
 	 	<input type="button" class="btn btn-outline-success" style="margin-left:490px;" value="문의하러가기" onclick="validate();" >

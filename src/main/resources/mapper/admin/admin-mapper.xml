@@ -3,13 +3,13 @@
 <mapper namespace="admin">
 	
 	<select id="selectBoardList" resultMap = "boardMap">
-		select * from qnaboard order by boardno
+		select * from qnaboard where category='FAQ' order by boardno
 	</select>
 	<resultMap type="map" id="boardMap">
 	</resultMap>
 	
 	<select id="countBoardList" resultType="_int">
-		select count(*) as cnt from qnaboard
+		select count(*) as cnt from qnaboard where category='FAQ'
 	</select>
 	
 	<select id="selectEventList" resultMap = "eventMap">
@@ -37,8 +37,6 @@
 	<select id="selectSellerAllList" resultMap="sellerMap">
 		select * from seller
 	</select>
-	<resultMap type="map" id="sellerMap">
-	</resultMap>
 	
 	<select id="countSellerList" resultType="_int">
 		select count(*) as cnt from seller
@@ -65,7 +63,7 @@
 	</select>
 	
 	<insert id="insertAsking" parameterType="qnaBoard">
-		insert into qnaboard(boardNo, boardTitle,boardContent,boardWriter,category) values(seq_qnaboard_boardno.nextval,#{boardTitle },#{boardContent },#{boardWriter },'asking')
+		insert into qnaboard(boardNo, boardTitle,boardContent,boardWriter,category) values(seq_qnaboard_boardno.nextval,#{boardTitle },#{boardContent },#{boardWriter },'qna')
 	</insert>
 	
 	<select id="boardRefList" resultType="qnaBoard">
@@ -76,7 +74,7 @@
 		select * from qnaboard where boardNo = #{boardNo }
 	</select>
 	
-	<select id="countMemberList">
+	<select id="countMemberList" resultType="_int">
 		select count(*) as cnt from member where delflag = 'N'
 	</select>
 	
@@ -84,13 +82,98 @@
 		select * from member where delflag = 'N'
 	</select>
 
-	<resultMap type="map" id="memberMap">
-	</resultMap>
 	
 	<delete id="deleteEvent" parameterType="_int">
 		delete event where eventNo=#{eventNo}
 	</delete>
 
+	<select id="qnaControlList" resultType="qnaBoard">
+		select * from qnaboard where boardno not in (select boardref from qnaboard where boardlevel=2) and category='qna' order by boardno desc
+	</select>
+	
+	<select id="countQnaControlList" resultType="_int">
+		select count(*) as cnt from qnaboard where boardno not in (select boardref from qnaboard where boardlevel=2) and category='qna' order by boardno desc
+	</select>
+	
+	<select id="qnaAnswer" resultType="qnaBoard">
+		select * from qnaboard where boardNo = #{boardNo }
+	</select>
+	
+	<insert id="insertAnswer" parameterType="qnaBoard">
+		insert into qnaboard values(seq_qnaboard_boardno.nextval,#{boardTitle },#{boardContent }, #{boardWriter }, #{boardLevel } ,#{boardRef },#{category },sysdate)
+	</insert>
+	
+	<select id="selectSellerBL" resultType="seller">
+		select * from seller where blackFlag='Y'
+	</select>
+	
+	<select id="countSellerBL" resultType="_int">
+		select count(*) as cnt from seller where blackFlag='Y'
+	</select>
+	
+	<select id="selectMemberBL" resultType="member">
+		select * from member where blackFlag='Y'
+	</select>
+	
+	<select id="countMemberBL" resultType="_int">
+		select count(*) as cnt from member where blackFlag='Y'
+	</select>
+	
+	<update id="changeMemberbFlagtoN">
+		update member set blackFlag='N' where memberId = #{memberId }
+	</update>
+	
+	<update id="changeMemberbFlagtoY">
+		update member set blackFlag='Y' where memberId = #{memberId }
+	</update>
+	
+	<select id="selectAdList" resultType="ad">
+		select * from ad order by adno desc
+	</select>
+	
+	<select id="countAdList" resultType="_int">
+		select count(*) as cnt from ad
+	</select>
+	
+	<select id="selectAdingList" resultType="ad">
+		<![CDATA[ select * from ad where enddate >= sysdate ]]>
+	</select>
+	
+	<select id="countAdingList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from ad where enddate >= sysdate ]]>
+	</select>
+	
+	<select id="selectAdedList" resultType="ad">
+		<![CDATA[ select * from ad where enddate < sysdate ]]>
+	</select>
+	
+	<select id="countAdedList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from ad where enddate < sysdate ]]>
+	</select>
+	
+	<select id="adStoreView" resultType="storeInfo">
+		select * from storeinfo where storeNo = #{storeNo }
+	</select>
+	
+	<select id="adStoreAdView" resultType="ad">
+		select * from ad where adNo = #{adNo }
+	</select>
+	
+	<update id="deleteAd">
+	{call
+		declare
+		begin
+		update ad set enddate = sysdate where adNo = #{adNo };
+		update storeInfo set storegrade = 'C' where storeNo = #{storeNo };
+		end
+	}
+	</update>
+	
+	<resultMap type="map" id="memberMap">
+	</resultMap>
+	<resultMap type="map" id="sellerMap">
+	</resultMap>
+	
 	
 </mapper>
 

@@ -23,12 +23,18 @@ table#tbl-event tr td a {text-decoration:none !important;}
 <script>
 $(function(){
 	$("#collapsePages").addClass("show");	
-	$("#eventControl").addClass("active");	
+	$("#adControl").addClass("active");	
 	$("#toDoList").addClass("active");	
 });
-function fn_goEventForm(){
-	location.href = "${pageContext.request.contextPath}/admin/eventForm.do";
-}
+function fn_goAllAd(){
+	location.href = "${pageContext.request.contextPath}/admin/adControl.do?status=all";
+}; 
+function fn_goAding(){
+	location.href = "${pageContext.request.contextPath}/admin/adControl.do?status=ading";
+};
+function fn_goAded(){
+	location.href = "${pageContext.request.contextPath}/admin/adControl.do?status=aded";
+};
 </script>
 
 <!-- Page Wrapper -->
@@ -48,30 +54,32 @@ function fn_goEventForm(){
           <!-- Page Heading -->
          <section id="board-container" class="container">
 
-		<input type="button" value="이벤트 등록" id="btn-add" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
+		<input type="button" value="ALL" id="btn-add" class="btn btn-outline-success" onclick="fn_goAllAd();"/>
+		<input type="button" value="진행중인 광고" id="btn-add" class="btn btn-outline-success" onclick="fn_goAding();"/>
+		<input type="button" value="끝난 광고" id="btn-add" class="btn btn-outline-success" onclick="fn_goAded();"/>
 		<table id="tbl-event" class="table table-striped table-hover">
 			<tr>
 				<th>번호</th>
-				<th>제목</th>
-				<th>시작일</th>
-				<th>마지막일</th>
-				<th>수량</th>
-				<!-- 목록뿌리기 : 파일이있으면 file.png 보여주기 -->
+				<th>가게번호</th>
+				<th>광고 등급</th>
+				<th>광고 시작일</th>
+				<th>광고 종료일</th>
+				
 			</tr>
-			<c:if test="${not empty list}">
-				<c:forEach items="${list }" var="b">
+			<c:if test="${not empty adList}">
+				<c:forEach items="${adList }" var="ad">
 			<tr>
-				<td>${b['EVENTNO'] }</td>
-				<td><a href="${pageContext.request.contextPath }/admin/eventView.do?eventNo=${b['EVENTNO'] }" >${b["EVENTTITLE"] }</a></td>
-				<td><fmt:formatDate value="${b['STARTDATE']}" type="date" /> </td>
-				<td><fmt:formatDate value="${b['ENDDATE']}" type="date" /> </td>
-				<td>${b['AMOUNT'] }</td>
+				<td>${ad.adNo }</td>
+				<td><a href="${pageContext.request.contextPath }/admin/adStoreView.do?adNo=${ad.adNo }&storeNo=${ad.storeNo }" >${ad.storeNo }</a></td>
+				<td>${ad.storeGrade }</td>
+				<td><fmt:formatDate value="${ad.startDate}" type="date" /> </td>
+				<td><fmt:formatDate value="${ad.endDate}" type="date" /> </td>
 			</tr>
 				</c:forEach>
 			</c:if>
-			<c:if test="${empty list}">
+			<c:if test="${empty adList}">
 				<tr>
-					<td colspan="4">등록된 정보가 없습니다.</td>
+					<td colspan="5">등록된 정보가 없습니다.</td>
 				</tr>
 			</c:if>
 		
@@ -81,9 +89,10 @@ function fn_goEventForm(){
 		int totalContents = (int)request.getAttribute("totalContents");
 		int numPerPage = (int)request.getAttribute("numPerPage");
 		int cPage = (int)request.getAttribute("cPage");
+		String status = (String)request.getAttribute("status");
 	%>
 	<div>
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"eventList.do") %>
+	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"adControl.do?status="+status) %>
 	</div>
 		
 	<!-- 페이지바  -->

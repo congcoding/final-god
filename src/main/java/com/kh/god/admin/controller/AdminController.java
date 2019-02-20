@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,10 +26,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.admin.model.service.AdminService;
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Controller
 public class AdminController {
@@ -168,16 +171,35 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/sellerBlackList.do")
-	public String blackListChange(@RequestParam String sellerId, @RequestParam String bFlag) {
+	public String SblackListChange(@RequestParam String sellerId, @RequestParam String bFlag, @RequestParam String page) {
 		int result = 0;
 		if((bFlag).equals("Y")) {
 			result = adminService.changeSellerbFlagtoN(sellerId);
 		}else {
 			result = adminService.changeSellerbFlagtoY(sellerId);
 		}
+	
+		if(page.equals("SList")) {
+			return "redirect:/admin/sellerList.do";
+		}else{
+			return "redirect:/admin/sellerBList.do";
+		}
+	}
+	
+	@RequestMapping("/admin/memberBlackList.do")
+	public String MblackListChange(@RequestParam String memberId, @RequestParam String bFlag, @RequestParam String page) {
+		int result = 0;
+		if((bFlag).equals("Y")) {
+			result = adminService.changeMemberbFlagtoN(memberId);
+		}else {
+			result = adminService.changeMemberbFlagtoY(memberId);
+		}
 		
-		
-		return "redirect:/admin/sellerList.do";
+		if(page.equals("MList")) {
+			return "redirect:/admin/memberList.do";
+		}else {
+			return "redirect:/admin/memberBList.do";
+		}
 	}
 	
 	@RequestMapping("/admin/askingList.do")
@@ -193,6 +215,7 @@ public class AdminController {
 		
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("boardWriter",boardWriter);
 		model.addAttribute("list",list);
 		model.addAttribute("boardRefList",boardRefList);
 		model.addAttribute("totalContents",totalContents);
@@ -341,4 +364,121 @@ public class AdminController {
 		return mav;
 	}
 	
+	@RequestMapping("/admin/qnaControl.do")
+	public String qnaControl(Model model,@RequestParam(value="cPage",defaultValue="1") int cPage) {
+		
+		int numPerPage = 6;
+		
+		List<Map<String,String>> list = adminService.qnaControlList(cPage,numPerPage);
+		int totalContents = adminService.countQnaControlList();
+		
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("list",list);
+		model.addAttribute("totalContents",totalContents);
+		
+		return "admin/qnaControl";
+	}
+	
+	@RequestMapping("/admin/qnaAnswer.do")
+	public String qnaControl(@RequestParam(name="boardNo") int boardNo, Model model) {
+		
+		QnaBoard list = adminService.qnaAnswer(boardNo);
+		model.addAttribute("board",list);
+		
+		return "admin/qnaAnswer";
+	}
+	
+	@RequestMapping("/admin/insertAnswer.do")
+	public String insertAnswer(@RequestParam(name="boardNo") int boardNo, @RequestParam(name="answerTitle") String answerTitle, @RequestParam(name="boardWriter") String boardWriter, @RequestParam(name="answerContent") String answerContent, Model model) {
+		QnaBoard answer = new QnaBoard();
+		answer.setBoardTitle(answerTitle);
+		answer.setBoardContent(answerContent);
+		answer.setBoardWriter(boardWriter);
+		answer.setBoardRef(boardNo);
+		answer.setCategory("answer");
+		answer.setBoardLevel(2);
+		
+		int result = adminService.insertAnswer(answer);
+		
+		return "redirect:/admin/qnaControl.do";
+	}
+	
+	@RequestMapping("/admin/sellerBList.do")
+	public String selectSellerBL(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
+	
+		int numPerPage = 6;
+		List<Map<String,String>> seller = adminService.selectSellerBL(cPage, numPerPage);
+		int totalContents = adminService.countSellerBL();
+
+		model.addAttribute("list",seller);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("totalContents",totalContents);
+		
+		 return "admin/sellerBList";
+	}
+	
+	@RequestMapping("/admin/memberBList.do")
+	public String selectMemberBL(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
+		
+		int numPerPage = 6;
+		List<Map<String,String>> member = adminService.selectMemberBL(cPage, numPerPage);
+		int totalContents = adminService.countMemberBL();
+
+		model.addAttribute("list",member);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("totalContents",totalContents);
+		
+		 return "admin/memberBList";
+	}
+	
+	@RequestMapping("/admin/adControl.do")
+	public String adControl(@RequestParam(value="cPage",defaultValue="1") int cPage, @RequestParam(value="status",defaultValue="all") String status, Model model) {
+		
+		int numPerPage = 6;
+		List<Map<String,String>> adList = null;
+		int totalContents = 0;
+		if(status.equals("all")) {
+			adList = adminService.selectAdList(cPage,numPerPage);
+			totalContents = adminService.countAdList();
+		}else if(status.equals("ading")) {
+			adList = adminService.selectAdingList(cPage,numPerPage);
+			totalContents = adminService.countAdingList();
+			
+		}else if(status.equals("aded")) {
+			adList = adminService.selectAdedList(cPage,numPerPage);
+			totalContents = adminService.countAdedList();
+			
+		}
+		
+		model.addAttribute("adList",adList);
+		model.addAttribute("status",status);
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		
+		return "admin/adControl";
+	}
+	
+	@RequestMapping("/admin/adStoreView.do")
+	public String adStoreView(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="adNo") int adNo, Model model ) {
+		StoreInfo store = adminService.adStoreView(storeNo);
+		Ad ad = adminService.adStoreAdView(adNo);
+		model.addAttribute("store",store);
+		model.addAttribute("ad",ad);
+		return "admin/adStoreView";
+	}
+	
+	@RequestMapping("/admin/deleteAd.do")
+	public String deleteAd(@RequestParam(name="adNo") String adNo, @RequestParam(name="storeNo") String storeNo) {
+		Map<String,String> map = new HashMap<>();
+		map.put("adNo",adNo);
+		map.put("storeNo",storeNo);
+		int result = adminService.deleteAd(map);
+		
+		return "redirect:/admin/adControl.do";
+	}
 }
