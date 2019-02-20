@@ -4,14 +4,44 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <fmt:requestEncoding value="UTF-8" />
-<link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/seller/MyStoreOrder.css" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
 
+<!-- Custom fonts for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
+<!-- Custom styles for this template-->
+<link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
-<h2 id="title">주문현황</h2>
+<script>
+$(function(){
+	var storeNo = "${param.storeNo}"
+	$("#collapse"+storeNo).addClass("show");
+	$("#collapse"+storeNo).parent("li").addClass("active");	
+	$("#collapse"+storeNo+">div>a.updateMyStoreInfo").addClass("active");	
+});
+</script>
+
+<!-- Page Wrapper -->
+  <div id="wrapper">
+
+	<jsp:include page="/WEB-INF/views/seller/sideBar.jsp"></jsp:include>
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+          <!-- Page Heading -->
+          <h1 class="h3 mb-4 text-gray-800">주문현황</h1>
+          
+          <!-- 여기부터 코드 붙여넣으면 됨 -->
 <div id="container">
 <div class="row">
   <div class="col-4">
@@ -64,7 +94,7 @@
 				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
 				     
 				      <td>
-				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">주문접수</button>
+				      <button type="button" id="orderAcception" onclick="orderNo(${orderList1.ORDERNO})" class="btn btn-info" data-toggle="modal" data-target="#receiveModal">주문접수</button>
 				      <button type="button" id="orderCancel" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
 				      </td> 
 				    </tr>
@@ -178,7 +208,7 @@
      <!-- 접수모달창 -->
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="receiveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -187,15 +217,18 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
+      <form>
       <div class="modal-body">
-			<button type="button" class="btn btn-info">10분~30분</button>
-			<button type="button" class="btn btn-info">30분~50분</button>
-			<button type="button" class="btn btn-info">50분~60분</button>
-			<button type="button" class="btn btn-info">60분 이상</button>
+      		<input type="hidden" id="orderNoForReceive" >
+			<button type="button" class="btn btn-info" value="10분~30분">10분~30분</button>
+			<button type="button" class="btn btn-info" value="30분~50분">30분~50분</button>
+			<button type="button" class="btn btn-info" value="50분~60분">50분~60분</button>
+			<button type="button" class="btn btn-info" value="60분 이상">60분 이상</button>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary">주문접수</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -244,6 +277,36 @@ $("#etc").on("click", function(){
 $(".btnReason").on("click", function(){
 	$("#cancelReason").prop('readonly', true);
 });
-</script>
+//모달로 orderno 보내기
+function orderNo(item){
+	console.log(item);
+}
 
-<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
+</script>
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+

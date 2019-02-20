@@ -40,6 +40,8 @@ public interface SellerDao {
 
 	List<Menu> selectMenuList(String storeNo);
 
+	int updateSoldout(String menuCode);
+
 	List<Map<String, Object>> orderList1(String storeNo);
 
 }

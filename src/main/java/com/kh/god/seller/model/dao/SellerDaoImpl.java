@@ -87,6 +87,10 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public int updateSoldout(String menuCode) {
+		return sqlSession.update("storeInfo.updateSoldout", menuCode);
+	}
+
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("storeInfo.myStoreOrderInfo",storeNo);
@@ -97,8 +101,5 @@ public class SellerDaoImpl implements SellerDao {
 		// TODO Auto-generated method stub
 		return sqlSession.selectList("storeInfo.orderList1",storeNo);
 	}
-
-
-
 
 }
