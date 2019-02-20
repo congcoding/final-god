@@ -14,15 +14,6 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
-<link rel="stylesheet" href="#" />
-
-<style>
-.table{
-	margin: 0 auto;
-	margin-top: 10%;
-	width: 80%;
-}
-</style>
 
 <script>
 $(function(){
@@ -70,7 +61,7 @@ $(function(){
 			<td><c:out value="${menu.menuName}" /></td>
 			<td><c:out value="${menu.menuPrice}" /></td>
 			<td>
-				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#exampleModal" id="menuUpdate-btn" onclick="location.href='/seller/updateMenu.do?menuCode=${menu.menuCode}'">수정</button>
+				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#exampleModal" id="menuUpdate-btn" onclick="location.href='${pageContext.request.contextPath}/seller/updateMenu.do?menuCode=${menu.menuCode}'">수정</button>
 				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="location.href='${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode=${menu.menuCode}'">삭제</button>
 				<%-- <button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}'">품절</button> --%>
 				<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}'">품절</button>
