@@ -146,9 +146,12 @@ public class SellerController {
 		Seller s = sellerService.selectOneSeller(sellerLoggedIn.getSellerId());
 	
 		//System.out.println("@@@@@@@@@"+ s.getPhone());
+		List<StoreInfo> si = sellerService.selectListStorInfo(sellerLoggedIn.getSellerId());
+		logger.debug("@@@@@@@@@@@@@" + si);
 		
 		model.addAttribute("s", s);
-		
+		model.addAttribute("si", si);
+				
 		return "seller/sellerView";
 	}
 		
@@ -343,5 +346,6 @@ public class SellerController {
 
     	return "seller/goUpdateMyStore.do";
     }
+   
 
 }

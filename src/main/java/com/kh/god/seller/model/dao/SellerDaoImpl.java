@@ -79,4 +79,9 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.update("storeInfo.updateStoreInfo",map);
 	}
 
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sqlSession.selectList("storeInfo.selectListStorInfo" , sellerId);
+	}
+
 }

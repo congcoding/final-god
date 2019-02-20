@@ -34,4 +34,6 @@ public interface SellerService {
 
 	int updateSeller(Seller seller);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 }

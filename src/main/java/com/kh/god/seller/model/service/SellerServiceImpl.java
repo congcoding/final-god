@@ -84,5 +84,10 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.updateStoreInfo(map);
 	}
 
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sellerDao.selectListStorInfo(sellerId);
+	}
+
 	
 }

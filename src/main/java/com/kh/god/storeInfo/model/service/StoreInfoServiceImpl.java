@@ -59,5 +59,20 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 		
 	}
 
+	@Override
+	public StoreInfo selectOnebyStoreNo(String storeNo) {
+		return storeInfoDao.selectOnebyStoreNo(storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> selectAttchMentLsit(String storeNo) {
+		return storeInfoDao.selectAttchMentLsit(storeNo);
+	}
+
+	@Override
+	public int deleteFile1(String filename) {
+		return storeInfoDao.deleteFile1(filename);
+	}
+
 
 }
