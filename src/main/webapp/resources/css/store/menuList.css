@@ -1,51 +1,93 @@
 @charset "UTF-8";
 
+#last-container{
+	margin : 0 auto;
+	margin-top: 135px;
+}
 
-#menu-container{
+/*매장 기본 정보 */
+.card{
+	width: 60%;
+    margin: 0 auto;
+}
+
+/*상세보기 내용 전부 담고 있는 div*/
+div#menuView-container{
     position: relative;
     width: 83%;
-    top: 25px;
-    left: -3%;
+    top: 35px;
+    margin: 0 auto;
+}
+div#menuView-container table thead th{
+	border-top : none;
 }
 
 /* 매장 메뉴, 정보, 리뷰 탭 */
-#MenuNavi{
+div#MenuNavi{
     position: relative;
     width : 61%;
     margin-bottom: 10px;
 }
 
-/* 메뉴 테이블 div */
-#menuTable{
+/* 매장 메뉴, 리뷰, 정보 테이블이 담긴 div*/
+div#Menu-wrapper{
+	float : left;
+	min-width : 60%;
+	margin-right: 60px;
+	border: 1px solid transparent;
+}
+
+/* 메뉴 테이블*/
+table#menuTable{
     position: relative;
-	width: 61%;
 	margin-bottom: 100px;
 }
-div#menu-container table thead th{
-	border-top : none;
-}
 
-/* 가게정보 div */
-#sellerInformation{
+/* 가게정보*/
+table#sellerInformation{
     position: relative;
-    width: 61%;
 }
 
+div#Cart-wrapper{
+	float : left;
+}
 
-/* 주문표 div */
-#cart{
+/* 주문표 table */
+table#cart{
+	width : 500px;
 	position: absolute;
-	width: 400px;
 	top: 0px;
-	left: 70%;
-	margin-left: 100px;
+}
+
+table#cart th{
+	text-align: center;
+}
+
+table#cart th:first-of-type{
+	width : 200px;
+}	
+
+table#cart th:nth-of-type(2){
+	width : 100px;
+}
+
+table#cart th:nth-of-type(3){
+	width : 150px;
+}
+
+table#cart th:last-of-type{
+	width : 50px;
+}
+
+table#cart td{
+	text-align : center;
 }
 
 /* 수량 표시*/
 input.order-num{ /*cart[i].amount*/
 	width: 30px;
     text-align: center;
-    margin : 0 5px;
+    margin : 0 15px;
     border: none;
 }
 
@@ -53,30 +95,36 @@ input.order-num{ /*cart[i].amount*/
 button.btn-xs{
 	background-color: white;
     border: 1px solid #c5c5c5;;
-    vertical-align: middle;
     border-radius: .25rem;
+    cursor: pointer;
 }
 button.add-order-num{
     
 }
 button.minus-order-num{
-	 width: 24.95px;
+	width: 24.95px;
 }
 
-
-.card{
-	width: 65%;
-    margin-left: 122px;
-    margin-top: 144px;
+button:disabled{
+	background-color: #ccc;
+	cursor : default;
 }
+
+/* 메뉴 삭제 버튼*/
+button.delete-order{
+	width: 24.95px;
+	height: 28px;
+	background: black;
+    color: white;
+    border:none;
+}
+
 
 img{
 	width:93px;
 }
 
-#last-container{
-	    margin-left: 230px;
-}
+
 
 .introduce{
 	font-weight: bold;

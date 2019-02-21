@@ -84,6 +84,7 @@
 			<mapping path="/board/**/*.do" /> <!-- board로 요청하는 모든 주소에 대하여 loginCepterInteceptor를 실행해라 -->
 			<mapping path="/seller/sellerView.do" />
 			<mapping path="seller/sellerUpdate.do" />
+			<mapping path="/seller/**/*.do" />
 			<exclude-mapping path="/board/boardList.do"/> <!-- 단, /board/boardList.do 는 빼고  || spring 3.2 버전부터 지원  -->
 			
 			<beans:bean id="loginCheckInterceptor" class="com.kh.god.common.interceptor.LoginCheckInterceptor" />
