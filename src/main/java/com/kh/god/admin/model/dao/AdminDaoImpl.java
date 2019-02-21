@@ -12,6 +12,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
@@ -252,6 +253,30 @@ public class AdminDaoImpl implements AdminDao {
 
 	}
 //	---------------------------------------------------------
-	
+
+	@Override
+	public StoreInfo storePMSView(String storeNo) {
+		return sqlSession.selectOne("admin.storePMSView", storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> storePMSAttaView(String storeNo) {
+		return sqlSession.selectList("admin.storePMSAttaView", storeNo);
+	}
+
+	@Override
+	public int storePMSOk(String storeNo) {
+		return sqlSession.update("admin.storePMSOk", storeNo);
+	}
+
+	@Override
+	public int storePMSClose(String storeNo) {
+		return sqlSession.update("admin.storePMSClose", storeNo);
+	}
+
+	@Override
+	public int storePMSOpen(String storeNo) {
+		return sqlSession.update("admin.storePMSOpen", storeNo);
+	}
 
 }
