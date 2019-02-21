@@ -59,5 +59,45 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 		
 	}
 
+	@Override
+	public StoreInfo selectOnebyStoreNo(String storeNo) {
+		return storeInfoDao.selectOnebyStoreNo(storeNo);
+	}
 
+	@Override
+	public List<Map<String, String>> selectAttchMentLsit(String storeNo) {
+		return storeInfoDao.selectAttchMentLsit(storeNo);
+	}
+
+	@Override
+	public int deleteFile1(String filename) {
+		return storeInfoDao.deleteFile1(filename);
+	}
+
+	@Override
+	public int updateStore(StoreInfo s, List<SAttachment> attachList) {
+		int result = 0 ;
+		String storeNo = "" ;
+		
+		result = storeInfoDao.updateStore(s);
+		storeNo = s.getStoreNo();
+		logger.debug("사업자번호호호호호호호호호호혹"+storeNo);
+		
+		if(result == 0 ) {
+			throw new StoreInfoException("사업장 등록 오류!");
+		}
+		
+		if(attachList.size() > 0) {
+			for(SAttachment a : attachList) {
+				a.setStoreNo(storeNo);
+				result = storeInfoDao.insertAttachment(a);
+				if(result == 0) {
+					throw new StoreInfoException("첨부파일 등록 오류!");
+				}
+				
+			}
+		
+	}
+		return result;
+	}
 }

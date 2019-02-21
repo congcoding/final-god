@@ -14,5 +14,7 @@ public interface MenuService {
 
 	int menuCount(String storeNo);
 
+	Menu selectOneMenu(String menuCode);
+
 
 }

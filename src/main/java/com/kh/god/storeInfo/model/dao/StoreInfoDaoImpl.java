@@ -37,6 +37,26 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	public int insertAttachment(SAttachment a ) {
 		return sqlSession.insert("storeInfo.insertAttachment" , a );
 	}
+
+	@Override
+	public StoreInfo selectOnebyStoreNo(String storeNo) {
+		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo" , storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> selectAttchMentLsit(String storeNo) {
+		return sqlSession.selectList("storeInfo.selectAttchMentLsit" , storeNo);
+	}
+
+	@Override
+	public int deleteFile1(String filename) {
+		return sqlSession.update("storeInfo.deleteFile1" , filename);
+	}
+
+	@Override
+	public int updateStore(StoreInfo s) {
+		return sqlSession.update("storeInfo.updateStore" , s);
+	}
 	
 
 	

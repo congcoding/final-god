@@ -30,7 +30,17 @@ div#head-container {
 
 div#member {
 	margin-left: -40px;
-	width: 450px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+div#memberBL {
+	margin-left: -40px;
+	width: 225px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -42,7 +52,18 @@ div#member {
 div#seller {
 	margin-top: -50px;
 	margin-left: 500px;
-	width: 450px;
+	width: 225px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
+div#sellerBL {
+	margin-top: -50px;
+	margin-left: 500px;
+	width: 225px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -70,6 +91,7 @@ table#tbl-seller tbody tr td {
 table#tbl-seller tbody tr td input {
 	text-align: center;
 }
+
 </style>
 <script>
 $(function(){
@@ -93,10 +115,18 @@ function bFlagCheck(sellerId,bFlag){
 			return;
 		}
 	}
-
-	location.href = "${pageContext.request.contextPath}/admin/sellerBlackList.do?sellerId="+sellerId+"&bFlag="+bFlag;
+	location.href = "${pageContext.request.contextPath}/admin/sellerBlackList.do?sellerId="+sellerId+"&bFlag="+bFlag+"&page=SList";
 	
 };
+
+function fn_goSellerBL(){
+	
+	location.href = "${pageContext.request.contextPath}/admin/sellerBList.do";
+};
+function fn_goMemberBL(){
+	location.href = "${pageContext.request.contextPath}/admin/memberBList.do";
+};
+
 
 </script>
 <%
@@ -122,9 +152,13 @@ function bFlagCheck(sellerId,bFlag){
 				<!-- Page Heading -->
 				<div id="head-container">
 					<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div>
+					<div id="memberBL" class="alert-light" onclick="fn_goMemberBL();">일반회원 BL</div>
 					<div id="seller" class="alert-info" onclick="fn_goSellerList();">판매자</div>
+					<div id="sellerBL" class="alert-light" onclick="fn_goSellerBL();">판매자 BL</div>
+				
 				</div>
 
+				<br />
 				<table class="table" id="tbl-seller">
 					<thead>
 						<tr>

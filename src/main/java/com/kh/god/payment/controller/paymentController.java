@@ -1,5 +1,7 @@
 package com.kh.god.payment.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,10 +15,7 @@ public class paymentController {
 
 	
 	@RequestMapping("/payment/goPaymentPage.do")
-	public String goPaymentPage(Model model,
-			@RequestParam("menuName") String menuName,
-			@RequestParam("menuCode") String menuCode,
-			@RequestParam("menuPrice") String menuPrice) {
+	public String goPaymentPage() {
 		
 		
 		return "payment/paymentPreparations";

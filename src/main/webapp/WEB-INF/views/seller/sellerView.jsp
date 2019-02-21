@@ -117,7 +117,10 @@ span#passworderror3{
     margin-left: 8px;
     border-radius: 3px;
 }
-
+.btn-outline-success:hover {
+	 background-color: white; 
+     border-color: white;
+}
 </style>
 
 <div id="MemberEnroll-container">
@@ -215,10 +218,10 @@ span#passworderror3{
 			<input type="hidden" name="phone" />
 			<label for="selectPhone" class="col-sm-3">핸드폰 번호</label>	
 			<div class="form-inline">
-				<select class="form-control selectPhone" id="selectPhone" value="${fn:split(s.phone ,'-')[0]}" > 
-	  				<option selected="selected">010</option>
-	  				<option>019</option>
-	  				<option>016</option>
+				<select class="form-control selectPhone" id="selectPhone"  > 
+	  				<option <c:if test="${fn:split(s.phone ,'-')[0] eq '010'}">selected</c:if>>010</option>
+	  				<option <c:if test="${fn:split(s.phone ,'-')[0] eq '019'}">selected</c:if>>019</option>
+	  				<option <c:if test="${fn:split(s.phone ,'-')[0] eq '016'}">selected</c:if>>016</option>
 				</select>
 				&nbsp;-&nbsp;
 				<input class="form-control selectPhone" type="text" id="phone1" maxlength="4" style="width: 80px;" value="${fn:split(s.phone ,'-')[1]}"
@@ -239,7 +242,34 @@ span#passworderror3{
 	<hr />
 	<br />
 	<!-- 리스트로 본인 사업장 보여주기 -->
+		<div>
+			<table class="table table-striped table-hover" style="text-align: center;"  >
+				<tr>
+					<th>허가상태</th>
+					<th>사업자명</th>
+					<th>수정/삭제</th>
+				</tr>
+					<c:if test="${not empty si}">
+						<c:forEach items="${si}" var="storeInfo" >
+							<tr>
+								<td>
+								<c:if test="${storeInfo.pmsFlag eq 'N'}">
+									대기중
+								</c:if> 
+								<c:if test="${storeInfo.pmsFlag eq 'Y'}">
+									허가 완료
+								</c:if> 
+								</td>
+								<td>${storeInfo.storeName }</td>
+								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}');" value="수정" class="btn btn-outline-success"  style="border-color: lightgray; color: gray;"/>&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" style="border-color: lightgray; color: gray;"/></td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</table>
+		</div>
 	
+	<hr />
+	<br />
 	<!-- 사업장 추가 버튼 -->
 	<div id="addStore"  onclick="addStore();" >
 	<br />
@@ -249,8 +279,8 @@ span#passworderror3{
 	<br />
 	
 	
-	<!-- 사업장 정보 출력하기 -->
 	
+	<!-- 사업장 정보 출력하기 -->
 	<div id="addStore-container" style="display:none;">
 	<h2>사업장 정보</h2>
 	<br />
@@ -361,8 +391,11 @@ span#passworderror3{
   		<!-- operatingHours -->
 		<div class="form-group row">
     		<label for=operatingHours" class="col-sm-3">영업시간</label>
-    	<div>
-      			<input type="text" class="form-control" name="operatingHours" id="operatingHours" />
+    	<div class="form-inline">
+    			<input type="hidden" name="operatingHours" />
+      			<input type="text" class="form-control"  id="operatingHours"  style="width: 80px;" />
+      			&nbsp;&nbsp;-&nbsp;&nbsp;
+      			<input type="text" class="form-control"  id="operatingHours1"  style="width: 80px;" />
     		</div>&nbsp;&nbsp;
   		</div>		
   		<!-- deliveryMinPrice -->
@@ -400,13 +433,19 @@ function validate(){ /* 유효성 검사 */
 
 function validate2(){
 	
-	
 	if($("#brnoCheck").val() === "0"){
 		alert("사업자번호를 확인하세요.");
 		return false;
 	}
-
 	
+	if($("#categoryNo").val() === "선택"){
+		alert("사업장 종류를 선택하십시오.");
+		return false;
+	}
+	
+	var operatingHours = $("#operatingHours").val().trim() + " ~ " + $("#operatingHours1").val().trim() ;
+	$("[name=operatingHours]").val(operatingHours);
+
 	var storetelval = $("#selectStoretel").val()+"-"+$("#storetel1").val().trim()+"-"+$("#storetel1").val().trim();
 	$("[name=storeTel]").val(storetelval);
 	 
@@ -658,7 +697,11 @@ $(function(){
 	
 });
 
-
+function storeModify(storeNo){
+	
+	location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoView.do?storeNo="+storeNo;
+	
+};
 
 </script>
 

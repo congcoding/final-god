@@ -1,13 +1,16 @@
 package com.kh.god.seller.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -57,31 +60,113 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+
 	public List<MenuAttachment> getAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.getAttachment(storeNo);
 	}
 
 	@Override
+	public List<Menu> selectMenuList(String storeNo) {
+		
+		return sellerDao.selectMenuList(storeNo);
+	}
+
 	public List<MenuAttachment> getthumbAttachment(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.getthumbAttachment(storeNo);
 	}
 
 	@Override
 	public int oldThumbNail(String nowThumb) {
-		// TODO Auto-generated method stub
-		return sellerDao.oldThumbNail(nowThumb);	}
+		return sellerDao.oldThumbNail(nowThumb);	
+    }
 
 	@Override
 	public int changeThmbNail(String newThumb) {
-		// TODO Auto-generated method stub
 		return sellerDao.changeThmbNail(newThumb);
 	}
 
 	@Override
 	public int updateStoreInfo(Map<String, Object> map) {
 		return sellerDao.updateStoreInfo(map);
+	}
+	
+	@Override
+	public int updateSoldout(Map<String, Object> map) {
+		return sellerDao.updateSoldout(map);
+	}
+	
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sellerDao.selectListStorInfo(sellerId);
+	}
+
+	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.myStoreOrderInfo(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList1(storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectAll(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectAll(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectNow(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectNow(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectPast(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectPast(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public int countAdAll(String storeNo) {
+		return sellerDao.countAdAll(storeNo);
+	}
+
+	@Override
+	public int countAdNow(String storeNo) {
+		return sellerDao.countAdNow(storeNo);
+	}
+
+	@Override
+	public int countAdPast(String storeNo) {
+		return sellerDao.countAdPast(storeNo);
+	}
+
+	@Override
+	public int adRequest(Ad ad) {
+		return sellerDao.adRequest(ad);
+	}
+	
+	public int receiveOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.receiveOrder(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList2(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList3(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList3(storeNo);
+	}
+
+	@Override
+	public int deliveryEnd(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.deliveryEnd(orderNo);
 	}
 
 	

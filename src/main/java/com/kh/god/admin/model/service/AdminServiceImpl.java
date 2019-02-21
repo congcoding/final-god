@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.god.admin.model.dao.AdminDao;
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -116,8 +118,123 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
+	public List<Map<String, String>> qnaControlList(int cPage, int numPerPage) {
+		return adminDao.qnaControlList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countQnaControlList() {
+		return adminDao.countQnaControlList();
+	}
+
+	@Override
+	public QnaBoard qnaAnswer(int boardNo) {
+		return adminDao.qnaAnswer(boardNo);
+	}
+
+	@Override
+	public int insertAnswer(QnaBoard answer) {
+		return adminDao.insertAnswer(answer);
+	}
+
+	@Override
+	public List<Map<String, String>> selectSellerBL(int cPage, int numPerPage) {
+		return adminDao.selectSellerBL(cPage,numPerPage);
+	}
+
+	@Override
+	public int countSellerBL() {
+		return adminDao.countSellerBL();
+	}
+
+	@Override
+	public int countMemberBL() {
+		return adminDao.countMemberBL();
+	}
+
+	@Override
+	public List<Map<String, String>> selectMemberBL(int cPage, int numPerPage) {
+		return adminDao.selectMemberBL(cPage,numPerPage);
+	}
+
+	@Override
+	public int changeMemberbFlagtoN(String memberId) {
+		return adminDao.changeMemberbFlagtoN(memberId);
+	}
+
+	@Override
+	public int changeMemberbFlagtoY(String memberId) {
+		return adminDao.changeMemberbFlagtoY(memberId);
+	}
+
+	@Override
+	public List<Map<String, String>> selectAdList(int cPage, int numPerPage) {
+		return adminDao.selectAdList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countAdList() {
+		return adminDao.countAdList();
+	}
+	
+	@Override
+	public List<Map<String, String>> selectAdingList(int cPage, int numPerPage) {
+		return adminDao.selectAdingList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countAdingList() {
+		return adminDao.countAdingList();
+	}
+	
+	@Override
+	public List<Map<String, String>> selectAdedList(int cPage, int numPerPage) {
+		return adminDao.selectAdedList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countAdedList() {
+		return adminDao.countAdedList();
+	}
+
+	@Override
+	public StoreInfo adStoreView(String storeNo) {
+		return adminDao.adStoreView(storeNo);
+	}
+
+	@Override
+	public Ad adStoreAdView(int adNo) {
+		return adminDao.adStoreAdView(adNo);
+	}
+
+	@Override
+	public int deleteAd(Map<String, String> map) {
+		return adminDao.deleteAd(map);
+	}
+		
 	public int updateEvent(Event event) {
 		return adminDao.updateEvent(event);
 	}
 
+	@Override
+	public List<Map<String, String>> storePMSList(int cPage, int numPerPage) {
+		return adminDao.storePMSList(cPage, numPerPage);
+	}
+
+	@Override
+	public int countStorePMSList() {
+		return adminDao.countStorePMSList();
+	}
+
+	@Override
+	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
+		return adminDao.storeList(cPage, numPerPage);
+	}
+
+	@Override
+	public int countStoreList() {
+		return adminDao.countStoreList();
+	}
+
+//	---------------------------------------------------------
 }

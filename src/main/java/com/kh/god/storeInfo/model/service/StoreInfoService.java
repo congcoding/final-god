@@ -14,4 +14,12 @@ public interface StoreInfoService {
 
 	int addStore(StoreInfo s, List<SAttachment> attachList);
 
+	StoreInfo selectOnebyStoreNo(String storeNo);
+
+	List<Map<String, String>> selectAttchMentLsit(String storeNo);
+
+	int deleteFile1(String filename);
+
+	int updateStore(StoreInfo s, List<SAttachment> attachList);
+
 }

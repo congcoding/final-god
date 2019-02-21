@@ -8,7 +8,7 @@
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/payment/paymentPreparations.css" />
-
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 <div id="container">
 			<form>
@@ -59,19 +59,20 @@
 				  <tbody>
 				    <tr>
 				      <td>  
+				      <input type="hidden" name="methodForController">
 				      	<div class="laterPayment">
 						      	만나서 결제
 						      	<br>
-						      	  <button type="button" class="btn btn-outline-info">현금</button>&nbsp;
-						    	  <button type="button" class="btn btn-outline-info">카드</button>
+						      	  <button type="button" class="btn btn-outline-info method" value="later_cash" name="method">현금</button>&nbsp;
+						    	  <button type="button" class="btn btn-outline-info method" value="later_card" name="method">카드</button>
 						    </div>
 						   	<br>
 						    <div class="nowPayment">
 						      	웹에서 결제
 						      	<br>
-						      	  <button type="button" class="btn btn-outline-info" >신용카드</button>&nbsp;
-						    	  <button type="button" class="btn btn-outline-info" >네이버페이</button>&nbsp;
-						    	  <button type="button" class="btn btn-outline-info" >카카오페이</button> 	  
+						      	  <button type="button" class="btn btn-outline-info method" value="now_card" name="method">신용카드</button>&nbsp;
+						    	  <button type="button" class="btn btn-outline-info method" value="now_naverpay" name="method">네이버페이</button>&nbsp;
+						    	  <button type="button" class="btn btn-outline-info method" value="now_kakao" name="method">카카오페이</button> 	  
 						    </div>
 					   </td>
 				    </tr>
@@ -96,7 +97,9 @@
 				</table>
 	</form>
 	
-				<!-- 주문표 -->
+		
+		
+		<!-- 주문표 이거 세션에 담긴걸 꺼내는 형식으로!!-->
 			<div id="cart">
 				<table class="table">
 				  <thead class="thead-light">
@@ -122,9 +125,15 @@
 				</table>
 				<button type="button" class="btn btn-info" id="orderEndBtn">주문완료</button>
 				
+				
 			</div> 
 </div>
 <script>
+$(document).ready(function(){
+	var IMP = window.IMP; // 생략가능
+	IMP.init('iamport'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+});
+
 function getLocation(){
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
@@ -186,6 +195,42 @@ $("#address").keyup(function() {
 		$("#address").removeClass(" is-invalid");
 		$("#addressWarning").css("display","none");
 });
+
+$("#orderEndBtn").on("click",function(){
+	 var method = $("input[name=methodForController]").val();
+	 if(method=='now_card'){
+		 IMP.request_pay({
+		       pg : 'inicis', // version 1.1.0부터 지원.
+		       pay_method : 'card',
+		       merchant_uid : 'merchant_' + new Date().getTime(),
+		       name : '주문명:결제테스트', //메뉴
+		       amount : 1000, //가격
+		       buyer_email : 'iamport@siot.do', //멤버 전화번호
+		       buyer_name : '구매자이름', //멤버 이름
+		       buyer_tel : '010-1234-5678', //멤버 전화번호
+		       buyer_addr : '서울특별시 강남구 삼성동', //멤버 주소
+		       buyer_postcode : '123-456', //멤버 우편번호
+		       m_redirect_url : 'https://www.yourdomain.com/payments/complete' //결제가 완료되었을 때 페이지
+		   }, function(rsp) {
+		       if ( rsp.success ) {
+		    	   //컨트롤러단에 보내기
+		           var msg = '결제가 완료되었습니다.';
+		           msg += '고유ID : ' + rsp.imp_uid;
+		           msg += '상점 거래ID : ' + rsp.merchant_uid;
+		           msg += '결제 금액 : ' + rsp.paid_amount;
+		           msg += '카드 승인번호 : ' + rsp.apply_num;
+		       } else {
+		           var msg = '결제에 실패하였습니다.';
+		           msg += '에러내용 : ' + rsp.error_msg;
+		       }
+		       alert(msg);
+		   });
+
+	 }
+
+});
+
+
 /* 만나서 결제클릭시  */
 $(".laterPayment").on("click", function(){
 	$("#coupon").prop('readonly', true);
@@ -195,6 +240,15 @@ $(".laterPayment").on("click", function(){
 $(".nowPayment").on("click", function(){
 	$("#coupon").prop('readonly', false);
 });
+
+
+/* 결제수단클릭시 */
+ $("[name=method]").on("click", function(){
+		$("input[name=methodForController]").val($(this).val());
+})
+
+
+
 </script>
 
 

@@ -46,7 +46,7 @@ public class StoreInfoController {
 		System.setProperty("webdriver.chrome.driver", "C:\\Worksapces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
 	
 	     ChromeOptions options = new ChromeOptions();
-	     	options.addArguments("headless");
+	     options.addArguments("headless");
 	        try {
 	            driver = new ChromeDriver(options);
 	          //  driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
@@ -98,21 +98,25 @@ public class StoreInfoController {
 
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
+		String brno = no ;
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
 		setUp();
 		
 		
 		//사업자번호 입력 
-		driver.findElement(By.id("bsno")).sendKeys(no);
+		driver.findElement(By.id("bsno")).click();
+		driver.findElement(By.id("bsno")).sendKeys(brno);
 		driver.findElement(By.id("bsno")).click();
 		driver.findElement(By.id("trigger5")).click();
 		
-		System.out.println("클릭됐니 ");
+		//System.out.println("클릭됐니 ");
 		Thread.sleep(2000); 
 		String storeNo ="";
 		String info = driver.findElement(By.id("grid2_body_tbody")).getText();
 		logger.debug("@@@@@@@@@@@@@@@@info"+info);
+		
+		
 		
 		try {
 			storeNo = info.substring(0,12 );
@@ -213,5 +217,129 @@ public class StoreInfoController {
 
 		
 		}
+	
+	@RequestMapping("/storeInfo/storeInfoView.do")
+	public String storeInfoView(@RequestParam("storeNo") String storeNo , Model model) {
+		
+		StoreInfo si  = storeInfoService.selectOnebyStoreNo(storeNo);
+		List<Map<String, String>> attachmentList = null ;
+		
+		String loc = "/seller/sellerView.do";
+		String msg = "";
+		String view = "storeInfo/storeInfoView";
+		
+		if(si != null ) {
+			attachmentList = storeInfoService.selectAttchMentLsit(storeNo);
+			
+			if(attachmentList == null) {
+				msg = "내용을 불러 올 수 없습니다.";
+				view ="common.msg";
+			}else{
+				
+			}
+		}
+		
+		model.addAttribute("storeInfo" , si);
+		model.addAttribute("attachmentList" , attachmentList);
+		
+		return view;
 	}
+	
+	@RequestMapping("/storeInfo/UpdateStore.do")
+	public String updateStore(StoreInfo s , @RequestParam(name="upFile" , required=false) MultipartFile[] upFiles, HttpServletRequest request ,
+		@RequestParam(name="oldfile" , required=false) String[] oldfile, 	@RequestParam(name="oldfile1" , required=false) String[] oldfile1	, Model model) {
+		
+		logger.debug("storeTel="+s.getStoreTel());
+		logger.debug("fileName1="+ upFiles[0].getOriginalFilename());
+		logger.debug("size1="+upFiles[0].getSize());
+		logger.debug("fileName2="+ upFiles[1].getOriginalFilename());
+		logger.debug("size2="+upFiles[1].getSize());
+		//logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
+		
+		
+		String loc = "/storeInfoView.do?storeNo=";
+		String msg = "";
+		try {
+			
+			//1.파일업로드
+			//실제 경로 절대경로를 받아와야함.
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/seller");
+			logger.debug(saveDirectory);
+			
+			//첨부파일을 저장할 객체 
+			//여러개라고 가정하고 List
+			List<SAttachment> attachList = new ArrayList<>();
+			
+			//MultipartFile 처리 로직
+			for( MultipartFile f : upFiles ) {
+				if(!f.isEmpty()) {
+					//파일명(업로드)
+					String originalFileName = f.getOriginalFilename();				
+					//파일명(서버저장용)
+					String renamedFileName = Utils.getRenamedFileName(originalFileName);
+					
+					logger.debug("renamedFileName="+renamedFileName);
+					
+					
+					//실제 서버에 파일 저장
+					try {
+						f.transferTo(new File(saveDirectory+"/"+renamedFileName));
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+					
+					//첨부파일객체 생성 . 리스트 추가 
+					SAttachment attach = new SAttachment();
+					attach.setOriginalFileName(originalFileName);
+					attach.setRenamedFileName(renamedFileName);
+					attachList.add(attach);
+				}//if끝
+			}//forEach 끝 
+			//2.업무로직
+			int result = storeInfoService.updateStore(s , attachList);
+			//3.뷰단처리
+			
+			 if(result >0) { msg ="수정 성공!";
+			  
+			  }else { msg="수정 실패!"; }
+			
+			
+			//mav.addObject("msg", msg);
+			//mav.addObject("loc", loc);
+			//mav.setViewName("common/msg");  //jsp경로
+			}catch(Exception e) {
+				logger.error("게시물 등록 에러 " , e);
+				//throw new BoardException("게시물 등록 에러", e);
+			}
+		
+			model.addAttribute("msg", msg);
+			model.addAttribute("loc", loc);
+		
+		return "common/msg";
+
+		
+		}
+	 
+    @RequestMapping("/storeinfo/deletefile1.do")
+    @ResponseBody
+    public Map<String, Object> deleteFile1 (@RequestParam ( name="filename", required=false) String filename ) {
+    	logger.debug("@@@@@@@@@@@@@@@@@@@@filename"+filename);
+    	
+    	 Map<String, Object> map = new HashMap<>();
+    	int result = storeInfoService.deleteFile1(filename);
+    	
+    	
+    	String msg = "";
+    	if(result >0) {
+    		msg = "첨부파일 삭제 완료 ";
+    	}else {
+    		msg = "첨부파일 삭제 실패 ";
+    	}
+    	logger.debug(msg);
+        map.put("result" , result);
+    	
+    	return  map;
+    }
+	
+}
 
