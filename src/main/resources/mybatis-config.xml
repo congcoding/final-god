@@ -40,6 +40,9 @@
 				   alias="orderInfo"/>
 				   
 		
+		<typeAlias type="com.kh.god.storeInfo.model.vo.SAttachment"
+				   alias="SAttachment"/>
+		
 	</typeAliases>
 	
 	

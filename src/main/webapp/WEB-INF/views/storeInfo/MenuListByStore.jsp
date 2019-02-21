@@ -135,7 +135,9 @@
 			
 		</div>	
 			
+
 		<div style=”clear:both;”></div>
+		
 		
 		<!-- 주문표 ---------------------------------------------------------------->
 		<div id="Cart-wrapper" >
@@ -164,28 +166,6 @@
 </div> <!-- #last-container -->
 
 
-<!-- 주문확인 모달창 -->
-<!-- Button trigger modal -->
-<!-- Modal -->
-<div class="modal fade" id="checkCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">이렇게 주문할까요?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <div class="modal-body"></div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="goPayment">결제하기</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- 결제를 위한 폼전송 -->
 <form action="${pageContext.request.contextPath}/menu/inputCart.do" name="inputCartFrm" id="inputCartFrm">
@@ -327,7 +307,10 @@ function inputCart(menuCode){
 }
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
 /* 각 메뉴->카트 확인 모달영역 */
 /* function checkCart(menuName,menuCode,menuPrice){
 	
@@ -342,9 +325,12 @@ $('#checkCart').on('show.bs.modal', function (event) {
 	
 });
 
+<<<<<<< HEAD
 } */
 
 
+=======
+>>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
 	$("#clickreview").addClass("active");
@@ -379,7 +365,9 @@ $("#clickInformation").click("on", function(){
 	$("#sellerInformation").show();
 });
 
-
+function goPayment(){
+	location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
+}
 </script>
 
 

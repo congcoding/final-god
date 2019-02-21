@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
@@ -38,10 +39,36 @@ public interface SellerService {
 
 	int updateSeller(Seller seller);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<Menu> selectMenuList(String storeNo);
 
-	int updateSoldout(String menuCode);
+	int updateSoldout(Map<String, Object> map);
 
 	List<Map<String, Object>> orderList1(String storeNo);
+
+
+	List<Map<String, String>> adSelectAll(int cPage, int numPerPage, String storeNo);
+
+	List<Map<String, String>> adSelectNow(int cPage, int numPerPage, String storeNo);
+
+	List<Map<String, String>> adSelectPast(int cPage, int numPerPage, String storeNo);
+
+	int countAdAll(String storeNo);
+
+	int countAdNow(String storeNo);
+
+	int countAdPast(String storeNo);
+
+	int adRequest(Ad ad);
+
+	int receiveOrder(Map<String, Object> map);
+
+	List<Map<String, Object>> orderList2(String storeNo);
+
+	List<Map<String, Object>> orderList3(String storeNo);
+
+	int deliveryEnd(int orderNo);
+
 
 }
