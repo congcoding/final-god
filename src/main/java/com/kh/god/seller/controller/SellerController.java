@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -274,9 +275,15 @@ public class SellerController {
 		System.out.println("@@storeNo=>>>>>"+storeNo);
 		//접수대기 오더리스트
 		List<Map<String, Object>> orderList1 = sellerService.orderList1(storeNo);
-		
-		
+		//접수진행 오더리스트
+		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
+		//배달완료 오더리스트
+		List<Map<String, Object>> orderList3 = sellerService.orderList3(storeNo);
+
 		model.addAttribute("orderList1",orderList1);
+		model.addAttribute("orderList2",orderList2);
+		model.addAttribute("orderList3",orderList3);
+
 		
 		return "seller/MyStoreOrder";
 	}
@@ -357,49 +364,43 @@ public class SellerController {
 
     }
     
-//    @RequestMapping("/seller/selectMenuList.do")
-//    @ResponseBody
-//    public List<Menu> selectMenuList(@RequestParam("storeNo") String storeNo, Model model) {
-//		System.out.println("사업자 번호 왔냐? " + storeNo);
-//    	
-//		List<Menu> menu = sellerService.selectMenuList(storeNo);
-//		
-//		System.out.println("메뉴 왔냐? " + menu);
-//		
-//		model.addAttribute("menu", menu);
-//		
-//    	return menu;
-//    	
-//    }
-    
 	@RequestMapping("/seller/myStoreMenu.do")
 	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
 		if(logger.isDebugEnabled()) {
-			logger.debug("goUpdateMenu() 요청!"); 
+			logger.debug("myStoreMenu() 요청!"); 
 		}
 		
-		System.out.println("사업자 번호 왔냐? " + storeNo);
+		logger.debug("☆★☆★☆★☆★☆★사업자 번호 왔냐? " + storeNo);
 		
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
 
-		System.out.println("메뉴 왔냐? " + menu);
+		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
 
 		return "/seller/myStoreMenu";
 	}
 	
-	@RequestMapping("/seller/updateSoldout.do")
+	@RequestMapping("/seller/goUpdateMenu.do")
 	public ModelAndView updateSoldOut(@RequestParam("menuCode") String menuCode,
+									  @RequestParam("storeNo") String storeNo,
+									  @RequestParam("soldoutFlag") String soldoutFlag,
 									  ModelAndView mav) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("soldOut() 요청!");
+			logger.debug("updateSoldOut() 요청!");
 		}
-
-		System.out.println("메뉴코드 왔냐? " + menuCode);
-
-		int result = sellerService.updateSoldout(menuCode);
+		
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+		logger.debug("☆★☆★☆★☆★☆★품절여부 왔냐? " + soldoutFlag);
+		
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("soldoutFlag", soldoutFlag);
+		
+		int result = sellerService.updateSoldout(map);
 
 		String loc = "/";
 		String msg = "";
@@ -407,16 +408,95 @@ public class SellerController {
 
 		if (result > 0) {
 			msg = "품절 변경 성공";
-			loc = "/seller/updateMenu";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
 		} else {
 			msg = "품절 변경 실패";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
 		}
 
 		mav.addObject("loc", loc);
 		mav.addObject("msg", msg);
+		mav.addObject("map", map);
 		mav.setViewName(view);
 
 		return mav;
 	}
+	
+
+	@RequestMapping("/seller/myAd.do")
+	public String myAd(@RequestParam(value="cPage",defaultValue="1") int cPage,@RequestParam(name="storeNo") String storeNo, Model model, @RequestParam(value="status",defaultValue="all") String status) {
+		int numPerPage = 5;
+		int totalContents = 0;
+		List<Map<String,String>> list = null;
+		if(status.equals("all")) {
+			list = sellerService.adSelectAll(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdAll(storeNo);
+		}else if(status.equals("now")) {
+			list = sellerService.adSelectNow(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdNow(storeNo);
+			logger.debug("wwwww");
+		}else if(status.equals("past")) {
+			list = sellerService.adSelectPast(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdPast(storeNo);
+		}
+		
+		model.addAttribute("storeNo",storeNo);
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("list",list);
+		model.addAttribute("status",status);
+		
+		return "seller/myAd";
+		
+	}
+	
+	@RequestMapping("/seller/adRequest.do")
+	public String adRequest(@RequestParam(name="storeNo") String storeNo,@RequestParam(name="cost") int cost) {
+		Ad ad = new Ad();
+		ad.setStoreNo(storeNo);
+		ad.setPrice(cost);
+		if(cost==50000) {
+			ad.setStoreGrade("A");
+		}else {
+			ad.setStoreGrade("B");
+		}
+		int result = sellerService.adRequest(ad);
+		
+		return "redirect:/seller/myAd.do?storeNo="+storeNo;
+	}
+	
+
+	//주문접수 
+	@RequestMapping("/seller/receiveOrder.do")
+	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
+			@RequestParam String howLongChecked) {
+		Map<String,Object> map = new HashMap<>();
+		map.put("orderNo",orderNo);
+		map.put("howLongChecked",howLongChecked);
+
+		int result = sellerService.receiveOrder(map);
+		System.out.println(result>0?"접수완료":"실패");
+		
+		return "redirect:/";
+	}
+	//배달완료
+	@RequestMapping("/seller/deliveryEnd.do")
+	@ResponseBody
+	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
+			@RequestParam("storeNo") String storeNo) {
+		System.out.println("@@orderNo=>"+orderNo);
+		System.out.println("@@storeNo=>"+storeNo);
+
+		int result = sellerService.deliveryEnd(orderNo);
+		Map<String, Object> map = new HashMap<>();
+		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
+
+		System.out.println(result>0?"배달완료":"실패");
+		map.put("orderList2", orderList2);
+
+		return map;
+	}
+
 
 }

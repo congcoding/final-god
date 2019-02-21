@@ -42,7 +42,7 @@
 		            <a class="collapse-item" href="#">내 가게 통계</a>
 		            <a class="collapse-item updateMyStoreInfo" href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}">내 가게 수정</a>
 		            <a class="collapse-item" href="#">리뷰</a>
-		            <a class="collapse-item" href="#">광고 신청</a>
+		            <a class="collapse-item myAd" href="${pageContext.request.contextPath }/seller/myAd.do?storeNo=${store.storeNo}">광고</a>
 		          </div>
 		        </div>
 		      </li>

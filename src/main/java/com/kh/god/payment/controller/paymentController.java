@@ -15,10 +15,7 @@ public class paymentController {
 
 	
 	@RequestMapping("/payment/goPaymentPage.do")
-	public String goPaymentPage(Model model,
-			@RequestParam("menuName") String menuName,
-			@RequestParam("menuCode") String menuCode,
-			@RequestParam("menuPrice") String menuPrice) {
+	public String goPaymentPage() {
 		
 		
 		return "payment/paymentPreparations";

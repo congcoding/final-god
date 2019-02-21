@@ -142,7 +142,7 @@
 		    <tfoot>
 		    	<tr>
 		    		<td colspan="3">
-		    			<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#checkCart">
+		    			<button type="button" onclick="goPayment();" class="btn btn-outline-success" data-toggle="modal" data-target="#checkCart">
 		    				주문하기
 		    			</button>  <!-- 주문함수 만들어야함~~~ -->
 		    		</td>
@@ -154,28 +154,6 @@
 </div> <!-- #last-container -->
 
 
-<!-- 주문확인 모달창 -->
-<!-- Button trigger modal -->
-<!-- Modal -->
-<div class="modal fade" id="checkCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">이렇게 주문할까요?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <div class="modal-body"></div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="goPayment">결제하기</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- 결제를 위한 폼전송 -->
 <form action="${pageContext.request.contextPath}/menu/inputCart.do" name="inputCartFrm" id="inputCartFrm">
@@ -296,8 +274,6 @@ function inputCart(menuName,menuCode,menuPrice){
 }
 
 
-
-
 /* 각 메뉴->카트 확인 모달영역 */
 function checkCart(menuName,menuCode,menuPrice){
 	
@@ -311,11 +287,6 @@ $('#checkCart').on('show.bs.modal', function (event) {
 	});	
 	
 });
-
-}
-
- 
-
 
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
@@ -351,7 +322,9 @@ $("#clickInformation").click("on", function(){
 	$("#sellerInformation").show();
 });
 
-
+function goPayment(){
+	location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
+}
 </script>
 
 
