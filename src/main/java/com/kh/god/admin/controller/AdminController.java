@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +31,6 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
-import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -718,6 +718,15 @@ public class AdminController {
 		mav.setViewName("common/msg");
 		
 		return mav;
+	}
+	
+	@RequestMapping("/admin/carouselEvent.do")
+	public Map<String, Object> carouselEvent(Model model) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		List<Event> eventList = adminService.carouselEvent();
+		map.put("list", eventList);
+		return map;
 	}
 	
 	

@@ -300,4 +300,9 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.update("admin.storePMSOpen", storeNo);
 	}
 
+	@Override
+	public List<Event> carouselEvent() {
+		return sqlSession.selectList("admin.carouselEvent");
+	}
+
 }
