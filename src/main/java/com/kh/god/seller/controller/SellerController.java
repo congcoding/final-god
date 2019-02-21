@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -421,6 +422,51 @@ public class SellerController {
 		return mav;
 	}
 	
+
+	@RequestMapping("/seller/myAd.do")
+	public String myAd(@RequestParam(value="cPage",defaultValue="1") int cPage,@RequestParam(name="storeNo") String storeNo, Model model, @RequestParam(value="status",defaultValue="all") String status) {
+		int numPerPage = 5;
+		int totalContents = 0;
+		List<Map<String,String>> list = null;
+		if(status.equals("all")) {
+			list = sellerService.adSelectAll(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdAll(storeNo);
+		}else if(status.equals("now")) {
+			list = sellerService.adSelectNow(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdNow(storeNo);
+			logger.debug("wwwww");
+		}else if(status.equals("past")) {
+			list = sellerService.adSelectPast(cPage,numPerPage,storeNo);
+			totalContents = sellerService.countAdPast(storeNo);
+		}
+		
+		model.addAttribute("storeNo",storeNo);
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("list",list);
+		model.addAttribute("status",status);
+		
+		return "seller/myAd";
+		
+	}
+	
+	@RequestMapping("/seller/adRequest.do")
+	public String adRequest(@RequestParam(name="storeNo") String storeNo,@RequestParam(name="cost") int cost) {
+		Ad ad = new Ad();
+		ad.setStoreNo(storeNo);
+		ad.setPrice(cost);
+		if(cost==50000) {
+			ad.setStoreGrade("A");
+		}else {
+			ad.setStoreGrade("B");
+		}
+		int result = sellerService.adRequest(ad);
+		
+		return "redirect:/seller/myAd.do?storeNo="+storeNo;
+	}
+	
+
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
 	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
@@ -451,5 +497,6 @@ public class SellerController {
 
 		return map;
 	}
+
 
 }

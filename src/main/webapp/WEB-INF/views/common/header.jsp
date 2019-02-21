@@ -156,6 +156,8 @@ nav.navbar-light{
 	</div>
 	
 	<script>
+	
+	
 	function NoMultiChk(chk){
 		var obj = document.getElementsByName("login");
 	    for(var i=0; i<obj.length; i++){
@@ -184,6 +186,6 @@ nav.navbar-light{
 		
 	}
 		
-	
+
 	</script>
    <section id="content">

@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
@@ -109,6 +111,43 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public List<Map<String, String>> adSelectAll(int cPage, int numPerPage, String storeNo) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("storeInfo.adSelectAll",storeNo,rowBounds);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectNow(int cPage, int numPerPage, String storeNo) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("storeInfo.adSelectNow",storeNo,rowBounds);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectPast(int cPage, int numPerPage, String storeNo) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("storeInfo.adSelectPast",storeNo,rowBounds);
+	}
+
+	@Override
+	public int countAdNow(String storeNo) {
+		return sqlSession.selectOne("storeInfo.countAdNow",storeNo);
+	}
+
+	@Override
+	public int countAdAll(String storeNo) {
+		return sqlSession.selectOne("storeInfo.countAdAll",storeNo);
+	}
+
+	@Override
+	public int countAdPast(String storeNo) {
+		return sqlSession.selectOne("storeInfo.countAdPast",storeNo);
+	}
+
+	@Override
+	public int adRequest(Ad ad) {
+		return sqlSession.insert("storeInfo.adRequest",ad);
+	}
+
 	public int receiveOrder(Map<String, Object> map) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("storeInfo.receiveOrder",map);
