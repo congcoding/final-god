@@ -98,10 +98,14 @@
 	</select>
 	
 	<select id="selectAttchMentLsit" resultType="SAttachment">
-		select * from sattachment where storeno = #{storeNo}
+		select * from sattachment where storeno = #{storeNo} and status = 'N'
 	</select>
 	
 	<update id="deleteFile1">
 		update sattachment set status = 'Y' where originalfilename = #{filename}
+	</update>
+	
+	<update id="updateStore" >
+		update storeinfo set storeTel = #{storeTel} , storename=#{storeName} ,storeAddress = #{storeAddress} , categoryNo = #{categoryNo} , storeintro = #{storeIntro} , personalday = #{personalDay} , operatinghours = #{operatingHours}  , deliveryMinPrice =#{deliveryMinPrice} where storeNo = #{storeNo}
 	</update>
 </mapper>
