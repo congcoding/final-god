@@ -21,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -720,15 +720,13 @@ public class AdminController {
 		return mav;
 	}
 	
+	@ResponseBody
 	@RequestMapping("/admin/carouselEvent.do")
-	public Map<String, Object> carouselEvent(Model model) {
+	public Map<String, Object> carouselEvent() {
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 		List<Event> eventList = adminService.carouselEvent();
-		map.put("list", eventList);
+		map.put("carouselEvent", eventList);
 		return map;
 	}
-	
-	
-	
+
 }

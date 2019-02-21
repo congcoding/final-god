@@ -42,14 +42,46 @@ function categoryList(item){
 
 $(function(){
 	$.ajax({
-	    url: "${pageContext.request.contextPath }/admin/carouselEvent.do",
-	    dataType:"json",
+	    url: "${pageContext.request.contextPath}/admin/carouselEvent.do",
+	    dataType : "json",
 	    contentType : "application/json; charset=UTF-8",
 	    success: function(data) {
-	    	console.log(data);
+	    	$.each(data,function(index,item){
+	    		console.log(item[0]);
+	    			var html = "";
+	    			var count = "";
+	    		for(var i in item){
+	    			if(i==0){
+	    				count += "<li data-target='#carouselExampleIndicators' data-slide-to='0' class='active'></li>";
+	    			}else{
+	    				count += "<li data-target='#carouselExampleIndicators' data-slide-to='"+i+"'></li>";
+	    			}
+	    		}
+	    		$("#countEvent").html(count);
+	    		for(var i in item){
+	    			console.log(item[i].EVENTNO);
+	    			if(i==0){
+	    				html += "<div class='carousel-item active'>";
+	    			}else {
+	    				html +="<div class='carousel-item'>";	
+	    			}
+	    			html += "<img onclick='fn_eventView("+item[i].EVENTNO+")'"; 
+	    			html += "class='d-block w-100' style='height:212px;width:812px;' src='${pageContext.request.contextPath}/resources/upload/event/"+item[i].EVENTSMALL+"' />";
+    				html +="</div>";
+	    		}
+	    			$("#eventShow").html(html);
+	    			
+	    	});
+	    	
+	    },error : function(request,status,error){
+	    	console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 	    }
 	});
-})
+});
+
+function fn_eventView(eventNo){
+	location.href="${pageContext.request.contextPath}/event/eventView.do?eventNo="+eventNo;
+}
 </script>
 
 <section id="menu-content">
@@ -57,19 +89,13 @@ $(function(){
 	
 		<div id="event-container">
 			<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-			  <ol class="carousel-indicators">
-			    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+			  <ol class="carousel-indicators" id="countEvent">
+			    <!-- <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
 			    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-			    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+			    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li> -->
 			  </ol>
-			  <div class="carousel-inner">
-			  	<c:if test="${not empty carouselEvent}">
-					<c:forEach items="${carouselEvent }" var="e">
-						<div class="carousel-item">
-			      			<img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/${e.eventSmall}">
-			    		</div>
-				  	</c:forEach>
-			  	</c:if>
+			  <div class="carousel-inner" id="eventShow">
+				  	
 			  </div>
 			  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
 			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
