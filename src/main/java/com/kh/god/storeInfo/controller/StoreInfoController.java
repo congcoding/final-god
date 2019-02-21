@@ -43,7 +43,7 @@ public class StoreInfoController {
 	String alertText  = "";
 	
 	public static void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Worksapces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
+		System.setProperty("webdriver.chrome.driver", "C:\\Workspaces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
 	
 	     ChromeOptions options = new ChromeOptions();
 	     options.addArguments("headless");
