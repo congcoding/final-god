@@ -123,4 +123,6 @@ public interface AdminService {
 
 	List<Event> carouselEvent();
 
+	int storePMSReject(Map<String, String> map);
+
 }

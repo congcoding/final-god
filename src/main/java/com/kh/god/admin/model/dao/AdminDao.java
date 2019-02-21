@@ -115,6 +115,8 @@ public interface AdminDao {
 
 	int storePMSOk(String storeNo);
 
+	int storeReject(Map<String, String> map);
+
 	int storePMSClose(String storeNo);
 
 	int storePMSOpen(String storeNo);
