@@ -35,7 +35,7 @@ public interface SellerService {
 
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 	
-	int updatePwd(String password);
+	int updatePwd(Seller s);
 
 	int updateSeller(Seller seller);
 
@@ -69,6 +69,10 @@ public interface SellerService {
 	List<Map<String, Object>> orderList3(String storeNo);
 
 	int deliveryEnd(int orderNo);
+
+	int updateMenu(Map<String, Object> map);
+
+	int deleteMenu(String menuCode);
 
 
 }

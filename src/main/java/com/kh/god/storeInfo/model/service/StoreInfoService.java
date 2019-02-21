@@ -22,4 +22,6 @@ public interface StoreInfoService {
 
 	int updateStore(StoreInfo s, List<SAttachment> attachList);
 
+	int closedStore(String storeNo);
+
 }
