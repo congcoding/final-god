@@ -213,6 +213,30 @@
 	</select>
 
 <!-- ============================================== -->
+	<select id="storePMSView" resultType="storeInfo">
+		select * from storeInfo where storeNo=#{storeNo}
+	</select>
+	
+	<select id="storePMSAttaView" resultType="SAttachment">
+		select * from sattachment where storeNo=#{storeNo}
+	</select>
+	
+	<update id="storePMSOk">
+		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+	</update>
+	
+	<update id="storePMSReject">
+		update storeInfo set pmsflag='R' where storeNo=#{storeNo}
+	</update>
+	
+	<update id="storePMSClose">
+		update storeInfo set pmsflag='C' where storeNo=#{storeNo}
+	</update>
+
+	<update id="storePMSOpen">
+		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+	</update>
+	
 	
 </mapper>
 

@@ -39,7 +39,7 @@ $(function(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>
+          <h1 class="h3 mb-4 text-gray-800">내 가게 메뉴 수정</h1>
           
           <!-- 여기부터 코드 붙여넣으면 됨 -->
 <table class="table table-bordered" id="menuTable">

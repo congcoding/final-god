@@ -3,8 +3,10 @@ package com.kh.god.member.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,18 +24,20 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketSession;
 
 import com.kh.god.common.util.Utils;
+import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
-import com.kh.god.menu.model.vo.Menu;
+
 
 
 /*******************final 프로젝트 *******************/
 @Controller
 @SessionAttributes(value = {"memberLoggedIn"}) //value = 문자열 배열로 여러개 넣을수도잇음!
 public class MemberController {
-
+	private Map<String,WebSocketSession> memberSession ;
 	Logger logger = Logger.getLogger(getClass());
 	
 	//DI : 스프링은 빈을 관리시, 기본적으로 싱글턴을 처리한다.
@@ -208,6 +212,8 @@ public class MemberController {
 	@RequestMapping(value = "/member/memberLogin.do", method = RequestMethod.POST)
     public ModelAndView memberLogin(@RequestParam String memberId, @RequestParam String password,
                               ModelAndView mav, HttpSession session) {
+	memberSession = WebSocketHandler.getInstance().getUserList();
+	List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
       if(logger.isDebugEnabled()) {
          logger.debug("회원 로그인 요청");
       }
@@ -216,21 +222,36 @@ public class MemberController {
         String msg = "";
         String loc = "/";
         String view = "/common/msg";
+        boolean loginFlag = true;
         //로그인 처리
         if(m == null) {
             msg = "아이디가 존재하지 않습니다.";
         }else {
-            //비밀번호 비교             
+        	Set<String> keyValue = memberSession.keySet();
+			logger.debug("keyValue : "+keyValue);
+			Iterator<String> iterator = keyValue.iterator();
+			while(iterator.hasNext()) {
+				String loginId = iterator.next();
+				logger.debug("로그인 되어있는 아이디!"+ loginId+", 로그인을 요청한 아이디 : "+ m.getMemberId());
+				if(m.getMemberId().equals(loginId)) {
+					
+					msg = "이미 로그인한 아이디가 있습니다.";
+					loc="/";
+					loginFlag = false;
+				}
+				
+			}
+            //비밀번호 비교
+            System.out.println(password);
+           if(loginFlag == true) {
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
-                
-            	
-            	mav.addObject("memberLoggedIn",m);
-                
-            	
-            	view = "redirect:/";
+                mav.addObject("memberLoggedIn",m);
+                session.setAttribute("login",m.getMemberId());
+                view = "redirect:/";
             }else {
             	msg = "비밀번호를 잘못 입력하셨습니다.";
-            }                
+            } 
+           }
         }
         
         mav.addObject("loc", loc);
@@ -243,10 +264,14 @@ public class MemberController {
 
 	
 	@RequestMapping("/member/memberLogout.do")
-	public String memberLogout(SessionStatus sessionStatus) {
+	public String memberLogout(SessionStatus sessionStatus,@RequestParam String memberId,HttpSession session) {
+		memberSession = WebSocketHandler.getInstance().getUserList();
+		
+		session.setAttribute("login",null);
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청");
-		
+		WebSocketHandler.getInstance().getUserList().remove(memberId);
+
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
 		
 		//@sessionAttribute 로 로그인 했다면, sessionStatus.setComplete() 로 무효화

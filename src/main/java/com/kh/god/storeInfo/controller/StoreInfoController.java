@@ -42,8 +42,8 @@ public class StoreInfoController {
 	String URL = null;
 	String alertText  = "";
 	
-	public static void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Worksapces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
+	public static void setUp(String loc) throws Exception {
+		System.setProperty("webdriver.chrome.driver", loc); 
 	
 	     ChromeOptions options = new ChromeOptions();
 	     options.addArguments("headless");
@@ -94,14 +94,15 @@ public class StoreInfoController {
 	
 	@RequestMapping(value = "/storeinfo/checkBrno.do" ,  method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no ) throws Exception {
+	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no, HttpServletRequest request) throws Exception {
 
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		String brno = no ;
+		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe");
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
-		setUp();
+		setUp(loc);
 		
 		
 		//사업자번호 입력 
@@ -254,10 +255,10 @@ public class StoreInfoController {
 		logger.debug("size1="+upFiles[0].getSize());
 		logger.debug("fileName2="+ upFiles[1].getOriginalFilename());
 		logger.debug("size2="+upFiles[1].getSize());
-		logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
+		//logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
 		
 		
-		String loc = "/seller/sellerView.do";
+		String loc = "/storeInfoView.do?storeNo=";
 		String msg = "";
 		try {
 			
@@ -296,13 +297,13 @@ public class StoreInfoController {
 				}//if끝
 			}//forEach 끝 
 			//2.업무로직
-			//int result = storeInfoService.updateStore(s , attachList);
+			int result = storeInfoService.updateStore(s , attachList);
 			//3.뷰단처리
-			/*
-			 * if(result >0) { msg ="게시물 등록 성공!";
-			 * 
-			 * }else { msg="게시물 등록 실패!"; }
-			 */
+			
+			 if(result >0) { msg ="수정 성공!";
+			  
+			  }else { msg="수정 실패!"; }
+			
 			
 			//mav.addObject("msg", msg);
 			//mav.addObject("loc", loc);
@@ -327,6 +328,7 @@ public class StoreInfoController {
     	
     	 Map<String, Object> map = new HashMap<>();
     	int result = storeInfoService.deleteFile1(filename);
+    	
     	
     	String msg = "";
     	if(result >0) {

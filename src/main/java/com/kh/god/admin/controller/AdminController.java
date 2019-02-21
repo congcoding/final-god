@@ -30,7 +30,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
-import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -594,5 +594,132 @@ public class AdminController {
 	}
 	
 //	---------------------------------------------------------
+	
+	@RequestMapping("/admin/storePMSView.do")
+	public String storePMSView(@RequestParam(name="storeNo") String storeNo, Model model) {
+		StoreInfo si = adminService.storePMSView(storeNo);
+		List<Map<String, String>> sa = adminService.storePMSAttaView(storeNo);
+		
+		model.addAttribute("store", si);
+		model.addAttribute("atta", sa);
+		
+		return "admin/storePMSView";
+	}
+	
+	@RequestMapping("/admin/storeView.do")
+	public String storeView(@RequestParam(name="storeNo") String storeNo, Model model) {
+		StoreInfo si = adminService.storePMSView(storeNo);
+		List<Map<String, String>> sa = adminService.storePMSAttaView(storeNo);
+		
+		model.addAttribute("store", si);
+		model.addAttribute("atta", sa);
+		
+		return "admin/storeView";
+	}
+	
+	@RequestMapping("/admin/storePMSfileDownload.do")
+	public void storePMSFileDownload(@RequestParam String rName, @RequestParam String oName, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+		
+		//파일 입출력 준비
+		String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/seller");
+		
+		//입력 스트림
+		File f = new File(saveDirectory+"/"+rName);
+		FileInputStream fis = new FileInputStream(f);
+		BufferedInputStream bis = new BufferedInputStream(fis);
+		
+		//출력스트림
+		ServletOutputStream sos = response.getOutputStream();
+		BufferedOutputStream bos = new BufferedOutputStream(sos);
+		
+		//전송할 파일명작성
+		String resFileName = "";
+		
+		//요청브라우저에 따른 분기를 처리
+		boolean isMSIE = request.getHeader("user-agent").indexOf("MSIE") != -1 //요청브라우저를 가져오는 key
+						|| request.getHeader("user-agent").indexOf("Trident") != -1; //IE10 이전(MSIE), 이후(Trident)
+		if(isMSIE) {
+			//utf-8인코딩처리를 명시적으로 해줌
+			resFileName = URLEncoder.encode(oName, "UTF-8");
+			//+로 처리된 공백을 다시 한 번 %20(공백의미)로 치환
+			resFileName = resFileName.replaceAll("\\+", "%20");
+		}else {
+			resFileName = new String(oName.getBytes("UTF-8"), "ISO-8859-1"); //톰캣 기본 인코딩타입			
+		}
+		
+		//파일전송
+		response.setContentType("application/octet-stream");
+		response.setHeader("Content-Disposition", "attachment;filename="+resFileName);
+		
+		//파일쓰기
+		int read = -1;
+		while((read=bis.read()) != -1) {
+			bos.write(read);
+		}
+		bos.close();
+		bis.close();
+	}
+	
+	@RequestMapping("/admin/storePMSOk.do")
+	public ModelAndView storePMSOk(@RequestParam(name="storeNo") String storeNo, ModelAndView mav) {
+		int result = adminService.storePMSOk(storeNo);
+		
+		String msg = "";
+		if(result>0) {
+			msg="가게 신청 허가 완료";
+		}else {
+			msg = "가게 신청 허가 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/storePMSList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/admin/storePMSReject")
+	public String storePMSX(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="rejectInfo") String rejectInfo) {
+		System.out.println(storeNo+"@@@@"+rejectInfo);
+		return "admin/storePMSList";
+	}
+	
+	@RequestMapping("/admin/storePMSClose")
+	public ModelAndView storePMSClose(@RequestParam(name="storeNo") String storeNo, ModelAndView mav) {
+		int result = adminService.storePMSClose(storeNo);
+		
+		String msg = "";
+		if(result>0) {
+			msg="가게 영업 중지 완료";
+		}else {
+			msg = "가게 영업 중지 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/storeView.do?storeNo="+storeNo);
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/admin/storePMSOpen")
+	public ModelAndView storePMSOpen(@RequestParam(name="storeNo") String storeNo, ModelAndView mav) {
+		int result = adminService.storePMSOpen(storeNo);
+		
+		String msg = "";
+		if(result>0) {
+			msg="가게 영업 중지 해제 완료";
+		}else {
+			msg = "가게 영업 중지 해제 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/storeView.do?storeNo="+storeNo);
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	
 	
 }

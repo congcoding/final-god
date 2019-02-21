@@ -11,6 +11,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -257,4 +258,29 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 //	---------------------------------------------------------
+	
+	@Override
+	public StoreInfo storePMSView(String storeNo) {
+		return adminDao.storePMSView(storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> storePMSAttaView(String storeNo) {
+		return adminDao.storePMSAttaView(storeNo);
+	}
+
+	@Override
+	public int storePMSOk(String storeNo) {
+		return adminDao.storePMSOk(storeNo);
+	}
+
+	@Override
+	public int storePMSClose(String storeNo) {
+		return adminDao.storePMSClose(storeNo);
+	}
+
+	@Override
+	public int storePMSOpen(String storeNo) {
+		return adminDao.storePMSOpen(storeNo);
+	}
 }
