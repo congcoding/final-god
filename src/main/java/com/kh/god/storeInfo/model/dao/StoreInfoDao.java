@@ -22,6 +22,8 @@ public interface StoreInfoDao {
 
 	int deleteFile1(String filename);
 
+	int updateStore(StoreInfo s);
+
 
 
 }

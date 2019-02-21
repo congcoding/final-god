@@ -21,7 +21,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.util.Utils;
+import com.kh.god.common.websocket.WebSocketHandler;
+import com.kh.god.member.model.vo.Member;
 import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
@@ -33,7 +37,7 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
-	
+	private Map<String,WebSocketSession> memberSession ;
 	Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
@@ -89,6 +93,8 @@ public class SellerController {
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
 			ModelAndView mav , HttpSession session) {
+		memberSession = WebSocketHandler.getInstance().getUserList();
+		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
@@ -97,24 +103,42 @@ public class SellerController {
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
-		
+	     boolean loginFlag = true;
 	     if (s == null) {
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
 	      } else {
+	    	  Set<String> keyValue = memberSession.keySet();
+				logger.debug("keyValue : "+keyValue);
+				Iterator<String> iterator = keyValue.iterator();
+				while(iterator.hasNext()) {
+					String loginId = iterator.next();
+					logger.debug("로그인 되어있는 아이디!"+ loginId);
+					if(s.getSellerId().equals(loginId)) {
+						msg = "이미 로그인한 아이디가 있습니다.";
+						loc="/";
+						loginFlag = false;
+					}
+					
+				}
 	         // 비밀번호 비교
+			if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
+	            session.setAttribute("login",s.getSellerId());
+
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
 	            session.setAttribute("storeSideBar", store);
+
 	            view = "redirect:/";
 	            
 	         } else {
 	            msg = "비밀번호를 잘못 입력하셨습니다.";
 	            loc = "/";
 	         }
+			}
 	      }
 	      
 	     mav.addObject("loc", loc);
@@ -126,11 +150,13 @@ public class SellerController {
 	}
 	
 	@RequestMapping("/seller/sellerLogout.do")
-	public String logout(SessionStatus sessionStatus) {
+	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session) {
+		memberSession = WebSocketHandler.getInstance().getUserList();
 		
+		session.setAttribute("login",null);
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청!"); 
-		
+		WebSocketHandler.getInstance().getUserList().remove(sellerId);
 	      
 	      if(!sessionStatus.isComplete()) {
 	         sessionStatus.setComplete();

@@ -254,10 +254,10 @@ public class StoreInfoController {
 		logger.debug("size1="+upFiles[0].getSize());
 		logger.debug("fileName2="+ upFiles[1].getOriginalFilename());
 		logger.debug("size2="+upFiles[1].getSize());
-		logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
+		//logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
 		
 		
-		String loc = "/seller/sellerView.do";
+		String loc = "/storeInfoView.do?storeNo=";
 		String msg = "";
 		try {
 			
@@ -296,13 +296,13 @@ public class StoreInfoController {
 				}//if끝
 			}//forEach 끝 
 			//2.업무로직
-			//int result = storeInfoService.updateStore(s , attachList);
+			int result = storeInfoService.updateStore(s , attachList);
 			//3.뷰단처리
-			/*
-			 * if(result >0) { msg ="게시물 등록 성공!";
-			 * 
-			 * }else { msg="게시물 등록 실패!"; }
-			 */
+			
+			 if(result >0) { msg ="수정 성공!";
+			  
+			  }else { msg="수정 실패!"; }
+			
 			
 			//mav.addObject("msg", msg);
 			//mav.addObject("loc", loc);
@@ -327,6 +327,7 @@ public class StoreInfoController {
     	
     	 Map<String, Object> map = new HashMap<>();
     	int result = storeInfoService.deleteFile1(filename);
+    	
     	
     	String msg = "";
     	if(result >0) {

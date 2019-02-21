@@ -230,7 +230,6 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.update("admin.updateEvent", event);
 	}
 
-	@Override
 	public List<Map<String, String>> storePMSList(int cPage, int numPerPage) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
 		return sqlSession.selectList("admin.selectStorePMSList", null, rowBounds);
