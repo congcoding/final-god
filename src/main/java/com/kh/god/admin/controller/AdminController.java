@@ -91,7 +91,7 @@ public class AdminController {
 		model.addAttribute("totalContents",totalContents);
 		model.addAttribute("list",list);
 		model.addAttribute("status",status);
-		return "admin/eventList";
+		return "redirect:/admin/eventList.do?status="+status;
 	}
 	
 	@RequestMapping("/admin/insertEvent.do")
