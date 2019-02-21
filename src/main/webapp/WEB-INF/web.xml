@@ -38,10 +38,14 @@
 			</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
+		<!--웹소켓통신시 비동기 통신을 위해 기본값이 false로 되어있는것을 true로 바꿈 -->
+		<async-supported>true</async-supported>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>appServlet</servlet-name>
 		<url-pattern>*.do</url-pattern>
+		<!-- 웹소켓 패턴 지정 /echo로 할 예정 -->
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
 	

@@ -12,14 +12,31 @@
 		select count(*) as cnt from qnaboard where category='FAQ'
 	</select>
 	
-	<select id="selectEventList" resultMap = "eventMap">
+	<select id="selectEventAllList" resultMap = "eventMap">
 		select * from event order by eventNo desc
 	</select>
+	
+	<select id="countEventAllList" resultType="_int">
+		select count(*) as cnt from event
+	</select>
+	
+	<select id="selectEventIngList" resultMap = "eventMap">
+		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+	</select>
+	
+	<select id="countEventIngList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from event where enddate >= sysdate ]]>
+	</select>
+	
+	<select id="selectEventEndList" resultMap = "eventMap">
+		<![CDATA[ select * from event where enddate < sysdate order by eventNo desc  ]]>
+	</select>
+	
 	<resultMap type="map" id="eventMap">
 	</resultMap>
 	
-	<select id="countEventList" resultType="_int">
-		select count(*) as cnt from event
+	<select id="countEventEndList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from event where enddate < sysdate ]]>
 	</select>
 	
 	<select id="getLastEventNo" resultType="_int">
@@ -196,6 +213,30 @@
 	</select>
 
 <!-- ============================================== -->
+	<select id="storePMSView" resultType="storeInfo">
+		select * from storeInfo where storeNo=#{storeNo}
+	</select>
+	
+	<select id="storePMSAttaView" resultType="SAttachment">
+		select * from sattachment where storeNo=#{storeNo}
+	</select>
+	
+	<update id="storePMSOk">
+		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+	</update>
+	
+	<update id="storePMSReject">
+		update storeInfo set pmsflag='R' where storeNo=#{storeNo}
+	</update>
+	
+	<update id="storePMSClose">
+		update storeInfo set pmsflag='C' where storeNo=#{storeNo}
+	</update>
+
+	<update id="storePMSOpen">
+		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+	</update>
+	
 	
 </mapper>
 

@@ -43,6 +43,12 @@
 		<typeAlias type="com.kh.god.storeInfo.model.vo.SAttachment"
 				   alias="SAttachment"/>
 		
+		
+		<typeAlias type="com.kh.god.chat.model.vo.Chat"
+				   alias="chat"/>	
+		
+		<typeAlias type="com.kh.god.chat.model.vo.ChatRoom"
+				   alias="chatRoom"/>	
 	</typeAliases>
 	
 	
