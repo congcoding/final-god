@@ -88,6 +88,15 @@ span#passworderror3{
     top: 4px;
     display: none;
 }
+.btn-outline-success:hover {
+	 background-color: #117a8b; 
+     border-color: white;
+     color : white;
+}
+.btn-outline-success{
+     border-color: #117a8b;
+     color : #117a8b;
+}
 
 </style>
 
@@ -101,11 +110,6 @@ span#passworderror3{
 	<form name="sellerEnrollFrm" action="${pageContext.request.contextPath}/seller/sellerEnrollEnd.do" 
 		  method="post" 
 		  onsubmit="return validate();" >
-		<!-- 프로필 사진 -->
-		
-		
-		
-		
 		<!-- 아이디 -->
 		<div class="form-group row">
     		<label for="inputSellerId" class="col-sm-3">아이디</label>

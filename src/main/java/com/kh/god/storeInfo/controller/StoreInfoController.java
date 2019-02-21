@@ -342,6 +342,59 @@ public class StoreInfoController {
     	
     	return  map;
     }
+    
+    @RequestMapping("storeinfo/closed.do")
+    @ResponseBody
+    public Map<String, Object> closedStore(@RequestParam (name = "storeNo") String storeNo ){
+    	logger.debug("@@@@@@@@@@@@@@@@@@@storeNo"+storeNo);
+    	
+   	 Map<String, Object> map = new HashMap<>();
+   	int result = storeInfoService.closedStore(storeNo);
+   	
+   	
+   	String msg = "";
+   	if(result >0) {
+   		msg = "폐업신고 완료 ";
+   	}else {
+   		msg = "폐업신고 실패 ";
+   	}
+   	logger.debug(msg);
+       map.put("result" , result);
+ 
+    	return map;
+    }
+    
+    @RequestMapping("storeinfo/brnoCheckDuplicate.do")
+    @ResponseBody
+    public Map<String, Object> brnoCheckDuplicate(@RequestParam (name = "brno") String storeNo ){
+    	logger.debug("@@@@@@@@@@@@@@@@@@@storeNo"+storeNo);
+    	
+    	Map<String, Object> map = new HashMap<>();
+    	StoreInfo si = storeInfoService.selectOnebyStoreNo(storeNo);
+    	String brno = "";
+    	String msg = "" ;
+    	int result = 0 ;
+    	
+    	if(si != null) {
+    		brno= si.getStoreNo();
+    		if(brno.equals(storeNo)) {
+    		
+    			msg = "이미 등록된 번호입니다.";
+    		}
+    	}	
+    	else {
+    		msg = "확인버튼을 눌러주세요.";
+    		result = 1;
+    	}
+    	
+    	map.put("msg" , msg );
+    	map.put("result" , result );
+    
+    	
+    	return map;
+    }
+    
+    
 	
 }
 
