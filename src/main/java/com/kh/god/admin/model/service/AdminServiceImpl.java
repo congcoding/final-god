@@ -29,13 +29,33 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Map<String, String>> eventList(int cPage, int numPerPage) {
-		return adminDao.selectEventList(cPage,numPerPage);
+	public List<Map<String, String>> eventAllList(int cPage, int numPerPage) {
+		return adminDao.selectEventAllList(cPage,numPerPage);
 	}
 
 	@Override
-	public int countEventList() {
-		return adminDao.countEventList();
+	public int countEventAllList() {
+		return adminDao.countEventAllList();
+	}
+	
+	@Override
+	public List<Map<String, String>> eventIngList(int cPage, int numPerPage) {
+		return adminDao.selectEventIngList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventIngList() {
+		return adminDao.countEventIngList();
+	}
+	
+	@Override
+	public List<Map<String, String>> eventEndList(int cPage, int numPerPage) {
+		return adminDao.selectEventEndList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventEndList() {
+		return adminDao.countEventEndList();
 	}
 
 	@Override

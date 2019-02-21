@@ -24,13 +24,13 @@
 <style>
 div#head-container {
 	margin: 30px auto;
-	width: 900px;
+	width: 500px;
 	height: 50px;
 }
 
 div#member {
 	margin-left: -40px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -38,9 +38,10 @@ div#member {
 	display: table-cell;
 	vertical-align: middle;
 }
+
 div#memberBL {
 	margin-left: -40px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -52,18 +53,7 @@ div#memberBL {
 div#seller {
 	margin-top: -50px;
 	margin-left: 500px;
-	width: 225px;
-	height: 50px;
-	text-align: center;
-	font-weight: bold;
-	cursor: pointer;
-	display: table-cell;
-	vertical-align: middle;
-}
-div#sellerBL {
-	margin-top: -50px;
-	margin-left: 500px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -72,6 +62,17 @@ div#sellerBL {
 	vertical-align: middle;
 }
 
+div#sellerBL {
+	margin-top: -50px;
+	margin-left: 500px;
+	width: 250px;
+	height: 50px;
+	text-align: center;
+	font-weight: bold;
+	cursor: pointer;
+	display: table-cell;
+	vertical-align: middle;
+}
 input#boardTitle {
 	font-weight: bold;
 }

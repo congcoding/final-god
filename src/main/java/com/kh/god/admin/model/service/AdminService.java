@@ -15,9 +15,17 @@ public interface AdminService {
 
 	int countBoardList();
 
-	List<Map<String, String>> eventList(int cPage, int numPerPage);
+	List<Map<String, String>> eventAllList(int cPage, int numPerPage);
 
-	int countEventList();
+	int countEventAllList();
+	
+	List<Map<String, String>> eventIngList(int cPage, int numPerPage);
+
+	int countEventIngList();
+	
+	List<Map<String, String>> eventEndList(int cPage, int numPerPage);
+
+	int countEventEndList();
 
 	int getLastEventNo();
 

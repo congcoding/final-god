@@ -15,9 +15,17 @@ public interface AdminDao {
 
 	int countBoardList();
 
-	List<Map<String, String>> selectEventList(int cPage, int numPerPage);
+	List<Map<String, String>> selectEventAllList(int cPage, int numPerPage);
 
-	int countEventList();
+	int countEventAllList();
+	
+	List<Map<String, String>> selectEventIngList(int cPage, int numPerPage);
+
+	int countEventIngList();
+	
+	List<Map<String, String>> selectEventEndList(int cPage, int numPerPage);
+
+	int countEventEndList();
 
 	int getLastEventNo();
 
