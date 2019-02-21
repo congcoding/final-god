@@ -42,8 +42,8 @@ public class StoreInfoController {
 	String URL = null;
 	String alertText  = "";
 	
-	public static void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Workspaces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
+	public static void setUp(String loc) throws Exception {
+		System.setProperty("webdriver.chrome.driver", loc); 
 	
 	     ChromeOptions options = new ChromeOptions();
 	     options.addArguments("headless");
@@ -94,14 +94,15 @@ public class StoreInfoController {
 	
 	@RequestMapping(value = "/storeinfo/checkBrno.do" ,  method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no ) throws Exception {
+	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no, HttpServletRequest request) throws Exception {
 
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		String brno = no ;
+		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe");
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
-		setUp();
+		setUp(loc);
 		
 		
 		//사업자번호 입력 
