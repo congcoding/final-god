@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.OrderInfo;
@@ -103,6 +104,41 @@ public class SellerServiceImpl implements SellerService {
 	public List<Map<String, Object>> orderList1(String storeNo) {
 		// TODO Auto-generated method stub
 		return sellerDao.orderList1(storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectAll(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectAll(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectNow(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectNow(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> adSelectPast(int cPage, int numPerPage,String storeNo) {
+		return sellerDao.adSelectPast(cPage,numPerPage,storeNo);
+	}
+
+	@Override
+	public int countAdAll(String storeNo) {
+		return sellerDao.countAdAll(storeNo);
+	}
+
+	@Override
+	public int countAdNow(String storeNo) {
+		return sellerDao.countAdNow(storeNo);
+	}
+
+	@Override
+	public int countAdPast(String storeNo) {
+		return sellerDao.countAdPast(storeNo);
+	}
+
+	@Override
+	public int adRequest(Ad ad) {
+		return sellerDao.adRequest(ad);
 	}
 	
 }

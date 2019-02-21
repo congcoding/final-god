@@ -89,5 +89,30 @@
 		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveflag='N') F where m.memberid=F.memberid and storeno='511-25-93434' and receiveFlag='N'
    </select>
 
+	<select id="adSelectAll" resultType="ad">
+		select * from ad where storeNo = #{storeNo } order by adNo desc
+	</select>
+	<select id="adSelectNow" resultType="ad">
+		<![CDATA[ select * from ad where storeNo = #{storeNo } and enddate >= sysdate order by adNo desc]]>
+	</select>
+	<select id="adSelectPast" resultType="ad">
+		<![CDATA[ select * from ad where storeNo = #{storeNo } and enddate < sysdate order by adNo desc]]>
+	</select>
+	
+	<select id="countAdAll" resultType="_int">
+		 select count(*) as cnt from ad where storeNo = #{storeNo }
+	</select>
+	
+	<select id="countAdNow" resultType="_int">
+		<![CDATA[ select count(*) as cnt from ad where storeNo = #{storeNo } and enddate >= sysdate order by adNo desc]]>
+	</select>
+	
+	<select id="countAdPast" resultType="_int">
+		 <![CDATA[ select count(*) as cnt from ad where storeNo = #{storeNo } and enddate < sysdate order by adNo desc]]>
+	</select>
+
+	<insert id="adRequest" parameterType="ad">
+		 <![CDATA[ insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1))]]>
+	</insert>
 
 </mapper>
