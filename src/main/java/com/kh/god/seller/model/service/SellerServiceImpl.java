@@ -169,5 +169,11 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.deliveryEnd(orderNo);
 	}
 
+	@Override
+	public int cancelOrder(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.cancelOrder(orderNo);
+	}
+
 	
 }

@@ -69,4 +69,6 @@ public interface SellerDao {
 
 	int deliveryEnd(int orderNo);
 
+	int cancelOrder(int orderNo);
+
 }

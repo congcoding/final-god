@@ -70,5 +70,7 @@ public interface SellerService {
 
 	int deliveryEnd(int orderNo);
 
+	int cancelOrder(int orderNo);
+
 
 }

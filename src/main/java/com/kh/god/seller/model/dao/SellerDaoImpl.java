@@ -171,5 +171,11 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.update("storeInfo.deliveryEnd",orderNo);
 	}
 
+	@Override
+	public int cancelOrder(int orderNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("storeInfo.cancelOrder",orderNo);
+	}
+
 
 }
