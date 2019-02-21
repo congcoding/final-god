@@ -82,7 +82,7 @@ $(function(){
 				</table>
 			
 				<br />
-				<input type="button" id="deleteAd" class="btn btn-outline-success" value="삭제" >
+				<input type="button" id="deleteAd" class="btn btn-outline-success" value="해지" >
 			</form>
 		  </div>
 

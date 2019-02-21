@@ -69,15 +69,28 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/eventList.do")
-	public String eventList(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
+	public String eventList(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model,@RequestParam(value="status",defaultValue="all") String status) {
 		int numPerPage = 10;
-		List<Map<String,String>> list = adminService.eventList(cPage,numPerPage);
-		int totalContents = adminService.countEventList();
+		List<Map<String,String>> list =null; 
+		int totalContents  = 0; 
+		
+		if(status.equals("all")){
+			list = adminService.eventAllList(cPage,numPerPage);
+			totalContents= adminService.countEventAllList();
+		}else if(status.equals("ing")){
+			list = adminService.eventIngList(cPage,numPerPage);
+			totalContents= adminService.countEventIngList();
+			
+		}else if(status.equals("end")){
+			list = adminService.eventEndList(cPage,numPerPage);
+			totalContents= adminService.countEventEndList();
+		}
 		
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("totalContents",totalContents);
 		model.addAttribute("list",list);
+		model.addAttribute("status",status);
 		return "admin/eventList";
 	}
 	

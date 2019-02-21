@@ -32,14 +32,36 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public List<Map<String, String>> selectEventList(int cPage, int numPerPage) {
+	public List<Map<String, String>> selectEventAllList(int cPage, int numPerPage) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectEventList",null,rowBounds);
+		return sqlSession.selectList("admin.selectEventAllList",null,rowBounds);
 	}
 
 	@Override
-	public int countEventList() {
-		return sqlSession.selectOne("admin.countEventList");
+	public int countEventAllList() {
+		return sqlSession.selectOne("admin.countEventAllList");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectEventIngList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventIngList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventIngList() {
+		return sqlSession.selectOne("admin.countEventIngList");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectEventEndList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventEndList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventEndList() {
+		return sqlSession.selectOne("admin.countEventEndList");
 	}
 
 	@Override
