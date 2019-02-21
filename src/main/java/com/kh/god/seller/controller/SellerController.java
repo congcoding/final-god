@@ -1,11 +1,8 @@
 package com.kh.god.seller.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -496,6 +493,76 @@ public class SellerController {
 		map.put("orderList2", orderList2);
 
 		return map;
+	}
+	
+	@RequestMapping("/seller/updateMenu.do")
+	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
+								   @RequestParam("menuName") String menuName, 
+								   @RequestParam("menuPrice") int menuPrice,
+								   @RequestParam("storeNo") String storeNo,
+								   ModelAndView mav) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateMenu() 요청!");
+		}
+
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★메뉴이름 왔냐? " + menuName);
+		logger.debug("☆★☆★☆★☆★☆★메뉴가격 왔냐? " + menuPrice);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("menuName", menuName);
+		map.put("menuPrice", menuPrice);
+		map.put("storeNo", storeNo);
+
+		int result = sellerService.updateMenu(map);
+
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 수정 성공!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		} else {
+			msg = "메뉴 수정 실패!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.addObject("map", map);
+		mav.setViewName(view);
+
+		return mav;
+
+	}
+	
+	@RequestMapping("/seller/deleteMenu.do")
+	public String deleteMenu(String menuCode, String storeNo) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteMenu() 요청!");
+		}
+		
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+		
+		int result = sellerService.deleteMenu(menuCode);
+		
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 삭제 성공!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		} else {
+			msg = "메뉴 삭제 실패!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		}
+		
+		return loc;
 	}
 
 

@@ -22,6 +22,23 @@ $(function(){
 	$("#collapse"+storeNo).parent("li").addClass("active");	
 	$("#collapse"+storeNo+">div>a.myStoreMenu").addClass("active");	
 });
+
+function updateMenu(menuName, menuPrice, menuCode, storeNo){
+/* 	console.log("######", menuName);
+	console.log("######", menuPrice);
+	console.log("######", menuCode);
+	console.log("######", storeNo); */
+	
+	$("#menuName").val(menuName);
+	$("#menuPrice").val(menuPrice);
+	$("#menuCode").val(menuCode);
+	$("#storeNo").val(storeNo);
+}
+
+function deleteMenu(menuCode, storeNo){
+	location.href="${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode="+menuCode+"&storeNo="+storeNo;
+}
+
 </script>
 
 <!-- Page Wrapper -->
@@ -58,10 +75,10 @@ $(function(){
 		<tr>
 			<th scope="row">${vs.count}</th>
 			<td><c:out value="${menu.menuName}" /></td>
-			<td><c:out value="${menu.menuPrice}" /></td>
+			<td><fmt:formatNumber type="currency" value="${menu.menuPrice }"/></td>
 			<td>
-				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#exampleModal" id="menuUpdate-btn" onclick="location.href='${pageContext.request.contextPath}/seller/updateMenu.do?menuCode=${menu.menuCode}'">수정</button>
-				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="location.href='${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode=${menu.menuCode}'">삭제</button>
+				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#exampleModal" id="menuUpdate-btn" onclick="updateMenu('${menu.menuName}', ${menu.menuPrice }, '${menu.menuCode }', '${menu.storeNo}');">수정</button>
+				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="deleteMenu('${menu.menuCode}', '${menu.storeNo }');">삭제</button>
 				<c:if test="${menu.soldoutFlag eq 'N'}">
 					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}&storeNo=${menu.storeNo }&soldoutFlag=${menu.soldoutFlag }'">품절</button>
 				</c:if>
@@ -72,36 +89,41 @@ $(function(){
 		</tr>
 	</c:forEach>
 </table>
-
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
-          </div>
-          <div class="form-group">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
-      </div>
-    </div>
-  </div>
-</div>
+<form action="${pageContext.request.contextPath}/seller/updateMenu.do">
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">메뉴 수정</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <form>
+	          <div class="form-group">
+	          	<input type="hidden" class="form-control" id="menuCode" name="menuCode"/>
+	          	<input type="hidden" class="form-control" id="storeNo" name="storeNo"/>
+	            <label for="menuName" class="col-form-label">메뉴명</label>
+	            <input type="text" class="form-control" id="menuName" name="menuName"/>
+	            <label for="menuPrice" class="col-form-label">메뉴가격</label>
+	            <input type="text" class="form-control" id="menuPrice" name="menuPrice"/>
+	          </div>
+	          <div class="form-group">
+	            <label for="message-text" class="col-form-label">메뉴사진</label>
+	            <textarea class="form-control" id="message-text"></textarea>
+	          </div>
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	        <button type="submit" class="btn btn-primary">수정</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</form>
 <br /><br />
         </div>
         <!-- /.container-fluid -->

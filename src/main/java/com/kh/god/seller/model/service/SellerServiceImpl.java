@@ -169,5 +169,15 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.deliveryEnd(orderNo);
 	}
 
+	@Override
+	public int updateMenu(Map<String, Object> map) {
+		return sellerDao.updateMenu(map);
+	}
+
+	@Override
+	public int deleteMenu(String menuCode) {
+		return sellerDao.deleteMenu(menuCode);
+	}
+
 	
 }

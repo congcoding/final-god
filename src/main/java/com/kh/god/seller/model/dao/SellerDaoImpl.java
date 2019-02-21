@@ -171,5 +171,15 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.update("storeInfo.deliveryEnd",orderNo);
 	}
 
+	@Override
+	public int updateMenu(Map<String, Object> map) {
+		return sqlSession.update("menu.updateMenu", map);
+	}
+
+	@Override
+	public int deleteMenu(String menuCode) {
+		return sqlSession.delete("menu.deleteMenu", menuCode);
+	}
+
 
 }
