@@ -39,8 +39,8 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public int updatePwd(String password) {
-		return sqlSession.update("seller.updatePwd" , password);
+	public int updatePwd(Seller s) {
+		return sqlSession.update("seller.updatePwd" , s );
 	}
 
 	@Override

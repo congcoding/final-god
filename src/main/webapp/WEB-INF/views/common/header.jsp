@@ -148,6 +148,7 @@ nav.navbar-light{
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
+	      	<!-- 	<input type="checkbox" name="autoLogin" />  -->
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
 		  </form>
@@ -168,6 +169,13 @@ nav.navbar-light{
 	}
 	
 	function check(){
+		
+	/*  	if($("#autoLogin :checked")){
+			$("#autoLogin").val("1");
+		}else{
+			$("#autoLogin").val("");
+		}  */
+		
 		var chk = $("[name='login']:checked").val();
 		
 		if(chk == undefined) {

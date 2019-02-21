@@ -100,4 +100,9 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	}
 		return result;
 	}
+
+	@Override
+	public int closedStore(String storeNo) {
+		return storeInfoDao.closedStore(storeNo);
+	}
 }

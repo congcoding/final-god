@@ -35,7 +35,7 @@ public interface SellerService {
 
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 	
-	int updatePwd(String password);
+	int updatePwd(Seller s);
 
 	int updateSeller(Seller seller);
 

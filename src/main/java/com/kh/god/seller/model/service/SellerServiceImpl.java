@@ -38,8 +38,8 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int updatePwd(String password) {
-		return sellerDao.updatePwd(password);
+	public int updatePwd(Seller s) {
+		return sellerDao.updatePwd(s);
 	}
 
 	@Override

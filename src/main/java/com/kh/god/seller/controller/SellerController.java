@@ -87,8 +87,10 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
+	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 			ModelAndView mav , HttpSession session) {
+		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
+		
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
@@ -98,7 +100,7 @@ public class SellerController {
 	     String msg = "";
 	     String view = "common/msg";
 		
-	     if (s == null) {
+	     if (s == null || s.getDelFlag().equals("Y")) {
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
 	      } else {
@@ -248,15 +250,19 @@ public class SellerController {
 	
 	@RequestMapping(value ="/seller/updatePwd.do" , method = RequestMethod.POST )
 	@ResponseBody
-	public Map<String, Object> updatePwd(@RequestParam("password") String password ) {
+	public Map<String, Object> updatePwd(Seller seller, HttpSession session ) {
 		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 		
+		String password = seller.getPassword();
 		Map<String, Object> map = new HashMap<>();
 		String temp = password;
 		
 		password = bcryptPasswordEncoder.encode(temp);
+		seller.setSellerId(sellerLoggedIn.getSellerId());
+		seller.setPassword(password);
 		
-		int result = sellerService.updatePwd(password);
+		int result = sellerService.updatePwd(seller);
 		String msg = "";
 		
 		if(result > 0) {

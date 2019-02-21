@@ -19,7 +19,7 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
-	int updatePwd(String password);
+	int updatePwd(Seller s);
 
 	int updateSeller(Seller s);
 
