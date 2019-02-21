@@ -19,7 +19,7 @@ public interface SellerDao {
 	
 	List<StoreInfo> myStore(String sellerId);
 
-	int updatePwd(String password);
+	int updatePwd(Seller s);
 
 	int updateSeller(Seller s);
 
@@ -70,5 +70,10 @@ public interface SellerDao {
 	int deliveryEnd(int orderNo);
 
 	int cancelOrder(int orderNo);
+
+	int updateMenu(Map<String, Object> map);
+
+	int deleteMenu(String menuCode);
+
 
 }

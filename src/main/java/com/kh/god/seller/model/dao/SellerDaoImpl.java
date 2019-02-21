@@ -39,8 +39,8 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public int updatePwd(String password) {
-		return sqlSession.update("seller.updatePwd" , password);
+	public int updatePwd(Seller s) {
+		return sqlSession.update("seller.updatePwd" , s );
 	}
 
 	@Override
@@ -175,6 +175,15 @@ public class SellerDaoImpl implements SellerDao {
 	public int cancelOrder(int orderNo) {
 		// TODO Auto-generated method stub
 		return sqlSession.update("storeInfo.cancelOrder",orderNo);
+	}
+
+	public int updateMenu(Map<String, Object> map) {
+		return sqlSession.update("menu.updateMenu", map);
+	}
+
+	@Override
+	public int deleteMenu(String menuCode) {
+		return sqlSession.delete("menu.deleteMenu", menuCode);
 	}
 
 

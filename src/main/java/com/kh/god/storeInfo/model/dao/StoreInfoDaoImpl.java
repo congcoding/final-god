@@ -52,6 +52,16 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	public int deleteFile1(String filename) {
 		return sqlSession.update("storeInfo.deleteFile1" , filename);
 	}
+
+	@Override
+	public int updateStore(StoreInfo s) {
+		return sqlSession.update("storeInfo.updateStore" , s);
+	}
+
+	@Override
+	public int closedStore(String storeNo) {
+		return sqlSession.update("storeInfo.closedStore", storeNo);
+	}
 	
 
 	

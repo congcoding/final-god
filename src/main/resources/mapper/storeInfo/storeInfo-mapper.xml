@@ -21,7 +21,7 @@
 	</select>
 	
 	<insert id="addStore">
-		insert into storeinfo values(#{storeNo} , #{storeName}, #{storeTel} , #{storeAddress} , default , #{categoryNo} , #{storeIntro}, #{personalDay} , #{operatingHours} , default, default ,#{deliveryMinPrice} , #{sellerId})
+		insert into storeinfo values(#{storeNo} , #{storeName}, #{storeTel} , #{storeAddress} , default , #{categoryNo} , #{storeIntro}, #{personalDay} , #{operatingHours} , default, default ,#{deliveryMinPrice} , #{sellerId} , default)
 	</insert>
 	
 	<insert id="insertAttachment">
@@ -151,7 +151,7 @@
 	</select>
 	
 	<select id="selectAttchMentLsit" resultType="SAttachment">
-		select * from sattachment where storeno = #{storeNo}
+		select * from sattachment where storeno = #{storeNo} and status = 'N'
 	</select>
 	
 	<update id="deleteFile1">
@@ -162,5 +162,12 @@
 	    update orderinfo set cancelFlag='Y' where orderno=#{orderNo}
 	</select>
 
+	<update id="updateStore" >
+		update storeinfo set storeTel = #{storeTel} , storename=#{storeName} ,storeAddress = #{storeAddress} , categoryNo = #{categoryNo} , storeintro = #{storeIntro} , personalday = #{personalDay} , operatinghours = #{operatingHours}  , deliveryMinPrice =#{deliveryMinPrice} where storeNo = #{storeNo}
+	</update>
+	
+	<update id="closedStore">
+		update storeinfo set closeflag =  'Y' where storeNo = #{storeNo}
+	</update>
 
 </mapper>

@@ -118,9 +118,15 @@ span#passworderror3{
     border-radius: 3px;
 }
 .btn-outline-success:hover {
-	 background-color: white; 
+	 background-color: #117a8b; 
      border-color: white;
+     color : white;
 }
+.btn-outline-success{
+     border-color: #117a8b;
+     color : #117a8b;
+}
+
 </style>
 
 <div id="MemberEnroll-container">
@@ -141,8 +147,8 @@ span#passworderror3{
     		<input type="hidden" id="brnoCheck" value="0"/>
   		</div>	
   		<div id="addStoreNext-container" >
-			<form  enctype="multipart/form-data" method="post"  id="storeInfoUpdateFrm" >
-				<input type="hidden" name="storeNo" id="storeNo" />
+		 	<form  enctype="multipart/form-data" method="post"  id="storeInfoUpdateFrm"  action="${pageContext.request.contextPath }/storeInfo/UpdateStore.do"> 
+				<input type="hidden" name="storeNo" id="storeNo" value="${storeInfo.storeNo}"/>
 				<input type="hidden" name="sellerId" value="${storeInfo.sellerId}" />
 				
 				<!-- input:file소스 : https://getbootstrap.com/docs/4.1/components/input-group/#custom-file-input -->
@@ -155,8 +161,15 @@ span#passworderror3{
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-			    <label class="custom-file-label filelabel" id="labeloldfile" for="upFile1" style="overflow: hidden; border-radius: 3px;">${attachmentList[0].originalFileName}</label>
-			  	<button class="btn btn-outline-success" style="margin-left: 95px;" onclick="deletefile1();">삭제</button>
+			    <label class="custom-file-label filelabel" id="labeloldfile" for="upFile1" style="overflow: hidden; border-radius: 3px;">
+			    <c:if test="${attachmentList[0].originalFileName == null}">
+			    	첨부파일선택
+			    </c:if>
+			    <c:if test="${attachmentList[0].originalFileName != null}">
+			    ${attachmentList[0].originalFileName}
+			    </c:if>
+			    </label>
+			  	<button class="btn btn-outline-success" type="button" style="margin-left: 95px;" onclick="deletefile1();">삭제</button>
 			  </div>
 			</div>
 			
@@ -168,8 +181,15 @@ span#passworderror3{
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="upFile2" multiple >
-			    <label class="custom-file-label filelabel" for="upFile2" style="overflow: hidden; border-radius: 3px;">${attachmentList[1].originalFileName}</label>
-			    <button class="btn btn-outline-success" style="margin-left: 95px;" onclick="deletefile2(${attachmentList[1].originalFileName});">삭제</button>
+			    <label class="custom-file-label filelabel" id="labeloldfile1" for="upFile2" style="overflow: hidden; border-radius: 3px;">
+			    <c:if test="${attachmentList[1].originalFileName == null}">
+			    	첨부파일선택
+			    </c:if>
+			    <c:if test="${attachmentList[1].originalFileName != null}">
+			    ${attachmentList[1].originalFileName}
+			    </c:if>
+			    </label>
+			    <button type="button" class="btn btn-outline-success" style="margin-left: 95px;" onclick="deletefile2();">삭제</button>
 			  </div>
 			</div>
 			
@@ -258,8 +278,9 @@ span#passworderror3{
   		</div>		
     	
   		
-				<input type="submit" class="btn btn-outline-success" value="수정"  onclick="return validate2();"/>
-		</form>
+				<input type="submit" class="btn btn-outline-success " value="수정"  onclick="return validate2();"/>
+				<button type="button" class="btn btn-outline-success "  onclick="closed();" >폐업</button>
+ </form> 
   		</div>
 	</div>
 	</div>
@@ -271,9 +292,6 @@ span#passworderror3{
 
 function validate2(){
 	
-	$("#storeInfoUpdateFrm").attr("action", "${pageContext.request.contextPath }/storeInfo/UpdateStore.do" );
-	
-
 	if($("#categoryNo").val() === "선택"){
 		alert("사업장 종류를 선택하십시오.");
 		return false;
@@ -333,6 +351,7 @@ $(function(){
 function deletefile1(){
 	
 	var oldfile = $("#labeloldfile").text();
+	console.log(oldfile);
 	
 	
 	$.ajax({
@@ -340,15 +359,13 @@ function deletefile1(){
 		data : {filename : oldfile},
 		dataType: "json",
 		success : function(data){
-			return false;
 			console.log(data);
-			
-		if(data.result>0){
+	
+		 if(data.result>0){
 				$("#labeloldfile").text('첨부파일선택');
-				
-				
+			}else{
+				alert("첨부파일 삭제 에러");
 			}
-			 
 		},
 		error : function(){
 			console.log("ajax요청 에러!");
@@ -357,7 +374,57 @@ function deletefile1(){
 		
 	})
 };
-
+function deletefile2(){
+	
+	var oldfile = $("#labeloldfile1").text();
+	console.log(oldfile);
+	
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/storeinfo/deletefile1.do",
+		data : {filename : oldfile},
+		dataType: "json",
+		success : function(data){
+			console.log(data);
+	
+		 if(data.result>0){
+				$("#labeloldfile1").text('첨부파일선택');
+			}else{
+				alert("첨부파일 삭제 에러");
+			}
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+			
+		}
+		
+	})
+};
+function closed(){
+	var storeNo = $("#brno").val();
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/storeinfo/closed.do",
+		data : {storeNo : storeNo},
+		dataType: "json",
+		success : function(data){
+			console.log(data);
+	
+		 if(data.result>0){
+				alert("폐업신고가 정상적으로 처리되었습니다.");
+			}else{
+				alert("폐업신고 실패");
+			}
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+			
+		}
+		
+	})
+	
+	
+};
 
 
 </script>
