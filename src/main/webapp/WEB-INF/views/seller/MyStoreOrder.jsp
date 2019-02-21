@@ -14,6 +14,7 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/seller/MyStoreOrder.css" rel="stylesheet">
 
 <script>
 $(function(){
@@ -120,30 +121,30 @@ $(function(){
 				  <tbody>
 				    <tr>
 				    <!--${fn:split('1|2|3|4|5', '|') }  -->
-				      <c:forEach items="${orderList1}" var="orderList1">
+				      <c:forEach items="${orderList2}" var="orderList2">
 				      <td class="orderMenu">
-				      <c:forEach items="${fn:split(orderList1.NAME,'/')}" var="menu">
+				      <c:forEach items="${fn:split(orderList2.NAME,'/')}" var="menu">
 				      ${menu}<br>
 				      </c:forEach>
 				      </td>
-				      <td class="orderAddress">${orderList1.ADDRESS}</td>
-				      <td class="orderPhone">${orderList1.PHONE}</td>
-				      <c:if test="${orderList1.REQUEST eq null}">
-				      <td class="orderRequest">${orderList1.REQUEST}</td>
+				      <td class="orderAddress">${orderList2.ADDRESS}</td>
+				      <td class="orderPhone">${orderList2.PHONE}</td>
+				      <c:if test="${orderList2.REQUEST eq null}">
+				      <td class="orderRequest">${orderList2.REQUEST}</td>
 				      </c:if>
 				      
-				      <c:if test="${orderList1.PRICEWAY=='Y'}">
+				      <c:if test="${orderList2.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <c:if test="${orderList2.REQUEST=='N'}">
 				      <td class="orderWay">만나서결제</td>
 				      </c:if>
 				     
-				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>
-				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
+				      <td class="orderPrice">${orderList2.TOTALPRICE}</td>
+				      <td class="orderPrice">${orderList2.ORDERTIME}</td>
 				     
 				      <td>
-				      <button type="button" id="orderAcception" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">배달완료</button>
+				      <button type="button" onclick="deliveryEnd(${orderList2.ORDERNO},'${orderList2.STORENO}')" class="btn btn-info">배달완료</button>
 				      </td> 
 				    </tr>
 				     </c:forEach>
@@ -217,16 +218,17 @@ $(function(){
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form>
+      <form action="${pageContext.request.contextPath}/seller/receiveOrder.do" method="POST">
       <div class="modal-body">
-      		<input type="hidden" id="orderNoForReceive" >
-			<button type="button" class="btn btn-info" value="10분~30분">10분~30분</button>
-			<button type="button" class="btn btn-info" value="30분~50분">30분~50분</button>
-			<button type="button" class="btn btn-info" value="50분~60분">50분~60분</button>
-			<button type="button" class="btn btn-info" value="60분 이상">60분 이상</button>
+      		<input type="hidden" id="orderNoForReceive" name="orderNoForReceive">
+      		<input type="hidden" id="howLongChecked" name="howLongChecked">
+			<button type="button" name="howLong" class="btn btn-info howLong" value="10분~30분">10분~30분</button>
+			<button type="button" name="howLong" class="btn btn-info howLong" value="30분~50분">30분~50분</button>
+			<button type="button" name="howLong" class="btn btn-info howLong" value="50분~60분">50분~60분</button>
+			<button type="button" name="howLong" class="btn btn-info howLong" value="60분 이상">60분 이상</button>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">주문접수</button>
+        <button type="submit" class="btn btn-primary">주문접수</button>
       </div>
       </form>
     </div>
@@ -280,8 +282,32 @@ $(".btnReason").on("click", function(){
 //모달로 orderno 보내기
 function orderNo(item){
 	console.log(item);
-}
+	$("#orderNoForReceive").val(item);
+ 	
 
+}
+//선택된 배달소요시간 보내기
+$("[name=howLong]").on("click", function(){
+	$("input[name=howLongChecked]").val($(this).val());
+	console.log($(this).val());
+})
+
+//배달완료 버튼 눌렀을 시
+ function deliveryEnd(item, item2){
+	console.log(item);
+	console.log(item2);
+
+ 	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/deliveryEnd.do",
+		data : {orderNo : item, storeNo:item2},
+		success : function(data){
+			console.log(data)
+		},
+		error:function(){
+			console.log("ajax오류");
+		}
+	}); 
+} 
 </script>
         </div>
         <!-- /.container-fluid -->

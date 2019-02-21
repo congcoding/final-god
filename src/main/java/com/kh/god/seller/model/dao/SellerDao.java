@@ -37,11 +37,13 @@ public interface SellerDao {
 
 	int updateStoreInfo(Map<String, Object> map);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<OrderInfo> myStoreOrderInfo(String storeNo);
 
 	List<Menu> selectMenuList(String storeNo);
 
-	int updateSoldout(String menuCode);
+	int updateSoldout(Map<String, Object> map);
 
 	List<Map<String, Object>> orderList1(String storeNo);
 
@@ -58,5 +60,13 @@ public interface SellerDao {
 	int countAdPast(String storeNo);
 
 	int adRequest(Ad ad);
+
+	int receiveOrder(Map<String, Object> map);
+
+	List<Map<String, Object>> orderList2(String storeNo);
+
+	List<Map<String, Object>> orderList3(String storeNo);
+
+	int deliveryEnd(int orderNo);
 
 }

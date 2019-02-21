@@ -39,11 +39,14 @@ public interface SellerService {
 
 	int updateSeller(Seller seller);
 
+	List<StoreInfo> selectListStorInfo(String sellerId);
+
 	List<Menu> selectMenuList(String storeNo);
 
-	int updateSoldout(String menuCode);
+	int updateSoldout(Map<String, Object> map);
 
 	List<Map<String, Object>> orderList1(String storeNo);
+
 
 	List<Map<String, String>> adSelectAll(int cPage, int numPerPage, String storeNo);
 
@@ -58,5 +61,14 @@ public interface SellerService {
 	int countAdPast(String storeNo);
 
 	int adRequest(Ad ad);
+
+	int receiveOrder(Map<String, Object> map);
+
+	List<Map<String, Object>> orderList2(String storeNo);
+
+	List<Map<String, Object>> orderList3(String storeNo);
+
+	int deliveryEnd(int orderNo);
+
 
 }

@@ -89,10 +89,15 @@ public class SellerServiceImpl implements SellerService {
 	public int updateStoreInfo(Map<String, Object> map) {
 		return sellerDao.updateStoreInfo(map);
 	}
-
+	
 	@Override
-	public int updateSoldout(String menuCode) {
-		return sellerDao.updateSoldout(menuCode);
+	public int updateSoldout(Map<String, Object> map) {
+		return sellerDao.updateSoldout(map);
+	}
+	
+	@Override
+	public List<StoreInfo> selectListStorInfo(String sellerId) {
+		return sellerDao.selectListStorInfo(sellerId);
 	}
 
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
@@ -140,5 +145,29 @@ public class SellerServiceImpl implements SellerService {
 	public int adRequest(Ad ad) {
 		return sellerDao.adRequest(ad);
 	}
+	
+	public int receiveOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.receiveOrder(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList2(storeNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> orderList3(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.orderList3(storeNo);
+	}
+
+	@Override
+	public int deliveryEnd(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.deliveryEnd(orderNo);
+	}
+
 	
 }

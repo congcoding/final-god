@@ -142,7 +142,7 @@
 		    <tfoot>
 		    	<tr>
 		    		<td colspan="3">
-		    			<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#checkCart">
+		    			<button type="button" onclick="goPayment();" class="btn btn-outline-success" data-toggle="modal" data-target="#checkCart">
 		    				주문하기
 		    			</button>  <!-- 주문함수 만들어야함~~~ -->
 		    		</td>
@@ -154,28 +154,6 @@
 </div> <!-- #last-container -->
 
 
-<!-- 주문확인 모달창 -->
-<!-- Button trigger modal -->
-<!-- Modal -->
-<div class="modal fade" id="checkCart" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">이렇게 주문할까요?</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      
-      <div class="modal-body"></div>
-      
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="goPayment">결제하기</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- 결제를 위한 폼전송 -->
 <form action="${pageContext.request.contextPath}/menu/inputCart.do" name="inputCartFrm" id="inputCartFrm">
@@ -193,6 +171,8 @@ $(document).ready(function() {
         {queue: false, duration: 350});    
     });  
     
+    
+    
     //가게정보숨기기
 	$("#sellerInformation").hide();
     //리뷰숨기기
@@ -201,8 +181,16 @@ $(document).ready(function() {
     cartHtml();
 });
 
+function addOrderNum(){
+	
+	
+}
+
+
 // 주문표 html 
 function cartHtml(){
+	
+	
     console.log("cartHtml 함수실행");
     var cart = JSON.parse(sessionStorage.getItem("cart"));
     
@@ -216,12 +204,14 @@ function cartHtml(){
 		html += "<tr><th>메뉴</th><th>가격</th><th>수량</th></tr>";
 		
     	for (var i=0; i<cart.length; i++){			  
-    		
+    	
 	  		html += "<tr><td>"+cart[i].menuName+"</td>";
 	  		html += "<td>"+cart[i].menuPrice*cart[i].amount+"</td>"
-	  		html += "<td>"+cart[i].amount+"</td></tr>";
-	  		
-	 		sum += cart[i].menuPrice*cart[i].amount;
+	  		html += "<td><button type='button' class='btn-xs add-order-num'>+</button>";
+	  		html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">";
+	  		html += "<button type='button' class='btn-xs minus-order-num'>-</button></td></tr>";
+
+	  		sum += cart[i].menuPrice*cart[i].amount;
 	   	}
     	
     	html += "<tr><td>합계</td><td>"+sum+"</td></tr>"
@@ -229,7 +219,7 @@ function cartHtml(){
 	}else{				
 		html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
 	}//end of if(cart.length)
-    
+
 	$('#tbody-cart').html(html);
 	
 }
@@ -273,7 +263,7 @@ function inputCart(menuName,menuCode,menuPrice){
 			
 			// 로컬 스토리지에 저장
 			sessionStorage.setItem("cart", JSON.stringify(cart));			
-				
+
 			cartHtml();
 			
 		}, //success : 
@@ -281,10 +271,6 @@ function inputCart(menuName,menuCode,menuPrice){
 			console.log("ajax 에러");
 		}
 	});
-	
-	
-	
-	
 }
 
 
@@ -301,11 +287,6 @@ $('#checkCart').on('show.bs.modal', function (event) {
 	});	
 	
 });
-
-}
-
- 
-
 
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
@@ -341,7 +322,9 @@ $("#clickInformation").click("on", function(){
 	$("#sellerInformation").show();
 });
 
-
+function goPayment(){
+	location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
+}
 </script>
 
 
