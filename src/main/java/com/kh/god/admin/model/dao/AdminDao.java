@@ -119,4 +119,6 @@ public interface AdminDao {
 
 	int storePMSOpen(String storeNo);
 
+	List<Event> carouselEvent();
+
 }

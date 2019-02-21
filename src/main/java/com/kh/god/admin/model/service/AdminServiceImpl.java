@@ -283,4 +283,10 @@ public class AdminServiceImpl implements AdminService {
 	public int storePMSOpen(String storeNo) {
 		return adminDao.storePMSOpen(storeNo);
 	}
+
+	@Override
+	public List<Event> carouselEvent() {
+		// TODO Auto-generated method stub
+		return adminDao.carouselEvent();
+	}
 }

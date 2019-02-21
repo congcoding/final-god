@@ -237,6 +237,9 @@
 		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
 	</update>
 	
+	<select id="carouselEvent" resultMap="eventMap">
+		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+	</select>
 	
 </mapper>
 

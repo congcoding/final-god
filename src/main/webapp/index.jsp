@@ -39,6 +39,17 @@ function categoryList(item){
 	var categoryNo = $(item).attr("name");
     location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
 }
+
+$(function(){
+	$.ajax({
+	    url: "${pageContext.request.contextPath }/admin/carouselEvent.do",
+	    dataType:"json",
+	    contentType : "application/json; charset=UTF-8",
+	    success: function(data) {
+	    	console.log(data);
+	    }
+	});
+})
 </script>
 
 <section id="menu-content">
@@ -52,15 +63,13 @@ function categoryList(item){
 			    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
 			  </ol>
 			  <div class="carousel-inner">
-			    <div class="carousel-item active">
-			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_01.png" alt="First slide">
-			    </div>
-			    <div class="carousel-item">
-			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_02.png" alt="Second slide">
-			    </div>
-			    <div class="carousel-item">
-			      <img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/event_s_03.png" alt="Third slide">
-			    </div>
+			  	<c:if test="${not empty carouselEvent}">
+					<c:forEach items="${carouselEvent }" var="e">
+						<div class="carousel-item">
+			      			<img class="d-block w-100" src="${pageContext.request.contextPath }/resources/images/event/${e.eventSmall}">
+			    		</div>
+				  	</c:forEach>
+			  	</c:if>
 			  </div>
 			  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
 			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
