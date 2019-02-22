@@ -121,6 +121,7 @@ public class SellerController {
 					}
 					
 				}
+//				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
 	         // 비밀번호 비교
 			if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
