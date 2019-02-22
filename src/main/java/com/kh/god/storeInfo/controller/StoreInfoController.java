@@ -42,8 +42,8 @@ public class StoreInfoController {
 	String URL = null;
 	String alertText  = "";
 	
-	public static void setUp() throws Exception {
-		System.setProperty("webdriver.chrome.driver", "C:\\Worksapces\\sts_workspace\\01_HelloSpring\\src\\main\\webapp\\WEB-INF\\lib\\chromedriver.exe"); 
+	public static void setUp(String loc) throws Exception {
+		System.setProperty("webdriver.chrome.driver", loc); 
 	
 	     ChromeOptions options = new ChromeOptions();
 	     options.addArguments("headless");
@@ -94,14 +94,16 @@ public class StoreInfoController {
 	
 	@RequestMapping(value = "/storeinfo/checkBrno.do" ,  method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no ) throws Exception {
+	public Map<String, Object> checkBrno( @RequestParam(value="brno") String no, HttpServletRequest request) throws Exception {
 
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		String brno = no ;
+		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe");
+		//String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver");
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
-		setUp();
+		setUp(loc);
 		
 		
 		//사업자번호 입력 
@@ -340,6 +342,59 @@ public class StoreInfoController {
     	
     	return  map;
     }
+    
+    @RequestMapping("storeinfo/closed.do")
+    @ResponseBody
+    public Map<String, Object> closedStore(@RequestParam (name = "storeNo") String storeNo ){
+    	logger.debug("@@@@@@@@@@@@@@@@@@@storeNo"+storeNo);
+    	
+   	 Map<String, Object> map = new HashMap<>();
+   	int result = storeInfoService.closedStore(storeNo);
+   	
+   	
+   	String msg = "";
+   	if(result >0) {
+   		msg = "폐업신고 완료 ";
+   	}else {
+   		msg = "폐업신고 실패 ";
+   	}
+   	logger.debug(msg);
+       map.put("result" , result);
+ 
+    	return map;
+    }
+    
+    @RequestMapping("storeinfo/brnoCheckDuplicate.do")
+    @ResponseBody
+    public Map<String, Object> brnoCheckDuplicate(@RequestParam (name = "brno") String storeNo ){
+    	logger.debug("@@@@@@@@@@@@@@@@@@@storeNo"+storeNo);
+    	
+    	Map<String, Object> map = new HashMap<>();
+    	StoreInfo si = storeInfoService.selectOnebyStoreNo(storeNo);
+    	String brno = "";
+    	String msg = "" ;
+    	int result = 0 ;
+    	
+    	if(si != null) {
+    		brno= si.getStoreNo();
+    		if(brno.equals(storeNo)) {
+    		
+    			msg = "이미 등록된 번호입니다.";
+    		}
+    	}	
+    	else {
+    		msg = "확인버튼을 눌러주세요.";
+    		result = 1;
+    	}
+    	
+    	map.put("msg" , msg );
+    	map.put("result" , result );
+    
+    	
+    	return map;
+    }
+    
+    
 	
 }
 

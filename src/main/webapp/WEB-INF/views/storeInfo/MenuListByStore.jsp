@@ -9,9 +9,9 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
-<div id="last-container">
-	
-	<!-- 매장 요약-------------------------------------------------------------------------------------------------->
+
+
+<!-- 매장 요약-------------------------------------------------------------------------------------------------->
 	<div id="menuThumb-container" class="card">
 	  <ul class="list-group">
 		<c:forEach items="${storeInfo}" var="storeInfo">
@@ -25,165 +25,199 @@
 		</c:forEach>	
 	  </ul>
 	</div> 
-	
+
+<div id="last-container">
+
 	<!-- 상세보기-------------------------------------------------------------------------------------------------->
 	<div id="menuView-container">
 		
-		<!-- 네비게이션 탭 --------------------------------------------------------->
-		<div id="MenuNavi">		
-			<ul class="nav nav-tabs">
-				  <li class="nav-item">
-				    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
-				  </li>
-				  <li class="nav-item">
-				    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span>38</span></a>
-				  </li>
-				  <li class="nav-item">
-				    <a class="nav-link" id="clickInformation" href="#">정보</a>
-				  </li>
-			</ul>
+		<div id=menuView-left>	
+			<!-- 네비게이션 탭 --------------------------------------------------------->
+			<div id="MenuNavi">		
+				<ul class="nav nav-tabs">
+					  <li class="nav-item">
+					    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span>38</span></a>
+					  </li>
+					  <li class="nav-item">
+					    <a class="nav-link" id="clickInformation" href="#">정보</a>
+					  </li>
+				</ul>
+			</div>
+				
+			<!-- 메뉴/리뷰/사업자 정보---------------------------------------------------->
+			<div id="Menu-wrapper">		
+				<!-- 메뉴리스트 -->
+				<table class="table table-hover active" id="menuTable">				  
+					<!--menuList 가 존재하면 -->
+					<c:if test="${not empty menuList}">
+					  
+					  <!-- 주메뉴 -->
+					  <thead><tr><th scope="col" colspan="3">주메뉴</th></tr></thead>
+					  <tbody>
+						  <c:forEach items="${menuList}" var="menuList">
+							<c:if test = "${fn : contains(menuList.menuCode, 'M')}">
+							    <tr id="main-menu">
+							      <td>${menuList.menuName}</td>
+							      <td>${menuList.menuPrice}</td>
+								  <td>
+								  	<button type="button" class="btn btn-primary btn-sm"
+											onclick = "inputCart('${menuList.menuCode}');">
+										주문담기
+									</button>
+								  </td>    
+							    </tr>
+							 </c:if>
+						   </c:forEach>
+					  </tbody>
+					  
+					  <!-- 사이드메뉴 -->
+					  <thead><tr><th scope="col" colspan="2">사이드메뉴</th></tr></thead>
+					  <tbody>
+					    <c:forEach items="${menuList}" var="menuList">
+							<c:if test = "${fn : contains(menuList.menuCode, 'S')}">
+							    <tr id="side-menu">
+							      <td>${menuList.menuName}</td>
+							      <td>${menuList.menuPrice}</td>
+								  <td>
+								  	<button type="button" class="btn btn-primary btn-sm" 
+											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+								  </td>     
+							    </tr>
+							 </c:if>
+						 </c:forEach>
+					  </tbody>
+					  
+					  <!--  음료  -->
+					  <thead><tr><th scope="col" colspan="2">음료</th></tr></thead>
+					  <tbody>
+					    <c:forEach items="${menuList}" var="menuList">
+							<c:if test = "${fn : contains(menuList.menuCode, 'D')}">
+							    <tr id="drink-menu">
+							      <td>${menuList.menuName}</td>
+							      <td>${menuList.menuPrice}</td>
+								  <td>
+								  	<button type="button" class="btn btn-primary btn-sm"
+											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+								  </td>      
+							    </tr>
+							 </c:if>
+						 </c:forEach>
+					  </tbody>		  		  
+					
+					</c:if>
+				</table> <!-- menuTable -->
+		
+				<!-- 클린리뷰테이블 -->
+				
+			
+				<!-- 사업자정보 -->
+				<table class="table" id="sellerInformation">
+					<c:forEach items="${storeInfo}" var="storeInfo">		
+						<thead><tr><th scope="col">가게명</th></tr></thead>
+						<tbody><tr><td>${storeInfo.storeName}</td></tr></tbody>						  				  
+						
+						<thead><tr><th scope="col">가게소개</th></tr></thead>
+						<tbody><tr><td>${storeInfo.storeIntro}</td></tr></tbody>
+						
+						<thead><tr><th scope="col">가게주소</th></tr></thead>
+						<tbody><tr><td>${storeInfo.storeAddress}</td></tr></tbody>			  
+						
+						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
+						<tbody><tr><td>${storeInfo.storeTel}</td></tr></tbody>			 
+						
+						<thead><tr><th scope="col">휴무일</th></tr></thead>
+						<tbody><tr><td>${storeInfo.personalDay}</td></tr></tbody>			 
+						
+						<thead><tr><th scope="col">영업시간</th></tr></thead>
+						<tbody><tr><td>${storeInfo.operatingHours}</td></tr></tbody>
+					</c:forEach> <!-- end of ${storeInfo} -->
+				</table> <!-- end of table#sellerInformation -->
+				
+			</div>		
 		</div>
 		
-		<!-- 메뉴/리뷰/사업자 정보---------------------------------------------------->
-		<div id="Menu-wrapper">		
-			<!-- 메뉴리스트 -->
-			<table class="table table-hover active" id="menuTable">				  
-				<!--menuList 가 존재하면 -->
-				<c:if test="${not empty menuList}">
-				  
-				  <!-- 주메뉴 -->
-				  <thead><tr><th scope="col" colspan="3">주메뉴</th></tr></thead>
-				  <tbody>
-					  <c:forEach items="${menuList}" var="menuList">
-						<c:if test = "${fn : contains(menuList.menuCode, 'M')}">
-						    <tr id="main-menu">
-						      <td>${menuList.menuName}</td>
-						      <td>${menuList.menuPrice}</td>
-							  <td>
-							  	<button type="button" class="btn btn-primary btn-sm"
-										onclick = "inputCart('${menuList.menuCode}');">
-									주문담기
-								</button>
-							  </td>    
-						    </tr>
-						 </c:if>
-					   </c:forEach>
-				  </tbody>
-				  
-				  <!-- 사이드메뉴 -->
-				  <thead><tr><th scope="col" colspan="2">사이드메뉴</th></tr></thead>
-				  <tbody>
-				    <c:forEach items="${menuList}" var="menuList">
-						<c:if test = "${fn : contains(menuList.menuCode, 'S')}">
-						    <tr id="side-menu">
-						      <td>${menuList.menuName}</td>
-						      <td>${menuList.menuPrice}</td>
-							  <td>
-							  	<button type="button" class="btn btn-primary btn-sm" 
-										onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
-							  </td>     
-						    </tr>
-						 </c:if>
-					 </c:forEach>
-				  </tbody>
-				  
-				  <!--  음료  -->
-				  <thead><tr><th scope="col" colspan="2">음료</th></tr></thead>
-				  <tbody>
-				    <c:forEach items="${menuList}" var="menuList">
-						<c:if test = "${fn : contains(menuList.menuCode, 'D')}">
-						    <tr id="drink-menu">
-						      <td>${menuList.menuName}</td>
-						      <td>${menuList.menuPrice}</td>
-							  <td>
-							  	<button type="button" class="btn btn-primary btn-sm"
-										onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
-							  </td>      
-						    </tr>
-						 </c:if>
-					 </c:forEach>
-				  </tbody>		  		  
-				
-				</c:if>
-			</table> <!-- menuTable -->
-	
-			<!-- 클린리뷰테이블 -->
-			
-		
-			<!-- 사업자정보 -->
-			<table class="table" id="sellerInformation">
-				<c:forEach items="${storeInfo}" var="storeInfo">		
-					<thead><tr><th scope="col">가게명</th></tr></thead>
-					<tbody><tr><td>${storeInfo.storeName}</td></tr></tbody>						  				  
-					
-					<thead><tr><th scope="col">가게소개</th></tr></thead>
-					<tbody><tr><td>${storeInfo.storeIntro}</td></tr></tbody>
-					
-					<thead><tr><th scope="col">가게주소</th></tr></thead>
-					<tbody><tr><td>${storeInfo.storeAddress}</td></tr></tbody>			  
-					
-					<thead><tr><th scope="col">가게전화번호</th></tr></thead>
-					<tbody><tr><td>${storeInfo.storeTel}</td></tr></tbody>			 
-					
-					<thead><tr><th scope="col">휴무일</th></tr></thead>
-					<tbody><tr><td>${storeInfo.personalDay}</td></tr></tbody>			 
-					
-					<thead><tr><th scope="col">영업시간</th></tr></thead>
-					<tbody><tr><td>${storeInfo.operatingHours}</td></tr></tbody>
-				</c:forEach> <!-- end of ${storeInfo} -->
-			</table> <!-- end of table#sellerInformation -->
-			
-		</div>	
-			
-
-		<div style=”clear:both;”></div>
-		
-		
 		<!-- 주문표 ---------------------------------------------------------------->
-		<div id="Cart-wrapper" >
+		<div id="Cart-wrapper">
 			<table class="table" id="cart">
 				<thead class="thead-dark">
 					<tr>
 						<th scope="col" colspan="3">주문표</th>
-						<th scope="col"></th>
 					</tr>
 				</thead>
 				<tbody id="tbody-cart">		
 				
 			    </tbody>
 			    <tfoot>
-			    	<tr><td colspan="3">
+			    	<tr>
+			    		<td colspan="4">
 			    			<button type="button" class="btn btn-outline-success" 
 			    					data-toggle="modal" data-target="#checkCart">주문하기</button>			    						    			
-			    		</td></tr>    	
+			    		</td>
+			    	</tr>    	
 			    </tfoot>
 			</table>
 		</div><!-- div#Cart-wrapper -->	
+		
 			
 	</div> <!-- div#menu-container -->
 	
+	<!-- 주문표 삭제여부 물어보는 Modal  -->	
+	<div class="modal fade" id="checkEmptyCart" tabindex="-1" role="dialog" 
+		 aria-labelledby="checkEmptyCartLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      
+	      <div class="modal-header" style="display: block;">
+	        <h5 class="modal-title" id="checkEmptyCartLabel">주문표에 담기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      
+	      <div class="modal-body">
+	        	다른 음식점에서 이미 담은 메뉴가 있습니다. <br />
+	        	담긴 메뉴를 취소하고 새로운 음식점에서 메뉴를 담을까요?
+	        	<input type="hidden" id = "newMenuCode"/>
+	      </div>
+	      
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	        <button type="button" class="btn btn-primary" onclick="emptyCart( $('#newMenuCode').val() );">확인</button>
+	      </div>
+    	</div>
+  	  </div>
+	</div>
 	
 </div> <!-- #last-container -->
 
 
 
-<!-- 결제를 위한 폼전송 -->
-<form action="${pageContext.request.contextPath}/menu/inputCart.do" name="inputCartFrm" id="inputCartFrm">
-	<input type="hidden" name="menuCode"/>
-</form>
 
 <script>
 var cart = JSON.parse(sessionStorage.getItem("cart"));
 
 $(document).ready(function() {  
-  
-    $(window).scroll(function()  
-    {  
-        $('#cart').animate({top:$(window).scrollTop()+"px" },
-        {queue: false, duration: 350});    
+	
+	var cartWidth = $('#cart').innerHeight();
+
+    $(window).scroll(function(){
+    	// #div의 현재 위치
+    	var cartTbl = $("#cart").offset();  	
+    	var tableWidth = cartWidth+cartTbl.top;
+
+    	console.log("테이블 길이~~~",cartWidth);  	
+    	console.log("스크롤 높이~~~",cartWidth+$(window).scrollTop());
+    	
+    	  		
+        $('#cart').animate(    		
+        	{top: $(window).scrollTop()+"px"},{queue: false, duration: 300}
+        );  
+    
+    	//console.log($(window).scrollTop());
     });  
-    
-    
     
     //가게정보숨기기
 	$("#sellerInformation").hide();
@@ -195,16 +229,18 @@ $(document).ready(function() {
 
 //주문표 html 
 function cartHtml(){
-   
-    var sum = 0;
+    
+	console.log("cartHtml 호출");
+    
+	var sum = 0;
     
     //데이터를 테이블에 추가하기
 	var html = "";
 	$('#tbody-cart').html("");
     
-	if(cart != null){		    								
+		if(cart != null){		    								
 		
-		if(cart.length != 0){
+		/* if(cart.length != 0){
 			
 			html += "<tr><th>메뉴</th><th>가격</th><th>수량</th><th></th></tr>";
 			
@@ -227,11 +263,39 @@ function cartHtml(){
 		  		sum += cart[i].menuPrice*cart[i].amount;
 		   	}   
 	    	
-	    	html += "<tr><td>합계</td><td>"+sum+"</td><td></td></tr>"
+	    	html += "<tr><td>합계</td><td colspan ='3'>"+sum+"</td></tr>"; */
 	    	
-		}else{
-			html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
-		}
+	    	if(cart.length != 0){
+	    		html += "<tr><th>메뉴</th><th></th></tr>";
+	    		
+	    		for (var i=0; i<cart.length; i++){	
+	    			//메뉴 이름
+	    			html += "<tr><td colspan = '3'>"+cart[i].menuName+"</td></tr>"; 
+	    			 			    	
+	    			//수량 버튼
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>x</button></td>";
+	    			
+	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ ");"; //증가 버튼
+	    			if(cart[i].amount==9){html += "disabled";} 
+	    			html += ">+</button>";	    			
+	    			html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">"; //카트에 담긴 수량			  		
+	    			html += "<button type='button' class='btn-xs minus-order-num' onclick=InputCartAmount('"+i+"'," +-1 +"); "; //감소 버튼		  		
+			  		if(cart[i].amount==1){html += "disabled";}
+			  		html += ">-</button></td>";
+			  		
+			  		//가격
+	    			html += "<td>"+cart[i].menuPrice*cart[i].amount+"</td>";
+			  		
+			  		html += "</tr>";
+			  		
+			  		sum += cart[i].menuPrice*cart[i].amount;
+	    		}
+	    		
+	    		html += "<tr><td colspan ='2'>합계</td><td>"+sum+"</td></tr>"; 
+	    		
+	    	}else{
+				html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
+			}
 		  	
 	}else{ //cart == null
 		
@@ -241,8 +305,6 @@ function cartHtml(){
 	$('#tbody-cart').html(html);
 	
 }
-
-
 
 //메뉴 수량 증가 감소
 function InputCartAmount(index,num){
@@ -271,34 +333,52 @@ function deleteCartMenu(index){
 //주문 담기 : 카트에 담기 (세션)
 function inputCart(menuCode){
 	
+	console.log("inputCart 호출",menuCode);
+	
 	//menuCode를 이용해서 menu 객체 꺼내기
 	$.ajax({
 		url : "${pageContext.request.contextPath}/menu/selecOneMenu.do",
 		method : "get",
 		data : {menuCode : menuCode},
 		success : function(menu){	
-	
+			
+			console.log("cart = ",cart);
+			console.log("selectMenu = ",menu);
+			
 			//cart 배열에 menu 객체 추가
 			if(cart == null){ //cart 가 이미 storage에 없음 : 첫 객체일 경우 cart 배열을 생성 하고 추가			
 				cart = [];						
 				cart.push(menu);
+				
 			}else{ //cart 가 이미 storage에 있음
 				
-				var cnt = 0;			
+				var cnt = 0;		
+			
 				for (var i=0; i<cart.length; i++){					
-					if(menu.menuCode == cart[i].menuCode){ //검색한 메뉴가 cart 에 담겨있으면 	
-						cnt ++;
-						cart[i].amount = cart[i].amount + 1;
-					}													
+					
+					if(menu.storeNo != cart[i].storeNo){ //새로 추가한 메뉴가 기존의 메뉴와 다른 사업자번호를 가지고 있다면
+						$('#newMenuCode').val(menu.menuCode);
+						$('#checkEmptyCart').modal(); //모달이 실행되고서 아래도 계속실행중임..
+						cnt = 1;
+					}else{						
+						if(menu.menuCode == cart[i].menuCode){ //꺼낸 메뉴가 cart에 이미 담겨있으면 	
+							cnt ++;
+							cart[i].amount = cart[i].amount + 1;
+						}						
+					}	
+											
 				}//end of for (중복찾기)
 				
-					if(cnt == 0){ //중복없음
+				if(cnt == 0){ //중복없음
 					cart.push(menu);
-				}							
-			}			
+				}
+				
+			}//else (cart != null)
+			
 			// 세션 스토리지에 저장
 			sessionStorage.setItem("cart", JSON.stringify(cart));			
-			cartHtml();			
+			cartHtml();
+			console.log("ajax 완료-----------------------------------------------------------------");
 		}, //success : 
 		error : function(){
 			console.log("ajax 에러");
@@ -306,31 +386,29 @@ function inputCart(menuCode){
 	});
 }
 
+function emptyCart(newMenuCode){
 
-<<<<<<< HEAD
+	cart = [];
+	inputCart(newMenuCode);
+	$('#checkEmptyCart').modal('hide');
 
-=======
->>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
+}
+
+
 /* 각 메뉴->카트 확인 모달영역 */
-/* function checkCart(menuName,menuCode,menuPrice){
+function checkOrder(){
 	
-//주문하기 버튼을 누르면 폼 전송 (이름,코드,가격)
-$('#checkCart').on('show.bs.modal', function (event) {
-	$(".modal-body").text(item);
-	
-	$("#goPayment").on("click", function(){
-		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?menuName="
-						+item+"&menuCode="+item2+"&menuPrice="+item3;
-	});	
-	
-});
+	//주문하기 버튼을 누르면 폼 전송 (이름,코드,가격)
+	$('#checkCart').on('show.bs.modal', function (event) {
+		$(".modal-body").text(item);		
+		$("#goPayment").on("click", function(){
+			location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
+		});			
+	});
 
-<<<<<<< HEAD
-} */
+} 
 
 
-=======
->>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
 	$("#clickreview").addClass("active");
@@ -365,9 +443,8 @@ $("#clickInformation").click("on", function(){
 	$("#sellerInformation").show();
 });
 
-function goPayment(){
-	location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
-}
+
+
 </script>
 
 

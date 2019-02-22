@@ -128,10 +128,11 @@
 				
 			</div> 
 </div>
+<script src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
 <script>
 $(document).ready(function(){
 	var IMP = window.IMP; // 생략가능
-	IMP.init('iamport'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
+	IMP.init('imp40675186'); // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
 });
 
 function getLocation(){
@@ -202,15 +203,12 @@ $("#orderEndBtn").on("click",function(){
 		 IMP.request_pay({
 		       pg : 'inicis', // version 1.1.0부터 지원.
 		       pay_method : 'card',
-		       merchant_uid : 'merchant_' + new Date().getTime(),
+		       merchant_uid : 'merchant_' + new Date().getTime(),//주문번호
 		       name : '주문명:결제테스트', //메뉴
 		       amount : 1000, //가격
 		       buyer_email : 'iamport@siot.do', //멤버 전화번호
-		       buyer_name : '구매자이름', //멤버 이름
+		       
 		       buyer_tel : '010-1234-5678', //멤버 전화번호
-		       buyer_addr : '서울특별시 강남구 삼성동', //멤버 주소
-		       buyer_postcode : '123-456', //멤버 우편번호
-		       m_redirect_url : 'https://www.yourdomain.com/payments/complete' //결제가 완료되었을 때 페이지
 		   }, function(rsp) {
 		       if ( rsp.success ) {
 		    	   //컨트롤러단에 보내기
@@ -219,6 +217,8 @@ $("#orderEndBtn").on("click",function(){
 		           msg += '상점 거래ID : ' + rsp.merchant_uid;
 		           msg += '결제 금액 : ' + rsp.paid_amount;
 		           msg += '카드 승인번호 : ' + rsp.apply_num;
+		           
+		           location.href = "${pageContext.request.contextPath}/payment/paymentEnd.do?paymentId="+rsp.imp_uid;
 		       } else {
 		           var msg = '결제에 실패하였습니다.';
 		           msg += '에러내용 : ' + rsp.error_msg;
@@ -226,6 +226,24 @@ $("#orderEndBtn").on("click",function(){
 		       alert(msg);
 		   });
 
+	 } else if(method=='now_naverpay'){
+		    var oPay = Naver.Pay.create({
+		          "mode" : "production", // development or production
+		          "clientId": "u86j4ripEt8LRfPGzQ8" // clientId
+		    });
+
+		    //직접 만드신 네이버페이 결제버튼에 click Event를 할당하세요
+		
+		        oPay.open({
+		          "merchantUserKey": "가맹점 사용자 식별키",
+		          "merchantPayKey": "가맹점 주문 번호",
+		          "productName": "상품명을 입력하세요",
+		          "totalPayAmount": "1000",
+		          "taxScopeAmount": "1000",
+		          "taxExScopeAmount": "0",
+		          "returnUrl": "사용자 결제 완료 후 결제 결과를 받을 URL"
+		        });
+		  
 	 }
 
 });

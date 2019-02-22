@@ -19,6 +19,9 @@ input#btn-add{float:right; margin: 0 0 15px;}
 table#tbl-event tr th{text-align:center;}
 table#tbl-event tr td{text-align:center;}
 table#tbl-event tr td a {text-decoration:none !important;}
+input#btn-add2{float : right;}
+input#btn-add1{float : right;}
+input#btn-add3{float : right;}
 </style>
 <script>
 $(function(){
@@ -28,7 +31,16 @@ $(function(){
 });
 function fn_goEventForm(){
 	location.href = "${pageContext.request.contextPath}/admin/eventForm.do";
-}
+};
+function fn_goEventIng(){
+	location.href = "${pageContext.request.contextPath}/admin/eventList.do?status=ing";
+};
+function fn_goEventEnd(){
+	location.href = "${pageContext.request.contextPath}/admin/eventList.do?status=end";
+};
+function fn_goEventAll(){
+	location.href = "${pageContext.request.contextPath}/admin/eventList.do?status=all";
+};
 </script>
 
 <!-- Page Wrapper -->
@@ -48,7 +60,11 @@ function fn_goEventForm(){
           <!-- Page Heading -->
          <section id="board-container" class="container">
 
-		<input type="button" value="이벤트 등록" id="btn-add" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
+		<input type="button" value="끝난 이벤트" id="btn-add2" class="btn btn-info" onclick="fn_goEventEnd();"/>
+		<input type="button" value="진행중인 이벤트" id="btn-add1" class="btn btn-info" onclick="fn_goEventIng();"/>
+		<input type="button" value="전체 이벤트" id="btn-add3" class="btn btn-info" onclick="fn_goEventAll();"/>
+		<input type="button" value="이벤트 등록" id="btn-add4" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
+		<br /> <br />
 		<table id="tbl-event" class="table table-striped table-hover">
 			<tr>
 				<th>번호</th>
@@ -81,9 +97,10 @@ function fn_goEventForm(){
 		int totalContents = (int)request.getAttribute("totalContents");
 		int numPerPage = (int)request.getAttribute("numPerPage");
 		int cPage = (int)request.getAttribute("cPage");
+		String status = (String)request.getAttribute("status");
 	%>
 	<div>
-	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"eventList.do") %>
+	<%=com.kh.god.common.util.Utils.getPerBar(totalContents,cPage,numPerPage,"eventList.do?status="+status) %>
 	</div>
 		
 	<!-- 페이지바  -->

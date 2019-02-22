@@ -17,13 +17,13 @@
 <style>
 div#head-container {
 	margin: 30px auto;
-	width: 900px;
+	width: 500px;
 	height: 50px;
 }
 
 div#member {
 	margin-left: -40px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -34,7 +34,7 @@ div#member {
 
 div#memberBL {
 	margin-left: -40px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -46,7 +46,7 @@ div#memberBL {
 div#seller {
 	margin-top: -50px;
 	margin-left: 500px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -58,7 +58,7 @@ div#seller {
 div#sellerBL {
 	margin-top: -50px;
 	margin-left: 500px;
-	width: 225px;
+	width: 250px;
 	height: 50px;
 	text-align: center;
 	font-weight: bold;
@@ -104,9 +104,10 @@ function fn_goMemberBL(){
           <div id="head-container">
 					<div id="member" class="alert-light" onclick="fn_goMemberList();">일반회원</div>
 					<div id="memberBL" class="alert-light" onclick="fn_goMemberBL();">일반회원 BL</div>
+					
 					<div id="seller" class="alert-light" onclick="fn_goSellerList();">판매자</div>
 					<div id="sellerBL" class="alert-light" onclick="fn_goSellerBL();">판매자 BL</div>
-				</div>
+		 </div>
 
         </div>
         <!-- /.container-fluid -->

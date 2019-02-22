@@ -12,6 +12,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
@@ -31,14 +32,36 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public List<Map<String, String>> selectEventList(int cPage, int numPerPage) {
+	public List<Map<String, String>> selectEventAllList(int cPage, int numPerPage) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectEventList",null,rowBounds);
+		return sqlSession.selectList("admin.selectEventAllList",null,rowBounds);
 	}
 
 	@Override
-	public int countEventList() {
-		return sqlSession.selectOne("admin.countEventList");
+	public int countEventAllList() {
+		return sqlSession.selectOne("admin.countEventAllList");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectEventIngList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventIngList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventIngList() {
+		return sqlSession.selectOne("admin.countEventIngList");
+	}
+	
+	@Override
+	public List<Map<String, String>> selectEventEndList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventEndList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventEndList() {
+		return sqlSession.selectOne("admin.countEventEndList");
 	}
 
 	@Override
@@ -251,6 +274,40 @@ public class AdminDaoImpl implements AdminDao {
 
 	}
 //	---------------------------------------------------------
+
+	@Override
+	public StoreInfo storePMSView(String storeNo) {
+		return sqlSession.selectOne("admin.storePMSView", storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> storePMSAttaView(String storeNo) {
+		return sqlSession.selectList("admin.storePMSAttaView", storeNo);
+	}
+
+	@Override
+	public int storePMSOk(String storeNo) {
+		return sqlSession.update("admin.storePMSOk", storeNo);
+	}
+
+	@Override
+	public int storeReject(Map<String, String> map) {
+		return sqlSession.update("admin.storePMSReject", map);
+	}
 	
+	@Override
+	public int storePMSClose(String storeNo) {
+		return sqlSession.update("admin.storePMSClose", storeNo);
+	}
+
+	@Override
+	public int storePMSOpen(String storeNo) {
+		return sqlSession.update("admin.storePMSOpen", storeNo);
+	}
+
+	@Override
+	public List<Event> carouselEvent() {
+		return sqlSession.selectList("admin.carouselEvent");
+	}
 
 }

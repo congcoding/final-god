@@ -11,6 +11,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -29,13 +30,33 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Map<String, String>> eventList(int cPage, int numPerPage) {
-		return adminDao.selectEventList(cPage,numPerPage);
+	public List<Map<String, String>> eventAllList(int cPage, int numPerPage) {
+		return adminDao.selectEventAllList(cPage,numPerPage);
 	}
 
 	@Override
-	public int countEventList() {
-		return adminDao.countEventList();
+	public int countEventAllList() {
+		return adminDao.countEventAllList();
+	}
+	
+	@Override
+	public List<Map<String, String>> eventIngList(int cPage, int numPerPage) {
+		return adminDao.selectEventIngList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventIngList() {
+		return adminDao.countEventIngList();
+	}
+	
+	@Override
+	public List<Map<String, String>> eventEndList(int cPage, int numPerPage) {
+		return adminDao.selectEventEndList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventEndList() {
+		return adminDao.countEventEndList();
 	}
 
 	@Override
@@ -237,4 +258,40 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 //	---------------------------------------------------------
+	
+	@Override
+	public StoreInfo storePMSView(String storeNo) {
+		return adminDao.storePMSView(storeNo);
+	}
+
+	@Override
+	public List<Map<String, String>> storePMSAttaView(String storeNo) {
+		return adminDao.storePMSAttaView(storeNo);
+	}
+
+	@Override
+	public int storePMSOk(String storeNo) {
+		return adminDao.storePMSOk(storeNo);
+	}
+	
+	@Override
+	public int storePMSReject(Map<String, String> map) {
+		return adminDao.storeReject(map);
+	}
+
+	@Override
+	public int storePMSClose(String storeNo) {
+		return adminDao.storePMSClose(storeNo);
+	}
+
+	@Override
+	public int storePMSOpen(String storeNo) {
+		return adminDao.storePMSOpen(storeNo);
+	}
+
+	@Override
+	public List<Event> carouselEvent() {
+		return adminDao.carouselEvent();
+	}
+
 }

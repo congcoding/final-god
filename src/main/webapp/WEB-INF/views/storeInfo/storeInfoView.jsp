@@ -118,9 +118,15 @@ span#passworderror3{
     border-radius: 3px;
 }
 .btn-outline-success:hover {
-	 background-color: white; 
+	 background-color: #117a8b; 
      border-color: white;
+     color : white;
 }
+.btn-outline-success{
+     border-color: #117a8b;
+     color : #117a8b;
+}
+
 </style>
 
 <div id="MemberEnroll-container">
@@ -272,7 +278,8 @@ span#passworderror3{
   		</div>		
     	
   		
-				<input type="submit" class="btn btn-outline-success" value="수정"  onclick="return validate2();"/>
+				<input type="submit" class="btn btn-outline-success " value="수정"  onclick="return validate2();"/>
+				<button type="button" class="btn btn-outline-success "  onclick="closed();" >폐업</button>
  </form> 
   		</div>
 	</div>
@@ -393,7 +400,31 @@ function deletefile2(){
 		
 	})
 };
-
+function closed(){
+	var storeNo = $("#brno").val();
+	
+	$.ajax({
+		url : "${pageContext.request.contextPath}/storeinfo/closed.do",
+		data : {storeNo : storeNo},
+		dataType: "json",
+		success : function(data){
+			console.log(data);
+	
+		 if(data.result>0){
+				alert("폐업신고가 정상적으로 처리되었습니다.");
+			}else{
+				alert("폐업신고 실패");
+			}
+		},
+		error : function(){
+			console.log("ajax요청 에러!");
+			
+		}
+		
+	})
+	
+	
+};
 
 
 </script>

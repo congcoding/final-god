@@ -24,6 +24,8 @@ public interface StoreInfoDao {
 
 	int updateStore(StoreInfo s);
 
+	int closedStore(String storeNo);
+
 
 
 }

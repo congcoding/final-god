@@ -19,14 +19,12 @@
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
+
 <!-- 주소api -->
+
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> 
 
-
-
-
 <style>
-
 nav.navbar-light{
 	background : #117a8b;
 }
@@ -331,7 +329,7 @@ span.srchVal{
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
 		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=seller1'">내가게</button> 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
 		  </c:if>
 		</c:if>
 		</div>
@@ -368,6 +366,7 @@ span.srchVal{
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
+	      	<!-- 	<input type="checkbox" name="autoLogin" />  -->
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
 		  </form>
@@ -388,6 +387,13 @@ span.srchVal{
 	}
 	
 	function check(){
+		
+	/*  	if($("#autoLogin :checked")){
+			$("#autoLogin").val("1");
+		}else{
+			$("#autoLogin").val("");
+		}  */
+		
 		var chk = $("[name='login']:checked").val();
 		
 		if(chk == undefined) {

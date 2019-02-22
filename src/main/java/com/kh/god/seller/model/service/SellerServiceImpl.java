@@ -38,8 +38,8 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int updatePwd(String password) {
-		return sellerDao.updatePwd(password);
+	public int updatePwd(Seller s) {
+		return sellerDao.updatePwd(s);
 	}
 
 	@Override
@@ -167,6 +167,21 @@ public class SellerServiceImpl implements SellerService {
 	public int deliveryEnd(int orderNo) {
 		// TODO Auto-generated method stub
 		return sellerDao.deliveryEnd(orderNo);
+	}
+
+	@Override
+	public int cancelOrder(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.cancelOrder(orderNo);
+	} 
+	
+	public int updateMenu(Map<String, Object> map) {
+		return sellerDao.updateMenu(map);
+	}
+
+	@Override
+	public int deleteMenu(String menuCode) {
+		return sellerDao.deleteMenu(menuCode);
 	}
 
 	
