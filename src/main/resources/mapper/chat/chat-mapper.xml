@@ -6,18 +6,34 @@
 	</select>
 	<select id="selectChatLog" resultMap="chatlogmap">
 		select *
-		from(select rownum as rnum, v.* from(select * from chat c left join chatroom c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime desc) v)v
+		from(select rownum as rnum, v.* from(select * from chatroom c left join chat c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime desc) v)v
 		where rnum = 1
 	</select>
 	
 	<select id="selectChattingLogs" resultMap="chat">
-		select * from chat c left join chatroom c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime
+		select * from chatroom c left join chat c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime
 	</select>
+	<!-- 상대방이 읽으면 readFlag를  Y로 바꿔준다. -->
 	<update id="updateReadFlag">
 		update chat set readflag = 'Y' where chatroomno = #{chatRoomNo}
 	</update>
+	<!-- 채팅 로그를 기록한다. -->
 	<insert id="insertChatLog">
 		insert into chat values(seq_chatno.nextval,#{chatRoomNo},#{chatContent},default,#{sendMember},default)
+	</insert>
+	<!-- 채팅하고자하는 사람를 찾는다. -->
+	<select id="searchPerson" resultType="seller">
+		select * from seller where sellerid like '%'||#{searchId}||'%'
+	</select>
+	<!-- 추가하고자하는 사람과 채팅방이 있는지 확인한다. -->
+	<select id="searchChatRoom" resultMap='chatRoom'>
+		select * from chatroom where (sellerid=#{sellerId} or sellerid2=#{sellerId}) and (sellerid=#{sellerId2} or sellerid2=#{sellerId2})
+	</select>
+	<insert id="createChatRoom" parameterType="chatRoom">
+		insert into chatroom values(seq_chatroomno.nextval,#{sellerId},#{sellerId2})
+		<selectKey keyProperty="chatRoomNo" resultType="_int" order="AFTER">
+			select seq_chatroomno.currval from dual
+		</selectKey>
 	</insert>
 	<!-- rnum이 포함되어있는 resultMap -->
 	<resultMap type="map" id="chatlogmap">
@@ -27,6 +43,7 @@
 		<result column="sendtime" property="sendtime" javaType="string"/>
 		<result column="chatroomno_1" property="chatroomno1" javaType="string"/>
 	</resultMap>
+	
 	<!-- rnum이 포함되어있지 않는 resultMap -->
 	<resultMap type="map" id="chat">
 		<result column="chatroomno_1" property="chatroomno1" javaType="string"/>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.kh.god.chat.model.vo.Chat;
 import com.kh.god.chat.model.vo.ChatRoom;
+import com.kh.god.seller.model.vo.Seller;
 
 public interface ChatDao {
 
@@ -15,5 +16,11 @@ public interface ChatDao {
 	List<Map<String,String>> selectChattingLogs(Map<String, String> map);
 
 	int insertChatLog(Chat chat);
+
+	List<Seller> searchPerson(String searchId);
+
+	ChatRoom searchChatRoom(ChatRoom roomId) ;
+
+	int creatChatRoom(ChatRoom roomId);
 
 }

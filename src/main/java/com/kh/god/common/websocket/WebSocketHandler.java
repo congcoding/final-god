@@ -44,7 +44,9 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	public List<WebSocketSession> getSessionList(){
 		return sessionList;
 	}
-	
+	public void setUserList(String loginId,WebSocketSession session) {
+		userSession.put(loginId,session);
+	}
 	//※클라이언트 연결 된 후
 		//WebSocketSession을 매개 변수로 받고 클라이언트가 연결된 후 
 		//해당 클라이언트의 정보를 가져와 연결확인 작업을한다.
