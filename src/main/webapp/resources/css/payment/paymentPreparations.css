@@ -7,14 +7,18 @@
 	border-top: 2px dotted black;
 }
 #totalPriceSpan{
-	    color: red;
+	 color: red;
+}
+#deliveryInformation-container{
+	float: left;
 }
 #cart{
     position: relative;
-    width: 20%;
-    top: -810px;
-    margin-left: 60%;
-   
+    float: right;
+    width: 30%;
+    top: -813px;
+    margin-left: 60%;    
+    margin-right: 50px; 
 }
 .checkOut{
 	background-color: #fff8eb;
@@ -26,10 +30,10 @@
 }
  
 #container #deliveryInformation{ 
-    width:647px;
+    width: 600px;
     height:300px;
     margin:0 auto;
-    margin-left: 25%;
+    margin-left: 5%;
 }
 #orderEndBtn{
 	width:100%;
