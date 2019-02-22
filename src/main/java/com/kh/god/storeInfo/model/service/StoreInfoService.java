@@ -20,4 +20,8 @@ public interface StoreInfoService {
 
 	int deleteFile1(String filename);
 
+	int updateStore(StoreInfo s, List<SAttachment> attachList);
+
+	int closedStore(String storeNo);
+
 }

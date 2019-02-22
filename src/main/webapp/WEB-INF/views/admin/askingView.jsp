@@ -58,9 +58,6 @@ function goAnswer(boardNo,boardRef){
 			<c:if test="${board.boardNo == ref.boardRef}">
 				<div class="answering-container" onclick="goAnswer('${ref.boardNo }','${ref.boardRef }'); " > 답변보러가기 </div>
 			</c:if>
-			<c:if test="${board.boardNo != ref.boardRef}">
-				<div class="answering-container">문의중....</div>
-			</c:if>
 		</c:forEach>
 	</c:if>
 	

@@ -7,6 +7,7 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 public interface AdminService {
@@ -15,9 +16,17 @@ public interface AdminService {
 
 	int countBoardList();
 
-	List<Map<String, String>> eventList(int cPage, int numPerPage);
+	List<Map<String, String>> eventAllList(int cPage, int numPerPage);
 
-	int countEventList();
+	int countEventAllList();
+	
+	List<Map<String, String>> eventIngList(int cPage, int numPerPage);
+
+	int countEventIngList();
+	
+	List<Map<String, String>> eventEndList(int cPage, int numPerPage);
+
+	int countEventEndList();
 
 	int getLastEventNo();
 
@@ -101,5 +110,19 @@ public interface AdminService {
 
 	int countStoreList();
 //	---------------------------------------------------------
+
+	StoreInfo storePMSView(String storeNo);
+
+	List<Map<String, String>> storePMSAttaView(String storeNo);
+
+	int storePMSOk(String storeNo);
+
+	int storePMSClose(String storeNo);
+
+	int storePMSOpen(String storeNo);
+
+	List<Event> carouselEvent();
+
+	int storePMSReject(Map<String, String> map);
 
 }

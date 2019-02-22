@@ -1,6 +1,5 @@
 package com.kh.god.seller.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,8 +20,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.util.Utils;
+import com.kh.god.common.websocket.WebSocketHandler;
+import com.kh.god.member.model.vo.Member;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -33,7 +37,7 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
-	
+	private Map<String,WebSocketSession> memberSession ;
 	Logger logger = Logger.getLogger(getClass());
 	
 	@Autowired
@@ -87,8 +91,15 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password,
+	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 			ModelAndView mav , HttpSession session) {
+
+		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
+		
+
+		memberSession = WebSocketHandler.getInstance().getUserList();
+		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
+
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
@@ -97,26 +108,51 @@ public class SellerController {
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
+
 		
-	     if (s == null) {
+	  
+
+	     boolean loginFlag = true;
+	     
+	     if (s == null || s.getDelFlag().equals("Y")) {
+
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
 	      } else {
+	    	  Set<String> keyValue = memberSession.keySet();
+				logger.debug("keyValue : "+keyValue);
+				Iterator<String> iterator = keyValue.iterator();
+				while(iterator.hasNext()) {
+					String loginId = iterator.next();
+					logger.debug("로그인 되어있는 아이디!"+ loginId);
+					if(s.getSellerId().equals(loginId)) {
+						msg = "이미 로그인한 아이디가 있습니다.";
+						loc="/";
+						loginFlag = false;
+					}
+					
+				}
 	         // 비밀번호 비교
+			if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
+	            session.setAttribute("login",s.getSellerId());
+
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            
 	            session.setAttribute("storeSideBar", store);
+
 	            view = "redirect:/";
 	            
 	         } else {
 	            msg = "비밀번호를 잘못 입력하셨습니다.";
 	            loc = "/";
 	         }
+			}
 	      }
-	      
+	     
 	     mav.addObject("loc", loc);
 	     mav.addObject("msg", msg);
 	     mav.setViewName(view);
@@ -126,11 +162,13 @@ public class SellerController {
 	}
 	
 	@RequestMapping("/seller/sellerLogout.do")
-	public String logout(SessionStatus sessionStatus) {
+	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session) {
+		memberSession = WebSocketHandler.getInstance().getUserList();
 		
+		session.setAttribute("login",null);
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청!"); 
-		
+		WebSocketHandler.getInstance().getUserList().remove(sellerId);
 	      
 	      if(!sessionStatus.isComplete()) {
 	         sessionStatus.setComplete();
@@ -248,15 +286,19 @@ public class SellerController {
 	
 	@RequestMapping(value ="/seller/updatePwd.do" , method = RequestMethod.POST )
 	@ResponseBody
-	public Map<String, Object> updatePwd(@RequestParam("password") String password ) {
+	public Map<String, Object> updatePwd(Seller seller, HttpSession session ) {
 		
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 		
+		String password = seller.getPassword();
 		Map<String, Object> map = new HashMap<>();
 		String temp = password;
 		
 		password = bcryptPasswordEncoder.encode(temp);
+		seller.setSellerId(sellerLoggedIn.getSellerId());
+		seller.setPassword(password);
 		
-		int result = sellerService.updatePwd(password);
+		int result = sellerService.updatePwd(seller);
 		String msg = "";
 		
 		if(result > 0) {
@@ -470,7 +512,13 @@ public class SellerController {
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
 	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
-			@RequestParam String howLongChecked) {
+			@RequestParam String howLongChecked,
+			@RequestParam String memberPhone) {
+		System.out.println(memberPhone);
+		MessageSend ms = new MessageSend();
+		String flag = "receive";
+		ms.main(howLongChecked,memberPhone,flag);
+
 		Map<String,Object> map = new HashMap<>();
 		map.put("orderNo",orderNo);
 		map.put("howLongChecked",howLongChecked);
@@ -480,14 +528,30 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
+	//주문취소
+	@RequestMapping("/seller/cancelOrder.do")
+	@ResponseBody
+	public String cancelOrder(@RequestParam("orderNoForCancel") int orderNo,
+			@RequestParam("reason") String reason,
+			@RequestParam(value="cancelReason", required=false) String cancelReason,
+			@RequestParam("memberPhoneForCancel") String memberPhoneForCancel) {
+		//cancelReason
+		if(reason.equals("기타")) {
+			reason = "기타:" + cancelReason;
+		}
+		MessageSend ms = new MessageSend();
+		String flag = "cancel";
+		ms.main(reason,memberPhoneForCancel,flag);
+
+		int result = sellerService.cancelOrder(orderNo);
+		return "";
+	}
+	
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody
 	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
 			@RequestParam("storeNo") String storeNo) {
-		System.out.println("@@orderNo=>"+orderNo);
-		System.out.println("@@storeNo=>"+storeNo);
-
 		int result = sellerService.deliveryEnd(orderNo);
 		Map<String, Object> map = new HashMap<>();
 		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
@@ -496,6 +560,77 @@ public class SellerController {
 		map.put("orderList2", orderList2);
 
 		return map;
+	}
+	
+
+	@RequestMapping("/seller/updateMenu.do")
+	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
+								   @RequestParam("menuName") String menuName, 
+								   @RequestParam("menuPrice") int menuPrice,
+								   @RequestParam("storeNo") String storeNo,
+								   ModelAndView mav) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateMenu() 요청!");
+		}
+
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★메뉴이름 왔냐? " + menuName);
+		logger.debug("☆★☆★☆★☆★☆★메뉴가격 왔냐? " + menuPrice);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("menuName", menuName);
+		map.put("menuPrice", menuPrice);
+		map.put("storeNo", storeNo);
+
+		int result = sellerService.updateMenu(map);
+
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 수정 성공!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		} else {
+			msg = "메뉴 수정 실패!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.addObject("map", map);
+		mav.setViewName(view);
+
+		return mav;
+
+	}
+	
+	@RequestMapping("/seller/deleteMenu.do")
+	public String deleteMenu(String menuCode, String storeNo) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteMenu() 요청!");
+		}
+		
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+		
+		int result = sellerService.deleteMenu(menuCode);
+		
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 삭제 성공!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		} else {
+			msg = "메뉴 삭제 실패!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		}
+		
+		return loc;
 	}
 
 

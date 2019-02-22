@@ -118,8 +118,20 @@ span#passworderror3{
     border-radius: 3px;
 }
 .btn-outline-success:hover {
-	 background-color: white; 
+	 background-color: #117a8b; 
      border-color: white;
+     color : white;
+}
+.btn-outline-success{
+     border-color: #117a8b;
+     color : #117a8b;
+ 
+}
+#brnocheck{
+	position: relative;
+    top: -31px;
+    left: 49px;
+    display : none;
 }
 </style>
 
@@ -261,7 +273,7 @@ span#passworderror3{
 								</c:if> 
 								</td>
 								<td>${storeInfo.storeName }</td>
-								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}');" value="수정" class="btn btn-outline-success"  style="border-color: lightgray; color: gray;"/>&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" style="border-color: lightgray; color: gray;"/></td>
+								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}');" value="수정" class="btn btn-outline-success"  />&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" /></td>
 							</tr>
 						</c:forEach>
 					</c:if>
@@ -291,8 +303,9 @@ span#passworderror3{
     		<label for="inputSellerId" class="col-sm-3">사업자번호</label>
     		<div>
       			<input type="text" class="form-control" id="brno"  >
+      			<span id="brnocheck">이미 등록된 번호입니다.</span>
     		</div>&nbsp;&nbsp;
-    		<button  class="btn btn-outline-success" id="brno-btn" onclick="brnoChk();" >확인</button>
+    		<button  class="btn btn-outline-success" id="brno-btn" onclick="brnoChk();" style="width : 58; height: 40;" >확인</button>
     		<input type="hidden" id="brnoCheck" value="0"/>
   		</div>	
   		<div id="addStoreNext-container" >
@@ -651,7 +664,46 @@ function brnoChk(){
 };
 
 $("#brno").on("keyup", function(){
-	$(this).val($(this).val().replace(/[^0-9]/g,""));
+	 $(this).val($(this).val().replace(/[^0-9]/g,""));
+	 var brno = $(this).val();
+	
+	  if(brno.length < 10 || brno.length > 11){
+			$("#brnocheck").text("숫자10자리를 입력하세요.");
+			$("#brnocheck").css("color" ,"black");
+			$("#brnocheck").show();
+		}else{ 
+		var a =	brno.substr(0,3);
+		var b =	$("#brno").val().substr(3,2);
+		var c =	brno.substr(5,10);
+		brno = a +"-"+b+"-"+c;
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/storeinfo/brnoCheckDuplicate.do",
+			method : "post",
+			data : {brno : brno},
+			dataType :"json",
+			success : function(data){
+				
+				if(data.result === 1){
+					
+						$("#brnocheck").css("color" ,"green");
+						$("#brnocheck").text(data.msg);
+						$("#brnocheck").show();
+					
+				}else{
+					$("#brnocheck").css("color", "red");
+					$("#brnocheck").text(data.msg);
+					$("#brnocheck").show();
+				}
+		
+			},
+			error : function(){
+				console.log("ajax요청 에러!");
+			}
+		
+	});
+		}
+		
 });
 
 function execDaumPostcode(){	
