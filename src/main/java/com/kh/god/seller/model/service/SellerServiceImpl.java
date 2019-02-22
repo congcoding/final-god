@@ -170,6 +170,11 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+	public int cancelOrder(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.cancelOrder(orderNo);
+	} 
+	
 	public int updateMenu(Map<String, Object> map) {
 		return sellerDao.updateMenu(map);
 	}

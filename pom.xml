@@ -252,6 +252,15 @@
     <artifactId>selenium-java</artifactId>
     <version>3.3.1</version>
 	</dependency>
+
+	
+	<dependency>
+	    <groupId>net.nurigo</groupId>
+	    <artifactId>javaSDK</artifactId>
+	    <version>2.2</version>
+	</dependency>
+             
+
      
        <!-- 웹 소켓 통신을 위한 의존 2개 -->
        <!-- WebSocket -->

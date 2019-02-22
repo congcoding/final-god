@@ -26,6 +26,7 @@ import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -140,6 +141,7 @@ public class SellerController {
 
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            
 	            session.setAttribute("storeSideBar", store);
 
 	            view = "redirect:/";
@@ -510,7 +512,13 @@ public class SellerController {
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
 	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
-			@RequestParam String howLongChecked) {
+			@RequestParam String howLongChecked,
+			@RequestParam String memberPhone) {
+		System.out.println(memberPhone);
+		MessageSend ms = new MessageSend();
+		String flag = "receive";
+		ms.main(howLongChecked,memberPhone,flag);
+
 		Map<String,Object> map = new HashMap<>();
 		map.put("orderNo",orderNo);
 		map.put("howLongChecked",howLongChecked);
@@ -520,14 +528,30 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
+	//주문취소
+	@RequestMapping("/seller/cancelOrder.do")
+	@ResponseBody
+	public String cancelOrder(@RequestParam("orderNoForCancel") int orderNo,
+			@RequestParam("reason") String reason,
+			@RequestParam(value="cancelReason", required=false) String cancelReason,
+			@RequestParam("memberPhoneForCancel") String memberPhoneForCancel) {
+		//cancelReason
+		if(reason.equals("기타")) {
+			reason = "기타:" + cancelReason;
+		}
+		MessageSend ms = new MessageSend();
+		String flag = "cancel";
+		ms.main(reason,memberPhoneForCancel,flag);
+
+		int result = sellerService.cancelOrder(orderNo);
+		return "";
+	}
+	
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody
 	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
 			@RequestParam("storeNo") String storeNo) {
-		System.out.println("@@orderNo=>"+orderNo);
-		System.out.println("@@storeNo=>"+storeNo);
-
 		int result = sellerService.deliveryEnd(orderNo);
 		Map<String, Object> map = new HashMap<>();
 		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
@@ -538,6 +562,7 @@ public class SellerController {
 		return map;
 	}
 	
+
 	@RequestMapping("/seller/updateMenu.do")
 	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
 								   @RequestParam("menuName") String menuName, 

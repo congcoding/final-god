@@ -26,43 +26,49 @@ hr{
     position: relative;
 }
 </style>
-   	
+ 
+
+<div id="category-container">  	
+	
 	<!-- 검색창 -->
     <div id="search-container">
-		   <form class="form-inline my-2 my-lg-0">
-		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
-		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-		   </form>
+	 <form class="form-inline my-2 my-lg-0">
+	   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+	   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+	 </form>
     </div>
 	
 	<!-- 카테고리란 -->
-	<ul class="nav nav-pills nav-fill" id="category-nav">
-	  <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="1" id="chicken">치킨</a>
-	  </li>
-	    <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="2" id="pizza">피자</a>
-	  </li>
-	    <li class="nav-item">
-	    <a class="nav-link"onclick="categoryList(this);" name="3" id="bossam">보쌈/족발</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="4" id="bunsik">분식</a>
-	  </li>
-	    <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="5" id="china">중식</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="6" id="japan">일식</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" onclick="categoryList(this);" name="7" id="korea">한식</a>
-	  </li>
-	</ul>
-	
-	<hr>
+	<div id ="category-nav-container">
+		<ul class="nav nav-pills nav-fill" id="category-nav">
+		  <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="1" id="chicken">치킨</a>
+		  </li>
+		    <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="2" id="pizza">피자</a>
+		  </li>
+		    <li class="nav-item">
+		    <a class="nav-link"onclick="categoryList(this);" name="3" id="bossam">보쌈/족발</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="4" id="bunsik">분식</a>
+		  </li>
+		    <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="5" id="china">중식</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="6" id="japan">일식</a>
+		  </li>
+		  <li class="nav-item">
+		    <a class="nav-link" onclick="categoryList(this);" name="7" id="korea">한식</a>
+		  </li>
+		</ul>		
+		<hr>
+	</div>
 
-	<script>	
+</div>
+
+<script>	
 	function categoryList(item){
 		var categoryNo = $(item).attr("name");
 	    location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoList.do?categoryNo="+categoryNo;
@@ -146,7 +152,6 @@ hr{
 		$("#korea").addClass("active");
 	});
 	
-	</script>
-   <section id="content">
+</script>
 
 
