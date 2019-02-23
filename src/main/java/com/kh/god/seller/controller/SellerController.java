@@ -360,7 +360,7 @@ public class SellerController {
     		@RequestParam(name="personalday" , required = false) String personalday,
     		@RequestParam(name="nowThumb" , required = false) String nowThumb,
     		@RequestParam(name="newThumb" , required = false) String newThumb,
-    		@RequestParam(name="storeNo") String storeNo,
+    		@RequestParam(name="storeNo", required = false) String storeNo,
     		Model model
 	
     		) {
@@ -400,9 +400,9 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	//int updateThumb = sellerService.updateStoreInfo();
-
-    	return "common/msg";
+    	
+//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
+    	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
     

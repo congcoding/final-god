@@ -135,7 +135,11 @@ $(function(){
       </div>
    
  </form>
+ <br>
+ <br>
+
 </div>
+
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script>
 $("#updateAddressBtn").on("click", function(){

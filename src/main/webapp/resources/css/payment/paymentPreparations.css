@@ -11,9 +11,9 @@
 }
 #cart{
     position: relative;
-    width: 20%;
-    top: -810px;
-    margin-left: 60%;
+    width: 36%;
+    top: -853px;
+    left: 62%;
    
 }
 .checkOut{
@@ -26,10 +26,7 @@
 }
  
 #container #deliveryInformation{ 
-    width:647px;
-    height:300px;
-    margin:0 auto;
-    margin-left: 25%;
+    width: 58%;
 }
 #orderEndBtn{
 	width:100%;
