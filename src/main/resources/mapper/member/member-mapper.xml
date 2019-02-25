@@ -30,10 +30,9 @@
 		UPDATE MEMBER SET delflag = 'Y' WHERE memberId = #{memberId}
 	</update>
 	
-	<select id="checkBookMark">
-		select count(*) from bookmark 
-		WHERE memberId = #{memberId} and storeNo = #{storeNo}
-	</select>
-	
+	<select id="checkBookMark" resultType="_int">
+        select count(*) as cnt from bookmark
+        WHERE memberId = #{memberId} and storeNo = #{storeNo}
+    </select>
 	
 </mapper>

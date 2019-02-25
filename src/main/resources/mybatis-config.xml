@@ -48,6 +48,9 @@
 		
 		<typeAlias type="com.kh.god.chat.model.vo.ChatRoom"
 				   alias="chatRoom"/>	
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.Coupon"
+				   alias="coupon" />
 	</typeAliases>
 	
 	
