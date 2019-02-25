@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -606,6 +608,18 @@ public class AdminController {
 		int result = adminService.couponDownload(coupon);
 		
 		return "redirect:/event/eventView.do?eventNo="+eventNo;
+	}
+	
+	@RequestMapping("/admin/timeChart.do")
+	@ResponseBody
+	public Map<String, Object> timeChart(@RequestParam(name="month") String month) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = null;
+		if(month.equals("now")) {
+			list = adminService.timeChart();
+		}
+		map.put("list", list);
+		return map;
 	}
 	
 //	---------------------------------------------------------
