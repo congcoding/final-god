@@ -12,7 +12,7 @@
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/resources/css/seller/MyStoreOrder.css" rel="stylesheet">
@@ -96,8 +96,8 @@ $(function(){
 				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
 				     
 				      <td>
-				      <button type="button" id="orderAcception" onclick="orderNo(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count})" class="btn btn-info" data-toggle="modal" data-target="#receiveModal">주문접수</button>
-				      <button type="button" id="orderCancel" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
+				      <button type="button" id="orderAcception" onclick="orderNo(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count},'${orderList1.PHONE}')" class="btn btn-info" data-toggle="modal" data-target="#receiveModal">주문접수</button>
+				      <button type="button" id="orderCancel" onclick="cancelOrder(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count},'${orderList1.PHONE}','${orderList1.PRICEWAY}','${orderList1.PAYMENTID}');" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
 				      </td> 
 				    </tr>
 				      </c:forEach>
@@ -165,37 +165,35 @@ $(function(){
 				      <th scope="col">요청사항</th>
 				      <th scope="col">결제수단</th>
 				      <th scope="col">총 가격</th>
-				      <th scope="col">주문시간</th>     
-				     <th scope="col"></th>
+				      <th scope="col">배달완료시간</th>     
+				 
 				    </tr>
 				  </thead>
 				  <tbody>
-				   <c:forEach items="${orderList1}" var="orderList1" varStatus="var">
-				    <tr no="${var.count}">
+				    <c:forEach items="${orderList3}" var="orderList3" varStatus="var">
+				    <tr no="${var.count}" class="trOrderList3">
 				    <!--${fn:split('1|2|3|4|5', '|') }  -->
-				      <td class="orderMenu" no="${var.count}">
-				      <c:forEach items="${fn:split(orderList1.NAME,'/')}" var="menu">
+				      <td class="orderMenu">
+				      <c:forEach items="${fn:split(orderList3.NAME,'/')}" var="menu">
 				      ${menu}<br>
 				      </c:forEach>
 				      </td>
-				      <td class="orderAddress">${orderList1.ADDRESS}</td>
-				      <td class="orderPhone">${orderList1.PHONE}</td>
-				      <c:if test="${orderList1.REQUEST eq null}">
-				      <td class="orderRequest">${orderList1.REQUEST}</td>
+				      <td class="orderAddress">${orderList3.ADDRESS}</td>
+				      <td class="orderPhone">${orderList3.PHONE}</td>
+				      <c:if test="${orderList3.REQUEST eq null}">
+				      <td class="orderRequest">${orderList3.REQUEST}</td>
 				      </c:if>
 				      
-				      <c:if test="${orderList1.PRICEWAY=='Y'}">
+				      <c:if test="${orderList3.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <c:if test="${orderList3.REQUEST=='N'}">
 				      <td class="orderWay">만나서결제</td>
 				      </c:if>
 				     
-				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>
-				      <td class="orderPrice">${orderList1.ORDERTIME}</td>
+				      <td class="orderPrice">${orderList3.TOTALPRICE}</td>
+				      <td class="orderPrice">${orderList3.DELIVERYEND}</td>
 				     
-				      <td>
-				      </td> 
 				    </tr>
 				     </c:forEach>
 				  </tbody>
@@ -224,6 +222,7 @@ $(function(){
       		<input type="hidden" id="orderNoForReceive" name="orderNoForReceive">
       		<input type="hidden" id="howLongChecked" name="howLongChecked">
       		<input type="hidden" id="ForHide" name="ForHide">
+      		<input type="hidden" id="memberPhone" name="memberPhone">
       		
 			<button type="button" name="howLong" class="btn btn-info howLong" value="10분~30분">10분~30분</button>
 			<button type="button" name="howLong" class="btn btn-info howLong" value="30분~50분">30분~50분</button>
@@ -250,40 +249,57 @@ $(function(){
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="cancelFrm">
           <div class="form-group">
-          
-            <input type='radio' name='reason' value='주문량이 너무 많아서' class="btnReason"/>주문량이 너무 많아서
+            <input type="hidden" id="orderNoForCancel" name="orderNoForCancel">
+      		<!-- <input type="hidden" id="reason" name="howLongChecked"> -->
+      		<input type="hidden" id="ForHideCancel" name="ForHideCancel">
+      		<input type="hidden" id="memberPhoneForCancel" name="memberPhoneForCancel">
+     
+      		<!-- 결제여부 -->
+      		<input type="hidden" id="priceWay" name="priceWay">
+      		<!-- 페이먼트아이디 => 결제취소를 위해 -->
+      		<input type="hidden" id="paymentId" name="paymentId">
+      		
+      		
+            <input type='radio' name='reason' value='주문량이 너무 많습니다' class="btnReason"/>주문량이 너무 많아서
             <br>
             <br>
-            <input type='radio' name='reason' value='배달소요시간이 오래 걸릴 거같아서' class="btnReason"/>배달소요시간이 오래 걸릴 거같아서
+            <input type='radio' name='reason' value='배달소요시간이 오래 걸릴 거같습니다' class="btnReason"/>배달소요시간이 오래 걸릴 거같아서
             <br>
             <br>
-            <input type='radio' name='reason' value='해당메뉴품절' class="btnReason"/>해당메뉴품절
+            <input type='radio' name='reason' value='해당메뉴는 품절입니다' class="btnReason"/>해당메뉴품절
             <br>
             <br>
             <input type='radio' name='reason' value='기타' id="etc"/>기타
             <br>
             <label for="message-text" class="form-control-label">배달취소사유:</label>
-            <textarea class="form-control" id="cancelReason" readonly></textarea>
+            <textarea class="form-control" id="cancelReason" name="cancelReason" readonly></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary">주문취소</button>
+        <button type="button" class="btn btn-primary" id="cancelBtn" onclick="backMoney();">주문취소</button>
       </div>
     </div>
   </div>
 </div>
+<script
+src="https://code.jquery.com/jquery-3.3.1.min.js"
+integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+crossorigin="anonymous">
+
+
+</script>
 <script>
+
 $("#etc").on("click", function(){
 	$("#cancelReason").prop('readonly', false);
 });
 $(".btnReason").on("click", function(){
 	$("#cancelReason").prop('readonly', true);
 });
-//
 
 //선택된 배달소요시간 보내기
 $("[name=howLong]").on("click", function(){
@@ -291,14 +307,32 @@ $("[name=howLong]").on("click", function(){
 	console.log($(this).val());
 })
 //주문접수,모달로 orderno 보내기
-function orderNo(item,item2,item3){
-	
+function orderNo(item,item2,item3,item4){	
 	console.log(item);
 	console.log(item2);
 	console.log(item3);
+	console.log(item4);
+
 	$("#ForHide").val(item3);
 	$("#orderNoForReceive").val(item);
+	$("#memberPhone").val(item4);
+	$("")
 }
+
+//주문취소
+$("#cancelBtn").on("click", function(){
+	var formData = $("#cancelFrm").serialize();
+	var no = $("input[name=ForHideCancel]").val();
+	var priceWay = $("#priceWay").val();
+	var paymentId = $("#paymentId").val();
+	console.log("주문취소버튼트림전->",paymentId);
+
+	paymentId = paymentId.trim();
+	console.log("주문취소버튼트림후->",paymentId);
+	
+/* https://api.iamport.kr/payments/cancel?_token=05227ed48c9631371a058008d8ccc76efc61c07f */
+});
+
 //주문접수 
 $("#receiveBtn").on("click", function(){
 	var no = $("input[name=ForHide]").val();
@@ -318,6 +352,40 @@ $("#receiveBtn").on("click", function(){
 		}
 	}); 
 });
+function cancelOrder(item,item2,item3,item4,item5,item6){
+/*     <input type="hidden" id="orderNoForCancel" name="orderNoForCancel">
+		<!-- <input type="hidden" id="reason" name="howLongChecked"> -->
+		<input type="hidden" id="ForHideCancel" name="ForHideCancel">
+		<input type="hidden" id="memberPhoneForCancel" name="memberPhoneForCancel"> */
+	console.log(item5);
+	console.log(item6);
+
+	$("#orderNoForCancel").val(item);
+	$("#ForHideCancel").val(item3);
+	$("#memberPhoneForCancel").val(item4);
+	$("#priceWay").val(item5);
+	$("#paymentId").val(item6);
+
+
+}
+
+
+/* */
+	
+	
+/* 	$.ajax({
+		url : "${pageContext.request.contextPath}/seller/cancelOrder.do",
+		data:formData,
+		success : function(data){
+			$(".trOrderList1[no="+no+"]").hide('1000'); 
+			$('#receiveModal').modal('hide')
+			console.log("에이젝스성공");		
+		},
+		error:function(){
+			console.log("ajax오류");
+		}
+	}); */
+/* }); */
 //배달완료 버튼 눌렀을 시
  function deliveryEnd(item, item2,item3){
 	console.log(item);
@@ -336,6 +404,9 @@ $("#receiveBtn").on("click", function(){
 		}
 	});  
 } 
+
+
+
 </script>
         </div>
         <!-- /.container-fluid -->

@@ -230,7 +230,7 @@
 	</update>
 	
 	<update id="storePMSReject">
-		update storeInfo set pmsflag='R' where storeNo=#{storeNo}
+		update storeInfo set pmsflag='R', rejectInfo=#{rejectInfo} where storeNo=#{storeNo}
 	</update>
 	
 	<update id="storePMSClose">

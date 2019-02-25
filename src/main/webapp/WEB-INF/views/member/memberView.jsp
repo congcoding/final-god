@@ -11,7 +11,7 @@
 
 <style>
 div#MemberView-container{
-    margin: 150px auto 0;
+    margin: 150px auto;
 	width : 800px;
 	text-align : center;
 }
@@ -200,7 +200,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<hr />
 		
 		<input type="submit" class="btn btn-outline-success" value="수정하기" >
-	
+		<input type="button" class="btn btn-outline-success" value="탈퇴하기" onclick= "memberDelete();" >
 	</form>
 	
 </div>
@@ -220,12 +220,8 @@ function validate(){
  	/*핸드폰 번호 처리*/
 	$("input[name=phone]").val($('#phone1').val()+"-"+$('#phone2').val()+"-"+$('#phone3').val());
   	
-
 	return true;
 }
-
-
-
 
 $(function(){
 	//프로필사진
@@ -332,6 +328,16 @@ function execDaumPostcode(){
    	    popupName: 'postcodePopup' //팝업 이름을 설정(영문,한글,숫자 모두 가능, 영문 추천)
    	});
   
+}
+
+
+function memberDelete(){
+	var bool = confirm("정말 탈퇴하시겠습니까?");
+	if(bool){
+		location.href="${pageContext.request.contextPath}/member/memberDelete.do?memberId=${m.memberId}";
+	}
+	
+	
 }
 
 </script>

@@ -69,8 +69,11 @@ public interface SellerDao {
 
 	int deliveryEnd(int orderNo);
 
+	int cancelOrder(int orderNo);
+
 	int updateMenu(Map<String, Object> map);
 
 	int deleteMenu(String menuCode);
+
 
 }

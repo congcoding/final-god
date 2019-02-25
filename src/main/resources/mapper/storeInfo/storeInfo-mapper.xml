@@ -89,11 +89,11 @@
    </update>
 
    <select id="orderList1" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N'
+		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N' and cancelFlag='N'
    </select>
    
     <select id="orderList2" resultType="map">
@@ -105,7 +105,7 @@
     </select>
     
     <select id="orderList3" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.deliveryend,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
@@ -164,6 +164,10 @@
 		update sattachment set status = 'Y' where originalfilename = #{filename}
 	</update>
 	
+	<select id="cancelOrder">
+	    update orderinfo set cancelFlag='Y' where orderno=#{orderNo}
+	</select>
+
 	<update id="updateStore" >
 		update storeinfo set storeTel = #{storeTel} , storename=#{storeName} ,storeAddress = #{storeAddress} , categoryNo = #{categoryNo} , storeintro = #{storeIntro} , personalday = #{personalDay} , operatinghours = #{operatingHours}  , deliveryMinPrice =#{deliveryMinPrice} where storeNo = #{storeNo}
 	</update>

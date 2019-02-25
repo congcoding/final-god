@@ -11,38 +11,40 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.seller.model.vo.Seller;
 
 /**
- * 로그인하지 않고, 
- * /member/memberView.do?memberId=gr1234 
- * /member/memberUpdate.do 
- * 등을 요청시 로그인 여부를 검사하고,
- * 로그인 하지 않았다면, common/msg.jsp 에서 경고메세지 출력 
+ * 로그인하지 않고, /member/memberView.do?memberId=gr1234 /member/memberUpdate.do 등을
+ * 요청시 로그인 여부를 검사하고, 로그인 하지 않았다면, common/msg.jsp 에서 경고메세지 출력
  */
 public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 
 	Logger logger = Logger.getLogger(getClass());
-	
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		
-		HttpSession session = request.getSession();
-		Member memberLoggedIn = (Member)session.getAttribute("memberLoggedIn");
-		
-//		if(memberLoggedIn == null) {
-//			request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
-//			request.setAttribute("loc", "/");
-//			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
-//			return false;
-//		}
-		
-		if(memberLoggedIn == null) {
-			Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-			
-		}
-		
-		return super.preHandle(request, response, handler); //이 값은 항상 트루
-	}
-	
 
-	
+		// 주소랑 로그인한 사람이 다를때
+		String memberId = request.getParameter("memberId");
+		HttpSession session = request.getSession();
+		Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
+
+		/*
+		 * if(memberLoggedIn == null || !memberId.equals(memberLoggedIn.getMemberId()))
+		 * { request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
+		 * request.setAttribute("loc", "/");
+		 * request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(
+		 * request, response);
+		 * 
+		 * Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		 * 
+		 * return false; }
+		 */
+
+		
+		 if(memberLoggedIn == null) { Seller sellerLoggedIn =
+		 (Seller)session.getAttribute("sellerLoggedIn"); }
+		 
+
+		return super.preHandle(request, response, handler); // 이 값은 항상 트루
+	}
+
 }

@@ -279,6 +279,11 @@ public class AdminServiceImpl implements AdminService {
 	public int storePMSOk(String storeNo) {
 		return adminDao.storePMSOk(storeNo);
 	}
+	
+	@Override
+	public int storePMSReject(Map<String, String> map) {
+		return adminDao.storeReject(map);
+	}
 
 	@Override
 	public int storePMSClose(String storeNo) {
@@ -294,6 +299,5 @@ public class AdminServiceImpl implements AdminService {
 	public List<Event> carouselEvent() {
 		return adminDao.carouselEvent();
 	}
-
 
 }

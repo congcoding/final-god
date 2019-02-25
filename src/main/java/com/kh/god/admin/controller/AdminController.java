@@ -694,9 +694,24 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/storePMSReject")
-	public String storePMSX(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="rejectInfo") String rejectInfo) {
-		System.out.println(storeNo+"@@@@"+rejectInfo);
-		return "admin/storePMSList";
+	public ModelAndView storePMSX(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="rejectInfo") String rejectInfo, ModelAndView mav) {
+		Map<String,String> map = new HashMap<>();
+		map.put("storeNo", storeNo);
+		map.put("rejectInfo", rejectInfo);
+		int result = adminService.storePMSReject(map);
+		
+		String msg = "";
+		if(result>0) {
+			msg="가게 신청 거절 완료";
+		}else {
+			msg = "가게 신청 거절 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/storePMSList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
 	}
 	
 	@RequestMapping("/admin/storePMSClose")

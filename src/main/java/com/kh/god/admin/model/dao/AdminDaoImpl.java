@@ -298,6 +298,11 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
+	public int storeReject(Map<String, String> map) {
+		return sqlSession.update("admin.storePMSReject", map);
+	}
+	
+	@Override
 	public int storePMSClose(String storeNo) {
 		return sqlSession.update("admin.storePMSClose", storeNo);
 	}

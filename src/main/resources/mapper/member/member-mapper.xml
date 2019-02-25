@@ -26,4 +26,14 @@
 		WHERE memberId = #{memberId}
 	</update>
 	
+	<update id="deleteMember">
+		UPDATE MEMBER SET delflag = 'Y' WHERE memberId = #{memberId}
+	</update>
+	
+	<select id="checkBookMark">
+		select count(*) from bookmark 
+		WHERE memberId = #{memberId} and storeNo = #{storeNo}
+	</select>
+	
+	
 </mapper>

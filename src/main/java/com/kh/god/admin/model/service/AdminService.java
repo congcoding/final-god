@@ -126,5 +126,6 @@ public interface AdminService {
 
 	int couponDownload(Coupon coupon);
 
+	int storePMSReject(Map<String, String> map);
 
 }
