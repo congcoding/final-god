@@ -529,25 +529,7 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
-	//주문취소
-	@RequestMapping("/seller/cancelOrder.do")
-	@ResponseBody
-	public String cancelOrder(@RequestParam("orderNoForCancel") int orderNo,
-			@RequestParam("reason") String reason,
-			@RequestParam(value="cancelReason", required=false) String cancelReason,
-			@RequestParam("memberPhoneForCancel") String memberPhoneForCancel) {
-		//cancelReason
-		if(reason.equals("기타")) {
-			reason = "기타:" + cancelReason;
-		}
-		MessageSend ms = new MessageSend();
-		String flag = "cancel";
-		ms.main(reason,memberPhoneForCancel,flag);
 
-		int result = sellerService.cancelOrder(orderNo);
-		return "";
-	}
-	
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody

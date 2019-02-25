@@ -113,7 +113,7 @@
    </select>
    
    <update id="receiveOrder">
-       update orderinfo set receiveFlag='Y',deliverytime=#{howLongChecked} where orderno=#{orderNo}
+       update orderinfo set receiveFlag='Y' where orderno=#{orderNo}
    </update>
 
 	<select id="adSelectAll" resultType="ad">

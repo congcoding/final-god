@@ -12,7 +12,9 @@
 
 <div id="container">
 	<div id="deliveryInformation-container">
-		<form>
+		<form name=deliveryFrm action="${pageContext.request.contextPath}/payment/paymentEnd.do">
+		<input type="hidden" name="storeNo" id="storeNo" value="${storeNo}">
+		<input type="hidden" name="paymentId" id="paymentId">
 			<table class="table" id="deliveryInformation">
 			  <thead class="thead-light">
 			    <tr><th scope="col">배달정보</th></tr>
@@ -30,7 +32,7 @@
 				    <label for="inputEmail3" class="col-sm-2 col-form-label">전화번호</label>
 						<div class="col-sm-10">
 			  			<input type="tel" class="form-control" id="tel" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
-			  			 <span id="telWarning">휴대전화번호는 숫자만 입력해주세요.</span>
+			  			 <span id="telWarning">휴대전화번호는 숫자만 입력해주세요.</span> 
 				    </div>
 				  </td>
 			    </tr>
@@ -45,7 +47,7 @@
 			    <tr>
 			      <td>
 						<div class="col-sm-10">
-			  				<input type="text" class="form-control" id="inputEmail3" placeholder="주문시 요청사항이 있다면 남겨주세요.">
+			  				<input type="text" class="form-control" name="request" id="request" placeholder="주문시 요청사항이 있다면 남겨주세요.">
 				  	</div>
 				  </td>
 			    </tr>
@@ -71,8 +73,6 @@
 					      	웹에서 결제
 					      	<br>
 					      	  <button type="button" class="btn btn-outline-info method" value="now_card" name="method">신용카드</button>&nbsp;
-					    	  <button type="button" class="btn btn-outline-info method" value="now_naverpay" name="method">네이버페이</button>&nbsp;
-					    	  <button type="button" class="btn btn-outline-info method" value="now_kakao" name="method">카카오페이</button> 	  
 					    </div>
 				   </td>
 			    </tr>
@@ -113,6 +113,11 @@
 		<button type="button" class="btn btn-info" id="orderEndBtn">주문완료</button>
 	</div> <!-- div#cart -->
 	
+	<!-- 결제후 폼제출 -->
+	<from name="paymentEndFrm">
+	
+	</from>
+	
 </div> <!-- div#container -->
 
 <script src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
@@ -127,9 +132,9 @@ $(document).ready(function(){
 	//cartTable 채우기
 	var html = "";
 	var sum = 0;
+	html += "<tr><td colspan = '2'>${storeName}</td></tr>";
 	for (var i=0; i<cart.length; i++){
 	 	<!-- 주문메뉴 -->
-	 	html += "<tr><td colspan = '2'>${storeName}</td></tr>";
 	    html += "<tr class= 'checkOut'><td>"+cart[i].menuName+"</td><td>"+cart[i].amount+"개</td></tr>";	    
 	    sum += cart[i].menuPrice*cart[i].amount;
 	}
@@ -203,14 +208,22 @@ $("#address").keyup(function() {
 });
 
 $("#orderEndBtn").on("click",function(){
+
+	var sum=0;
+	for (var i=0; i<cart.length; i++){
+	 	<!-- 주문메뉴 -->
+	    sum += cart[i].menuPrice*cart[i].amount;
+	}
+	
+	//11자
 	 var method = $("input[name=methodForController]").val();
 	 if(method=='now_card'){
 		 IMP.request_pay({
 		       pg : 'inicis', // version 1.1.0부터 지원.
 		       pay_method : 'card',
 		       merchant_uid : 'merchant_' + new Date().getTime(),//주문번호
-		       name : '주문명:결제테스트', //메뉴
-		       amount : 1000, //가격
+		       name : '${storeName}', //메뉴
+		       amount : sum, //가격
 		       buyer_email : 'iamport@siot.do', //멤버 전화번호
 		       
 		       buyer_tel : '010-1234-5678', //멤버 전화번호
@@ -222,8 +235,9 @@ $("#orderEndBtn").on("click",function(){
 		           msg += '상점 거래ID : ' + rsp.merchant_uid;
 		           msg += '결제 금액 : ' + rsp.paid_amount;
 		           msg += '카드 승인번호 : ' + rsp.apply_num;
-		           
-		           location.href = "${pageContext.request.contextPath}/payment/paymentEnd.do?paymentId="+rsp.imp_uid;
+		           $("#paymentId").val(rsp.imp_uid);
+		           $("[name=deliveryFrm]").submit();
+		           console.log("결제ajax완료");
 		       } else {
 		           var msg = '결제에 실패하였습니다.';
 		           msg += '에러내용 : ' + rsp.error_msg;
@@ -231,24 +245,12 @@ $("#orderEndBtn").on("click",function(){
 		       alert(msg);
 		   });
 
-	 } else if(method=='now_naverpay'){
-		    var oPay = Naver.Pay.create({
-		          "mode" : "production", // development or production
-		          "clientId": "u86j4ripEt8LRfPGzQ8" // clientId
-		    });
-
-		    //직접 만드신 네이버페이 결제버튼에 click Event를 할당하세요
-		
-		        oPay.open({
-		          "merchantUserKey": "가맹점 사용자 식별키",
-		          "merchantPayKey": "가맹점 주문 번호",
-		          "productName": "상품명을 입력하세요",
-		          "totalPayAmount": "1000",
-		          "taxScopeAmount": "1000",
-		          "taxExScopeAmount": "0",
-		          "returnUrl": "사용자 결제 완료 후 결제 결과를 받을 URL"
-		        });
-		  
+	 } else if(method=="later_cash"||method=="later_card"){
+		 $("[name=deliveryFrm]").submit();
+         console.log("나중에 결제 폼 전송");
+	 } else {
+		 alert("결제수단을 선택해주세요.");
+		 return;
 	 }
 
 });
