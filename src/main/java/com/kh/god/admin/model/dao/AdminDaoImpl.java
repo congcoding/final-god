@@ -323,5 +323,8 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectList("admin.carouselEvent");
 	}
 
-
+	@Override
+	public List<Integer> chartByCategory() {
+		return sqlSession.selectList("admin.chartByCategory");
+	}
 }

@@ -129,4 +129,6 @@ public interface AdminDao {
 
 	int couponDownload(Coupon coupon);
 
+	List<Integer> chartByCategory();
+
 }

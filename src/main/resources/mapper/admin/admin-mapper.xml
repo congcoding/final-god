@@ -249,5 +249,13 @@
 		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
 	</select>
 	
+	<select id="chartByCategory" resultType="_int">
+		select sum(O.totalPrice) totalPrice
+		from orderInfo O, storeInfo S
+		where O.storeNo = S.storeNo
+		group by categoryNo
+		order by categoryNo
+	</select>
+	
 </mapper>
 
