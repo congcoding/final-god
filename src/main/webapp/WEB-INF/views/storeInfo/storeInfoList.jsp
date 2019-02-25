@@ -49,7 +49,16 @@ $(document).ready(function(){
 	<!-- 전체 게시글 출력 -->
 	<div class="row">
 			<c:forEach items="${list }" var="list" varStatus="status">
-				<div class="card" style="width: 20rem;">
+			
+				<c:if test="${list.storeGrade eq 'A'}">
+					<div class="card" style="width: 20rem; border : 1px solid #e9fbfa; background-color:#e9fbfa;" >
+				</c:if>
+				<c:if test="${list.storeGrade eq 'B'}">
+					<div class="card" style="width: 20rem; border:1px solid #26d9d0;">
+				</c:if>
+				<c:if test="${list.storeGrade eq 'C'}">
+					<div class="card" style="width: 20rem;"  style="border:red;">
+				</c:if>
 					<img class="card-img-top" src="" alt="StoreInfo Thumbnail">
 					<div class="card-body">
 						<h5 class="card-title" style="font-weight: bold;">
@@ -59,19 +68,45 @@ $(document).ready(function(){
 							<c:out value="${list.storeIntro }" />
 						</p>
 					</div>
-					<ul class="list-group list-group-flush">
-						<li id="storeNo"><c:out value="${list.storeNo }"></c:out></li>
-						<li class="list-group-item"><strong>영업시간 </strong> <c:out
+					
+						<ul class="list-group list-group-flush">
+					
+					<c:if test="${list.storeGrade eq 'A'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>영업시간 </strong> <c:out
 								value="${list.operatingHours }" /></li>
-						<li class="list-group-item"><strong>전화번호 </strong> <c:out
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>전화번호 </strong> <c:out
 								value="${list.storeTel }" /></li>
-						<li class="list-group-item"><strong>배달최소금액 </strong> <c:out
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>배달최소금액 </strong> <c:out
 								value="${list.deliveryMinPrice }" /></li>
-					</ul>
+					</c:if>
+					
+					<c:if test="${list.storeGrade eq 'B'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>영업시간 </strong> <c:out
+								value="${list.operatingHours }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>전화번호 </strong> <c:out
+								value="${list.storeTel }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>배달최소금액 </strong> <c:out
+								value="${list.deliveryMinPrice }" /></li>
+					</c:if>
+					
+					<c:if test="${list.storeGrade eq 'C'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" ><strong>영업시간 </strong> <c:out
+								value="${list.operatingHours }" /></li>
+						<li class="list-group-item" ><strong>전화번호 </strong> <c:out
+								value="${list.storeTel }" /></li>
+						<li class="list-group-item" ><strong>배달최소금액 </strong> <c:out
+								value="${list.deliveryMinPrice }" /></li>
+					</c:if>
+						</ul>
 					<div class="card-body">
 						<a class="btn btn-primary" href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${list.storeNo }">주문하기</a>
 					</div>
 				</div>
+		
+				
 			</c:forEach>
 	</div>
 

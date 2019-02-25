@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
@@ -273,6 +274,12 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectOne("admin.countStoreList");
 
 	}
+	
+	@Override
+	public int couponDownload(Coupon coupon) {
+		return sqlSession.insert("admin.couponDownload",coupon);
+	}
+	
 //	---------------------------------------------------------
 
 	@Override
@@ -309,5 +316,12 @@ public class AdminDaoImpl implements AdminDao {
 	public List<Event> carouselEvent() {
 		return sqlSession.selectList("admin.carouselEvent");
 	}
+
+	@Override
+	public Event selectOneEvent(int eventNo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

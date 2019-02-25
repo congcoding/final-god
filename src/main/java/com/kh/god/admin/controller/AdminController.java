@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
@@ -591,6 +592,20 @@ public class AdminController {
 		model.addAttribute("list",list);
 		
 		return "/admin/storeList";
+	}
+	
+	@RequestMapping("/admin/coupon.do")
+	public String couponDown(@RequestParam(name="memberId") String memberId, @RequestParam(name="eventNo") int eventNo,Model model) {
+		
+		Event event = adminService.eventView(eventNo);
+		Coupon coupon = new Coupon();
+		coupon.setEventNo(event.getEventNo());
+		coupon.setMemberId(memberId);
+		coupon.setStartDate(coupon.getStartDate());
+		coupon.setEndDate(coupon.getEndDate());
+		int result = adminService.couponDownload(coupon);
+		
+		return "redirect:/event/eventView.do?eventNo="+eventNo;
 	}
 	
 //	---------------------------------------------------------

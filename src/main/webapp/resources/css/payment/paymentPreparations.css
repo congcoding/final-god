@@ -14,6 +14,10 @@
 }
 #cart{
     position: relative;
+
+    width: 36%;
+    top: -853px;
+    left: 62%;
     float: right;
     width: 30%;
     top: -813px;
@@ -30,6 +34,7 @@
 }
  
 #container #deliveryInformation{ 
+    width: 58%;
     width: 600px;
     height:300px;
     margin:0 auto;

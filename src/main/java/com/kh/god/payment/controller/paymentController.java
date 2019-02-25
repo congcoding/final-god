@@ -28,6 +28,7 @@ public class paymentController {
 	//결제완료시
 	@RequestMapping("/payment/paymentEnd.do")
 	public String paymentEnd(@RequestParam("paymentId") String paymentId) {
+		System.out.println("@@@페이먼트아이디"+paymentId);		
 		//int putPaymentId = paymentService.putPaymentId(paymentId);
 		return "redirect:/";
 	}

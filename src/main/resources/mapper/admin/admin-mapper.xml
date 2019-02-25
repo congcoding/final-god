@@ -212,6 +212,10 @@
 		select count(*) from storeInfo
 	</select>
 
+	<insert id="couponDownload" parameterType="coupon">
+		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
+	</insert>
+
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}

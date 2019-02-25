@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
@@ -122,6 +123,8 @@ public interface AdminService {
 	int storePMSOpen(String storeNo);
 
 	List<Event> carouselEvent();
+
+	int couponDownload(Coupon coupon);
 
 	int storePMSReject(Map<String, String> map);
 
