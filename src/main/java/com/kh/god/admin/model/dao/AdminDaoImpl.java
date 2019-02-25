@@ -318,9 +318,8 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public Event selectOneEvent(int eventNo) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Integer> chartByCategory() {
+		return sqlSession.selectList("admin.chartByCategory");
 	}
 
 

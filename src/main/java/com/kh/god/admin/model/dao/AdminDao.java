@@ -124,8 +124,8 @@ public interface AdminDao {
 
 	List<Event> carouselEvent();
 
-	Event selectOneEvent(int eventNo);
-
 	int couponDownload(Coupon coupon);
+
+	List<Integer> chartByCategory();
 
 }

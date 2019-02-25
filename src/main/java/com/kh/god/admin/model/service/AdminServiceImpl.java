@@ -300,4 +300,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.carouselEvent();
 	}
 
+	@Override
+	public List<Integer> chartByCategory() {
+		return adminDao.chartByCategory();
+	}
+
 }

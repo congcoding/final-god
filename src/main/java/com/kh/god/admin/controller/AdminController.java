@@ -758,5 +758,13 @@ public class AdminController {
 		map.put("carouselEvent", eventList);
 		return map;
 	}
+	
+	@RequestMapping("admin/chart.do")
+	public Model chart(Model model) {
+		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("admin/chart");
+		return model;
+	}
 
 }
