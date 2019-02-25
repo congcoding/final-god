@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kh.god.admin.model.dao.AdminDao;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.seller.model.vo.Seller;
@@ -256,6 +257,11 @@ public class AdminServiceImpl implements AdminService {
 	public int countStoreList() {
 		return adminDao.countStoreList();
 	}
+	
+	@Override
+	public int couponDownload(Coupon coupon) {
+		return adminDao.couponDownload(coupon);
+	}
 
 //	---------------------------------------------------------
 	
@@ -286,7 +292,8 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public List<Event> carouselEvent() {
-		// TODO Auto-generated method stub
 		return adminDao.carouselEvent();
 	}
+
+
 }

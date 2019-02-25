@@ -139,7 +139,13 @@
 	</select>
 
 	<insert id="adRequest" parameterType="ad">
-		 <![CDATA[ insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1))]]>
+	{call
+		declare
+		begin
+		update storeinfo set storegrade=#{storeGrade} where storeNo = #{storeNo};
+		insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1));
+		end
+	}
 	</insert>
 
 	<update id="deliveryEnd">
