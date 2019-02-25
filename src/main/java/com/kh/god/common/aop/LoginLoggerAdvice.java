@@ -27,8 +27,7 @@ public class LoginLoggerAdvice {
 
 		if(map.containsKey("memberLoggedIn")) {
 			Member m = (Member) map.get("memberLoggedIn");			
-			logger.info("["+m.getMemberId()+"] 로그인");
-			
+			logger.info("["+m.getMemberId()+"] 로그인");			
 		}
 	}
 	
@@ -41,8 +40,6 @@ public class LoginLoggerAdvice {
 			//있다면
 			Seller s = (Seller)map.get("sellerLoggedIn");
 			logger.info("["+s.getSellerId()+"]이 로그인함.");
-			
-			
 		}
 	}
 	

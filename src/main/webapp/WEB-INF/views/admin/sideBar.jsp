@@ -44,7 +44,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item" id="chart">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="${pageContext.request.contextPath}/admin/chart.do">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>통계</span></a>
       </li>

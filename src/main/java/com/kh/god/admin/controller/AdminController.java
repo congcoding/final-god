@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +29,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -593,6 +596,32 @@ public class AdminController {
 		return "/admin/storeList";
 	}
 	
+	@RequestMapping("/admin/coupon.do")
+	public String couponDown(@RequestParam(name="memberId") String memberId, @RequestParam(name="eventNo") int eventNo,Model model) {
+		
+		Event event = adminService.eventView(eventNo);
+		Coupon coupon = new Coupon();
+		coupon.setEventNo(event.getEventNo());
+		coupon.setMemberId(memberId);
+		coupon.setStartDate(coupon.getStartDate());
+		coupon.setEndDate(coupon.getEndDate());
+		int result = adminService.couponDownload(coupon);
+		
+		return "redirect:/event/eventView.do?eventNo="+eventNo;
+	}
+	
+	@RequestMapping("/admin/timeChart.do")
+	@ResponseBody
+	public Map<String, Object> timeChart(@RequestParam(name="month") String month) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = null;
+		if(month.equals("now")) {
+			list = adminService.timeChart();
+		}
+		map.put("list", list);
+		return map;
+	}
+	
 //	---------------------------------------------------------
 	
 	@RequestMapping("/admin/storePMSView.do")
@@ -742,6 +771,14 @@ public class AdminController {
 		List<Event> eventList = adminService.carouselEvent();
 		map.put("carouselEvent", eventList);
 		return map;
+	}
+	
+	@RequestMapping("admin/chart.do")
+	public Model chart(Model model) {
+		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("admin/chart");
+		return model;
 	}
 
 }

@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -273,6 +275,17 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectOne("admin.countStoreList");
 
 	}
+	
+	@Override
+	public int couponDownload(Coupon coupon) {
+		return sqlSession.insert("admin.couponDownload",coupon);
+	}
+	
+	@Override
+	public List<OrderInfo> timeChart() {
+		return sqlSession.selectList("admin.timeChart");
+	}
+	
 //	---------------------------------------------------------
 
 	@Override
@@ -310,4 +323,8 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectList("admin.carouselEvent");
 	}
 
+	@Override
+	public List<Integer> chartByCategory() {
+		return sqlSession.selectList("admin.chartByCategory");
+	}
 }

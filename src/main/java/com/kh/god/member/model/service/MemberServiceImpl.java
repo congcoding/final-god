@@ -1,5 +1,7 @@
 package com.kh.god.member.model.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +31,19 @@ public class MemberServiceImpl implements MemberService {
 	public int updateMember(Member m) {
 		return memberDao.updateMember(m);
 	}
+
+
+	@Override
+	public int deleteMember(String memberId) {
+		return memberDao.deleteMember(memberId);
+	}
+
+
+	@Override
+	public int checkBookMark(Map<String, String> map) {		
+		return memberDao.checkBookMark(map);
+	}
+
+
 
 }

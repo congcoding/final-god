@@ -14,11 +14,79 @@
 
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet"> 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script>
 $(function(){
 	$("#dashBoard").addClass("active");	
 });
+
+$(function(){
+	google.charts.load('current', {packages: ['corechart', 'bar']});
+	google.charts.setOnLoadCallback(drawBasic);
+});
+function drawBasic() {
+	var one = 0;
+	var two = 0;
+	var three = 0;
+	var four = 0;
+	var five = 0;
+	var six = 0;
+	var seven = 0;
+	var eight = 0;
+	var month = new Date();
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/timeChart.do?month=now",
+		type : "post",
+		async:"false",
+		success : function(list){
+			
+			$.each(list,function(index,item){
+				
+			  for(var i in item){
+				  
+				  if(item[i] >= 9 && item[i] < 12){
+					  one +=1;
+				  }else if(item[i] >= 12 && item[i] < 15){
+					  two +=1;
+				  }else if(item[i] >= 15 && item[i] < 18){
+					  three +=1;
+				  }else if(item[i] >= 18 && item[i] < 21){
+					  four +=1;
+				  }else if(item[i] >= 21 && item[i] < 24){
+					  five +=1;
+				  }else if(item[i] >= 0 && item[i] < 3){
+					  six +=1;
+				  }else if(item[i] >= 3 && item[i] < 6){
+					  seven +=1;
+				  }else if(item[i] >= 6 && item[i] < 9){
+					  eight +=1;
+				  }
+			  }
+			  
+			  var data = new google.visualization.arrayToDataTable([
+				  ['시간','판매량',{role:'style'}, { role: 'annotation' } ],
+				  ['09-12',one,'#FFF0F5',one],
+				  ['12-15',two,'#ADD8E6',two],
+				  ['15-18',three,'#E0FFFF',three],
+				  ['18-21',four,'#66CDAA',four],
+				  ['21-24',five,'#FFE4E1',five],
+				  ['24-03',six,'#FFDAB9',six],
+				  ['03-06',seven,'#DDA0DD',seven],
+				  ['06-09',eight,'#6A5ACD',eight],
+				  
+			  ]);
+
+			
+		      var chart = new google.visualization.ColumnChart(
+		        document.getElementById('chart-time'));
+		
+		      chart.draw(data);
+			});/* each end */
+		} /* success function end */
+      
+	}); /* ajax end  */
+}
 </script>
 
 <!-- Page Wrapper -->
@@ -132,8 +200,10 @@ $(function(){
                   <h6 class="m-0 font-weight-bold text-primary">시간대별 판매량</h6>
                 </div>
                 <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="myBarChart"></canvas>
+                  <div class="chart-bar" id="chart-time">
+                    <canvas id="myBarChart">
+                    
+                    </canvas>
                   </div>
                   </div>
               </div>

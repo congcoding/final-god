@@ -1,5 +1,7 @@
 package com.kh.god.seller.model.vo;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +17,15 @@ public class OrderInfo {
 	private int orderNo;
 	private String memberId;
 	private String storeNo;
-	private int totlaPrice;
+	private int totalPrice;
+	private String cancelFlag;
+	private Date orderTime;
 	private String deliveryFlag;
-	private String deliveryEnd;
+	private Date deliveryEnd;
 	private int originalPrice;
 	private String priceWay;
 	private String receiveFlag;
 	private String request;
-	private String deliveryTime;
+	private String delivertTime;
+	private String paymentId;
 }

@@ -5,6 +5,10 @@
 	margin-top: 100px;
 }
 
+div#last-container .btn-primary:hover{
+	background-color: #32aeb8;
+}
+
 /*매장 기본 정보 */
 div#menuThumb-container{
 	width: 60%;
@@ -33,6 +37,13 @@ div#MenuNavi{
     margin-bottom: 10px;
 }
 
+div#MenuNavi a{
+	color : #117a8b;
+}
+ div#MenuNavi .nav-link.active{
+ 	color : black;
+ }
+
 /* 매장 메뉴, 리뷰, 정보 테이블이 담긴 div*/
 div#Menu-wrapper{
 	float : left;
@@ -50,9 +61,11 @@ table#menuTable tr td:nth-of-type(3){
 	text-align : center;
 }
 
+
 /* 가게정보*/
 table#sellerInformation{
     position: relative;
+    margin-bottom: 100px;
 }
 
 /* 주문표 div*/
@@ -104,6 +117,12 @@ button:disabled{
 	cursor : default;
 }
 
+button#btn-order{
+	background-color: #117a8b;
+    border-color: white;
+    color: white;
+}
+
 /* 메뉴 삭제 버튼*/
 button.delete-order{
 	width: 24.95px;
@@ -119,7 +138,14 @@ img{
 }
 
 
-
 .introduce{
 	font-weight: bold;
 }
+
+
+/* 모달 css */
+.modal-header{
+	background: #d1ecf1;
+	color: #fff;
+}
+

@@ -37,8 +37,9 @@ nav.navbar-light{
 }
 
 .header-btn{
-	color : white;
+	background-color: #117a8b;
 	border-color: white;
+	color : white;
 }
 .header-btn:hover {
     background-color: #117a8b;
@@ -48,6 +49,7 @@ nav.navbar-light{
 .navbar-expand-lg .btn-outline-success:hover {
 	background-color: #32aeb8;
 }
+
 #modal-checkbox{
 	padding-right: 252px;
 }
@@ -251,7 +253,8 @@ span.srchVal{
 		  <c:if test="${sellerLoggedIn == null}">
 		  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
 			<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
-			<button class="btn btn-outline-sucess" type="button" onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do?memberId=${memberLoggedIn.memberId}'">로그아웃</button>
+			<button class="btn btn-outline-sucess" type="button" 
+					onclick = "memberLogOut();">로그아웃</button>
 		  </c:if>
 		</c:if>
 		
@@ -376,7 +379,11 @@ span.srchVal{
 	</div>
 	
 	<script>
-	
+	function memberLogOut(){
+		sessionStorage.clear();
+		location.href=
+			'${pageContext.request.contextPath}/member/memberLogout.do?memberId=${memberLoggedIn.memberId}';
+	}
 	
 	function NoMultiChk(chk){
 		var obj = document.getElementsByName("login");

@@ -47,7 +47,7 @@ $(function(){
 	    contentType : "application/json; charset=UTF-8",
 	    success: function(data) {
 	    	$.each(data,function(index,item){
-	    		console.log(item[0]);
+	    		
 	    			var html = "";
 	    			var count = "";
 	    		for(var i in item){
@@ -59,7 +59,7 @@ $(function(){
 	    		}
 	    		$("#countEvent").html(count);
 	    		for(var i in item){
-	    			console.log(item[i].EVENTNO);
+	    			
 	    			if(i==0){
 	    				html += "<div class='carousel-item active'>";
 	    			}else {

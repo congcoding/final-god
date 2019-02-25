@@ -8,7 +8,7 @@
 		where categoryno = A.categoryno) categorycount 
 	from storeInfo A 
 	where categoryno = #{categoryno} 
-	order by storegrade desc
+	order by storegrade
 	</select>
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
 	
@@ -89,7 +89,7 @@
    </update>
 
    <select id="orderList1" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
@@ -139,7 +139,13 @@
 	</select>
 
 	<insert id="adRequest" parameterType="ad">
-		 <![CDATA[ insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1))]]>
+	{call
+		declare
+		begin
+		update storeinfo set storegrade=#{storeGrade} where storeNo = #{storeNo};
+		insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1));
+		end
+	}
 	</insert>
 
 	<update id="deliveryEnd">

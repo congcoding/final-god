@@ -10,14 +10,19 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
 
-
 <!-- 매장 요약-------------------------------------------------------------------------------------------------->
 	<div id="menuThumb-container" class="card">
 	  <ul class="list-group">
 		<c:forEach items="${storeInfo}" var="storeInfo">
-	    <li class="list-group-item">${storeInfo.storeName}</li>
+	    <li class="list-group-item" id=storeName>
+	    		${storeInfo.storeName}
+	    		<span>
+					
+	    		</span>
+	    </li>
 	    <li class="list-group-item">
-	    	<div><img alt="" src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
+	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
+	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
 	    	<div class="introduce">최소주문금액  ${storeInfo.deliveryMinPrice}</div>
 	    	<div class="introduce">결제수단 카드결제,만나서결제</div>
 	    </li>	    
@@ -63,7 +68,7 @@
 							      <td>${menuList.menuName}</td>
 							      <td>${menuList.menuPrice}</td>
 								  <td>
-								  	<button type="button" class="btn btn-primary btn-sm"
+								  	<button type="button" class="btn header-btn btn-primary btn-sm"
 											onclick = "inputCart('${menuList.menuCode}');">
 										주문담기
 									</button>
@@ -74,7 +79,7 @@
 					  </tbody>
 					  
 					  <!-- 사이드메뉴 -->
-					  <thead><tr><th scope="col" colspan="2">사이드메뉴</th></tr></thead>
+					  <thead><tr><th scope="col" colspan="3">사이드메뉴</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
 							<c:if test = "${fn : contains(menuList.menuCode, 'S')}">
@@ -82,7 +87,7 @@
 							      <td>${menuList.menuName}</td>
 							      <td>${menuList.menuPrice}</td>
 								  <td>
-								  	<button type="button" class="btn btn-primary btn-sm" 
+								  	<button type="button" class="btn header-btn btn-primary btn-sm" 
 											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
 								  </td>     
 							    </tr>
@@ -91,7 +96,7 @@
 					  </tbody>
 					  
 					  <!--  음료  -->
-					  <thead><tr><th scope="col" colspan="2">음료</th></tr></thead>
+					  <thead><tr><th scope="col" colspan="3">음료</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
 							<c:if test = "${fn : contains(menuList.menuCode, 'D')}">
@@ -99,7 +104,7 @@
 							      <td>${menuList.menuName}</td>
 							      <td>${menuList.menuPrice}</td>
 								  <td>
-								  	<button type="button" class="btn btn-primary btn-sm"
+								  	<button type="button" class="btn header-btn btn-primary btn-sm"
 											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
 								  </td>      
 							    </tr>
@@ -153,16 +158,15 @@
 			    <tfoot>
 			    	<tr>
 			    		<td colspan="4">
-			    			<button type="button" class="btn btn-outline-success" 
-			    					data-toggle="modal" data-target="#checkCart">주문하기</button>			    						    			
+			    			<button type="button" class="btn" id="btn-order"		
+			    					onclick="checkOrder();">주문하기</button>			    						    			
 			    		</td>
 			    	</tr>    	
 			    </tfoot>
 			</table>
-		</div><!-- div#Cart-wrapper -->	
-		
-			
+		</div><!-- div#Cart-wrapper -->			
 	</div> <!-- div#menu-container -->
+	
 	
 	<!-- 주문표 삭제여부 물어보는 Modal  -->	
 	<div class="modal fade" id="checkEmptyCart" tabindex="-1" role="dialog" 
@@ -170,11 +174,13 @@
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      
-	      <div class="modal-header" style="display: block;">
-	        <h5 class="modal-title" id="checkEmptyCartLabel">주문표에 담기</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
+	      <div class="modal-header">
+	        <div class="modal-title" id="checkEmptyCartLabel">주문표에 담기</div>
+	        <div>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+	        </div>
 	      </div>
 	      
 	      <div class="modal-body">
@@ -190,7 +196,7 @@
     	</div>
   	  </div>
 	</div>
-	
+
 </div> <!-- #last-container -->
 
 
@@ -207,13 +213,10 @@ $(document).ready(function() {
     	// #div의 현재 위치
     	var cartTbl = $("#cart").offset();  	
     	var tableWidth = cartWidth+cartTbl.top;
-
-    	console.log("테이블 길이~~~",cartWidth);  	
-    	console.log("스크롤 높이~~~",cartWidth+$(window).scrollTop());
-    	
-    	  		
+  	  		
         $('#cart').animate(    		
-        	{top: $(window).scrollTop()+"px"},{queue: false, duration: 300}
+        	{top: $(window).scrollTop()+"px"},
+        	{queue: false, duration: 300}
         );  
     
     	//console.log($(window).scrollTop());
@@ -292,14 +295,18 @@ function cartHtml(){
 	    		}
 	    		
 	    		html += "<tr><td colspan ='2'>합계</td><td>"+sum+"</td></tr>"; 
+	    		$('#btn-order').removeAttr("disabled");
 	    		
 	    	}else{
 				html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
+				$('#btn-order').attr("disabled","disabled");
 			}
 		  	
 	}else{ //cart == null
 		
 		html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
+		$('#btn-order').attr("disabled","disabled");
+		
 	}//end of if(cart.length)
 
 	$('#tbody-cart').html(html);
@@ -387,25 +394,21 @@ function inputCart(menuCode){
 }
 
 function emptyCart(newMenuCode){
-
 	cart = [];
 	inputCart(newMenuCode);
 	$('#checkEmptyCart').modal('hide');
-
 }
 
 
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
 	
-	//주문하기 버튼을 누르면 폼 전송 (이름,코드,가격)
-	$('#checkCart').on('show.bs.modal', function (event) {
-		$(".modal-body").text(item);		
-		$("#goPayment").on("click", function(){
-			location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do";
-		});			
-	});
 
+	var bool = confirm("주문 하시겠습니까?");
+	
+	if(bool){
+		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text();	
+	}	
 } 
 
 
@@ -442,8 +445,6 @@ $("#clickInformation").click("on", function(){
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 });
-
-
 
 </script>
 
