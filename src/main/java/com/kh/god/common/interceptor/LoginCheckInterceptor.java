@@ -35,7 +35,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 		 * request, response);
 		 * 
 		 * Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-		 * 
+		 * 아무나 memberView 못보게 막음, 결제 직전 페이지에서 장바구니 보여줌
 		 * return false; }
 		 */
 
