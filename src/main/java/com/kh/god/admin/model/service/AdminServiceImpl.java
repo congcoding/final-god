@@ -338,4 +338,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.chartByWeek(map);
 	}
 
+	@Override
+	public List<Integer> chartByCategoryAmount() {
+		return adminDao.chartByCategoryAmount();
+	}
+
 }
