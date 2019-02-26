@@ -26,6 +26,8 @@ public interface StoreInfoDao {
 
 	int closedStore(String storeNo);
 
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+
 
 
 }

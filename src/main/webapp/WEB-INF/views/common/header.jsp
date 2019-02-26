@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="com.kh.god.seller.model.vo.*" %>
+<%
+	Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+	if(sellerLoggedIn != null){
+	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
+	}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +22,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
-
+<link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
+<!-- 구글 차트 API -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
@@ -369,7 +378,7 @@ span.srchVal{
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
-	      	<!-- 	<input type="checkbox" name="autoLogin" />  -->
+	      	<!-- <input type="checkbox" name="autoLogin" /> -->
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
 		  </form>
@@ -395,11 +404,11 @@ span.srchVal{
 	
 	function check(){
 		
-	/*  	if($("#autoLogin :checked")){
+ 		if($("#autoLogin :checked")){
 			$("#autoLogin").val("1");
 		}else{
 			$("#autoLogin").val("");
-		}  */
+		}  
 		
 		var chk = $("[name='login']:checked").val();
 		

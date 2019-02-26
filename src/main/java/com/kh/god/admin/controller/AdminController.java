@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -838,6 +837,24 @@ public class AdminController {
 		model.addAttribute("chartByCategoryList", chartByCategory);
 		model.addAttribute("admin/chart");
 		return model;
+	}
+	
+	@RequestMapping("admin/chartByWeek.do")
+	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") Date weeklyStartDate, @RequestParam(name="weeklyEndDate") Date weeklyEndDate) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		Map<String, Date> map = new HashMap<>();
+		map.put("weeklyStartDate", weeklyStartDate);
+		map.put("weeklyEndDate", weeklyEndDate);
+		
+		
+		
+//		List<OrderInfo> list = null;
+//		if(month.equals("now")) {
+//			list = adminService.timeChart();
+//		}
+//		map.put("list", list);
+		return returnMap;
 	}
 
 }
