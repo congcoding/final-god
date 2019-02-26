@@ -12,7 +12,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
-import com.kh.god.chat.model.exception.ChatException;
 import com.kh.god.chat.model.vo.Chat;
 import com.kh.god.chat.model.vo.ChatRoom;
 import com.kh.god.seller.model.vo.Seller;

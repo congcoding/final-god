@@ -97,7 +97,7 @@ $(function(){
 				     
 				      <td>
 				      <button type="button" id="orderAcception" onclick="orderNo(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count},'${orderList1.PHONE}')" class="btn btn-info" data-toggle="modal" data-target="#receiveModal">주문접수</button>
-				      <button type="button" id="orderCancel" onclick="cancelOrder(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count},'${orderList1.PHONE}','${orderList1.PRICEWAY}','${orderList1.PAYMENTID}');" class="btn btn-secondary" data-toggle="modal" data-target="#cancelOrder">접수취소</button>
+				      <button type="button" id="orderCancel" onclick="cancelOrder(${orderList1.ORDERNO},'${orderList1.STORENO}',${var.count},'${orderList1.PHONE}','${orderList1.PRICEWAY}','${orderList1.PAYMENTID}');" class="btn btn-secondary" data-toggle="modal" data-target="#cancelModal">접수취소</button>
 				      </td> 
 				    </tr>
 				      </c:forEach>
@@ -239,7 +239,7 @@ $(function(){
 </div>
 
 <!-- 주문취소 선택시 -->
-<div class="modal fade" id="cancelOrder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -280,7 +280,8 @@ $(function(){
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary" id="cancelBtn" onclick="backMoney();">주문취소</button>
+         <!-- onclick="backMoney();" -->
+        <button type="button" class="btn btn-primary" id="cancelBtn">주문취소</button>
       </div>
     </div>
   </div>
@@ -325,12 +326,22 @@ $("#cancelBtn").on("click", function(){
 	var no = $("input[name=ForHideCancel]").val();
 	var priceWay = $("#priceWay").val();
 	var paymentId = $("#paymentId").val();
-	console.log("주문취소버튼트림전->",paymentId);
-
-	paymentId = paymentId.trim();
-	console.log("주문취소버튼트림후->",paymentId);
 	
-/* https://api.iamport.kr/payments/cancel?_token=05227ed48c9631371a058008d8ccc76efc61c07f */
+  	$.ajax({
+		url : "${pageContext.request.contextPath}/payment/paymentCancel.do",
+		data:formData,
+		success : function(data){
+			$(".trOrderList1[no="+no+"]").hide('1000'); 
+			$("#cancelModal").removeClass("show");
+			location.reload();
+			console.log("에이젝스성공");
+			
+		},
+		error:function(){
+			console.log("ajax오류");
+		}
+	}); 
+
 });
 
 //주문접수 
@@ -343,7 +354,9 @@ $("#receiveBtn").on("click", function(){
 		data:formData,
 		success : function(data){
 			$(".trOrderList1[no="+no+"]").hide('1000'); 
-			$('#receiveModal').modal('hide')
+			$("#receiveModal").removeClass("show");
+			location.reload();
+
 			console.log("에이젝스성공");
 			
 		},
