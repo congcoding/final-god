@@ -12,12 +12,12 @@ import com.kh.god.seller.model.vo.Seller;
 
 /**
  *  !! 로그인이 되었고, 당사자여야지 접근가능
- *  /member/memberView.do" 
- *  /member/memberUpdate.do"
+ *  /seller/sellerView.do
+	seller/sellerUpdate.do
  *  요청시 로그인 여부를 검사하고, 로그인 하지 않았다면, common/msg.jsp 에서 경고메세지 출력
  * 
  */
-public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
+public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 
 	Logger logger = Logger.getLogger(getClass());
 
@@ -26,17 +26,16 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 
 		// 주소창의 아이디값
-		String memberId = request.getParameter("memberId");
+		String sellerId = request.getParameter("sellerId");
 		
 		// 로그인한 사람 값
 		HttpSession session = request.getSession();		
-		Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn"); 
 
-		//일반회원이 로그인을 안한 상태거나 
-		//다른 아이디로 memberView나 memberUpdate에 접근하거나		
-		if(memberLoggedIn != null) { // 일반 회원으로 로그인은 했지만,
+		
+		if(sellerLoggedIn != null) {
 			
-			if(!memberId.equals(memberLoggedIn.getMemberId())) { //주소와  로그인한 memberId가 다른경우
+			if(!sellerId.equals(sellerLoggedIn.getSellerId())) { 
 				request.setAttribute("msg", "올바른 접근이 아닙니다");
 				request.setAttribute("loc", "/");
 				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
@@ -44,14 +43,14 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 				return false; 				
 			}
 			
-		}else { //memberLoggedIn == null 로그인도 안한 경우
+		}else { 
 			request.setAttribute("msg", "로그인 후 진행하세요");
 			request.setAttribute("loc", "/");
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 			return false;
 		}
-		
-	
+				
+
 		
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}
