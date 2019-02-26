@@ -27,22 +27,24 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();
 		Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
 
-		/*
-		 * if(memberLoggedIn == null || !memberId.equals(memberLoggedIn.getMemberId()))
-		 * { request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
-		 * request.setAttribute("loc", "/");
-		 * request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(
-		 * request, response);
-		 * 
-		 * Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-		 * 
-		 * return false; }
-		 */
-
+		//로그인을 안했거나, 로그인한 사람의 아이디와 주소창 아이디가 다를때. 
+		if(memberLoggedIn == null || !memberId.equals(memberLoggedIn.getMemberId())){ 
+			
+			request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
+			request.setAttribute("loc", "/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 		
-		 if(memberLoggedIn == null) { Seller sellerLoggedIn =
-		 (Seller)session.getAttribute("sellerLoggedIn"); }
-		 
+			Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+		
+			return false; 
+		}
+		
+		
+
+		/*
+		 * if (memberLoggedIn == null) { Seller sellerLoggedIn = (Seller)
+		 * session.getAttribute("sellerLoggedIn"); }
+		 */
 
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}

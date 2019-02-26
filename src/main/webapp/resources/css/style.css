@@ -22,9 +22,12 @@ section#content img#center-image {
 
 /********** footer **********/
 footer {
-	background-color:#f8f9fa; 
-	background-clip:content-box; 
-	clear:both; 
-	height:95px; 
-	text-align:center;
+	background-color: #f8f9fa;
+    background-clip: content-box;
+    clear: both;
+    height: 95px;
+    text-align: center;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

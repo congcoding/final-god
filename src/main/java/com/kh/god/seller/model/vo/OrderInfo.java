@@ -15,7 +15,7 @@ public class OrderInfo {
 	private int orderNo;
 	private String memberId;
 	private String storeNo;
-	private int totlaPrice;
+	private int totalPrice;
 	private String deliveryFlag;
 	private String deliveryEnd;
 	private int originalPrice;
