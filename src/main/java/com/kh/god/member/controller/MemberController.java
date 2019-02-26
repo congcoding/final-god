@@ -433,17 +433,18 @@ public class MemberController {
 	/** 일반회원 로그아웃 : memberLogout */
 	@RequestMapping("/member/memberLogout.do")
 	public String memberLogout(SessionStatus sessionStatus,@RequestParam String memberId,HttpSession session) {
+
+		if(logger.isDebugEnabled()) {
+			logger.debug("로그아웃 요청");			
+		}
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
 		session.setAttribute("login",null);
-		
-		if(logger.isDebugEnabled())
-			logger.debug("로그아웃 요청");
+		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
+		//session.invalidate();
 		
 		WebSocketHandler.getInstance().getUserList().remove(memberId);
 
-		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
-		
 		//@sessionAttribute 로 로그인 했다면, sessionStatus.setComplete() 로 무효화
 		if(!sessionStatus.isComplete()) sessionStatus.setComplete();
 		

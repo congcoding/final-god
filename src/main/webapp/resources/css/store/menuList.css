@@ -134,10 +134,10 @@ button#btn-order{
 /* 메뉴 삭제 버튼*/
 button.delete-order{
 	width: 24.95px;
-	height: 28px;
-	background: black;
-    color: white;
-    border:none;
+    height: 28px;
+    background: white;
+    border: 1px solid #c5c5c5;
+    color: #545b62;
 }
 
 
