@@ -190,15 +190,17 @@ input#getYear{float : right;}
           </div>
           
           <div class="card shadow mb-4" style="width:740px">
-
             <div class="card-header py-3" style="display:inline-block;">
               <h6 class="m-0 font-weight-bold text-primary" style="display:inline-block;">월별 판매량</h6>
               <input type="button" id="btnYear" class="btn-light btn-sm" value="검색" />
               <input type="text" id="getYear" placeholder="ex)2018" />
             </div>
             <div class="card-body">
-              <div id="chartByMonth" style="width:700px; height:300px;"> </div>
-
+              <div id="chartByMonth" style="width:700px; height:300px;"></div>
+            </div>
+          </div>
+		  
+		  <div class="card shadow mb-4" style="width:740px">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">일주일 판매량</h6>
             </div>
