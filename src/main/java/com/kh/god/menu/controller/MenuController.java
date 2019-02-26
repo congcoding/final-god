@@ -51,17 +51,20 @@ public class MenuController {
 		List<Menu> menuList = menuService.menuList(storeNo);
 		List<StoreInfo> storeInfo = menuService.storeInfoList(storeNo);		
 		int menuTotalCount = menuService.menuCount(storeNo);
+		int checkedBookMark = 0;
+		
 		if( memberLoggedIn != null) {
 			Map<String, String> map = new HashMap<>();
 			map.put("memberId", memberLoggedIn.getMemberId());
 			map.put("storeNo", storeNo);
-			int checkedBookMark = memberService.checkBookMark(map);			
-		}
-		
+			checkedBookMark = memberService.checkBookMark(map);
+			
+		}	
 		
 		model.addAttribute("menuTotalCount",menuTotalCount);
 		model.addAttribute("menuList",menuList);
 		model.addAttribute("storeInfo",storeInfo);
+		model.addAttribute("checkedBookMark",checkedBookMark);
 		
 		return "storeInfo/MenuListByStore";	
 	}

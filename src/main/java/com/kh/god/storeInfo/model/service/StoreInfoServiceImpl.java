@@ -49,8 +49,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 				result = storeInfoDao.insertAttachment(a);
 				if(result == 0) {
 					throw new StoreInfoException("첨부파일 등록 오류!");
-				}
-				
+				}				
 			}
 		}
 		
