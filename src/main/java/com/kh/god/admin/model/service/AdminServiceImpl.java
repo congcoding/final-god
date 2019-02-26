@@ -269,6 +269,26 @@ public class AdminServiceImpl implements AdminService {
 	public List<OrderInfo> timeChart() {
 		return adminDao.timeChart();
 	}
+	
+	@Override
+	public List<OrderInfo> chartByMonth(int year) {
+		return adminDao.chartByMonth(year);
+	}
+	
+	@Override
+	public List<OrderInfo> totalCostByMonthly() {
+		return adminDao.totalCostByMonthly();
+	}
+	
+	@Override
+	public List<Coupon> couponList(String memberId) {
+		return adminDao.couponList(memberId);
+	}
+	
+	@Override
+	public int couponAmount(int eventNo) {
+		return adminDao.couponAmount(eventNo);
+	}
 
 //	---------------------------------------------------------
 	

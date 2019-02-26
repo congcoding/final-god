@@ -111,6 +111,14 @@ public interface AdminDao {
 	int countStoreList();
 	
 	List<OrderInfo> timeChart();
+	
+	List<OrderInfo> chartByMonth(int year);
+	
+	List<OrderInfo> totalCostByMonthly();
+	
+	List<Coupon> couponList(String memberId);
+	
+	int couponAmount(int eventNo);
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);
