@@ -680,6 +680,15 @@ public class AdminController {
 		return map;
 	}
 	
+	@RequestMapping("/admin/adCostByMonthly.do")
+	@ResponseBody
+	public Map<String,Object> adCostByMonthly(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Ad> list = adminService.adCostByMonthly();
+		map.put("list", list);
+		return map;
+	}
+	
 //	---------------------------------------------------------
 	
 	@RequestMapping("/admin/storePMSView.do")

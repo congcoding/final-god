@@ -303,6 +303,11 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
+	public List<Ad> adCostByMonthly() {
+		return sqlSession.selectList("admin.adCostByMonthly");
+	}
+	
+	@Override
 	public List<Coupon> couponList(String memberId) {
 		return sqlSession.selectList("admin.couponList",memberId);
 	}

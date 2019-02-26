@@ -117,6 +117,8 @@ public interface AdminDao {
 	
 	List<OrderInfo> totalCostByMonthly();
 	
+	List<Ad> adCostByMonthly();
+	
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);

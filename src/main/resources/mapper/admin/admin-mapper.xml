@@ -227,6 +227,10 @@
 		<![CDATA[ select totalPrice from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
 	</select>
 	
+	<select id="adCostByMonthly" resultType="_int">
+		<![CDATA[ select price from ad where to_char(enddate, 'mm') >= to_char(sysdate, 'mm') and to_char(enddate, 'mm')<(to_char(sysdate,'mm')+1) ]]>
+	</select>
+	
 	<select id="chartByMonth" resultType="string">
 		<![CDATA[ select to_char(ordertime, 'mm') as month from orderinfo where to_char(ordertime, 'yyyy') = #{year} ]]>
 	</select>

@@ -32,16 +32,22 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChartByCategory);
 
 function drawChartByCategory() {
-
+	var data0 = ${chartByCategoryList[0]};
+	var data1 = ${chartByCategoryList[1]};
+	var data2 = ${chartByCategoryList[2]};
+	var data3 = ${chartByCategoryList[3]};
+	var data4 = ${chartByCategoryList[4]};
+	var data5 = ${chartByCategoryList[5]};
+	var data6 = ${chartByCategoryList[6]};
   var data = google.visualization.arrayToDataTable([
-    ['Category', 'Total Price'],
-    ['치킨', ${chartByCategoryList[0]}],
-    ['피자', ${chartByCategoryList[1]}],
-    ['보쌈/족발', ${chartByCategoryList[2]}],
-    ['분식', ${chartByCategoryList[3]}],
-    ['중식', ${chartByCategoryList[4]}],
-    ['일식', ${chartByCategoryList[5]}],
-    ['한식', ${chartByCategoryList[6]}],
+	    ['Category', 'Total Price'],
+	    ['치킨', data0],
+	    ['피자', data1],
+	    ['보쌈/족발', data2],
+	    ['분식',data3],
+	    ['중식', data4],
+	    ['일식', data5],
+	    ['한식', data6],
   ]);
 
   var options = {
@@ -226,12 +232,15 @@ input#getYear{float : right;}
   <!-- End of Page Wrapper -->
 
   <script>
+  $(function(){
+	  
+
   $("#btnYear").on("click",function(){
 		
 	  var year = $("#getYear").val();
 	  google.charts.load("current", {packages:["corechart", 'bar']});
 	  google.charts.setOnLoadCallback(drawByMonthChart);
-
+ 
 	  function drawByMonthChart(){
 	  	var month1 = 0;
 	  	var month2 = 0;
@@ -251,7 +260,6 @@ input#getYear{float : right;}
 	  		type : "post",
 	  		async : "false",
 	  		success : function(list){
-	  			
 
 	 			$.each(list,function(index,item){
 	 				
@@ -281,7 +289,7 @@ input#getYear{float : right;}
 	 					}else if(item[i]==12){
 	 						month12 +=1;
 	 					}
-	 				}
+	 				} /* for end */
 	 				
 	  			var data= new google.visualization.arrayToDataTable([
 		  			 ['Month', 'Quantity',{role:'style'}],
@@ -312,14 +320,15 @@ input#getYear{float : right;}
 	  	        };
 
 	  	        var chart = new google.visualization.LineChart(document.getElementById('chartByMonth'));
-	  	      $("#searchYear").show();
-
+	  	        $("#searchYear").show();
 	  	        chart.draw(data, options);
 	  		}); /* each end */
-	  	}
+	  	}/* success end */
 
-	  	});
-	   }
-	  });
+	  	});/* ajax end */
+	  }/* function end  */
+  }); /* btn click end */
+  
+  }); /* onload function end */
   </script>
 
