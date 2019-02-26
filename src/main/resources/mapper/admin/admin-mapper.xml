@@ -257,5 +257,14 @@
 		order by categoryNo
 	</select>
 	
+	<select id="chartByWeek" resultType="_int">
+		<![CDATA[
+		select nvl(column3, 0)
+		from (select column1, column2 from (SELECT TO_CHAR(TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+LEVEL-1, 'YYYY/MM/DD') column1 FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{weeklyEndDate}, 'YYYY/MM/DD')-TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+1)), (SELECT LEVEL column2 FROM DUAL CONNECT BY LEVEL <= 7)) A
+		left join (select to_char(O.deliveryEnd, 'yyyy/mm/dd') column4, S.categoryno, nvl(sum(O.originalPrice), 0) column3 from orderInfo O, storeInfo S where O.storeNo = S.storeNo and (O.deliveryend between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1)
+		group by to_char(O.deliveryEnd, 'yyyy/mm/dd'), S.categoryno) B on A.column2 = B.categoryno and A.column1 = B.column4 order by column1, column2
+		]]>
+	</select>
+	
 </mapper>
 

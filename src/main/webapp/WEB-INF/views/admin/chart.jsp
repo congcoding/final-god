@@ -108,38 +108,6 @@ function applyWeeklyHighlight() {
 	});
 }
 
-
-/* 일주일 판매량 차트*/	
-google.charts.setOnLoadCallback(drawChartByWeek);
-
-function drawChartByWeek(){
-
-	// 차트 데이터
-	var data = new google.visualization.arrayToDataTable([
-		['요일', '치킨', '피자', '보쌈/족발', '분식', '중식', '일식', '한식'], 
-		['월', 10, 20, 30, 40, 20, 30, 40],
-		['화', 15, 30, 35, 20, 20, 30, 40],
-		['수', 20, 25, 40, 30, 20, 30, 40],
-		['목', 10, 30, 20, 50, 20, 30, 40],
-		['금', 5, 10, 25, 55, 20, 30, 40],
-		['토', 5, 10, 25, 55, 20, 30, 40],
-		['일', 5, 10, 25, 55, 20, 30, 40]
-	]);
-	
-	var chart_options = {
-		title : '그때 그시절 그것',
-		width : 700,
-		height : 400,
-		bar : {
-			groupWidth : '50%'
-		},
-		isStacked : true // 그래프 쌓기(스택), 기본값은 false
-	};
-
-	var chart = new google.visualization.ColumnChart(document.getElementById('chartByWeek'));
-	chart.draw(data, chart_options);
-}
-
 /* 일주일 판매량 ajax*/
 $(function(){
 	$('#btnByWeek').on("click", function(){
@@ -151,13 +119,40 @@ $(function(){
 			url : "${pageContext.request.contextPath}/admin/chartByWeek.do?weeklyStartDate="+weeklyStartDate+"&weeklyEndDate="+weeklyEndDate,
 			type : "post",
 			async:"false",
-			success : function(list){
+			success : function(data){
 				
+				google.charts.setOnLoadCallback(drawChartByWeek);
+
+				function drawChartByWeek(){
+
+					// 차트 데이터
+					var chartData = new google.visualization.arrayToDataTable([
+						['요일', '치킨', '피자', '보쌈/족발', '분식', '중식', '일식', '한식'], 
+						['월', data.chartByWeekList[0], data.chartByWeekList[1], data.chartByWeekList[2], data.chartByWeekList[3], data.chartByWeekList[4], data.chartByWeekList[5], data.chartByWeekList[6]],
+						['화', data.chartByWeekList[7], data.chartByWeekList[8], data.chartByWeekList[9], data.chartByWeekList[10], data.chartByWeekList[11], data.chartByWeekList[12], data.chartByWeekList[13]],
+						['수', data.chartByWeekList[14], data.chartByWeekList[15], data.chartByWeekList[16], data.chartByWeekList[17], data.chartByWeekList[18], data.chartByWeekList[19], data.chartByWeekList[20]],
+						['목', data.chartByWeekList[21], data.chartByWeekList[22], data.chartByWeekList[23], data.chartByWeekList[24], data.chartByWeekList[25], data.chartByWeekList[26], data.chartByWeekList[27]],
+						['금', data.chartByWeekList[28], data.chartByWeekList[29], data.chartByWeekList[30], data.chartByWeekList[31], data.chartByWeekList[32], data.chartByWeekList[33], data.chartByWeekList[34]],
+						['토', data.chartByWeekList[35], data.chartByWeekList[36], data.chartByWeekList[37], data.chartByWeekList[38], data.chartByWeekList[39], data.chartByWeekList[40], data.chartByWeekList[41]],
+						['일', data.chartByWeekList[42], data.chartByWeekList[43], data.chartByWeekList[44], data.chartByWeekList[45], data.chartByWeekList[46], data.chartByWeekList[47], data.chartByWeekList[48]],
+					]);
+					
+					var chart_options = {
+						width : 700,
+						height : 400,
+						bar : {
+							groupWidth : '50%'
+						},
+						isStacked : true // 그래프 쌓기(스택), 기본값은 false
+					};
+
+					var chart = new google.visualization.ColumnChart(document.getElementById('chartByWeek'));
+					chart.draw(chartData, chart_options);
+				}
 			}
-	     
 		});
 	})
-})
+});
 
 </script>
 
@@ -195,7 +190,7 @@ $(function(){
             <div class="card-body" style="text-align:center;">
               <input class="form-control" type='text' id='weeklyDatePicker' placeholder="Select Week" style="width:210px; display:inline-block"/>
               <button type="button" class="btn btn-light" id="btnByWeek">조회</button>
-              <div id="chartByWeek" style="width:700px; height:300px;"></div>
+              <div id="chartByWeek" style="width:700px; height:400px;"></div>
             </div>
           </div>
 

@@ -1,5 +1,6 @@
 package com.kh.god.admin.model.service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -132,5 +133,7 @@ public interface AdminService {
 	int storePMSReject(Map<String, String> map);
 
 	List<Integer> chartByCategory();
+
+	List<Integer> chartByWeek(Map<String, String> map);
 
 }
