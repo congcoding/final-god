@@ -26,22 +26,34 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 		String memberId = request.getParameter("memberId");
 		HttpSession session = request.getSession();
 		Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
-
-		/*
-		 * if(memberLoggedIn == null || !memberId.equals(memberLoggedIn.getMemberId()))
-		 * { request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
-		 * request.setAttribute("loc", "/");
-		 * request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(
-		 * request, response);
-		 * 
-		 * Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-		 * 아무나 memberView 못보게 막음, 결제 직전 페이지에서 장바구니 보여줌
-		 * return false; }
-		 */
+	
 
 		
-		 if(memberLoggedIn == null) { Seller sellerLoggedIn =
-		 (Seller)session.getAttribute("sellerLoggedIn"); }
+			
+		
+		/*  if(memberLoggedIn == null ) {
+			  
+			  Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+			
+			  
+		if( !memberId.equals(memberLoggedIn.getMemberId())){
+		  request.setAttribute("msg", "로그인 후 이용하실 수 있습니다");
+		  request.setAttribute("loc", "/");
+		  request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(
+		  request, response);
+		  
+		 
+		   //아무나 memberView 못보게 막음, 결제 직전 페이지에서 장바구니 보여줌
+		 return false; 
+		  }*/
+		  //}
+			  
+
+		
+		
+		  if(memberLoggedIn == null) { Seller sellerLoggedIn
+		  =(Seller)session.getAttribute("sellerLoggedIn"); }
+		
 		 
 
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
