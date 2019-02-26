@@ -119,6 +119,8 @@ public interface AdminService {
 	
 	List<OrderInfo> totalCostByMonthly();
 	
+	List<Ad> adCostByMonthly();
+	
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);

@@ -108,6 +108,22 @@ function drawBasic() {
 	}); /* ajax end  */
 }
 
+$(function(){
+	var total = 0;
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/adCostByMonthly.do",
+		type:"post",
+		success : function(data){
+			$.each(data,function(index,item){
+				for(var i in item){
+					total +=item[i];
+				}
+			});
+			$("#adCostByMonthly").text(addComma(total)+"원");
+		}
+	});
+});
+
 </script>
 
 <!-- Page Wrapper -->
@@ -138,8 +154,8 @@ function drawBasic() {
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">일주일 판매량</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">870,000원</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">이번달 광고 수입</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="adCostByMonthly"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
