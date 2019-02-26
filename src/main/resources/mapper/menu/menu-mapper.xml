@@ -13,4 +13,12 @@
    <delete id="deleteMenu">
    		delete menu where menuCode = #{menuCode}
    </delete>
+   
+   <select id="selectMenuNo" resultType="menu" >
+   		select menuNo from menu where storeNo = #{storeNo}
+   </select>
+   
+   <insert id="insertMenu">
+   		INSERT INTO MENU (storeNo, categoryNo, menuName, menuPrice, menuNo, menuCode) VALUES (#{storeNo}, #{categoryNo}, #{menuName}, #{menuPrice}, #{menuNo}, #{menuCode})
+   </insert>
 </mapper>

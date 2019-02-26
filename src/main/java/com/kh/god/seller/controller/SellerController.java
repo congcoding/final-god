@@ -22,16 +22,17 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.admin.model.vo.Ad;
-import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 
 @Controller
@@ -69,7 +70,7 @@ public class SellerController {
 	@RequestMapping("/seller/sellerEnrollEnd.do")
 	public String insertSeller(Seller s , Model model) {
 		//logger.debug("sellerinsert"+ s);
-		System.out.println("암화화전 :"+s.getPassword());
+		System.out.println("암호화전 :"+s.getPassword());
 		
 		String temp = s.getPassword();
 		s.setPassword(bcryptPasswordEncoder.encode(temp));
@@ -93,7 +94,18 @@ public class SellerController {
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 			ModelAndView mav , HttpSession session) {
-
+		
+	
+		/* @RequestParam(name="autoLogin") String autoLogin , */
+		/*
+		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
+		 * //기존에 LOGIN세션값 존재하면 제거 }
+		 */
+		
+		
+		
+		
+		
 		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
 		
 
@@ -103,14 +115,12 @@ public class SellerController {
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
+		//로그인 성공시 Seller 반환
 		Seller s = sellerService.selectOneSeller(memberId);
 		
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
-
-		
-	  
 
 	     boolean loginFlag = true;
 	     
@@ -118,7 +128,15 @@ public class SellerController {
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
-	      } else {
+	         
+	      } else {//로그인 성공시 
+	    	  
+	    	//  dto.setPassword(password);
+	    	  
+	    	 // if(dto.isUseCookie()) {
+	    		  
+	    	  //}
+	    	  
 	    	  Set<String> keyValue = memberSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
@@ -418,10 +436,15 @@ public class SellerController {
 		
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
+		StoreInfo storeInfo = sellerService.selectStoreInfo(storeNo);
 
 		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
+		model.addAttribute("storeNo", storeNo);
+		model.addAttribute("categoryNo", storeInfo.getCategoryNo());
+		
+		logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
 
 		return "/seller/myStoreMenu";
 	}
@@ -530,25 +553,7 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
-	//주문취소
-	@RequestMapping("/seller/cancelOrder.do")
-	@ResponseBody
-	public String cancelOrder(@RequestParam("orderNoForCancel") int orderNo,
-			@RequestParam("reason") String reason,
-			@RequestParam(value="cancelReason", required=false) String cancelReason,
-			@RequestParam("memberPhoneForCancel") String memberPhoneForCancel) {
-		//cancelReason
-		if(reason.equals("기타")) {
-			reason = "기타:" + cancelReason;
-		}
-		MessageSend ms = new MessageSend();
-		String flag = "cancel";
-		ms.main(reason,memberPhoneForCancel,flag);
 
-		int result = sellerService.cancelOrder(orderNo);
-		return "";
-	}
-	
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody
@@ -633,6 +638,39 @@ public class SellerController {
 		}
 		
 		return loc;
+	}
+	
+	@RequestMapping("seller/insertMenu.do")
+	public String insertMenu(@RequestParam(name = "menuOptions") String menuOptions, Model model, Menu menu) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("insertMenu() 요청!");
+		}
+		
+		int menuNo = sellerService.selectMenuNo(menu.getStoreNo());
+		String menuCode = "";
+		
+		if(menuNo == 0) {
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 있냐? " + menuNo);
+			menuNo = 1;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 몇이냐? " + menuNo);
+		} 
+		
+		else {
+			++menuNo;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버가 있다면 몇이냐? " + menuNo);
+			
+		}
+		
+		menuCode = menu.getStoreNo()+ menuOptions + menuNo;
+		menu.setMenuCode(menuCode);
+		menu.setMenuNo(menuNo);
+		
+		
+		int result = sellerService.insertMenu(menu);
+			
+		
+		return "redirect:/seller/myStoreMenu.do?storeNo="+menu.getStoreNo();
+		
 	}
 
 	/**

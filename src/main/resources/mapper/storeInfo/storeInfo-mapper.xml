@@ -7,7 +7,7 @@
 		from storeInfo 
 		where categoryno = A.categoryno) categorycount 
 	from storeInfo A 
-	where categoryno = #{categoryno} 
+	where categoryno = #{categoryno}
 	order by storegrade
 	</select>
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
@@ -113,7 +113,7 @@
    </select>
    
    <update id="receiveOrder">
-       update orderinfo set receiveFlag='Y',deliverytime=#{howLongChecked} where orderno=#{orderNo}
+       update orderinfo set receiveFlag='Y' where orderno=#{orderNo}
    </update>
 
 	<select id="adSelectAll" resultType="ad">
