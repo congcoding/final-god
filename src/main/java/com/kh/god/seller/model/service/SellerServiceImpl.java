@@ -184,5 +184,23 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.deleteMenu(menuCode);
 	}
 
+	@Override
+	public int insertOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrder(map);
+	}
+
+	@Override
+	public int insertOrderInfo(Map<String, Object> orderInfoMap) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrderInfo(orderInfoMap);
+	}
+
+	@Override
+	public int insertOrderMenu(Map<String, Object> orderMenuMap) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrderMenu(orderMenuMap);
+	}
+
 	
 }

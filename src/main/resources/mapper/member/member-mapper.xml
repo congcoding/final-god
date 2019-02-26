@@ -34,5 +34,15 @@
         select count(*) as cnt from bookmark
         WHERE memberId = #{memberId} and storeNo = #{storeNo}
     </select>
+    
+    <select id="couponListBymemberId" resultType="map">
+    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberid} and useflag='N'
+    </select>
+    
+    
+    <select id="getDiscount" resultType="_double">
+		select discount from event where eventno=#{eventNo}
+    </select>
+    
 	
 </mapper>

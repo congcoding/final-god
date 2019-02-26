@@ -75,5 +75,11 @@ public interface SellerDao {
 
 	int deleteMenu(String menuCode);
 
+	int insertOrder(Map<String, Object> map);
+
+	int insertOrderInfo(Map<String, Object> orderInfoMap);
+
+	int insertOrderMenu(Map<String, Object> orderMenuMap);
+
 
 }

@@ -186,5 +186,23 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.delete("menu.deleteMenu", menuCode);
 	}
 
+	@Override
+	public int insertOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrder",map);
+	}
+
+	@Override
+	public int insertOrderInfo(Map<String, Object> orderInfoMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrderInfo",orderInfoMap);
+	}
+
+	@Override
+	public int insertOrderMenu(Map<String, Object> orderMenuMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrderMenu",orderMenuMap);
+	}
+
 
 }

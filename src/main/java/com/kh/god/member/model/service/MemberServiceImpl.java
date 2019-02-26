@@ -1,5 +1,6 @@
 package com.kh.god.member.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,20 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int checkBookMark(Map<String, String> map) {		
 		return memberDao.checkBookMark(map);
+	}
+
+
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {
+		// TODO Auto-generated method stub
+		return memberDao.couponListBymemberId(memberId);
+	}
+
+
+	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return memberDao.getDiscount(eventNo);
 	}
 
 

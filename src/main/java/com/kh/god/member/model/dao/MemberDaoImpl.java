@@ -1,5 +1,6 @@
 package com.kh.god.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -44,6 +45,15 @@ public class MemberDaoImpl implements MemberDao {
 		return result;
 	}
 
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {		
+		return sqlSession.selectList("member.couponListBymemberId", memberId);
+	}
 
+	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("member.getDiscount", eventNo);
+	}
 
 }

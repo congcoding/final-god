@@ -22,4 +22,15 @@
 	<update id="updateSeller">
 		update seller set email = #{email} , phone = #{phone}  where sellerid = #{sellerId}
 	</update>
+	
+	<insert id="insertOrderInfo">
+		insert into orderinfo(orderNo,memberid,storeno,totalPrice,cancelFlag,deliveryFlag,originalPrice,priceWay,receiveFlag,request,paymentId) values (SEQ_ORDERINFO.nextval,#{memberId},#{storeNo}, #{totalPrice},'N','N',#{orginalPrice},#{priceWay},'N',#{request},#{paymentId})
+	</insert>
+		
+	<insert id="insertOrderMenu">
+	   <selectKey resultType="_int" keyProperty="orderNo" order="BEFORE">
+	   		select SEQ_ORDERINFO.currval from dual
+	   </selectKey>
+		insert into orderMenu(orderno,ordermenuno,menucode,storeno,amount) values (#{orderNo},SEQ_ORDERMENU.nextval,#{menuCode},#{storeNo},#{amount})		
+	</insert>
 </mapper>
