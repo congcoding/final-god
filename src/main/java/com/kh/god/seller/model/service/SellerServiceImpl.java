@@ -183,6 +183,10 @@ public class SellerServiceImpl implements SellerService {
 	public int deleteMenu(String menuCode) {
 		return sellerDao.deleteMenu(menuCode);
 	}
-
+	//종합 보기에서  저번주의 판매량을 가져온다.
+	@Override
+	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
+		return sellerDao.totalSaleVolume(sellerId,type);
+	}	
 	
 }

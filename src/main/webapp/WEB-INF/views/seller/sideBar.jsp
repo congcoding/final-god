@@ -39,7 +39,7 @@
 		          <div class="bg-white py-2 collapse-inner rounded">
 		            <a class="collapse-item myStoreOrder" href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}">주문내역 <span class="badge badge-primary badge-pill orderCount">14</span></a>
 		            <a class="collapse-item myStoreMenu" href="${pageContext.request.contextPath}/seller/myStoreMenu.do?storeNo=${store.storeNo}">내 가게 메뉴</a>
-		            <a class="collapse-item" href="#">내 가게 통계</a>
+		            <a class="collapse-item" href="${pageContext.request.contextPath }/seller/myStoreChart.do?storeNo=${store.storeNo}">내 가게 통계</a>
 		            <a class="collapse-item updateMyStoreInfo" href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}">내 가게 수정</a>
 		            <a class="collapse-item" href="#">리뷰</a>
 		            <a class="collapse-item myAd" href="${pageContext.request.contextPath }/seller/myAd.do?storeNo=${store.storeNo}">광고</a>

@@ -64,18 +64,7 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		return sqlSession.update("storeInfo.closedStore", storeNo);
 	}
 
-	@Override
-	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
-		List<Map<String,String>> resultList = null;
-		switch(type) {
-		case "today" : resultList = new ArrayList<>();resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofToday", sellerId); break;
-		case "week" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofWeek", sellerId); break;
-		case "month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofMonth", sellerId); break;
-		case "3month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeof3Month", sellerId); break;
-		}
-		
-		return resultList;
-	}
+
 	
 
 	

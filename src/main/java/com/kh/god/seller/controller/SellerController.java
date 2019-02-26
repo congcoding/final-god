@@ -204,7 +204,8 @@ public class SellerController {
 		}
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
-		
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,"today");
+		logger.debug("오늘자 판매량ㅇ ::"+saleVolume);
 //		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
 //		System.out.println("메뉴 나오라" + menu);
@@ -213,7 +214,7 @@ public class SellerController {
 		//페이지바 만들기
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
-
+		model.addAttribute("saleVolume",saleVolume);
 		return "seller/goMyStore";
 
 	}
@@ -634,5 +635,18 @@ public class SellerController {
 		return loc;
 	}
 
+	/**
+     * 종합 보기에서 저번주의 매장 판매량을 가지고 온다.
+     * @param sellerId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/chart/totalSaleVolume.do")
+    public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
+    	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
+    	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
+    	logger.debug(saleVolume);
+    	return saleVolume;
+    }
 
 }
