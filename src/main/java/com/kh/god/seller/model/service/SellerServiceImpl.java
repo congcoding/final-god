@@ -169,5 +169,35 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.deliveryEnd(orderNo);
 	}
 
+	@Override
+	public int cancelOrder(int orderNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.cancelOrder(orderNo);
+	} 
+	
+	public int updateMenu(Map<String, Object> map) {
+		return sellerDao.updateMenu(map);
+	}
+
+	@Override
+	public int deleteMenu(String menuCode) {
+		return sellerDao.deleteMenu(menuCode);
+	}
+
+	@Override
+	public int selectMenuNo(String storeNo) {
+		return sellerDao.selectMenuNo(storeNo);
+	}
+
+	@Override
+	public int insertMenu(Menu menu) {
+		return sellerDao.insertMenu(menu);
+	}
+
+	@Override
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sellerDao.selectStoreInfo(storeNo);
+	}
+
 	
 }

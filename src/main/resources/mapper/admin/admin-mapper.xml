@@ -212,6 +212,14 @@
 		select count(*) from storeInfo
 	</select>
 
+	<insert id="couponDownload" parameterType="coupon">
+		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
+	</insert>
+
+	<select id="timeChart" resultType="string">
+		<![CDATA[ select to_char(ordertime, 'hh24') from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
+	</select>
+	
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}
@@ -226,7 +234,7 @@
 	</update>
 	
 	<update id="storePMSReject">
-		update storeInfo set pmsflag='R' where storeNo=#{storeNo}
+		update storeInfo set pmsflag='R', rejectInfo=#{rejectInfo} where storeNo=#{storeNo}
 	</update>
 	
 	<update id="storePMSClose">
@@ -237,6 +245,17 @@
 		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
 	</update>
 	
+	<select id="carouselEvent" resultMap="eventMap">
+		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+	</select>
+	
+	<select id="chartByCategory" resultType="_int">
+		select sum(O.totalPrice) totalPrice
+		from orderInfo O, storeInfo S
+		where O.storeNo = S.storeNo
+		group by categoryNo
+		order by categoryNo
+	</select>
 	
 </mapper>
 

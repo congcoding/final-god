@@ -1,5 +1,7 @@
 package com.kh.god.member.model.dao;
 
+import java.util.Map;
+
 import com.kh.god.member.model.vo.Member;
 
 public interface MemberDao {
@@ -9,5 +11,10 @@ public interface MemberDao {
 	Member selectOneMember(String memberId);
 
 	int updateMember(Member m);
+
+	int deleteMember(String memberId);
+
+	int checkBookMark(Map<String, String> map);
+
 
 }

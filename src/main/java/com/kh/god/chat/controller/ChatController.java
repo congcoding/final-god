@@ -1,7 +1,6 @@
 package com.kh.god.chat.controller;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.god.chat.model.service.ChatService;
 import com.kh.god.chat.model.vo.Chat;
+import com.kh.god.chat.model.vo.ChatRoom;
+import com.kh.god.seller.model.vo.Seller;
 
 
 
@@ -98,6 +99,27 @@ public class ChatController {
 		chat.setSendTime(date);
 		
 		int result = chatService.insertChatLog(chat);
+		
+		return result;
+	}
+	@ResponseBody
+	@RequestMapping(value="/chat/searchPerson.do")
+	public List<Seller> searchPerson(@RequestParam String searchId) {
+		logger.debug("찾을 사람의 ID : "+searchId);
+		List<Seller> sellerId = chatService.searchPerson(searchId);
+		logger.debug(sellerId);
+		return sellerId;
+	}
+	@ResponseBody
+	@RequestMapping(value="/chat/addPerson.do")
+	public List<Map<String,String>> addPerson(@RequestParam String addId , @RequestParam String loginId) {
+		logger.debug("addPerson searchId: "+addId + " : "+loginId);
+		ChatRoom roomId = new ChatRoom();
+		roomId.setSellerId(loginId);
+		roomId.setSellerId2(addId);
+		List<Map<String, String>> result = null;
+		result = chatService.addPerson(roomId);
+		
 		
 		return result;
 	}

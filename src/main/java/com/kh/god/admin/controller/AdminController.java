@@ -22,15 +22,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
-import com.kh.god.storeInfo.model.vo.SAttachment;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -593,6 +595,32 @@ public class AdminController {
 		return "/admin/storeList";
 	}
 	
+	@RequestMapping("/admin/coupon.do")
+	public String couponDown(@RequestParam(name="memberId") String memberId, @RequestParam(name="eventNo") int eventNo,Model model) {
+		
+		Event event = adminService.eventView(eventNo);
+		Coupon coupon = new Coupon();
+		coupon.setEventNo(event.getEventNo());
+		coupon.setMemberId(memberId);
+		coupon.setStartDate(coupon.getStartDate());
+		coupon.setEndDate(coupon.getEndDate());
+		int result = adminService.couponDownload(coupon);
+		
+		return "redirect:/event/eventView.do?eventNo="+eventNo;
+	}
+	
+	@RequestMapping("/admin/timeChart.do")
+	@ResponseBody
+	public Map<String, Object> timeChart(@RequestParam(name="month") String month) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = null;
+		if(month.equals("now")) {
+			list = adminService.timeChart();
+		}
+		map.put("list", list);
+		return map;
+	}
+	
 //	---------------------------------------------------------
 	
 	@RequestMapping("/admin/storePMSView.do")
@@ -679,9 +707,24 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/storePMSReject")
-	public String storePMSX(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="rejectInfo") String rejectInfo) {
-		System.out.println(storeNo+"@@@@"+rejectInfo);
-		return "admin/storePMSList";
+	public ModelAndView storePMSX(@RequestParam(name="storeNo") String storeNo, @RequestParam(name="rejectInfo") String rejectInfo, ModelAndView mav) {
+		Map<String,String> map = new HashMap<>();
+		map.put("storeNo", storeNo);
+		map.put("rejectInfo", rejectInfo);
+		int result = adminService.storePMSReject(map);
+		
+		String msg = "";
+		if(result>0) {
+			msg="가게 신청 거절 완료";
+		}else {
+			msg = "가게 신청 거절 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/storePMSList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
 	}
 	
 	@RequestMapping("/admin/storePMSClose")
@@ -720,6 +763,39 @@ public class AdminController {
 		return mav;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/admin/carouselEvent.do")
+	public Map<String, Object> carouselEvent() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Event> eventList = adminService.carouselEvent();
+		map.put("carouselEvent", eventList);
+		return map;
+	}
 	
+	@RequestMapping("admin/chart.do")
+	public Model chart(Model model) {
+		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("admin/chart");
+		return model;
+	}
 	
+	@RequestMapping("admin/chartByWeek.do")
+	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") Date weeklyStartDate, @RequestParam(name="weeklyEndDate") Date weeklyEndDate) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		
+		Map<String, Date> map = new HashMap<>();
+		map.put("weeklyStartDate", weeklyStartDate);
+		map.put("weeklyEndDate", weeklyEndDate);
+		
+		
+		
+//		List<OrderInfo> list = null;
+//		if(month.equals("now")) {
+//			list = adminService.timeChart();
+//		}
+//		map.put("list", list);
+		return returnMap;
+	}
+
 }

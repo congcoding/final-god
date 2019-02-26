@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -109,6 +111,8 @@ public interface AdminService {
 	List<Map<String, String>> storeList(int cPage, int numPerPage);
 
 	int countStoreList();
+	
+	List<OrderInfo> timeChart();
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);
@@ -120,5 +124,13 @@ public interface AdminService {
 	int storePMSClose(String storeNo);
 
 	int storePMSOpen(String storeNo);
+
+	List<Event> carouselEvent();
+
+	int couponDownload(Coupon coupon);
+
+	int storePMSReject(Map<String, String> map);
+
+	List<Integer> chartByCategory();
 
 }

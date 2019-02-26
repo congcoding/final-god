@@ -24,4 +24,6 @@ public interface StoreInfoService {
 
 	int closedStore(String storeNo);
 
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+
 }

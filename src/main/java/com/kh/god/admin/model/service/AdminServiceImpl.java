@@ -1,6 +1,7 @@
 package com.kh.god.admin.model.service;
 
 import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.kh.god.admin.model.dao.AdminDao;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -256,6 +259,16 @@ public class AdminServiceImpl implements AdminService {
 	public int countStoreList() {
 		return adminDao.countStoreList();
 	}
+	
+	@Override
+	public int couponDownload(Coupon coupon) {
+		return adminDao.couponDownload(coupon);
+	}
+	
+	@Override
+	public List<OrderInfo> timeChart() {
+		return adminDao.timeChart();
+	}
 
 //	---------------------------------------------------------
 	
@@ -273,6 +286,11 @@ public class AdminServiceImpl implements AdminService {
 	public int storePMSOk(String storeNo) {
 		return adminDao.storePMSOk(storeNo);
 	}
+	
+	@Override
+	public int storePMSReject(Map<String, String> map) {
+		return adminDao.storeReject(map);
+	}
 
 	@Override
 	public int storePMSClose(String storeNo) {
@@ -283,4 +301,15 @@ public class AdminServiceImpl implements AdminService {
 	public int storePMSOpen(String storeNo) {
 		return adminDao.storePMSOpen(storeNo);
 	}
+
+	@Override
+	public List<Event> carouselEvent() {
+		return adminDao.carouselEvent();
+	}
+
+	@Override
+	public List<Integer> chartByCategory() {
+		return adminDao.chartByCategory();
+	}
+
 }

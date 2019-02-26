@@ -1,6 +1,5 @@
 package com.kh.god.seller.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +69,7 @@ public class SellerController {
 	@RequestMapping("/seller/sellerEnrollEnd.do")
 	public String insertSeller(Seller s , Model model) {
 		//logger.debug("sellerinsert"+ s);
-		System.out.println("암화화전 :"+s.getPassword());
+		System.out.println("암호화전 :"+s.getPassword());
 		
 		String temp = s.getPassword();
 		s.setPassword(bcryptPasswordEncoder.encode(temp));
@@ -122,7 +121,6 @@ public class SellerController {
 	     String msg = "";
 	     String view = "common/msg";
 
-		
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {
@@ -151,6 +149,7 @@ public class SellerController {
 					}
 					
 				}
+//				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
 	         // 비밀번호 비교
 			if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
@@ -160,6 +159,7 @@ public class SellerController {
 
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            
 	            session.setAttribute("storeSideBar", store);
 
 	            view = "redirect:/";
@@ -378,7 +378,7 @@ public class SellerController {
     		@RequestParam(name="personalday" , required = false) String personalday,
     		@RequestParam(name="nowThumb" , required = false) String nowThumb,
     		@RequestParam(name="newThumb" , required = false) String newThumb,
-    		@RequestParam(name="storeNo") String storeNo,
+    		@RequestParam(name="storeNo", required = false) String storeNo,
     		Model model
 	
     		) {
@@ -418,9 +418,9 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	//int updateThumb = sellerService.updateStoreInfo();
-
-    	return "common/msg";
+    	
+//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
+    	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
     
@@ -434,10 +434,15 @@ public class SellerController {
 		
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
+		StoreInfo storeInfo = sellerService.selectStoreInfo(storeNo);
 
 		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
+		model.addAttribute("storeNo", storeNo);
+		model.addAttribute("categoryNo", storeInfo.getCategoryNo());
+		
+		logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
 
 		return "/seller/myStoreMenu";
 	}
@@ -530,7 +535,13 @@ public class SellerController {
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
 	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
-			@RequestParam String howLongChecked) {
+			@RequestParam String howLongChecked,
+			@RequestParam String memberPhone) {
+		System.out.println(memberPhone);
+		MessageSend ms = new MessageSend();
+		String flag = "receive";
+		ms.main(howLongChecked,memberPhone,flag);
+
 		Map<String,Object> map = new HashMap<>();
 		map.put("orderNo",orderNo);
 		map.put("howLongChecked",howLongChecked);
@@ -540,14 +551,12 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
+
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody
 	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
 			@RequestParam("storeNo") String storeNo) {
-		System.out.println("@@orderNo=>"+orderNo);
-		System.out.println("@@storeNo=>"+storeNo);
-
 		int result = sellerService.deliveryEnd(orderNo);
 		Map<String, Object> map = new HashMap<>();
 		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
@@ -556,6 +565,110 @@ public class SellerController {
 		map.put("orderList2", orderList2);
 
 		return map;
+	}
+	
+
+	@RequestMapping("/seller/updateMenu.do")
+	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
+								   @RequestParam("menuName") String menuName, 
+								   @RequestParam("menuPrice") int menuPrice,
+								   @RequestParam("storeNo") String storeNo,
+								   ModelAndView mav) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("updateMenu() 요청!");
+		}
+
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★메뉴이름 왔냐? " + menuName);
+		logger.debug("☆★☆★☆★☆★☆★메뉴가격 왔냐? " + menuPrice);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("menuName", menuName);
+		map.put("menuPrice", menuPrice);
+		map.put("storeNo", storeNo);
+
+		int result = sellerService.updateMenu(map);
+
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 수정 성공!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		} else {
+			msg = "메뉴 수정 실패!";
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.addObject("map", map);
+		mav.setViewName(view);
+
+		return mav;
+
+	}
+	
+	@RequestMapping("/seller/deleteMenu.do")
+	public String deleteMenu(String menuCode, String storeNo) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteMenu() 요청!");
+		}
+		
+		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+		
+		int result = sellerService.deleteMenu(menuCode);
+		
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		if (result > 0) {
+			msg = "메뉴 삭제 성공!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		} else {
+			msg = "메뉴 삭제 실패!";
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+		}
+		
+		return loc;
+	}
+	
+	@RequestMapping("seller/insertMenu.do")
+	public String insertMenu(@RequestParam(name = "menuOptions") String menuOptions, Model model, Menu menu) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("insertMenu() 요청!");
+		}
+		
+		int menuNo = sellerService.selectMenuNo(menu.getStoreNo());
+		String menuCode = "";
+		
+		if(menuNo == 0) {
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 있냐? " + menuNo);
+			menuNo = 1;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 몇이냐? " + menuNo);
+		} 
+		
+		else {
+			++menuNo;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버가 있다면 몇이냐? " + menuNo);
+			
+		}
+		
+		menuCode = menu.getStoreNo()+ menuOptions + menuNo;
+		menu.setMenuCode(menuCode);
+		menu.setMenuNo(menuNo);
+		
+		
+		int result = sellerService.insertMenu(menu);
+			
+		
+		return "redirect:/seller/myStoreMenu.do?storeNo="+menu.getStoreNo();
+		
 	}
 
 
