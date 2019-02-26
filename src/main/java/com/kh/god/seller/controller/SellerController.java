@@ -34,6 +34,7 @@ import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
+
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
@@ -93,7 +94,18 @@ public class SellerController {
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 			ModelAndView mav , HttpSession session) {
-
+		
+	
+		/* @RequestParam(name="autoLogin") String autoLogin , */
+		/*
+		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
+		 * //기존에 LOGIN세션값 존재하면 제거 }
+		 */
+		
+		
+		
+		
+		
 		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
 		
 
@@ -103,6 +115,7 @@ public class SellerController {
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
+		//로그인 성공시 Seller 반환
 		Seller s = sellerService.selectOneSeller(memberId);
 		
 		 String loc = "/";
@@ -110,15 +123,21 @@ public class SellerController {
 	     String view = "common/msg";
 
 		
-	     if (s == null || s.getDelFlag().equals("Y")) {
-
 	     boolean loginFlag = true;
 	     
-	     if (s == null) {
+	     if (s == null || s.getDelFlag().equals("Y")) {
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
-	      } else {
+	         
+	      } else {//로그인 성공시 
+	    	  
+	    	//  dto.setPassword(password);
+	    	  
+	    	 // if(dto.isUseCookie()) {
+	    		  
+	    	  //}
+	    	  
 	    	  Set<String> keyValue = memberSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
@@ -151,7 +170,7 @@ public class SellerController {
 	         }
 			}
 	      }
-	     }
+	     
 	     mav.addObject("loc", loc);
 	     mav.addObject("msg", msg);
 	     mav.setViewName(view);
