@@ -7,7 +7,11 @@
 <jsp:include page="/WEB-INF/views/common/header.jsp">
    <jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
-
+<style>
+div.timeChart div#hasData{
+	/*  display : none;  */
+}
+</style>
 <!-- Custom fonts for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
 
@@ -85,7 +89,7 @@ $(function(){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">새로운 판매자 신청</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">주문 현황</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">3건</div>
@@ -111,7 +115,7 @@ $(function(){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">새로운 문의</div>
+                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">새로운 리뷰</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">2건</div>
                     </div>
                     <div class="col-auto">
@@ -129,20 +133,33 @@ $(function(){
 
             <!-- Area Chart -->
             <!-- Bar Chart -->
-              <div class="card shadow mb-4">
-                <div class="card-header py-3" style="width:600px;">
+              <div class="card shadow mb-4" style="width : 35rem; height : 30rem;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
                   <h6 class="m-0 font-weight-bold text-primary">시간대별 판매량</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" id="chartofSaleVolume">
+                      <div class="dropdown-header" >Sales volume by period:</div>
+                      <div class="dropdown-item" id="totalSaleVolumeofToday" value="today">Today</div>
+                      <div class="dropdown-item" id="totalSaleVolumeofWeek" value="week">Week</div>
+                      <div class="dropdown-item" id="totalSaleVolumeofMonth" value="month">Month</div>
+                      <div class="dropdown-item" id="totalSaleVolumeof3Month" value="3month">Three Month</div>
+                    </div>
+                  </div>
                 </div>
+                <!-- card body -->
                 <div class="card-body">
-                  <div class="chart-bar">
-                    <canvas id="myBarChart"></canvas>
+                  <div class="timeChart" style="height : 100%;">
+						
                   </div>
                   </div>
               </div>
 
             <!-- Pie Chart -->
             <div class="col-xl-4 col-lg-5">
-              <div class="card shadow mb-4" style="width:300px">
+              <div class="card shadow mb-4" style="width:25rem">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">카테고리별 판매량</h6>
@@ -151,7 +168,7 @@ $(function(){
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-                      <div class="dropdown-header">Dropdown Header:</div>
+                      <div class="dropdown-header">카테고리:</div>
                       <a class="dropdown-item" href="#">한식</a>
                       <a class="dropdown-item" href="#">양식</a>
                       <div class="dropdown-divider"></div>
@@ -317,19 +334,377 @@ $(function(){
   </a> 
 
   <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Core plugin JavaScript-->
   <script src="${pageContext.request.contextPath}/resources/js/jquery.easing.min.js"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="${pageContext.request.contextPath }/resources/js/sb-admin-2.js"></script>s
+  <script src="${pageContext.request.contextPath }/resources/js/sb-admin-2.js"></script>
 
-  <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
 
   <!-- Page level custom scripts -->
-  <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
   <script src="${pageContext.request.contextPath}/resources/js/demo/chart-bar-demo.js"></script>
+  
+  <script>
+  //그려낼 차트변수
+  var chart = null;
+  
+  $("div[id^=totalSaleVolumeof]").css("cursor","pointer");
+  //저번주 판매량데이터 가져옴
+  $("div[id^=totalSaleVolumeof]").on('click',function(){
+	  var types = $(this).attr("value");
+	  //먼저 그려져 있던 차트를 지운 뒤 차트를 그릴 준비를 한다.
+	  clearChart();
+	  $.ajax({
+		  url : "${pageContext.request.contextPath}/chart/totalSaleVolume.do",
+		  data : {sellerId : '${sellerLoggedIn.sellerId}',
+				  type : types	
+		  },
+		  success : function(data){
+			  if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
+	  		  	google.charts.load('current', {'packages':['corechart']});
+	  		  	google.charts.setOnLoadCallback(drawChart(data,types));
+			  }else{
+				  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+				  $(".timeChart").html(noData);
+			  }
+		  },
+		  erorr : function(jqxhr,textStatus,errorTrown){
+	 			console.log("종합보기의  판매량을 가져오는 중 에러 남!");
+				console.log(jqxhr);
+				console.log(textStatus);
+				console.log(errorTrown);
+	 		}
+	  });//end of ajax
+	  
+  });//end of totalSaleVolume click
+  
+  
+  //이미 그려져 있는 차트를 지운다.
+  function clearChart(){
+	  if(chart != null){
+	 	 chart.clearChart();
+	  }
+  }
+  //한주의 판매량 차트 그리기
+  function drawChart(data,types){
+	  if(types === 'week'){
+		//금액 초기화
+		  //각 요일별 총금액
+		  var storeName = [];
+		  storeName = storeNameArr(data);
+		  makeArray(storeName.length);
+		  for(var i in data){
+			  var sale = data[i];
+	          var week = sale.ORDERDAY;
+	          var totalPrice = parseInt(sale.TOTALPRICE);
+				  for(var i = 0; i < day.length; i++){
+					  if(storeName[i] != sale.STORENAME){
+					
+					  }else{
+						  if(week === '월'){
+							  day[i][0] = 0;
+							  day[i][0] += totalPrice;
+						  }else if(week === '화'){
+							  day[i][1] = 0;
+							  day[i][1] += totalPrice;
+						  }else if(week === '수'){
+							  day[i][2] = 0;
+							  day[i][2] += totalPrice; 
+						  }else if(week === '목'){
+							  day[i][3] = 0;
+							  day[i][3] += totalPrice;
+						  }else if(week === '금'){
+							  day[i][4] = 0;
+							  day[i][4] += totalPrice;
+						  }else if(week === '토'){
+							  day[i][5] = 0;
+							  day[i][5] += totalPrice;
+						  }else if(week === '일'){
+							  day[i][6] = 0;
+							  day[i][6] += totalPrice;
+						  } 
+						  break;
+					  }
+				  }//end of for
+				  
+			  
+		  }// end of for in
+		  //2차 배열 생성
+		  var info = [];
+		  for(var i = 0; i < 8; i++){
+			  info[i] = new Array();
+		  }
+		  for(var j = 0; j < 2; j++){
+			  //처음은 카테고리가 들어갈 배열
+			  if(j == 0){
+				 info[0][0] = 'week';	 			 
+				  for(var i = 0; i < storeName.length; i++){
+					  	info[0][i+1] = storeName[i];
+			 	 }//end of for
+			  }else{
+				  info[1][0] = 'Mon';
+				  info[2][0] = 'Tues';
+				  info[3][0] = 'Wed';
+				  info[4][0] = 'Thurs';
+				  info[5][0] = 'Fri';
+				  info[6][0] = 'Satur';
+				  info[7][0] = 'Sun';
+					
+				  for(var i = 0; i < storeName.length; i++){
+					for(var k = 1; k < info.length; k++){
+					 if(day[i][(k-1)] > 0){
+					  	info[k][(i+1)] = 0;
+					  	info[k][(i+1)] += day[i][k-1];
+						 
+					 }else{
+					  	info[k][(i+1)] = 0;
+					 }
+				  }
+				}
+				 
+			  }
+			  console.log(info);
+		  }//end of for
+	  }else if(types === 'today'){
+		  //시간대별 판매량으로서 3시간씩 끊어서 나타낼 예정임  ex) time0는 0시부터 3시, time1 : 3시~6시
+			var storeName = [];
+			storeName = storeNameArr(data);
+			makeArray(storeName.length);
+		 
+			  
+		  for(var i in data){
+			  var sale = data[i];
+			  var totalPrice = parseInt(sale.TOTALPRICE);
+	          var hour = parseInt(sale.ORDERDAY);
+				  for(var i = 0; i < storeName.length; i++){
+					  if(storeName[i] != sale.STORENAME){
+					  }else{
+						  for(var k = 0; k < 24; k++){
+								  day[i][k] = 0;
+							  if(hour == k+1){
+								  day[i][k] += totalPrice;
+							  }
+						  }
+						 /*  if(hour >= 0 && hour < 3){
+							  day[i] += totalPrice;
+						  }else if(hour >= 3 && hour < 3){
+							  day[i] += totalPrice;
+						  }else if(hour >= 6 && hour < 9){
+							  day[i] += totalPrice; 
+						  }else if(hour >= 9 && hour < 12){
+							  day[i] += totalPrice;
+						  }else if(hour >= 12 && hour < 15){
+							  day[i] += totalPrice;
+						  }else if(hour >= 15 && hour < 18){
+							  day[i] += totalPrice;
+						  }else if(hour >= 18 && hour < 21){
+							  day[i] += totalPrice;
+						  }else if(hour >= 21 && hour <= 23){
+							  day[i] += totalPrice;
+						  } */
+						  break;
+					  }
+				  }//end of for
+		  }// end of for in
+		  //2차 배열 생성
+		  var info = [];
+		  for(var i = 0; i < 25; i++){
+			  info[i] = new Array();
+		  }
+		  
+			  //처음은 카테고리가 들어갈 배열
+			  
+				 info[0][0] = 'Time';	 			 
+				  for(var i = 0; i < storeName.length; i++){
+					  	info[0][i+1] = storeName[i];
+			 	 }//end of for
+		console.log(info);
+				  for(var i = 0; i < storeName.length; i++){
+					  for(var j = 1; j < info.length; j++){
+						  if((j-1) < 10){
+						  	info[j][0] = "0"+(j-1)+":00 ~ 0"+(j)+":00";
+						  }else{
+							info[j][0] = (j-1)+":00 ~ "+(j)+":00";
+						  }
+						//  console.log(info);
+						  if(day[i][(j-1)] > 0){
+							  info[j][(i+1)] = 0;
+							  info[j][(i+1)] = day[i][(j-1)];
+						  }else{
+							  info[j][(i+1)] = 0;
+						  }
+					  }
+				  }
+				 
+			
+			  
+		
+	  }else if(types === 'month'){
+		  //day = []
+		  var storeName = [];
+		  storeName = storeNameArr(data);
+		  makeArray(storeName.length);
+		  console.log(day);
+		  for(var i in data){
+			  var sale = data[i];
+	          var date = parseInt((sale.ORDERDAY).substr(3));
+	          var totalPrice = parseInt(sale.TOTALPRICE);
+				  for(var i = 0; i < day.length; i++){
+					  if(storeName[i] != sale.STORENAME){
+					
+					  }else{
+						  day[i][date] = 0;
+						  day[i][date] += totalPrice;
+						  break;
+					  }
+				  }//end of for
+				  
+			  
+		  }// end of for in
+		  //2차 배열 생성
+		  var info = [];
+		  for(var i = 0; i < 32; i++){
+			  info[i] = new Array();
+		  }
+			 
+		//처음은 카테고리가 들어갈 배열
+		info[0][0] = 'Day';	 			 
+		 for(var i = 0; i < storeName.length; i++){
+		  	info[0][i+1] = storeName[i];
+		 	for(var k = 1; k <= 31; k++ ){
+			  info[k][0] = k+'일';
+			  if(day[i][k] > 0){
+			  	//console.log(day[i][k]+" i: "+i+" k: "+k +" i+1:"+(i+1));
+				  info[k][i+1] = day[i][k];
+			  }else{
+				  info[k][i+1] = 0;
+			  }
+		  
+		 	}
+			}//end of for
+				
+		
+			  
+		  
+		 // console.log(info);
+	  }else if(types === '3month'){
+		  var storeName = [];
+		  storeName = storeNameArr(data);
+		  makeArray(storeName.length);
+		   var date = new Date();
+		   var time =  (date.getMonth() + 1, 2);
+		  for(var i in data){
+			  var sale = data[i];
+	          var month = parseInt((sale.ORDERDAY));
+	          console.log(month);
+	          var totalPrice = parseInt(sale.TOTALPRICE);
+				  for(var i = 0; i < day.length; i++){
+					  if(storeName[i] != sale.STORENAME){
+					
+					  }else{
+						  day[i][month] = 0;
+						  day[i][month] += totalPrice;
+						  break;
+					  }
+				  }//end of for
+				  
+			  
+		  }// end of for in
+		  //2차 배열 생성
+		  var info = [];
+		  for(var i = 0; i < 4; i++){
+			  info[i] = new Array();
+		  }
+			 
+		//처음은 카테고리가 들어갈 배열
+		info[0][0] = 'Month';	 			 
+		 for(var i = 0; i < storeName.length; i++){
+		  	info[0][i+1] = storeName[i];
+		 	for(var k = 3; k > 0; k-- ){
+		 		if(time-k == 0){
+		 			info[4-k][0] = '12월';
+		 		}else if(time-k == -1){
+		 			info[4-k][0] = '11월';
+		 		}else if((time-k) == -2){
+		 			info[4-k][0] = '10월';
+		 		}else{
+					info[4-k][0] = (time-k)+'월';
+		 			
+		 		}
+			  if(day[i][k] > 0){
+			  	//console.log(day[i][k]+" i: "+i+" k: "+k +" i+1:"+(i+1));
+				  info[4-k][i+1] = day[i][k];
+			  }else{
+				  info[4-k][i+1] = 0;
+			  }
+		  
+		 	}
+			}//end of for
+			console.log(info);
+	  }//end of types If
+	  
+	 
+	  // Some raw data (not necessarily accurate) 2차 배열 형태로 넣어야함.
+	    var chartData = google.visualization.arrayToDataTable(info);
+	    var options = {
+	      title : types+' Store Sale volume',
+	      vAxis: {title: 'Sale Price'},
+	      hAxis: {title: 'Time'}
+	      //seriesType: 'line'
+	     // series: {2: {type: 'line'}}
+	    };
+
+	    chart = new google.visualization.LineChart($(".timeChart")[0]);
+	    chart.draw(chartData, options);
+		  
+	  
+  }//end of drawChat
+  
+  google.charts.load('current', {'packages':['corechart']});
+  
+  if(!'${saleVolume}'){
+	  google.charts.setOnLoadCallback(drawChart('${saleVolume}','today'));
+  }else{
+	  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+	  $(".timeChart").html(noData);
+  }
+  
+  
+	var day = [];
+	
+	function storeNameArr(data){
+		var storeName = [];
+		  var storeNameFlag = false;
+		  //배열의 길이를 동적으로 만들기 위한 거
+		  for(var i in data){
+			  var sale = data[i];
+			  if(storeName.length == 0){
+				  storeName[0] = sale.STORENAME;
+			  }else{
+				  for(var i = 0; i < storeName.length; i++){
+					  if(storeName[i] != sale.STORENAME){
+						  storeNameFlag = true;
+					  }else{
+						  storeNameFlag = false;
+						  break;
+					  }
+				  }
+				  
+		  	  }
+			  if(storeNameFlag == true){
+				  storeName[storeName.length] = sale.STORENAME;
+				  console.log(storeName);
+			  }
+		  }
+		  return storeName;
+	}
+	
+	function makeArray(length){
+		//2차 배열 만듬.
+		  for(var i = 0; i < length; i++){
+			  day[i] = new Array();
+		  }
+		return day;
+	}
+  </script>

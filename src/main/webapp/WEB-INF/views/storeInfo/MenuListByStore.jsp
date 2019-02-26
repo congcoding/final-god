@@ -29,6 +29,7 @@
 				</c:if>
 		    </span>
 	    </li>
+	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
 	    <li class="list-group-item">
 	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
 	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
@@ -459,12 +460,11 @@ function emptyCart(newMenuCode){
 
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
-	
 
 	var bool = confirm("주문 하시겠습니까?");
 	
 	if(bool){
-		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text();	
+		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val();	
 	}	
 } 
 

@@ -104,4 +104,6 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	public int closedStore(String storeNo) {
 		return storeInfoDao.closedStore(storeNo);
 	}
+	
+	
 }

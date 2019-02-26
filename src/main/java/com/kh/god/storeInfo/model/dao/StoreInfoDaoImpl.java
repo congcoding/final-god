@@ -1,5 +1,6 @@
 package com.kh.god.storeInfo.model.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,8 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	public int closedStore(String storeNo) {
 		return sqlSession.update("storeInfo.closedStore", storeNo);
 	}
+
+
 	
 
 	

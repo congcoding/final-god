@@ -35,16 +35,16 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 		
 			Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-		
+			//아무나 memberView 못보게 막음, 결제 직전 페이지에서 장바구니 보여줌
+			
 			return false; 
 		}
 		
-		
-
 		/*
 		 * if (memberLoggedIn == null) { Seller sellerLoggedIn = (Seller)
 		 * session.getAttribute("sellerLoggedIn"); }
 		 */
+
 
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}

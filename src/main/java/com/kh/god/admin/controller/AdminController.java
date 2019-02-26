@@ -28,9 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.admin.model.service.AdminService;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
 import com.kh.god.common.util.Utils;
+import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -60,8 +62,11 @@ public class AdminController {
 	}
 
 	@RequestMapping("/admin/dashBoard.do")
-	public void dashBoard() {
-	
+	public void dashBoard(Model model) {
+		int qnaCount = adminService.countQnaControlList();
+		int storePMSCount = adminService.countStorePMSList();
+		model.addAttribute("qnaCount",qnaCount);
+		model.addAttribute("storePMSCount",storePMSCount);
 	}
 
 	@RequestMapping("/admin/eventForm.do")
@@ -593,6 +598,88 @@ public class AdminController {
 		return "/admin/storeList";
 	}
 	
+	@RequestMapping("/admin/coupon.do")
+	public String couponDown(@RequestParam(name="memberId") String memberId, @RequestParam(name="eventNo") int eventNo,Model model) {
+		
+		Event event = adminService.eventView(eventNo);
+		List<Coupon> check = adminService.couponList(memberId);
+		String msg="";
+		String view = "common/msg";
+		String loc = "";
+		int duplication = 0;
+		Coupon coupon = new Coupon();
+		int result = 0;
+		logger.debug(check);
+		for(int i = 0; i< check.size(); i++ ){
+			Coupon element = check.get(i);
+			if((element.getEventNo())== eventNo) {
+				duplication = 1 ;
+			}
+		}
+		
+		if(duplication > 0) {
+			msg = "이미 다운 받은 쿠폰입니다.";
+			loc = "/event/eventView.do?eventNo="+eventNo;
+		}else if(duplication == 0) {
+			if(event.getAmount() > 0) {
+				coupon.setEventNo(event.getEventNo());
+				coupon.setMemberId(memberId);
+				coupon.setStartDate(event.getStartDate());
+				coupon.setEndDate(event.getEndDate());
+				int result1 = adminService.couponDownload(coupon);
+				int result2 = adminService.couponAmount(eventNo);
+				result = result1 + result2;
+				if(result > 1) {
+					loc = "/event/eventView.do?eventNo="+eventNo;
+					msg = "다운이 완료되었습니다.";
+				}else {
+					loc = "/event/eventView.do?eventNo="+eventNo;
+					msg = "쿠폰을 다운받을 수 없습니다.";
+				}
+			}else if(event.getAmount() <=0) {
+				loc = "/event/eventView.do?eventNo="+eventNo;
+				msg = "쿠폰이 모두 소진되었습니다ㅠㅠㅠ";
+			}
+		}
+		
+//		mav.addObject("loc",loc);
+//		mav.addObject("msg",msg);
+//		mav.setViewName("view");
+		model.addAttribute("msg",msg);
+		model.addAttribute("loc",loc);
+		
+		return "common/msg";
+	}
+	
+	@RequestMapping("/admin/timeChart.do")
+	@ResponseBody
+	public Map<String, Object> timeChart(@RequestParam(name="month") String month) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = null;
+		if(month.equals("now")) {
+			list = adminService.timeChart();
+		}
+		map.put("list", list);
+		return map;
+	}
+	@RequestMapping("/admin/chartByMonth.do")
+	@ResponseBody
+	public Map<String, Object> chartByMoneth(@RequestParam(name="year") int year) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = adminService.chartByMonth(year);
+		map.put("list", list);
+		return map;
+	}
+	
+	@RequestMapping("/admin/totalCostByMonthly.do")
+	@ResponseBody
+	public Map<String, Object> totalCostByMonthly() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<OrderInfo> list = adminService.totalCostByMonthly();
+		map.put("list", list);
+		return map;
+	}
+	
 //	---------------------------------------------------------
 	
 	@RequestMapping("/admin/storePMSView.do")
@@ -742,6 +829,27 @@ public class AdminController {
 		List<Event> eventList = adminService.carouselEvent();
 		map.put("carouselEvent", eventList);
 		return map;
+	}
+	
+	@RequestMapping("admin/chart.do")
+	public Model chart(Model model) {
+		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("admin/chart");
+		return model;
+	}
+	
+	@ResponseBody
+	@RequestMapping("admin/chartByWeek.do")
+	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") String weeklyStartDate, @RequestParam(name="weeklyEndDate") String weeklyEndDate) {
+		Map<String, String> map = new HashMap<>();
+		map.put("weeklyStartDate", weeklyStartDate);
+		map.put("weeklyEndDate", weeklyEndDate);
+		List<Integer> chartByWeek = adminService.chartByWeek(map);
+		
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("chartByWeekList", chartByWeek);
+		return returnMap;
 	}
 
 }

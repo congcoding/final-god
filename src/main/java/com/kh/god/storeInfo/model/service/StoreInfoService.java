@@ -24,4 +24,6 @@ public interface StoreInfoService {
 
 	int closedStore(String storeNo);
 
+	
+
 }
