@@ -76,6 +76,9 @@ public interface SellerService {
 
 	int deleteMenu(String menuCode);
 
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+
+
 	int selectMenuNo(String storeNo);
 
 	int insertMenu(Menu menu);
