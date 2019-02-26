@@ -119,6 +119,8 @@ public interface AdminService {
 	
 	List<OrderInfo> totalCostByMonthly();
 	
+	List<Ad> adCostByMonthly();
+	
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);
@@ -143,5 +145,7 @@ public interface AdminService {
 	List<Integer> chartByCategory();
 
 	List<Integer> chartByWeek(Map<String, String> map);
+
+	List<Integer> chartByCategoryAmount();
 
 }

@@ -32,6 +32,10 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 		HttpSession session = request.getSession();		
 		Member memberLoggedIn = (Member) session.getAttribute("memberLoggedIn");
 
+
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn"); 
+
+
 		//일반회원이 로그인을 안한 상태거나 
 		//다른 아이디로 memberView나 memberUpdate에 접근하거나		
 		if(memberLoggedIn != null) { // 일반 회원으로 로그인은 했지만,
@@ -50,9 +54,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 			return false;
 		}
-		
-	
-		
+
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}
 

@@ -282,6 +282,11 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<Ad> adCostByMonthly() {
+		return adminDao.adCostByMonthly();
+	}
+	
+	@Override
 	public List<Coupon> couponList(String memberId) {
 		return adminDao.couponList(memberId);
 	}
@@ -336,6 +341,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<Integer> chartByWeek(Map<String, String> map) {
 		return adminDao.chartByWeek(map);
+	}
+
+	@Override
+	public List<Integer> chartByCategoryAmount() {
+		return adminDao.chartByCategoryAmount();
 	}
 
 }
