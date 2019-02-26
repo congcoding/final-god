@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.exception.StoreInfoException;
 import com.kh.god.storeInfo.model.dao.StoreInfoDao;
 import com.kh.god.storeInfo.model.vo.SAttachment;
@@ -49,8 +50,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 				result = storeInfoDao.insertAttachment(a);
 				if(result == 0) {
 					throw new StoreInfoException("첨부파일 등록 오류!");
-				}
-				
+				}				
 			}
 		}
 		
@@ -105,10 +105,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	public int closedStore(String storeNo) {
 		return storeInfoDao.closedStore(storeNo);
 	}
-	
-	//종합 보기에서  저번주의 판매량을 가져온다.
+
 	@Override
-	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
-		return storeInfoDao.totalSaleVolume(sellerId,type);
+	public List<Review> reviewList(String storeNo) {
+		return storeInfoDao.reviewList(storeNo);
 	}
+	
+	
 }

@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
@@ -65,17 +66,12 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	}
 
 	@Override
-	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
-		List<Map<String,String>> resultList = null;
-		switch(type) {
-		case "today" : resultList = new ArrayList<>();resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofToday", sellerId); break;
-		case "week" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofWeek", sellerId); break;
-		case "month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeofMonth", sellerId); break;
-		case "3month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("storeInfo.totalSaleVolumeof3Month", sellerId); break;
-		}
-		
-		return resultList;
+	public List<Review> reviewList(String storeNo) {
+		List<Review> reviewList = sqlSession.selectList("storeInfo.reviewList",storeNo);
+		return reviewList;
 	}
+
+
 	
 
 	

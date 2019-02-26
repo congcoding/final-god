@@ -134,7 +134,6 @@ span#passworderror3{
 	<br />
 	<hr />	
 	<br />
-
 	
 	<!-- 사업장 정보 출력하기 -->
 	<div id="addStore-container" >

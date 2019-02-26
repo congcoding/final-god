@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="com.kh.god.seller.model.vo.*" %>
+<%
+	Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+	if(sellerLoggedIn != null){
+	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
+	}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +22,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+<link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
 <!-- 구글 차트 API -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -163,14 +171,13 @@ span.srchVal{
 }
 </style>
 </head>
-<!-- chatting modal -->
-		<div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<!-- chatting modal -->
+	<div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content" style="height : 40em; width : 25em;" id="chatModalContent">
 	    </div>
 	  </div>
 	</div><!-- end of chatting modal -->
-	
 
 	<!-- create chatRoom modal -->
 	<div class="modal fade" id="createChatRoom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -214,6 +221,7 @@ span.srchVal{
 	    </div>
 	  </div>
 	</div><!-- end of comfirm modal -->
+
 <body>
 <div id="socketAlert" class="alert alert-success" role="alert" ></div>
 <div id="container">
@@ -222,6 +230,7 @@ span.srchVal{
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
 		    <span class="navbar-toggler-icon"></span>
 		  </button>
+		  
 		  <!-- //collapse navbar-collapse -->
 		  <div class="navbar-collapse collapse " id="navbarTogglerDemo01">
 		    <a class="navbar-brand" href="${pageContext.request.contextPath}">God of Delivery</a>
@@ -237,29 +246,29 @@ span.srchVal{
 		      </li>
 		    </ul>
 		    
-		<!-- 회원 로그인,회원가입 버튼 -->
-	   <c:if test="${memberLoggedIn == null}">
-	   	<c:if test="${sellerLoggedIn == null}">
-		<!--https://getbootstrap.com/docs/4.1/components/buttons/#outline-buttons-->
-			<button class="btn btn-outline-success header-btn" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
-		 	&nbsp;  
-			<button class="btn btn-outline-success header-btn" type="button" 
-	     		onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
-		 </c:if>
-		</c:if>
-		
-		<!-- member 로그인후  -->
-		<c:if test="${memberLoggedIn != null}">
-		  <c:if test="${sellerLoggedIn == null}">
-		  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
-			<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
-			<button class="btn btn-outline-sucess" type="button" 
-					onclick = "memberLogOut();">로그아웃</button>
-		  </c:if>
-		</c:if>
-		
-		<!-- seller 로그인후  -->
-		<c:if test="${sellerLoggedIn != null}">
+			<!-- 회원 로그인,회원가입 버튼 -->
+		    <c:if test="${memberLoggedIn == null}">
+		   		<c:if test="${sellerLoggedIn == null}">
+				<!--https://getbootstrap.com/docs/4.1/components/buttons/#outline-buttons-->
+					<button class="btn btn-outline-success header-btn" type="button" data-toggle="modal" data-target="#loginModal">로그인</button> 
+			 		&nbsp;  
+					<button class="btn btn-outline-success header-btn" type="button" 
+		     				onclick="location.href='${pageContext.request.contextPath}/chooseEnrollType.do'">회원가입</button>
+				</c:if>
+			</c:if>
+			
+			<!-- member 로그인후  -->
+			<c:if test="${memberLoggedIn != null}">
+			  <c:if test="${sellerLoggedIn == null}">
+			  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
+				<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+				<button class="btn btn-outline-sucess" type="button" 
+						onclick = "memberLogOut();">로그아웃</button>
+			  </c:if>
+			</c:if>
+			
+			<!-- seller 로그인후  -->
+			<c:if test="${sellerLoggedIn != null}">
 		  <c:if test="${memberLoggedIn == null}">
 		  <!-- 알람  -->
 			<ul class="navbar-nav ml-auto">
@@ -286,9 +295,7 @@ span.srchVal{
                     <span class="font-weight-bold">A new monthly report is ready to download!</span>
                   </div>
                 </div>
-                
-                
-                
+  
                 <div class="dropdown-item d-flex align-items-center" >
                   <div class="mr-3">
                     <div class="icon-circle bg-success">
@@ -296,8 +303,7 @@ span.srchVal{
                     </div>
                   </div>
                   <div>
-                    <div class="small text-gray-500">December 7, 2019</div>
-                    $290.29 has been deposited into your account!
+                    <div class="small text-gray-500"></div>
                   </div>
                 </div>
               
@@ -312,6 +318,7 @@ span.srchVal{
                     Spending Alert: We've noticed unusually high spending for your account.
                   </div>
                 </div>
+                
                 <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
               </div>
             </li>
@@ -328,7 +335,8 @@ span.srchVal{
              
               </div>
             </li>
-            </ul>
+            </ul> <!-- ul.navbar-nav ml-auto -->
+            
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
@@ -336,11 +344,14 @@ span.srchVal{
 		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
 		  </c:if>
 		</c:if>
-		</div>
-		</nav>
-		</div>
+		
+		  </div> <!-- div#navbarTogglerDemo01 -->
+	    </nav>
+  </header>
+
+<!-- </div> -->
 	
-   </header>
+ 
 
    	<!-- 로그인모달 : https://getbootstrap.com/docs/4.1/components/modal/#live-demo -->
 	<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -370,7 +381,7 @@ span.srchVal{
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
 	      	</div>
-	      	<!-- 	<input type="checkbox" name="autoLogin" />  -->
+	      	<!-- <input type="checkbox" name="autoLogin" /> -->
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	      </div>
 		  </form>
@@ -396,11 +407,11 @@ span.srchVal{
 	
 	function check(){
 		
-	/*  	if($("#autoLogin :checked")){
+ 		if($("#autoLogin :checked")){
 			$("#autoLogin").val("1");
 		}else{
 			$("#autoLogin").val("");
-		}  */
+		}  
 		
 		var chk = $("[name='login']:checked").val();
 		

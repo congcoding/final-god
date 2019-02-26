@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -202,6 +203,48 @@ public class SellerDaoImpl implements SellerDao {
 	public int insertOrderMenu(Map<String, Object> orderMenuMap) {
 		// TODO Auto-generated method stub
 		return sqlSession.insert("seller.insertOrderMenu",orderMenuMap);
+	}
+
+	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
+		List<Map<String,String>> resultList = null;
+		switch(type) {
+		case "today" : resultList = new ArrayList<>();resultList = sqlSession.selectList("seller.totalSaleVolumeofToday", sellerId); break;
+		case "week" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("seller.totalSaleVolumeofWeek", sellerId); break;
+		case "month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("seller.totalSaleVolumeofMonth", sellerId); break;
+		case "3month" : resultList = new ArrayList<>(); resultList = sqlSession.selectList("seller.totalSaleVolumeof3Month", sellerId); break;
+		}
+		
+		return resultList;
+	}
+
+	public int selectMenuNo(String storeNo) {
+		List<Menu> menuList = sqlSession.selectList("menu.selectMenuNo", storeNo);
+		int menuNo = 0;
+
+		try {
+
+			if (menuList == null) {
+				menuNo = 0;
+			} else {
+
+				menuNo = menuList.get(menuList.size() - 1).getMenuNo();
+			}
+
+		} catch (IndexOutOfBoundsException e) {
+
+		}
+		
+		return menuNo;
+	}
+
+	@Override
+	public int insertMenu(Menu menu) {
+		return sqlSession.insert("menu.insertMenu", menu);
+	}
+
+	@Override
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
 	}
 
 

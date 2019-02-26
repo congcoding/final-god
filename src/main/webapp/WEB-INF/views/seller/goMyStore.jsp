@@ -347,7 +347,7 @@ $(function(){
   
   <script>
   //그려낼 차트변수
-  var chart;
+  var chart = null;
   
   $("div[id^=totalSaleVolumeof]").css("cursor","pointer");
   //저번주 판매량데이터 가져옴
@@ -382,7 +382,9 @@ $(function(){
   
   //이미 그려져 있는 차트를 지운다.
   function clearChart(){
-	  chart.clearChart();
+	  if(chart != null){
+	 	 chart.clearChart();
+	  }
   }
   //한주의 판매량 차트 그리기
   function drawChart(data,types){
@@ -660,33 +662,15 @@ $(function(){
   }//end of drawChat
   
   google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawVisualization);
   
-  function drawVisualization() {
-    // Some raw data (not necessarily accurate)
-    var data = google.visualization.arrayToDataTable([
-      ['Time', 'Bolivia', 'Rwanda', 'Average'],
-      ['00:00 ~ 03:00',  165,450,614.6],
-      ['03:00 ~ 06:00',  135,288,682],
-      ['06:00 ~ 09:00',  157,397,623],
-      ['09:00 ~ 12:00',  139,215,609.4],
-      ['12:00 ~ 15:00',  136,366,569.6],
-      ['15:00 ~ 18:00',  136,366,569.6],
-      ['18:00 ~ 21:00',  136,366,569.6],
-      ['21:00 ~ 24:00',  136,366,569.6]
-    ]);
-
-    var options = {
-      title : 'Today Store Sale volume',
-      vAxis: {title: 'SaleVolume'},
-      hAxis: {title: 'Time'},
-      seriesType: 'bars',
-      series: {2: {type: 'line'}}
-    };
-
-    chart = new google.visualization.ComboChart($(".timeChart")[0]);
-    chart.draw(data, options);
+  if(!'${saleVolume}'){
+	  google.charts.setOnLoadCallback(drawChart('${saleVolume}','today'));
+  }else{
+	  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+	  $(".timeChart").html(noData);
   }
+  
+  
 	var day = [];
 	
 	function storeNameArr(data){

@@ -81,5 +81,14 @@ public interface SellerDao {
 
 	int insertOrderMenu(Map<String, Object> orderMenuMap);
 
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+
+	int selectMenuNo(String storeNo);
+
+	int insertMenu(Menu menu);
+
+	StoreInfo selectStoreInfo(String storeNo);
+
+
 
 }

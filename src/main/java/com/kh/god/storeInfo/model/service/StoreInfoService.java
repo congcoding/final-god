@@ -3,6 +3,7 @@ package com.kh.god.storeInfo.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
@@ -24,6 +25,8 @@ public interface StoreInfoService {
 
 	int closedStore(String storeNo);
 
-	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+	List<Review> reviewList(String storeNo);
+
+	
 
 }
