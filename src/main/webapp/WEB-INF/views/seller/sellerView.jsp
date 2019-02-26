@@ -245,8 +245,6 @@ span#passworderror3{
 		</div>
 			
 		
-	
-		
 		<input type="submit" class="btn btn-outline-success" onclick="validate();" value="수정하기" >
 	
 	</form>

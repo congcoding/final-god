@@ -103,7 +103,7 @@ public class MemberController {
 	        int result = memberService.insertMember(m);
 	        String loc="/"; 
 	        String msg ="";
-	        String view = "/common/msg";
+	        String view = "common/msg";
 	        
 			if(result>0) {
 				msg = "회원가입성공"; 
@@ -191,14 +191,41 @@ public class MemberController {
 		return mav;
 	}
 
+	/** 회원 정보 삭제 : memberDelte */
+	@RequestMapping("/member/memberDelete.do")
+	public ModelAndView memberDelete(@RequestParam String memberId, ModelAndView mav) {
+		if(logger.isDebugEnabled()) { 
+			logger.debug(memberId+"회원의 '회원삭제' 요청"); 					
+		}		
+		
+		int result = memberService.deleteMember(memberId);
+		
+		String loc="/"; 
+		String msg ="";
+		String view = "common/msg";
+		       
+		if(result>0) {
+			msg = "회원삭제성공"; 
+						
+		}else {
+			msg="회원삭제실패!";
+			loc = "/member/memberView.do?memberId="+memberId; 	
+		}
+
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+		
+				
+		return mav; 		
+	}
+	
 	/** 회원 정보 조회 : memberView */
 	@RequestMapping("/member/memberView.do")
 	public String memberView(@RequestParam String memberId, Model model) {	
-		System.out.println("도착");	
 		if(logger.isDebugEnabled()) { 
-			logger.debug("회원'정보' 페이지 요청"); 		
-		}
-		
+			logger.debug(memberId+"회원의 '회원정보' 페이지 요청"); 					
+		}		
 		Member m = memberService.selectOneMember(memberId);
 		
 		model.addAttribute("m", m);
@@ -233,16 +260,13 @@ public class MemberController {
 			while(iterator.hasNext()) {
 				String loginId = iterator.next();
 				logger.debug("로그인 되어있는 아이디!"+ loginId+", 로그인을 요청한 아이디 : "+ m.getMemberId());
-				if(m.getMemberId().equals(loginId)) {
-					
+				if(m.getMemberId().equals(loginId)) {					
 					msg = "이미 로그인한 아이디가 있습니다.";
 					loc="/";
 					loginFlag = false;
-				}
-				
+				}				
 			}
             //비밀번호 비교
-            System.out.println(password);
            if(loginFlag == true) {
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
                 mav.addObject("memberLoggedIn",m);
@@ -268,8 +292,10 @@ public class MemberController {
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
 		session.setAttribute("login",null);
+		
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청");
+		
 		WebSocketHandler.getInstance().getUserList().remove(memberId);
 
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화

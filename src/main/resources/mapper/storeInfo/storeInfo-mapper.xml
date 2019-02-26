@@ -8,6 +8,7 @@
 		where categoryno = A.categoryno) categorycount 
 	from storeInfo A 
 	where categoryno = #{categoryno}
+	order by storegrade
 	</select>
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
 	
@@ -88,11 +89,11 @@
    </update>
 
    <select id="orderList1" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N'
+		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N' and cancelFlag='N'
    </select>
    
     <select id="orderList2" resultType="map">
@@ -104,7 +105,7 @@
     </select>
     
     <select id="orderList3" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.deliveryend,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
@@ -112,7 +113,7 @@
    </select>
    
    <update id="receiveOrder">
-       update orderinfo set receiveFlag='Y',deliverytime=#{howLongChecked} where orderno=#{orderNo}
+       update orderinfo set receiveFlag='Y' where orderno=#{orderNo}
    </update>
 
 	<select id="adSelectAll" resultType="ad">
@@ -138,7 +139,13 @@
 	</select>
 
 	<insert id="adRequest" parameterType="ad">
-		 <![CDATA[ insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1))]]>
+	{call
+		declare
+		begin
+		update storeinfo set storegrade=#{storeGrade} where storeNo = #{storeNo};
+		insert into ad values(seq_ad_adno.nextval, #{storeNo}, #{price}, #{storeGrade},sysdate,add_months(sysdate,+1));
+		end
+	}
 	</insert>
 
 	<update id="deliveryEnd">
@@ -157,6 +164,10 @@
 		update sattachment set status = 'Y' where originalfilename = #{filename}
 	</update>
 	
+	<select id="cancelOrder">
+	    update orderinfo set cancelFlag='Y' where orderno=#{orderNo}
+	</select>
+
 	<update id="updateStore" >
 		update storeinfo set storeTel = #{storeTel} , storename=#{storeName} ,storeAddress = #{storeAddress} , categoryNo = #{categoryNo} , storeintro = #{storeIntro} , personalday = #{personalDay} , operatinghours = #{operatingHours}  , deliveryMinPrice =#{deliveryMinPrice} where storeNo = #{storeNo}
 	</update>
@@ -165,4 +176,34 @@
 		update storeinfo set closeflag =  'Y' where storeNo = #{storeNo}
 	</update>
 
+
+	<!-- 종합 보기에서 저번주의 판매량을 가지고 오는 쿼리문 -->
+	<select id="totalSaleVolumeofWeek" resultMap="totalOf">
+		select to_char(ordertime,'dy')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
+		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
+		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and ((TRUNC(sysdate, 'iw')-7)- O.ordertime <![CDATA[<=]]> 0) and (TRUNC(sysdate, 'iw') - O.ordertime >= 0)
+		group by to_char(ordertime,'dy'),  S1.storename, O.storeno,S1.sellerid
+	</select>
+	<select id="totalSaleVolumeofToday" resultMap="totalOf">
+		select to_char(ordertime,'hh24')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
+		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
+		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and (TRUNC(sysdate)- O.ordertime <![CDATA[<=]]> 0) and (TRUNC(sysdate)+1 - O.ordertime >= 0)
+		group by to_char(ordertime,'hh24'), S1.storename, O.storeno,S1.sellerid
+	</select>
+	<select id="totalSaleVolumeofMonth" resultMap="totalOf">
+		select to_char(ordertime,'MM/dd')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
+		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
+		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and extract(month from sysdate)-extract(month from ordertime)=1 
+		group by to_char(ordertime,'MM/dd'), S1.storename, O.storeno,S1.sellerid
+	</select>
+	<select id="totalSaleVolumeof3Month" resultMap="totalOf">
+	select to_char(ordertime,'MM')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
+	from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
+	where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and extract(month from sysdate)-extract(month from ordertime) >= 1 and  extract(month from sysdate)-extract(month from ordertime) <![CDATA[<=]]> 3
+	group by to_char(ordertime,'MM'), S1.storename, O.storeno,S1.sellerid
+	</select>
+	<resultMap type="map" id="totalOf">
+		<result column="originalprice" property="ORIGINALPRICE" javaType="string"/>
+		<result column="totalprice" property="TOTALPRICE" javaType="string"/>
+	</resultMap>
 </mapper>

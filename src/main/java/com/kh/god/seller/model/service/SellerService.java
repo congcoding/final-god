@@ -70,6 +70,8 @@ public interface SellerService {
 
 	int deliveryEnd(int orderNo);
 
+	int cancelOrder(int orderNo);
+
 	int updateMenu(Map<String, Object> map);
 
 	int deleteMenu(String menuCode);
@@ -79,6 +81,7 @@ public interface SellerService {
 	int insertMenu(Menu menu);
 
 	StoreInfo selectStoreInfo(String storeNo);
+
 
 
 }

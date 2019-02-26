@@ -23,13 +23,16 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
 <link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
+<!-- 구글 차트 API -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
 <!-- 주소api -->
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
- 
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> 
+
 <style>
 nav.navbar-light{
 	background : #117a8b;
@@ -42,8 +45,9 @@ nav.navbar-light{
 }
 
 .header-btn{
-	color : white;
+	background-color: #117a8b;
 	border-color: white;
+	color : white;
 }
 .header-btn:hover {
     background-color: #117a8b;
@@ -53,6 +57,7 @@ nav.navbar-light{
 .navbar-expand-lg .btn-outline-success:hover {
 	background-color: #32aeb8;
 }
+
 #modal-checkbox{
 	padding-right: 252px;
 }
@@ -96,7 +101,7 @@ div#chatView{
 	margin-left : 0.25em;
 	overflow: -moz-scrollbars-vertical;
 	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-y: auto;	
 }
 div#chatView div.messageFormatMyself{
 
@@ -106,8 +111,8 @@ div#chatView div.messageFormatMyself{
 	text-align : right;
 	border : 1px solid lightgray;
 	border-radius :1em;
-	/*text-overflow : clip;*/
-	white-break : break-all;
+
+	
 }
 div#chatView div.messageFormatHim{
 
@@ -115,15 +120,55 @@ div#chatView div.messageFormatHim{
 	text-align : left;
 	border : 1px solid lightgray;
 	border-radius : 1em;
-	text-overflow : clip;
-	white-break:normal;
+	
 
+}
+div.dropdown-body{
+	overflow-y : auto;
+	max-height : 10rem;
 }
 div#socketAlert{
 	display : none;
 	z-index : 10;
 }
+div#messageContentShow{
+	white-space : normal;
+}
+div#createChatRoomHeader h5{
+	margin : auto;
+	margin-right : 1rem;
+}
+input#insertId{
+	float : left;
+	width : 13rem;
+}
 
+div#autoComplete{
+	min-width: 160px;
+	border : 1px solid gray;
+	display : none;
+	padding : 0;
+	margin : 0;	
+	
+}
+div#autoComplete li{
+	padding : 0 10px;
+	list-style : none;
+	cursor : pointer;
+
+}
+div#autoComplete li:hover{
+	background : lightseagreen;
+	color : white;
+}
+div#autoComplete li.selected{
+	background : lightseagreen;
+	color : white;
+}
+span.srchVal{
+	color : red;
+	
+}
 </style>
 </head>
 <!-- chatting modal -->
@@ -133,6 +178,50 @@ div#socketAlert{
 	    </div>
 	  </div>
 	</div><!-- end of chatting modal -->
+	
+
+	<!-- create chatRoom modal -->
+	<div class="modal fade" id="createChatRoom" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+	    <div class="modal-content" style="height : 19rem; width : 19rem;" id="createChatRoomBody">
+	    	<div class="modal-header" id="createChatRoomHeader">
+	        <h5 class="modal-title" >채팅할 사람</h5>	
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding : 0.1em;">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body"  id="addPersonForChat">
+			<input type="text" class="form-control" name="searchPerson" placeholder="추가할 아이디를 검색하세요." id="insertId" autocomplete="off" />
+	        <button type="button" class="btn btn-link" id="addPersonForChatBtn" data-toggle="modal" data-target="#confirmModal"><i class="fas fa-plus"></i></button>
+	        <div style="overflow-y : auto;" id="autoComplete"></div>
+		  </div>
+	      <div class="modal-footer">
+	      	
+	      </div>
+	    </div>
+	  </div>
+	</div><!-- end of create chatRoom -->
+	
+	<!-- confirm modal -->
+	<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+	    <div class="modal-content" style="height : 12rem; width : 20rem;" id="confrimBody">
+	    	<div class="modal-header" id="confrimHeader">
+	        <h5 class="modal-title" >확인</h5>	
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding : 0.1em;">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body"  id="confirmBody">
+			<input type="text" class="form-control" name="confirmContent"  readonly />
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-outline-success" id="confirmOkBtn"  onclick="confirmOrNot();">확인</button>
+	        <button type="button" class="btn btn-outline-danger" id="confirmCancleBtn" data-dismiss="modal">취소</button>
+	      	</div>
+	      </div>
+	    </div>
+	  </div>
+	</div><!-- end of comfirm modal -->
 <body>
 <div id="socketAlert" class="alert alert-success" role="alert" ></div>
 <div id="container">
@@ -172,7 +261,8 @@ div#socketAlert{
 		  <c:if test="${sellerLoggedIn == null}">
 		  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
 			<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
-			<button class="btn btn-outline-sucess" type="button" onclick="location.href='${pageContext.request.contextPath}/member/memberLogout.do?memberId=${memberLoggedIn.memberId}'">로그아웃</button>
+			<button class="btn btn-outline-sucess" type="button" 
+					onclick = "memberLogOut();">로그아웃</button>
 		  </c:if>
 		</c:if>
 		
@@ -297,7 +387,11 @@ div#socketAlert{
 	</div>
 	
 	<script>
-	
+	function memberLogOut(){
+		sessionStorage.clear();
+		location.href=
+			'${pageContext.request.contextPath}/member/memberLogout.do?memberId=${memberLoggedIn.memberId}';
+	}
 	
 	function NoMultiChk(chk){
 		var obj = document.getElementsByName("login");
@@ -344,18 +438,24 @@ div#socketAlert{
 				type : "get",
 				dataType : "json",
 				success : function(data){
-					var mform = $("<div><h6 class='dropdown-header'>Message Center</h6></div>");
+					timeStamp = "";
+					var mform = $("<div><h6 class='dropdown-header'>Message Center <div class='btn btn-link'  id='openChatRoom' data-toggle='modal' data-target='#createChatRoom' > <i class='fas fa-comment-dots'></i></div></h6></div>");
+					var bodyForm = $("<div class='dropdown-body'></div>");
 					for(var i in data){
 						var messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+" '> <div class='dropdown-list-image mr-3'><img class='rounded-circle' src='https://source.unsplash.com/fn_BT9fwg_E/60x60' alt=''><div class='status-indicator bg-success'></div></div></div>");
 						var message = data[i];
-						timeStamp = (message.sendtime).substring(0,16);
+						var messageData = "";
+						if(message.sendtime != null){
+							timeStamp = (message.sendtime).substring(0,16);
+						}
+							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> <div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
 						
-						var messageData = "<div><div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+message.CHATCONTENT+"</div> <div class='small text-gray-500' id='sendPerson'  value="+message.SENDMEMBER+">"+message.SENDMEMBER+" / "+  timeStamp+"</div></div>";
 						messageForm.append(messageData);
-						mform.append(messageForm);
-					}
 						
-					mform.append("<a class='dropdown-item text-center small text-gray-500' href='#'>Read More Messages</a>");
+						bodyForm.append(messageForm);
+					}
+						mform.append(bodyForm);
+					
 					$("#messageDropdownBox").html(mform);
 				
 				},
@@ -454,15 +554,14 @@ div#socketAlert{
 	//개별 상세 채팅방 구현
 	 $(document).on('click', 'div[id^="messageView"]', function(){
 		 	var chatroominfo ={
-		 						chatRoomNo : $(this).children().eq(1).children("#messagePreviewContent").attr('value'),
-		 						sendId : $(this).children().eq(1).children("#sendPerson").attr('value')!='${sellerLoggedIn.sellerId}'?$(this).children().eq(1).children("#sendPerson").text():"<no>"
+		 						chatRoomNo : $(this).children().eq(1).attr('value'),
+		 						sendId : $(this).children().eq(2).attr('value')!='${sellerLoggedIn.sellerId}'?$(this).children().eq(2).attr('value'):"<no>"
 		 					};
-		 	$("#chatModal").modal('show');
-		 	
 		 	$.ajax({
 		 		url : "${pageContext.request.contextPath}/chat/chattingLog.do",
 		 		data : chatroominfo,
 		 		success : function(data){
+		 			$("#chatModal").modal('show');
 		 			successLodingChatLogs(data);
 		 			setTimeout(function(){
 			 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
@@ -482,19 +581,23 @@ div#socketAlert{
 	 });
 	 
 	 function successLodingChatLogs(data){
-		 var myId = '${sellerLoggedIn.sellerId}';
-			var chatForm = $("<div style='height : 100%; padding: 0'></div>");
+		 	messageData = "";
+			var myId = '${sellerLoggedIn.sellerId}';
+			var chatForm = $("<div style='height : 100%; padding: 0;'></div>");
 			var chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><img class='rounded-circle' src='https://source.unsplash.com/fn_BT9fwg_E/60x60' alt=''><div class='status-indicator bg-success' id='memberstatus'></div><div id='communicateWith'>"+ (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID) +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
 			var chatBody = $("<div class='shadow rounded border border-success' id='chatView' style='height : 25rem;' ></div>");
 			var chatFooter = $("<div class='modal-footer' style='width : 100%;'><input type='hidden' id='sendChatRoomNo' value="+data[0].chatRoomNo+" /><input type='text' class='form-control' name='messageContent' placeholder='메세지를 입력하세요.' id='messageContent' /><button type='button' class='btn btn-outline-success' id='sendMessage'>전송</button></div> ");
 			for(var i in data){
 				//console.log(data[i]);
 					messageType = data[i];
+				if(messageType.sendTime != null){
 					timeStamp = (messageType.sendTime).substring(0,16);
+				
 				if(data[i].SENDMEMBER == myId){
 					 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.SENDMEMBER+" / "+  timeStamp +"</div></div>";
 				}else{
 					 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.SENDMEMBER+" / "+ timeStamp +"</div></div>";
+				}
 				}
 				chatBody.append(messageData);
 			}
@@ -505,13 +608,14 @@ div#socketAlert{
 			$("#chatModalContent").html(chatForm);
 			hasFocusRoom = $("#sendChatRoomNo").val();
 	 }
+	 
 	var sendMsgTime = null;
 	var alertType = null ;
 	var messageType = null;
 	 //사용자가 어느 채팅방에 들어가 있는지 확인하는 변수
 	var hasFocusRoom = 0;
 	var messageData = "";
-	var timeStamp;
+	var timeStamp = "";
 	 function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
@@ -546,7 +650,7 @@ div#socketAlert{
 	 		alertType = null;
 	 		messageType = null;
 	 		var message = JSON.parse(event.data);
-	 		console.log("소켓 갔다와서 : "+message);
+	 		
 	 		for(var i = 0; i < message.length; i++){
 		 		if(message[i].cmd === "alert")
 		 			  alertType = message[i];
@@ -566,6 +670,135 @@ div#socketAlert{
 	 	}; 
 	 	
 	 }
+	 
+	 var scrollPosition = 0;
+	 var curHeight = 0;
+	//추가할 채팅방 사람ID를 검색할때 ajax를 사용해서 자동완성
+	$("#insertId").keyup(function(e){
+		var selected = $(".selected");
+		var li = $("#autoComplete li");
+		if(e.key == 'ArrowDown'){
+			curHeight += $(this).height();
+			if(curHeight > $("#autoComplete").height()){
+			scrollPosition += $(this).height();
+			$("#autoComplete").animate({
+				scrollTop : scrollPosition
+			},100);
+				
+			}
+			if(selected.length == 0){
+				$("#autoComplete li:first").addClass("selected");
+			}else if(selected.is(li.last())){
+				//처리코드없음
+			}else{
+				
+				selected.removeClass("selected").next().addClass("selected");
+			}		
+			
+			
+		}else if(e.key == 'ArrowUp'){
+		
+			scrollPosition -= $(this).height() ;
+			$("#autoComplete").animate({
+				scrollTop : scrollPosition
+			},100);
+			if(selected.length == 0){
+				//처리코드 없음 
+			}else if(selected.is(li.first())){
+				selected.removeClass("selected");
+			}else{
+				selected.removeClass("selected").prev().addClass("selected");
+			}
+		}else if(e.key == 'Enter'){
+			//값 선택
+			$(this).val(selected.text());
+			//검색어 목록은 감추고, li태그들은 모두 삭제
+			$("#autoComplete").hide().children().remove();
+		}else{
+			var searchId = $(this).val();
+			if(searchId.trim().length == 0){
+				$("#autoComplete").css('display','none');
+				return;
+			}
+			
+			$.ajax({
+				url : "${pageContext.request.contextPath}/chat/searchPerson.do",
+				type : "post",
+				data : {searchId : searchId},
+				success : function(data){
+					
+					console.log("검색ID들 : "+data);
+					var html = "";
+					
+					for(var i in data){
+						var name = data[i].sellerId;
+						html += "<li id='searchId'"+i+" data-target='#data'"+i+">"+name.replace(searchId,"<span class='srchVal'>"+searchId+"</span>")+"</li>";
+					}
+					
+					//서버로부터 전달된값이 있는경우에만 보이게 처리
+					if(data.length != 0){//nameArr.length > 1 도 됨
+						setTimeout(function(){
+						$("#autoComplete").html(html).css('display','block').css("overflow-y","auto").css("max-height","7rem");
+						},150); 
+					}
+				}
+				});
+		}
+	});
+	$(document).on('click', 'li[id^="searchId"]',function(){
+		
+		$("input[name=searchPerson]").val($(this).text());
+		//검색어 목록은 감추고, li태그들은 모두 삭제
+		$("#autoComplete").hide().children().remove();
+	});
+	
+	function confirmOrNot(value){
+		var searchId = {
+				addId : $("input[name=searchPerson]").val(),
+				loginId : '${sellerLoggedIn.sellerId}'				
+		};
+		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
+			
+		$.ajax({
+			url : "${pageContext.request.contextPath}/chat/addPerson.do",
+			data : searchId,
+			success : function(data){
+				console.log(data);
+				if(data[0].SELLERID === '존재하지않는아이디'){
+					$("#confirmModal").modal('hide');
+					alert('아이디가 존재하지 않습니다.');
+				}else{
+					$("#createChatRoom").modal('hide');
+					$("#confirmModal").modal('hide');
+					$("#chatModal").modal('show');
+					successLodingChatLogs(data);
+					setTimeout(function(){
+		 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
+		 			},100);
+					
+				}
+			},
+			error : function(jqxhr,textStatus,errorTrown){
+	 			console.log("채팅방 만들다가 에러 남!");
+				console.log(jqxhr);
+				console.log(textStatus);
+				console.log(errorTrown);
+	 		}
+		});//end of ajax
+		}else{
+			$("#confirmModal").modal('hide');
+		}
+		
+		
+	}
+	$("#addPersonForChatBtn").on('click',function(){
+		if($("input[name=searchPerson]").val().trim().length == 0){
+			$("input[name=confirmContent]").attr('placeholder','아이디를 입력해주세요');
+		}else{
+			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?');
+			
+		}
+	});
 	
 	</script>
    <section id="content">

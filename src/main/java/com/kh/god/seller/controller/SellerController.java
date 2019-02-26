@@ -26,6 +26,7 @@ import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -131,6 +132,7 @@ public class SellerController {
 					}
 					
 				}
+//				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
 	         // 비밀번호 비교
 			if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
@@ -140,6 +142,7 @@ public class SellerController {
 
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
+	            
 	            session.setAttribute("storeSideBar", store);
 
 	            view = "redirect:/";
@@ -358,7 +361,7 @@ public class SellerController {
     		@RequestParam(name="personalday" , required = false) String personalday,
     		@RequestParam(name="nowThumb" , required = false) String nowThumb,
     		@RequestParam(name="newThumb" , required = false) String newThumb,
-    		@RequestParam(name="storeNo") String storeNo,
+    		@RequestParam(name="storeNo", required = false) String storeNo,
     		Model model
 	
     		) {
@@ -398,9 +401,9 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	//int updateThumb = sellerService.updateStoreInfo();
-
-    	return "common/msg";
+    	
+//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
+    	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
     
@@ -515,7 +518,13 @@ public class SellerController {
 	//주문접수 
 	@RequestMapping("/seller/receiveOrder.do")
 	public String receiveOrder(@RequestParam("orderNoForReceive") int orderNo,
-			@RequestParam String howLongChecked) {
+			@RequestParam String howLongChecked,
+			@RequestParam String memberPhone) {
+		System.out.println(memberPhone);
+		MessageSend ms = new MessageSend();
+		String flag = "receive";
+		ms.main(howLongChecked,memberPhone,flag);
+
 		Map<String,Object> map = new HashMap<>();
 		map.put("orderNo",orderNo);
 		map.put("howLongChecked",howLongChecked);
@@ -525,14 +534,12 @@ public class SellerController {
 		
 		return "redirect:/";
 	}
+
 	//배달완료
 	@RequestMapping("/seller/deliveryEnd.do")
 	@ResponseBody
 	public Map<String, Object> deliveryEnd(@RequestParam("orderNo") int orderNo,
 			@RequestParam("storeNo") String storeNo) {
-		System.out.println("@@orderNo=>"+orderNo);
-		System.out.println("@@storeNo=>"+storeNo);
-
 		int result = sellerService.deliveryEnd(orderNo);
 		Map<String, Object> map = new HashMap<>();
 		List<Map<String, Object>> orderList2 = sellerService.orderList2(storeNo);
@@ -543,6 +550,7 @@ public class SellerController {
 		return map;
 	}
 	
+
 	@RequestMapping("/seller/updateMenu.do")
 	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
 								   @RequestParam("menuName") String menuName, 

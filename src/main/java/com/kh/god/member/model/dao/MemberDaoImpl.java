@@ -1,5 +1,7 @@
 package com.kh.god.member.model.dao;
 
+import java.util.Map;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,9 +28,22 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public int updateMember(Member m) {
-		System.out.println(m);
 		int result = sqlSession.update("member.updateMember",m);
 		return result;
 	}
+
+	@Override
+	public int deleteMember(String memberId) {
+		int result = sqlSession.update("member.deleteMember",memberId);
+		return result;
+	}
+
+	@Override
+	public int checkBookMark(Map<String, String> map) {
+		int result = sqlSession.selectOne("member.checkBookMark",map);
+		return result;
+	}
+
+
 
 }

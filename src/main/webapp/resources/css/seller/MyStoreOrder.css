@@ -1,59 +1,12 @@
 @charset "UTF-8";
-#orderTable{
-    margin-top: 3%;
-    width: 80%;
-    margin-left: 10%;
-}
-th{
-	width: 8%;
-}
-#title{
-    margin-top: 8%;
-    margin-left: 11%;
-}
-.orderAddress{
-    width: 23%;
-}
-#list-home{
-margin-left: -443px;
-    width: 140%;
-    margin-top: 30px;
-    }
-#list-profile{
-margin-left: -443px;
-    width: 140%;
-    margin-top: 30px;
-}
-#list-messages{
-margin-left: -443px;
-    width: 140%;
-    margin-top: 30px;
+#orderWaitng{
+	    margin-left: -32%;
+    width: 128%;
 }
 #list-tab{
-       width: 16%;
-    margin-left: 1%;
-    margin-top: 36px;
+    width: 35%;
 }
-}
-#orderWaitng{
-	    margin-left: -27%;
-    margin-top: 32px;
-}
-#orderView{
-    width: 66%;
-    position: relative;
-    left: 20%;
-    top: -127px;
-} 
-.btn btn-info{
-    margin-left: 6%;
-}
-#orderAcception{
-	position: relative;
-    left: -42%;
-}
-#orderCancel{
-	position: relative;
-        left: 29%;
-    top: -38px;
+#list2{
+	    margin-left: -32%;
+    width: 128%;	
 }

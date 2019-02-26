@@ -99,7 +99,11 @@ public class StoreInfoController {
 		Map<String, Object> map = new HashMap<>();
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		String brno = no ;
+
+//		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver");
 		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe");
+		//String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver");
+
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
 		setUp(loc);
@@ -392,7 +396,19 @@ public class StoreInfoController {
     	
     	return map;
     }
-    
+    /**
+     * 종합 보기에서 저번주의 매장 판매량을 가지고 온다.
+     * @param sellerId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/chart/totalSaleVolume.do")
+    public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
+    	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
+    	List<Map<String,String>> saleVolume = storeInfoService.totalSaleVolume(sellerId,type);
+    	logger.debug(saleVolume);
+    	return saleVolume;
+    }
     
 	
 }
