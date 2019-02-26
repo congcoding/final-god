@@ -307,10 +307,7 @@ function inputCart(menuCode){
 }
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
 /* 각 메뉴->카트 확인 모달영역 */
 /* function checkCart(menuName,menuCode,menuPrice){
 	
@@ -325,12 +322,9 @@ $('#checkCart').on('show.bs.modal', function (event) {
 	
 });
 
-<<<<<<< HEAD
 } */
 
 
-=======
->>>>>>> 1fb9ec5808ecd06e00402b47ee62cffebb46c265
 /* 클린리뷰 클릭시 */
 $("#clickreview").click("on", function(){
 	$("#clickreview").addClass("active");

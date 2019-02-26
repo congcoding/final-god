@@ -68,7 +68,7 @@ public class SellerController {
 	@RequestMapping("/seller/sellerEnrollEnd.do")
 	public String insertSeller(Seller s , Model model) {
 		//logger.debug("sellerinsert"+ s);
-		System.out.println("암화화전 :"+s.getPassword());
+		System.out.println("암호화전 :"+s.getPassword());
 		
 		String temp = s.getPassword();
 		s.setPassword(bcryptPasswordEncoder.encode(temp));
@@ -414,10 +414,15 @@ public class SellerController {
 		
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
+		StoreInfo storeInfo = sellerService.selectStoreInfo(storeNo);
 
 		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
 
 		model.addAttribute("menu", menu);
+		model.addAttribute("storeNo", storeNo);
+		model.addAttribute("categoryNo", storeInfo.getCategoryNo());
+		
+		logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
 
 		return "/seller/myStoreMenu";
 	}
@@ -606,6 +611,39 @@ public class SellerController {
 		}
 		
 		return loc;
+	}
+	
+	@RequestMapping("seller/insertMenu.do")
+	public String insertMenu(@RequestParam(name = "menuOptions") String menuOptions, Model model, Menu menu) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("insertMenu() 요청!");
+		}
+		
+		int menuNo = sellerService.selectMenuNo(menu.getStoreNo());
+		String menuCode = "";
+		
+		if(menuNo == 0) {
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 있냐? " + menuNo);
+			menuNo = 1;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 몇이냐? " + menuNo);
+		} 
+		
+		else {
+			++menuNo;
+			logger.debug("☆★☆★☆★☆★☆★메뉴넘버가 있다면 몇이냐? " + menuNo);
+			
+		}
+		
+		menuCode = menu.getStoreNo()+ menuOptions + menuNo;
+		menu.setMenuCode(menuCode);
+		menu.setMenuNo(menuNo);
+		
+		
+		int result = sellerService.insertMenu(menu);
+			
+		
+		return "redirect:/seller/myStoreMenu.do?storeNo="+menu.getStoreNo();
+		
 	}
 
 

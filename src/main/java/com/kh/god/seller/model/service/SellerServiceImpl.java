@@ -179,5 +179,20 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.deleteMenu(menuCode);
 	}
 
+	@Override
+	public int selectMenuNo(String storeNo) {
+		return sellerDao.selectMenuNo(storeNo);
+	}
+
+	@Override
+	public int insertMenu(Menu menu) {
+		return sellerDao.insertMenu(menu);
+	}
+
+	@Override
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sellerDao.selectStoreInfo(storeNo);
+	}
+
 	
 }

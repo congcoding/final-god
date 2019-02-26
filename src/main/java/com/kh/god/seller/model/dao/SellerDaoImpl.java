@@ -181,5 +181,36 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.delete("menu.deleteMenu", menuCode);
 	}
 
+	@Override
+	public int selectMenuNo(String storeNo) {
+		List<Menu> menuList = sqlSession.selectList("menu.selectMenuNo", storeNo);
+		int menuNo = 0;
+
+		try {
+
+			if (menuList == null) {
+				menuNo = 0;
+			} else {
+
+				menuNo = menuList.get(menuList.size() - 1).getMenuNo();
+			}
+
+		} catch (IndexOutOfBoundsException e) {
+
+		}
+		
+		return menuNo;
+	}
+
+	@Override
+	public int insertMenu(Menu menu) {
+		return sqlSession.insert("menu.insertMenu", menu);
+	}
+
+	@Override
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
+	}
+
 
 }
