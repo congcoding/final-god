@@ -52,6 +52,7 @@ function drawChartByCategory() {
   chart.draw(data, options);
 }
 
+
 /* 일주일 판매량 */
 /* 일주일 판매량 DatePicker*/
 $(function(){
@@ -108,38 +109,6 @@ function applyWeeklyHighlight() {
 	});
 }
 
-
-/* 일주일 판매량 차트*/	
-google.charts.setOnLoadCallback(drawChartByWeek);
-
-function drawChartByWeek(){
-
-	// 차트 데이터
-	var data = new google.visualization.arrayToDataTable([
-		['요일', '치킨', '피자', '보쌈/족발', '분식', '중식', '일식', '한식'], 
-		['월', 10, 20, 30, 40, 20, 30, 40],
-		['화', 15, 30, 35, 20, 20, 30, 40],
-		['수', 20, 25, 40, 30, 20, 30, 40],
-		['목', 10, 30, 20, 50, 20, 30, 40],
-		['금', 5, 10, 25, 55, 20, 30, 40],
-		['토', 5, 10, 25, 55, 20, 30, 40],
-		['일', 5, 10, 25, 55, 20, 30, 40]
-	]);
-	
-	var chart_options = {
-		title : '그때 그시절 그것',
-		width : 700,
-		height : 400,
-		bar : {
-			groupWidth : '50%'
-		},
-		isStacked : true // 그래프 쌓기(스택), 기본값은 false
-	};
-
-	var chart = new google.visualization.ColumnChart(document.getElementById('chartByWeek'));
-	chart.draw(data, chart_options);
-}
-
 /* 일주일 판매량 ajax*/
 $(function(){
 	$('#btnByWeek').on("click", function(){
@@ -151,15 +120,47 @@ $(function(){
 			url : "${pageContext.request.contextPath}/admin/chartByWeek.do?weeklyStartDate="+weeklyStartDate+"&weeklyEndDate="+weeklyEndDate,
 			type : "post",
 			async:"false",
-			success : function(list){
+			success : function(data){
 				
+				google.charts.setOnLoadCallback(drawChartByWeek);
+
+				function drawChartByWeek(){
+
+					// 차트 데이터
+					var chartData = new google.visualization.arrayToDataTable([
+						['요일', '치킨', '피자', '보쌈/족발', '분식', '중식', '일식', '한식'], 
+						['월', data.chartByWeekList[0], data.chartByWeekList[1], data.chartByWeekList[2], data.chartByWeekList[3], data.chartByWeekList[4], data.chartByWeekList[5], data.chartByWeekList[6]],
+						['화', data.chartByWeekList[7], data.chartByWeekList[8], data.chartByWeekList[9], data.chartByWeekList[10], data.chartByWeekList[11], data.chartByWeekList[12], data.chartByWeekList[13]],
+						['수', data.chartByWeekList[14], data.chartByWeekList[15], data.chartByWeekList[16], data.chartByWeekList[17], data.chartByWeekList[18], data.chartByWeekList[19], data.chartByWeekList[20]],
+						['목', data.chartByWeekList[21], data.chartByWeekList[22], data.chartByWeekList[23], data.chartByWeekList[24], data.chartByWeekList[25], data.chartByWeekList[26], data.chartByWeekList[27]],
+						['금', data.chartByWeekList[28], data.chartByWeekList[29], data.chartByWeekList[30], data.chartByWeekList[31], data.chartByWeekList[32], data.chartByWeekList[33], data.chartByWeekList[34]],
+						['토', data.chartByWeekList[35], data.chartByWeekList[36], data.chartByWeekList[37], data.chartByWeekList[38], data.chartByWeekList[39], data.chartByWeekList[40], data.chartByWeekList[41]],
+						['일', data.chartByWeekList[42], data.chartByWeekList[43], data.chartByWeekList[44], data.chartByWeekList[45], data.chartByWeekList[46], data.chartByWeekList[47], data.chartByWeekList[48]],
+					]);
+					
+					var chart_options = {
+						width : 700,
+						height : 400,
+						bar : {
+							groupWidth : '50%'
+						},
+						isStacked : true // 그래프 쌓기(스택), 기본값은 false
+					};
+
+					var chart = new google.visualization.ColumnChart(document.getElementById('chartByWeek'));
+					chart.draw(chartData, chart_options);
+				}
 			}
-	     
 		});
 	})
-})
+});
 
 </script>
+
+<style>
+input#btnYear{float : right;}
+input#getYear{float : right;}
+</style>
 
 <!-- Page Wrapper -->
   <div id="wrapper">
@@ -189,15 +190,28 @@ $(function(){
           </div>
           
           <div class="card shadow mb-4" style="width:740px">
+            <div class="card-header py-3" style="display:inline-block;">
+              <h6 class="m-0 font-weight-bold text-primary" style="display:inline-block;">월별 판매량</h6>
+              <input type="button" id="btnYear" class="btn-light btn-sm" value="검색" />
+              <input type="text" id="getYear" placeholder="ex)2018" />
+            </div>
+            <div class="card-body">
+              <div id="chartByMonth" style="width:700px; height:300px;"></div>
+            </div>
+          </div>
+		  
+		  <div class="card shadow mb-4" style="width:740px">
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">일주일 판매량</h6>
             </div>
             <div class="card-body" style="text-align:center;">
               <input class="form-control" type='text' id='weeklyDatePicker' placeholder="Select Week" style="width:210px; display:inline-block"/>
               <button type="button" class="btn btn-light" id="btnByWeek">조회</button>
-              <div id="chartByWeek" style="width:700px; height:300px;"></div>
+              <div id="chartByWeek" style="width:700px; height:400px;"></div>
             </div>
           </div>
+          
+       
 
         </div>
         <!-- /.container-fluid -->
@@ -225,4 +239,102 @@ $(function(){
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
+  
+  <script>
+  $("#btnYear").on("click",function(){
+		
+	  var year = $("#getYear").val();
+	  google.charts.load("current", {packages:["corechart", 'bar']});
+	  google.charts.setOnLoadCallback(drawByMonthChart);
+
+	  function drawByMonthChart(){
+	  	var month1 = 0;
+	  	var month2 = 0;
+	  	var month3 = 0;
+	  	var month4 = 0;
+	  	var month5 = 0;
+	  	var month6 = 0;
+	  	var month7 = 0;
+	  	var month8 = 0;
+	  	var month9 = 0;
+	  	var month10 = 0;
+	  	var month11 = 0;
+	  	var month12 = 0;
+		
+	  	$.ajax({
+	  		url : "${pageContext.request.contextPath}/admin/chartByMonth.do?year="+year,
+	  		type : "post",
+	  		async : "false",
+	  		success : function(list){
+	  			
+
+	 			$.each(list,function(index,item){
+	 				
+	 				for(var i in item){
+	 					if(item[i] == 01){
+	 						month1 +=1;
+	 					}else if(item[i]==02){
+	 						month2 +=1;
+	 					}else if(item[i]==03){
+	 						month3 +=1;
+	 					}else if(item[i]==04){
+	 						month4 +=1;
+	 					}else if(item[i]==05){
+	 						month5 +=1;
+	 					}else if(item[i]==06){
+	 						month6 +=1;
+	 					}else if(item[i]==07){
+	 						month7 +=1;
+	 					}else if(item[i]==08){
+	 						month8 +=1;
+	 					}else if(item[i]==09){
+	 						month9 +=1;
+	 					}else if(item[i]==10){
+	 						month10 +=1;
+	 					}else if(item[i]==11){
+	 						month11 +=1;
+	 					}else if(item[i]==12){
+	 						month12 +=1;
+	 					}
+	 				}
+	 				
+	  			var data= new google.visualization.arrayToDataTable([
+		  			 ['Month', 'Quantity',{role:'style'}],
+		  	          ['01',  month1,'#6B8E23'],
+		  	          ['02',  month2,'#DA70D6'],
+		  	          ['03',  month3,'#66CDAA'],
+		  	          ['04',  month4,'#20B2AA'],
+		  	          ['05',  month5,'#ADD8E6'],
+		  	          ['06',  month6,'#6495ED'],
+		  	          ['07',  month7,'#8B008B'],
+		  	          ['08',  month8,'#008B8B'],
+		  	          ['09',  month9,'#000080'],
+		  	          ['10',  month10,'#483D8B'],
+		  	          ['11',  month11,'#2F4F4F'],
+		  	          ['12',  month12,'#8B4513']
+	  			]);
+
+	  	        var options = {
+	  	        		title: year+'년도 월별 판매량',
+	  	              chartArea: {width: '70%'},
+	  	              hAxis: {
+	  	                title: 'Month',
+	  	                minValue: 0
+	  	              },
+	  	              vAxis: {
+	  	                title: 'Quantity'
+	  	              }
+	  	        };
+
+	  	        var chart = new google.visualization.LineChart(document.getElementById('chartByMonth'));
+	  	      $("#searchYear").show();
+
+	  	        chart.draw(data, options);
+	  		}); /* each end */
+	  	}
+
+	  	});
+	   }
+	  });
+  </script>
 

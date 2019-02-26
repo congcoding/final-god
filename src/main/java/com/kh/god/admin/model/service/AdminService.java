@@ -1,5 +1,6 @@
 package com.kh.god.admin.model.service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -113,6 +114,14 @@ public interface AdminService {
 	int countStoreList();
 	
 	List<OrderInfo> timeChart();
+	
+	List<OrderInfo> chartByMonth(int year);
+	
+	List<OrderInfo> totalCostByMonthly();
+	
+	List<Coupon> couponList(String memberId);
+	
+	int couponAmount(int eventNo);
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);
@@ -132,5 +141,7 @@ public interface AdminService {
 	int storePMSReject(Map<String, String> map);
 
 	List<Integer> chartByCategory();
+
+	List<Integer> chartByWeek(Map<String, String> map);
 
 }

@@ -22,6 +22,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
@@ -221,7 +222,8 @@ public class SellerController {
 		}
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
-		
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,"today");
+		logger.debug("오늘자 판매량ㅇ ::"+saleVolume);
 //		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
 //		System.out.println("메뉴 나오라" + menu);
@@ -230,7 +232,7 @@ public class SellerController {
 		//페이지바 만들기
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
-
+		model.addAttribute("saleVolume",saleVolume);
 		return "seller/goMyStore";
 
 	}
@@ -671,5 +673,18 @@ public class SellerController {
 		
 	}
 
+	/**
+     * 종합 보기에서 저번주의 매장 판매량을 가지고 온다.
+     * @param sellerId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/chart/totalSaleVolume.do")
+    public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
+    	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
+    	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
+    	logger.debug(saleVolume);
+    	return saleVolume;
+    }
 
 }

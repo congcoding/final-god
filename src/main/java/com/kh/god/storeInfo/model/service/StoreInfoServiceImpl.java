@@ -49,8 +49,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 				result = storeInfoDao.insertAttachment(a);
 				if(result == 0) {
 					throw new StoreInfoException("첨부파일 등록 오류!");
-				}
-				
+				}				
 			}
 		}
 		
@@ -106,9 +105,5 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 		return storeInfoDao.closedStore(storeNo);
 	}
 	
-	//종합 보기에서  저번주의 판매량을 가져온다.
-	@Override
-	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
-		return storeInfoDao.totalSaleVolume(sellerId,type);
-	}
+	
 }

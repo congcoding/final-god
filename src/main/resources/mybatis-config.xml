@@ -15,6 +15,12 @@
 		<typeAlias type="com.kh.god.member.model.vo.Member"
 				   alias="member"/>	   
 				   
+		<typeAlias type="com.kh.god.member.model.vo.Review"
+				   alias="review"/>			   
+				   
+		<typeAlias type="com.kh.god.member.model.vo.RAttachment"
+				   alias="RAttachment"/>	
+				   
 		<typeAlias type="com.kh.god.storeInfo.model.vo.StoreInfo"
 				   alias="storeInfo"/>
 				   
@@ -41,7 +47,6 @@
 		
 		<typeAlias type="com.kh.god.storeInfo.model.vo.SAttachment"
 				   alias="SAttachment"/>
-		
 		
 		<typeAlias type="com.kh.god.chat.model.vo.Chat"
 				   alias="chat"/>	

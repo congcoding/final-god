@@ -10,15 +10,24 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
 
-<!-- 매장 요약-------------------------------------------------------------------------------------------------->
-	<div id="menuThumb-container" class="card">
-	  <ul class="list-group">
-		<c:forEach items="${storeInfo}" var="storeInfo">
+<!-- 매장 요약----------------------------------------------------------->
+<div id="menuThumb-container" class="card">
+  <ul class="list-group">
+	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
-	    		${storeInfo.storeName}
-	    		<span>
-					
-	    		</span>
+		    ${storeInfo.storeName}
+		    <span style="float : right">
+		    	<c:if test="${checkedBookMark != 1}"> 
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
+					</a>
+				</c:if>
+				<c:if test="${checkedBookMark == 1}">
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
+					</a>	
+				</c:if>
+		    </span>
 	    </li>
 	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
 	    <li class="list-group-item">
@@ -28,9 +37,9 @@
 	    	<div class="introduce">결제수단 카드결제,만나서결제</div>
 	    </li>	    
 	    <li class="list-group-item">가게소개 : ${storeInfo.storeIntro}</li>
-		</c:forEach>	
-	  </ul>
-	</div> 
+	</c:forEach>	
+  </ul>
+</div> 
 
 <div id="last-container">
 
@@ -201,35 +210,71 @@
 </div> <!-- #last-container -->
 
 
-
-
+<!--스크립트------------------------------------------------------------>
 <script>
+
 var cart = JSON.parse(sessionStorage.getItem("cart"));
 
 $(document).ready(function() {  
 	
-	var cartWidth = $('#cart').innerHeight();
-
     $(window).scroll(function(){
-    	// #div의 현재 위치
-    	var cartTbl = $("#cart").offset();  	
-    	var tableWidth = cartWidth+cartTbl.top;
   	  		
-        $('#cart').animate(    		
+    /*     $('#cart').animate(    		
         	{top: $(window).scrollTop()+"px"},
         	{queue: false, duration: 300}
-        );  
+        );   */
     
-    	//console.log($(window).scrollTop());
     });  
     
     //가게정보숨기기
 	$("#sellerInformation").hide();
     //리뷰숨기기
-
     
     cartHtml();
 });
+
+//매장 북마크
+function checkBookMark(value, storeNo, memberId){
+	console.log("북마크 함수 호출");
+	
+	//아이디값과 매장명을 기준으로 북마크 추가 또는 해제
+ 	if(${memberLoggedIn != null}){ // 로그인 되어있으면 이 기능을 
+				
+		$.ajax({
+			url : "${pageContext.request.contextPath}/member/checkBookMark.do",
+			method: "get",
+			data : {memberId : memberId, storeNo : storeNo, value : value},
+			success : function(checkedBookMark){
+				var html = "";
+				var msg = "";
+				
+ 				if(checkedBookMark == 1) { //북마크에 등록됨
+					html += "<a href='#' class = 'btn-checkBookMark' onclick = checkBookMark(1,'"+storeNo+"','"+memberId+"');>";
+					html += "<i class = 'fas fa-heart' style = 'font-size:24px; color:red'></i>";	
+					html += "</a>";	
+					msg = "북마크에 등록되었습니다.";					
+				}else if(checkedBookMark == 0){ //북마크에서 삭제됨
+					html += "<a href='#' class = 'btn-checkBookMark' onclick = checkBookMark(0,'"+storeNo+"','"+memberId+"');>";
+					html += "<i class = 'fas fa-heart' style = 'font-size:24px; color:gray'></i>";
+					html += "</a>";		
+					msg = "북마크가 해제되었습니다.";
+				} 
+											
+				$('#storeName >span').html(html);	//태그 넣기
+				alert(msg);
+				
+			}, //success;
+			error : function(){
+				console.log("ajax 에러");
+			}
+		});	
+ 			
+	}else{ //로그인 안되어있으면 로그인하라고 알림
+		alert("로그인 하셔야 사용하실 수 있습니다.");		
+	} 	
+	
+};
+
 
 //주문표 html 
 function cartHtml(){
@@ -274,11 +319,13 @@ function cartHtml(){
 	    		
 	    		for (var i=0; i<cart.length; i++){	
 	    			//메뉴 이름
-	    			html += "<tr><td colspan = '3'>"+cart[i].menuName+"</td></tr>"; 
+	    			html += "<tr><td colspan = '3' style='text-align: left'>"+cart[i].menuName+"</td></tr>"; 
 	    			 			    	
+	    			//삭제 버튼
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>ㅍ</button></td>";
+	    					
+	    			//<i class="fas fa-times"></i>
 	    			//수량 버튼
-	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>x</button></td>";
-	    			
 	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ ");"; //증가 버튼
 	    			if(cart[i].amount==9){html += "disabled";} 
 	    			html += ">+</button>";	    			
@@ -312,7 +359,7 @@ function cartHtml(){
 
 	$('#tbody-cart').html(html);
 	
-}
+};
 
 //메뉴 수량 증가 감소
 function InputCartAmount(index,num){
@@ -327,7 +374,7 @@ function InputCartAmount(index,num){
 	sessionStorage.setItem("cart", JSON.stringify(cart));		
 	cartHtml();
 
-}
+};
 
 //메뉴 삭제
 function deleteCartMenu(index){
@@ -336,7 +383,7 @@ function deleteCartMenu(index){
 	sessionStorage.setItem("cart", JSON.stringify(cart));	
 	cartHtml();
 	
-}
+};
 
 //주문 담기 : 카트에 담기 (세션)
 function inputCart(menuCode){
@@ -392,13 +439,13 @@ function inputCart(menuCode){
 			console.log("ajax 에러");
 		}
 	});
-}
+};
 
 function emptyCart(newMenuCode){
 	cart = [];
 	inputCart(newMenuCode);
 	$('#checkEmptyCart').modal('hide');
-}
+};
 
 
 /* 각 메뉴->카트 확인 모달영역 */
@@ -409,7 +456,7 @@ function checkOrder(){
 	if(bool){
 		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val();	
 	}	
-} 
+}; 
 
 
 /* 클린리뷰 클릭시 */

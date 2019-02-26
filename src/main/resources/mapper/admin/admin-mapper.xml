@@ -215,11 +215,25 @@
 	<insert id="couponDownload" parameterType="coupon">
 		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
 	</insert>
+	<update id="couponAmount">
+		update event set amount = amount -1 where eventNo = #{eventNo}
+	</update>
 
 	<select id="timeChart" resultType="string">
 		<![CDATA[ select to_char(ordertime, 'hh24') from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
 	</select>
 	
+	<select id="totalCostByMonthly" resultType="_int">
+		<![CDATA[ select totalPrice from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
+	</select>
+	
+	<select id="chartByMonth" resultType="string">
+		<![CDATA[ select to_char(ordertime, 'mm') as month from orderinfo where to_char(ordertime, 'yyyy') = #{year} ]]>
+	</select>
+	
+	<select id="couponList" resultType="coupon">
+		select eventNo from coupon where memberId = #{memberId}
+	</select>
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}
@@ -255,6 +269,15 @@
 		where O.storeNo = S.storeNo
 		group by categoryNo
 		order by categoryNo
+	</select>
+	
+	<select id="chartByWeek" resultType="_int">
+		<![CDATA[
+		select nvl(column3, 0)
+		from (select column1, column2 from (SELECT TO_CHAR(TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+LEVEL-1, 'YYYY/MM/DD') column1 FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{weeklyEndDate}, 'YYYY/MM/DD')-TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+1)), (SELECT LEVEL column2 FROM DUAL CONNECT BY LEVEL <= 7)) A
+		left join (select to_char(O.deliveryEnd, 'yyyy/mm/dd') column4, S.categoryno, nvl(sum(O.originalPrice), 0) column3 from orderInfo O, storeInfo S where O.storeNo = S.storeNo and (O.deliveryend between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1)
+		group by to_char(O.deliveryEnd, 'yyyy/mm/dd'), S.categoryno) B on A.column2 = B.categoryno and A.column1 = B.column4 order by column1, column2
+		]]>
 	</select>
 	
 </mapper>

@@ -1,5 +1,6 @@
 package com.kh.god.admin.model.dao;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -282,8 +283,28 @@ public class AdminDaoImpl implements AdminDao {
 	}
 	
 	@Override
+	public int couponAmount(int eventNo) {
+		return sqlSession.update("admin.couponAmount",eventNo);
+	}
+	
+	@Override
 	public List<OrderInfo> timeChart() {
 		return sqlSession.selectList("admin.timeChart");
+	}
+	
+	@Override
+	public List<OrderInfo> chartByMonth(int year) {
+		return sqlSession.selectList("admin.chartByMonth",year);
+	}
+	
+	@Override
+	public List<OrderInfo> totalCostByMonthly() {
+		return sqlSession.selectList("admin.totalCostByMonthly");
+	}
+	
+	@Override
+	public List<Coupon> couponList(String memberId) {
+		return sqlSession.selectList("admin.couponList",memberId);
 	}
 	
 //	---------------------------------------------------------
@@ -326,5 +347,10 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public List<Integer> chartByCategory() {
 		return sqlSession.selectList("admin.chartByCategory");
+	}
+
+	@Override
+	public List<Integer> chartByWeek(Map<String, String> map) {
+		return sqlSession.selectList("admin.chartByWeek", map);
 	}
 }
