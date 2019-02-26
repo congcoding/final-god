@@ -282,6 +282,11 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<Ad> adCostByMonthly() {
+		return adminDao.adCostByMonthly();
+	}
+	
+	@Override
 	public List<Coupon> couponList(String memberId) {
 		return adminDao.couponList(memberId);
 	}
