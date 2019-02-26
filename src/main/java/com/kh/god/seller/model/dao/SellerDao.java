@@ -75,5 +75,10 @@ public interface SellerDao {
 
 	int deleteMenu(String menuCode);
 
+	int selectMenuNo(String storeNo);
+
+	int insertMenu(Menu menu);
+
+	StoreInfo selectStoreInfo(String storeNo);
 
 }

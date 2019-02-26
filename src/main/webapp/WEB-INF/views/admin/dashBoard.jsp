@@ -22,6 +22,26 @@ $(function(){
 });
 
 $(function(){
+	var total = 0;
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/totalCostByMonthly.do",
+		type:"post",
+		success : function(data){
+			$.each(data,function(index,item){
+				for(var i in item){
+					total +=item[i];
+				}
+			});
+			$("#totalCostByMonthly").text(addComma(total)+"원");
+		}
+	});
+});
+function addComma(num) {
+	  var regexp = /\B(?=(\d{3})+(?!\d))/g;
+	  return num.toString().replace(regexp, ',');
+	}
+
+$(function(){
 	google.charts.load('current', {packages: ['corechart', 'bar']});
 	google.charts.setOnLoadCallback(drawBasic);
 });
@@ -87,6 +107,7 @@ function drawBasic() {
       
 	}); /* ajax end  */
 }
+
 </script>
 
 <!-- Page Wrapper -->
@@ -135,7 +156,7 @@ function drawBasic() {
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">월간 판매량</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">4,842,000원</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalCostByMonthly"></div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -154,11 +175,11 @@ function drawBasic() {
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">새로운 판매자 신청</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
-                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">3건</div>
+                          <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${storePMSCount }건</div>
                         </div>
                         <div class="col">
                           <div class="progress progress-sm mr-2">
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-info" role="progressbar" style="width: 50%" aria-valuenow="100-${storePMSCount }" aria-valuemin="0" aria-valuemax="100"></div>
                           </div>
                         </div>
                       </div>
@@ -178,7 +199,7 @@ function drawBasic() {
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">새로운 문의</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">2건</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">${qnaCount }건</div>
                     </div>
                     <div class="col-auto">
                       <i class="fas fa-comments fa-2x text-gray-300"></i>

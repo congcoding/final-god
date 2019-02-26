@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="com.kh.god.seller.model.vo.*" %>
+<%
+	Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
+	if(sellerLoggedIn != null){
+	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
+	}
+%>
 
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -19,7 +26,7 @@
      
     
        <li class="nav-item" id="dashBoard">
-        <a class="nav-link" href="${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=seller1">
+        <a class="nav-link" href="${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>요약</span></a>
       </li>

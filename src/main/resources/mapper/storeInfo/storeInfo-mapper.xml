@@ -7,7 +7,7 @@
 		from storeInfo 
 		where categoryno = A.categoryno) categorycount 
 	from storeInfo A 
-	where categoryno = #{categoryno} 
+	where categoryno = #{categoryno}
 	order by storegrade
 	</select>
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
