@@ -83,6 +83,9 @@ div#addReviewPhoto{
 				<a href="${pageContext.request.contextPath}/member/orderList.do?memberId=${memberLoggedIn.memberId}">구매 내역</a>
 			</li>
 			<li>
+				<a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">내 리뷰 보기</a>
+			</li>
+			<li>
 				<a href="${pageContext.request.contextPath}/member/bookMarkList.do?memberId=${memberLoggedIn.memberId}">즐겨찾는 매장</a>	
 			</li>
 		</ul>	
@@ -172,11 +175,11 @@ function addReviewPhoto(){
 	//사진 추가 창 추가
 	var html = "";
 	
-	if($('input[name="upFile"]').length <5){
+	if($('input[name="upFile"]').length <3){
 		html += "<input type='file' name='upFile'>";
 		$('#inputReviewPhoto').append(html);
 	}else{
-		alert('사진은 최대 5개까지 가능합니다.');
+		alert('사진은 최대 3개까지 가능합니다.');
 	}
 
 }

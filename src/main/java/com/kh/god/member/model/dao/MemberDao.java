@@ -35,5 +35,9 @@ public interface MemberDao {
 
 	int insertRAttachment(RAttachment a);
 
+	List<Review> reviewList(String memberId);
+
+	List<RAttachment> selectRAttachmentList(int reviewNo);
+
 
 }

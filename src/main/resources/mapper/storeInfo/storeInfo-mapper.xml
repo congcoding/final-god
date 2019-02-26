@@ -176,6 +176,8 @@
 		update storeinfo set closeflag =  'Y' where storeNo = #{storeNo}
 	</update>
 
-
+	<select id="reviewList" resultType="review">
+		SELECT * FROM REVIEW WHERE STORENO = #{storeNo}
+	</select>
 	
 </mapper>

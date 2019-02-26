@@ -74,46 +74,42 @@ div#memberViewFrm-container{
 
 	<div id="memberViewFrm-container">
 		
-		<!-- 주문 리스트 -->
+		<!-- 리뷰 리스트 css 잡아야함 -->
 		<div class = "memberViewCategory">		
 			
-			<h2>주문 내역</h2>
+			<h2>내 리뷰 보기</h2>
 			<br /><hr /><br />		
 			
-			<table class="table table-hover active" id="orderTable">				  
-				<!-- orderList가 존재하면 -->
-				<c:if test="${not empty orderList}">
-					<thead>
-						  <tr>
-							<th>주문 번호</th>
-							<th>결제 금액</th>
-							<th>리뷰</th>
-						  </tr>
-					</thead>
-					<tbody>				
-					<c:forEach var="o" items="${orderList}">	
+			<table class="table table-hover active" id="reviewTable">				  
+				<c:if test="${not empty reviewList }">
+					<c:forEach var="review" items="${reviewList }">
 						<tr>
-							<td>${o.ORDERNO}</td>
-							<td>${o.TOTALPRICE}</td>
-							<td>
-								<c:if test="${o.REVIEWNO == null}">
-									<button type="button" id="inputReviewBtn"
-											onclick = "reviewEnroll('${o.ORDERNO}', '${o.STORENO}');" >
-										리뷰작성하기
-									</button>
-								</c:if>
-								<c:if test="${o.REVIEWNO != null}">
-									리뷰보러가기(준비중)
-								</c:if>
-							</td>
-											
+							<td>${review.reviewNo }</td>
 						</tr>
-					</c:forEach>
-					</tbody>					
+						<tr>
+							<td>${review.title }</td>
+						</tr>
+						<tr>
+							<td>${review.content }</td>
+						</tr>
+						
+						<!-- 리뷰 첨부파일 꺼내기 -->
+						<c:if test="${not empty attachList}">
+							<tr>
+							<c:forEach var="a" items="${attachList }">
+								<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->
+								<c:if test="${review.reviewNo == a.reviewNo }">
+									<td><img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"></td>
+								</c:if>
+							</c:forEach>
+							</tr>
+						</c:if>					
+					
+					</c:forEach> <!-- reviewList를 돌면서 review 꺼내기 -->
 				</c:if>
-				<c:if test="${empty orderList}">
-					<tbody><tr>주문 내역이 없습니다.</tr></tbody>
-				</c:if>			
+				<c:if test="${empty reviewList }">
+					<tbody><tr><td>작성한 리뷰가 없습니다.</td></tr></tbody>
+				</c:if>
 			</table>
 
 		</div>
@@ -123,24 +119,9 @@ div#memberViewFrm-container{
 </div> <!-- div#MemberView-container -->
 
 
-<form name="memberEnrollFrm" method="POST" 
-	  action="${pageContext.request.contextPath}/member/memberReviewEnroll.do">
-    <input type="hidden" name="orderNo" id="FrmOrderNo" />
-    <input type="hidden" name="storeNo" id="FrmStoreNo"/>
-    <input type="hidden" name="writer" id="FrmWriter"/>
-</form>
-
-
 <script>
 
-function reviewEnroll(orderNo, storeNo){
-	
-	$('input#FrmOrderNo').val(orderNo);
-	$('input#FrmStoreNo').val(storeNo);
-	$('input#FrmWriter').val("${memberLoggedIn.memberId}");
-		
-	$('[name="memberEnrollFrm"]').submit();
-}
+
 
 </script>
 

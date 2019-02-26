@@ -33,8 +33,6 @@ import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
-import com.kh.god.seller.model.vo.OrderInfo;
-import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -250,12 +248,35 @@ public class MemberController {
 		model.addAttribute("orderList", orderList);
 		
 		String view = "member/memberOrder";
-		return view; 
-				
+		return view; 				
 	}
 	
+	/** 리뷰 내역 조회 : orderList */
+	@RequestMapping("/member/reviewList.do")
+	public String reviewList(@RequestParam String memberId, Model model) {	
+		
+		//1. 리뷰리스트를 꺼내고
+		List<Review> reviewList = memberService.reviewList(memberId);
+		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
+		List<RAttachment> attachList = new ArrayList<>();
+		
+		if(reviewList != null) {			
+			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
+			for(Review r : reviewList) {			
+				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
+			}
+			
+		}
+		
+		
+		model.addAttribute("reviewList", reviewList);
+		model.addAttribute("attachList", attachList);
+		
+		String view = "member/memberReview";
+		return view; 				
+	}
 
-	/** 리뷰작성 페이지 : memberReviewEnroll */
+	/** 리뷰작성 페이지 이동: memberReviewEnroll */
 	@RequestMapping("/member/memberReviewEnroll.do")
 	public String memberReviewEnroll(@RequestParam(name="orderNo") String orderNo,
 									 @RequestParam(name="storeNo") String storeNo,
@@ -370,11 +391,11 @@ public class MemberController {
 	@RequestMapping("/member/bookMarkList.do")
 	public String bookMarkList(@RequestParam String memberId, Model model) {	
 	
-		List<StoreInfo> sList = memberService.bookMarkList(memberId);
+		List<StoreInfo> bookmarkList = memberService.bookMarkList(memberId);
 		
-		model.addAttribute("sList", sList);
+		model.addAttribute("bookmarkList", bookmarkList);
 		
-		String view = "member/memberView";
+		String view = "member/memberBookMark";
 				
 		return view; 
 	}

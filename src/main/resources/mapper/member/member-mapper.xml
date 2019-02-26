@@ -57,10 +57,19 @@
 		from orderInfo o left join review r on o.orderNo = r.orderNo
 		where memberid = #{memberId} and receiveFlag = 'Y'
 	</select>
-	
-	<resultMap type="orderInfo" id="orderInfoMap">
 		
-	</resultMap>
+	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>
+	
+	
+	<select id="reviewList" resultType="review">
+		SELECT * FROM REVIEW
+		WHERE writer = #{memberId}
+	</select>
+	
+	<select id="selectRAttachmentList" resultType="RAttachment">
+		SELECT * FROM RATTACHMENT
+		WHERE REVIEWNO = #{reviewNo}
+	</select>
 	
 	<insert id="insertMemberReview">
 		INSERT INTO review (REVIEWNO, STORENO, ORDERNO, TITLE, WRITER, CONTENT, RATE, GOOD, HATE, RDATE)

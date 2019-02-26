@@ -92,5 +92,17 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	@Override
+	public List<Review> reviewList(String memberId) {
+		return memberDao.reviewList(memberId);
+	}
+
+
+	@Override
+	public List<RAttachment> selectRAttachmentList(int reviewNo) {
+		return memberDao.selectRAttachmentList(reviewNo);
+	}
+
+
 
 }

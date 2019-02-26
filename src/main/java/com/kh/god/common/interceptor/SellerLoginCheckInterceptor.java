@@ -17,6 +17,8 @@ import com.kh.god.seller.model.vo.Seller;
  *  요청시 로그인 여부를 검사하고, 로그인 하지 않았다면, common/msg.jsp 에서 경고메세지 출력
  * 
  */
+
+
 public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 
 	Logger logger = Logger.getLogger(getClass());

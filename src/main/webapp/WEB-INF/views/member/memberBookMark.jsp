@@ -77,42 +77,33 @@ div#memberViewFrm-container{
 		<!-- 주문 리스트 -->
 		<div class = "memberViewCategory">		
 			
-			<h2>주문 내역</h2>
+			<h2>즐겨찾는 매장 확인</h2>
 			<br /><hr /><br />		
 			
-			<table class="table table-hover active" id="orderTable">				  
+			<table class="table table-hover active" id="bookmarkTable">				  
 				<!-- orderList가 존재하면 -->
-				<c:if test="${not empty orderList}">
+				<c:if test="${not empty bookmarkList}">
 					<thead>
 						  <tr>
-							<th>주문 번호</th>
-							<th>결제 금액</th>
-							<th>리뷰</th>
+							<th>매장명</th>
+							<th>매장번호</th>
+							<th>매장주소</th>
+							<th>삭제하기</th>
 						  </tr>
 					</thead>
 					<tbody>				
-					<c:forEach var="o" items="${orderList}">	
+					<c:forEach var="b" items="${bookmarkList}">	
 						<tr>
-							<td>${o.ORDERNO}</td>
-							<td>${o.TOTALPRICE}</td>
-							<td>
-								<c:if test="${o.REVIEWNO == null}">
-									<button type="button" id="inputReviewBtn"
-											onclick = "reviewEnroll('${o.ORDERNO}', '${o.STORENO}');" >
-										리뷰작성하기
-									</button>
-								</c:if>
-								<c:if test="${o.REVIEWNO != null}">
-									리뷰보러가기(준비중)
-								</c:if>
-							</td>
-											
+							<td><a href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${b.storeNo }">${b.storeName}</a></td>
+							<td>${b.storeTel}</td>
+							<td>${b.storeAddress}</td>
+							<td></td>											
 						</tr>
 					</c:forEach>
 					</tbody>					
 				</c:if>
-				<c:if test="${empty orderList}">
-					<tbody><tr>주문 내역이 없습니다.</tr></tbody>
+				<c:if test="${empty bookmarkList}">
+					<tbody><tr><td>즐겨찾는 매장이 없습니다.</td></tr></tbody>
 				</c:if>			
 			</table>
 
@@ -123,24 +114,9 @@ div#memberViewFrm-container{
 </div> <!-- div#MemberView-container -->
 
 
-<form name="memberEnrollFrm" method="POST" 
-	  action="${pageContext.request.contextPath}/member/memberReviewEnroll.do">
-    <input type="hidden" name="orderNo" id="FrmOrderNo" />
-    <input type="hidden" name="storeNo" id="FrmStoreNo"/>
-    <input type="hidden" name="writer" id="FrmWriter"/>
-</form>
-
-
 <script>
 
-function reviewEnroll(orderNo, storeNo){
-	
-	$('input#FrmOrderNo').val(orderNo);
-	$('input#FrmStoreNo').val(storeNo);
-	$('input#FrmWriter').val("${memberLoggedIn.memberId}");
-		
-	$('[name="memberEnrollFrm"]').submit();
-}
+
 
 </script>
 

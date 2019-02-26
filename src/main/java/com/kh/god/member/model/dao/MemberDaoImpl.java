@@ -63,8 +63,8 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public List<StoreInfo> bookMarkList(String memberId) {
-		List<StoreInfo> sList = sqlSession.selectList("member.bookMarkList",memberId);
-		return sList;
+		List<StoreInfo> bList = sqlSession.selectList("member.bookMarkList",memberId);
+		return bList;
 	}
 
 	@Override
@@ -89,6 +89,18 @@ public class MemberDaoImpl implements MemberDao {
 	public int insertRAttachment(RAttachment a) {
 		int result = sqlSession.insert("member.insertRAttachment", a);
 		return result;
+	}
+
+	@Override
+	public List<Review> reviewList(String memberId) {
+		List<Review> reviewList = sqlSession.selectList("member.reviewList", memberId);
+		return reviewList;
+	}
+
+	@Override
+	public List<RAttachment> selectRAttachmentList(int reviewNo) {
+		List<RAttachment> attachmentList = sqlSession.selectList("member.selectRAttachmentList", reviewNo);
+		return attachmentList;
 	}
 
 
