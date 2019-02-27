@@ -88,7 +88,7 @@ $(function(){
 				      <c:if test="${orderList1.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList1.REQUEST=='N'}">
+				      <c:if test="${orderList1.PRICEWAY=='N'}">
 				      <td class="orderWay">만나서결제</td>
 				      </c:if>
 				     

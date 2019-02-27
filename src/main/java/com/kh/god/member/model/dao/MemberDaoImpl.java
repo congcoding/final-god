@@ -1,5 +1,6 @@
 package com.kh.god.member.model.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -7,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.RAttachment;
+import com.kh.god.member.model.vo.Review;
+import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
 public class MemberDaoImpl implements MemberDao {
@@ -44,6 +49,68 @@ public class MemberDaoImpl implements MemberDao {
 		return result;
 	}
 
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {		
+		return sqlSession.selectList("member.couponListBymemberId", memberId);
+	}
 
+	public int insertBookMark(Map<String, String> map) {
+		int result = sqlSession.insert("member.insertBookMark",map);
+		return result;
+	}
+
+	@Override
+	public int deleteBookMark(Map<String, String> map) {
+		int result = sqlSession.delete("member.deleteBookMark",map);
+		return result;
+	}
+
+	@Override
+	public List<StoreInfo> bookMarkList(String memberId) {
+		List<StoreInfo> bList = sqlSession.selectList("member.bookMarkList",memberId);
+		return bList;
+	}
+
+	@Override
+	public List<Map<String, String>> orderList(String memberId) {
+		List<Map<String, String>> orderList = sqlSession.selectList("member.orderList", memberId);
+		return orderList;
+	}
+
+	@Override
+	public int insertMemberReview(Review review) {
+		int result = sqlSession.insert("member.insertMemberReview", review);
+		return result;
+	}
+	
+	@Override
+	public Review selectOneReview(int orderNo) {
+		Review review = sqlSession.selectOne("member.selectOneReview", orderNo);
+		return review;
+	}
+
+	@Override
+	public int insertRAttachment(RAttachment a) {
+		int result = sqlSession.insert("member.insertRAttachment", a);
+		return result;
+	}
+
+	@Override
+	public List<Review> reviewList(String memberId) {
+		List<Review> reviewList = sqlSession.selectList("member.reviewList", memberId);
+		return reviewList;
+	}
+
+	@Override
+	public List<RAttachment> selectRAttachmentList(int reviewNo) {
+		List<RAttachment> attachmentList = sqlSession.selectList("member.selectRAttachmentList", reviewNo);
+		return attachmentList;
+	}
+
+	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("member.getDiscount", eventNo);
+	}
 
 }

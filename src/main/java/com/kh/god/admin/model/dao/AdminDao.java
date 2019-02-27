@@ -1,5 +1,6 @@
 package com.kh.god.admin.model.dao;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -116,6 +117,8 @@ public interface AdminDao {
 	
 	List<OrderInfo> totalCostByMonthly();
 	
+	List<Ad> adCostByMonthly();
+	
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);
@@ -138,5 +141,9 @@ public interface AdminDao {
 	int couponDownload(Coupon coupon);
 
 	List<Integer> chartByCategory();
+
+	List<Integer> chartByWeek(Map<String, String> map);
+
+	List<Integer> chartByCategoryAmount();
 
 }

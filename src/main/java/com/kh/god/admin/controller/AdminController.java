@@ -680,6 +680,15 @@ public class AdminController {
 		return map;
 	}
 	
+	@RequestMapping("/admin/adCostByMonthly.do")
+	@ResponseBody
+	public Map<String,Object> adCostByMonthly(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Ad> list = adminService.adCostByMonthly();
+		map.put("list", list);
+		return map;
+	}
+	
 //	---------------------------------------------------------
 	
 	@RequestMapping("/admin/storePMSView.do")
@@ -839,22 +848,26 @@ public class AdminController {
 		return model;
 	}
 	
+	@ResponseBody
 	@RequestMapping("admin/chartByWeek.do")
-	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") Date weeklyStartDate, @RequestParam(name="weeklyEndDate") Date weeklyEndDate) {
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		
-		Map<String, Date> map = new HashMap<>();
+	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") String weeklyStartDate, @RequestParam(name="weeklyEndDate") String weeklyEndDate) {
+		Map<String, String> map = new HashMap<>();
 		map.put("weeklyStartDate", weeklyStartDate);
 		map.put("weeklyEndDate", weeklyEndDate);
+		List<Integer> chartByWeek = adminService.chartByWeek(map);
 		
-		
-		
-//		List<OrderInfo> list = null;
-//		if(month.equals("now")) {
-//			list = adminService.timeChart();
-//		}
-//		map.put("list", list);
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		returnMap.put("chartByWeekList", chartByWeek);
 		return returnMap;
+	}
+	
+	@ResponseBody
+	@RequestMapping("admin/chartByCategoryAmount.do")
+	public Map<String, Object> chartByCategoryAmount(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Integer> chartByCategoryAmount = adminService.chartByCategoryAmount();
+		map.put("chartByCategoryAmountList", chartByCategoryAmount);
+		return map;
 	}
 
 }

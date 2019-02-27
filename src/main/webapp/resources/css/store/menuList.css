@@ -1,5 +1,20 @@
 @charset "UTF-8";
 
+/*매장 기본 정보 */
+div#menuThumb-container{
+	width: 60%;
+    margin: 0 auto;
+    top: 100px;
+}
+
+/*북마크 버튼*/
+.btn-checkBookMark{
+	padding:0;
+	width : 25px;
+	height: 25px;
+	border: none;
+}
+
 #last-container{
 	margin : 0 auto;
 	margin-top: 100px;
@@ -7,13 +22,6 @@
 
 div#last-container .btn-primary:hover{
 	background-color: #32aeb8;
-}
-
-/*매장 기본 정보 */
-div#menuThumb-container{
-	width: 60%;
-    margin: 0 auto;
-    top: 100px;
 }
 
 /*상세보기 내용 전부 담고 있는 div*/
@@ -126,10 +134,10 @@ button#btn-order{
 /* 메뉴 삭제 버튼*/
 button.delete-order{
 	width: 24.95px;
-	height: 28px;
-	background: black;
-    color: white;
-    border:none;
+    height: 28px;
+    background: white;
+    border: 1px solid #c5c5c5;
+    color: #545b62;
 }
 
 

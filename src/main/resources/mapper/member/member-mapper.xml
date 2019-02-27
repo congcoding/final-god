@@ -34,5 +34,70 @@
         select count(*) as cnt from bookmark
         WHERE memberId = #{memberId} and storeNo = #{storeNo}
     </select>
+    
+    <select id="couponListBymemberId" resultType="map">
+    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberid} and useflag='N'
+    </select>
+    
+    
+    <select id="getDiscount" resultType="_double">
+		select discount from event where eventno=#{eventNo}
+    </select>
+    
+    <select id="">
+		select count(*) from bookmark 
+		WHERE memberId = #{memberId} and storeNo = #{storeNo}
+	</select>
 	
+	<insert id="insertBookMark">
+		INSERT INTO bookmark (BOOKMARKNO, MEMBERID, STORENO)
+		VALUES (seq_bookmarkno.nextval, #{memberId}, #{storeNo})
+	</insert>
+	
+	<delete id="deleteBookMark">
+		DELETE FROM bookmark WHERE memberId = #{memberId} and storeno = #{storeNo}
+	</delete>
+	
+	<select id="bookMarkList" resultType="storeInfo">
+		select s.*
+		from storeinfo s left join bookmark b on s.storeNo = b.storeNo
+		where b.memberId = #{memberId}
+	</select>
+	
+	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
+	
+	<select id="orderList" resultType="map">
+		select o.*, r.reviewNo
+		from orderInfo o left join review r on o.orderNo = r.orderNo
+		where memberid = #{memberId} and receiveFlag = 'Y'
+	</select>
+		
+	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>
+	
+	
+	<select id="reviewList" resultType="review">
+		SELECT * FROM REVIEW
+		WHERE writer = #{memberId}
+	</select>
+	
+	<select id="selectRAttachmentList" resultType="RAttachment">
+		SELECT * FROM RATTACHMENT
+		WHERE REVIEWNO = #{reviewNo}
+	</select>
+	
+	<insert id="insertMemberReview">
+		INSERT INTO review (REVIEWNO, STORENO, ORDERNO, TITLE, WRITER, CONTENT, RATE, GOOD, HATE, RDATE)
+		VALUES (SEQ_REVIEWNO.nextval, #{storeNo}, #{orderNo}, #{title}, #{writer}, #{content}, #{rate}, default, default, sysdate)
+	</insert>
+	
+	<select id="selectOneReview" resultType="review">
+		SELECT * FROM REVIEW
+		WHERE ORDERNO = #{orderNo}
+	</select>
+		
+	<insert id="insertRAttachment">
+		INSERT INTO RAttachment (ATTACHMENTNO, REVIEWNO, ORIGINALFILENAME, RENAMEDFILENAME, UPLOADDATE, DOWNLOADCOUNT, STATUS)
+		VALUES(seq_rattachmentno.nextval, #{reviewNo}, #{originalFileName}, #{renamedFileName}, sysdate, default, default)
+	</insert>
+		
 </mapper>

@@ -1,5 +1,6 @@
 package com.kh.god.admin.model.service;
 
+import java.sql.Date;
 import java.util.List;
 
 import java.util.Map;
@@ -281,6 +282,11 @@ public class AdminServiceImpl implements AdminService {
 	}
 	
 	@Override
+	public List<Ad> adCostByMonthly() {
+		return adminDao.adCostByMonthly();
+	}
+	
+	@Override
 	public List<Coupon> couponList(String memberId) {
 		return adminDao.couponList(memberId);
 	}
@@ -330,6 +336,16 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<Integer> chartByCategory() {
 		return adminDao.chartByCategory();
+	}
+
+	@Override
+	public List<Integer> chartByWeek(Map<String, String> map) {
+		return adminDao.chartByWeek(map);
+	}
+
+	@Override
+	public List<Integer> chartByCategoryAmount() {
+		return adminDao.chartByCategoryAmount();
 	}
 
 }

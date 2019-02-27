@@ -19,8 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.service.MenuService;
 import com.kh.god.menu.model.vo.Menu;
+import com.kh.god.storeInfo.model.service.StoreInfoService;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Controller
@@ -33,6 +35,9 @@ public class MenuController {
 	
 	@Autowired
 	MemberService memberService;
+	
+	@Autowired
+	StoreInfoService storeInfoService;
 
 	@RequestMapping("/menu/menuList.do")
 	public String menuList(@RequestParam(value = "storeNo") String storeNo, 
@@ -51,17 +56,25 @@ public class MenuController {
 		List<Menu> menuList = menuService.menuList(storeNo);
 		List<StoreInfo> storeInfo = menuService.storeInfoList(storeNo);		
 		int menuTotalCount = menuService.menuCount(storeNo);
+		List<Review> reviewList = storeInfoService.reviewList(storeNo);
+		
+		
+		int checkedBookMark = 0;
+		
 		if( memberLoggedIn != null) {
 			Map<String, String> map = new HashMap<>();
 			map.put("memberId", memberLoggedIn.getMemberId());
 			map.put("storeNo", storeNo);
-			int checkedBookMark = memberService.checkBookMark(map);			
-		}
-		
+			checkedBookMark = memberService.checkBookMark(map);			
+		}	
 		
 		model.addAttribute("menuTotalCount",menuTotalCount);
 		model.addAttribute("menuList",menuList);
 		model.addAttribute("storeInfo",storeInfo);
+		
+		model.addAttribute("reviewList",reviewList);//매장 후기리스트
+		model.addAttribute("checkedBookMark",checkedBookMark); //북마크여부
+		
 		
 		return "storeInfo/MenuListByStore";	
 	}
