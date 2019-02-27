@@ -207,14 +207,31 @@ public class SellerDaoImpl implements SellerDao {
 		return menuNo;
 	}
 
+	/*
+	 * @Override public int insertMenu(Menu menu) { return
+	 * sqlSession.insert("menu.insertMenu", menu); }
+	 */
+
+	@Override
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
+	}
+
 	@Override
 	public int insertMenu(Menu menu) {
 		return sqlSession.insert("menu.insertMenu", menu);
 	}
 
 	@Override
-	public StoreInfo selectStoreInfo(String storeNo) {
-		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
+	public int insertMenuAttachment(MenuAttachment a) {
+		System.out.println("########################### insert a => " + a);
+		return sqlSession.insert("menu.insertMenuAttachment", a );
+	}
+	
+	@Override
+	public int updateMenuAttachment(MenuAttachment a) {
+		System.out.println("########################### update a => " + a);
+		return sqlSession.update("menu.updateMenuAttachment", a );
 	}
 
 
