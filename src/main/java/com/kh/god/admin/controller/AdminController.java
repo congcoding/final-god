@@ -869,5 +869,10 @@ public class AdminController {
 		map.put("chartByCategoryAmountList", chartByCategoryAmount);
 		return map;
 	}
+	
+	@RequestMapping("admin/reportList.do")
+	public String reportList() {
+		return "admin/reportList";
+	}
 
 }

@@ -38,6 +38,7 @@
             <a class="collapse-item" id="adControl" href="${pageContext.request.contextPath }/admin/adControl.do">광고 관리</a>
             <a class="collapse-item" id="eventControl" href="${pageContext.request.contextPath }/admin/eventList.do">이벤트 관리</a>
             <a class="collapse-item" id="qnaControl" href="${pageContext.request.contextPath }/admin/qnaControl.do">문의 관리</a>
+            <a class="collapse-item" id="reportControl" href="${pageContext.request.contextPath }/admin/reportList.do">신고 관리</a>
           </div>
         </div>
       </li>
