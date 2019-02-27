@@ -22,6 +22,7 @@ public class StoreInfo implements Serializable{
 	private String closeFlag;		// 매장 폐업 여부
 	private int deliveryMinPrice;	// 최소 배달 금액
 	private String sellerId;		// 사업자가입 ID
+	private String rejectInfo;		// 가게 신청 거절 사유
 	
 	public StoreInfo() {
 		super();
@@ -29,7 +30,7 @@ public class StoreInfo implements Serializable{
 
 	public StoreInfo(String storeNo, String storeName, String storeTel, String storeAddress, String storeGrade,
 			int categoryNo, String storeIntro, String personalDay, String operatingHours, String pmsFlag,
-			String closeFlag, int deliveryMinPrice, String sellerId) {
+			String closeFlag, int deliveryMinPrice, String sellerId, String rejectInfo) {
 		super();
 		this.storeNo = storeNo;
 		this.storeName = storeName;
@@ -44,6 +45,7 @@ public class StoreInfo implements Serializable{
 		this.closeFlag = closeFlag;
 		this.deliveryMinPrice = deliveryMinPrice;
 		this.sellerId = sellerId;
+		this.rejectInfo = rejectInfo;
 	}
 
 	public String getStoreNo() {
@@ -153,6 +155,14 @@ public class StoreInfo implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	public String getRejectInfo() {
+		return rejectInfo;
+	}
+
+	public void setRejectInfo(String rejectInfo) {
+		this.rejectInfo = rejectInfo;
+	}
 
 	@Override
 	public String toString() {
@@ -160,11 +170,7 @@ public class StoreInfo implements Serializable{
 				+ ", storeAddress=" + storeAddress + ", storeGrade=" + storeGrade + ", categoryNo=" + categoryNo
 				+ ", storeIntro=" + storeIntro + ", personalDay=" + personalDay + ", operatingHours=" + operatingHours
 				+ ", pmsFlag=" + pmsFlag + ", closeFlag=" + closeFlag + ", deliveryMinPrice=" + deliveryMinPrice
-				+ ", sellerId=" + sellerId + "]";
+				+ ", sellerId=" + sellerId + ", rejectInfo=" + rejectInfo + "]";
 	}
-	
-	
-	
-	
 
 }
