@@ -3,6 +3,7 @@ package com.kh.god.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
@@ -89,6 +91,31 @@ public class MemberDaoImpl implements MemberDao {
 	public int insertRAttachment(RAttachment a) {
 		int result = sqlSession.insert("member.insertRAttachment", a);
 		return result;
+	}
+
+	@Override
+	public Member findId(String email) {
+		Member m = null;
+		
+		 try{
+			m = sqlSession.selectOne("member.findId" , email);
+		 }
+		 catch(TooManyResultsException e) {
+			 
+		 }
+		 return m;
+	}
+
+	@Override
+	public Seller sellerfindId(String email) {
+		Seller s = null;
+		 try{
+			s = sqlSession.selectOne("seller.sellerfindId" , email);
+		 }
+		 catch(TooManyResultsException e) {
+			 
+		 }
+		return s;
 	}
 
 

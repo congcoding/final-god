@@ -77,6 +77,10 @@
 		VALUES(seq_rattachmentno.nextval, #{reviewNo}, #{originalFileName}, #{renamedFileName}, sysdate, default, default)
 	</insert>
 	
+	<select id="findId" resultType="member">
+		select * from member where email = #{email}
+	</select>
+	
 	
 
 	

@@ -27,14 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.email.SendEmail;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
-import com.kh.god.seller.model.vo.OrderInfo;
-import com.kh.god.storeInfo.model.vo.SAttachment;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -499,6 +499,37 @@ public class MemberController {
 		 
 		 return checkedBookMark;
 	 }
+	 
+	 @RequestMapping("/member/findId.do")
+	 @ResponseBody
+	 public Map<String, Object> findId(@RequestParam("email") String email){
+		 Map<String, Object> map = new HashMap<>();
+		 
+		 Member m = memberService.findId(email) ;
+		 String msg = "아이디가 이메일로 발송 되었습니다.";
+		 
+		 if(m == null) {
+			 Seller s = memberService.sellerfindId(email);	
+			 if(s == null) {
+				 msg = "등록된 이메일이 없습니다.";
+			 }else {
+				msg = "아이디가 이메일로 발송 되었습니다.";
+				
+				new SendEmail().mailSending(s.getEmail() , s.getSellerName() , s.getSellerId());
+			 }
+		 }else {
+			 
+			new SendEmail().mailSending(m.getEmail() , m.getMemberName() , m.getMemberId());
+		 }
+		
+		 map.put("msg" , msg);
+		 
+		 
+		 return map;
+	 }
+	 
+	 
+	 
 	 
 	 
 	 

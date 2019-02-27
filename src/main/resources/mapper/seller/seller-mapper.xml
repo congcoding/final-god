@@ -52,4 +52,8 @@
 		<result column="originalprice" property="ORIGINALPRICE" javaType="string"/>
 		<result column="totalprice" property="TOTALPRICE" javaType="string"/>
 	</resultMap>
+	
+	<select id="sellerfindId" resultType="seller">
+		select * from seller where email = #{email}
+	</select>
 </mapper>

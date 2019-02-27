@@ -7,6 +7,7 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 public interface MemberService {
@@ -34,6 +35,10 @@ public interface MemberService {
 	Review selectOneReview(int orderNo);
 
 	int insertRAttachment(RAttachment a);
+
+	Member findId(String email);
+
+	Seller sellerfindId(String email);
 
 
 	

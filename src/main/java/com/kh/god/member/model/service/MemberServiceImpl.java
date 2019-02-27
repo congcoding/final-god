@@ -11,6 +11,7 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -89,6 +90,18 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int insertRAttachment(RAttachment a) {
 		return memberDao.insertRAttachment(a);
+	}
+
+
+	@Override
+	public Member findId(String email) {
+		return memberDao.findId(email);
+	}
+
+
+	@Override
+	public Seller sellerfindId(String email) {
+		return memberDao.sellerfindId(email);
 	}
 
 
