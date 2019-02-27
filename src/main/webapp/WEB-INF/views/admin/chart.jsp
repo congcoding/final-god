@@ -33,7 +33,7 @@ google.charts.setOnLoadCallback(drawChartByCategory);
 
 function drawChartByCategory() {
 
-  var data = google.visualization.arrayToDataTable([
+ var data = google.visualization.arrayToDataTable([
     ['Category', 'Total Price'],
     ['치킨', ${chartByCategoryList[0]}],
     ['피자', ${chartByCategoryList[1]}],
@@ -80,6 +80,9 @@ $(function(){
             setTimeout("applyWeeklyHighlight()", 100);
         },
 		beforeShow : function() {
+			setTimeout("applyWeeklyHighlight()", 100);
+		},
+		onChangeMonthYear: function(year, month, widget) {
 			setTimeout("applyWeeklyHighlight()", 100);
 		}
     });

@@ -85,6 +85,8 @@ public interface SellerService {
 
 	StoreInfo selectStoreInfo(String storeNo);
 
+	List<Map<String, String>> totalSaleVolume(String sellerId, String storeNo, String string);
+
 
 
 }

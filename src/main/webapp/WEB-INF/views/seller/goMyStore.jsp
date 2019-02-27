@@ -132,7 +132,7 @@ $(function(){
           <div class="row">
 
             <!-- Area Chart -->
-            <!-- Bar Chart -->
+            <!-- Time Chart -->
               <div class="card shadow mb-4" style="width : 35rem; height : 30rem;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
                   <h6 class="m-0 font-weight-bold text-primary">시간대별 판매량</h6>

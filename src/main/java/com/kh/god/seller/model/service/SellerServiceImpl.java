@@ -206,6 +206,12 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.selectStoreInfo(storeNo);
 	}
 
+	@Override
+	public List<Map<String, String>> totalSaleVolume(String sellerId, String storeNo, String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 }

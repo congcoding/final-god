@@ -1,5 +1,6 @@
 package com.kh.god.seller.controller;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -686,5 +687,32 @@ public class SellerController {
     	logger.debug(saleVolume);
     	return saleVolume;
     }
+    @RequestMapping(value = "/seller/myStoreChart.do" )
+	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {
+		logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,storeNo,"today");
 
+//		model.addAttribute("orderList1",orderList1);
+		
+
+		
+		return "seller/myChart";
+	}
+	@RequestMapping("seller/chartByWeek.do")
+	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") Date weeklyStartDate, @RequestParam(name="weeklyEndDate") Date weeklyEndDate) {
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		logger.debug("시작 날짜 : "+weeklyStartDate+ "종료 날짜 : "+weeklyEndDate);
+		Map<String, Date> map = new HashMap<>();
+		map.put("weeklyStartDate", weeklyStartDate);
+		map.put("weeklyEndDate", weeklyEndDate);
+		
+		
+		
+//		List<OrderInfo> list = null;
+//		if(month.equals("now")) {
+//			list = adminService.timeChart();
+//		}
+//		map.put("list", list);
+		return returnMap;
+	}
 }
