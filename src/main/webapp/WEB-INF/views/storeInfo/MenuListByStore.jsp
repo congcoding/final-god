@@ -480,11 +480,16 @@ function emptyCart(newMenuCode){
 
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
-
-	var bool = confirm("주문 하시겠습니까?");
+	var memberid= "${memberLoggedIn.memberId}";
+	var bool = "";
+	if(memberid==""){
+		bool =  confirm("비회원으로 주문 하시겠습니까?");
+	} else {
+		bool =  confirm("주문 하시겠습니까?");
+	}
 	
 	if(bool){
-		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val();	
+		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val()+"&memberId="+memberid;	
 	}	
 }; 
 

@@ -50,6 +50,10 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {		
+		return sqlSession.selectList("member.couponListBymemberId", memberId);
+	}
+
 	public int insertBookMark(Map<String, String> map) {
 		int result = sqlSession.insert("member.insertBookMark",map);
 		return result;
@@ -103,6 +107,10 @@ public class MemberDaoImpl implements MemberDao {
 		return attachmentList;
 	}
 
-
+	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("member.getDiscount", eventNo);
+	}
 
 }

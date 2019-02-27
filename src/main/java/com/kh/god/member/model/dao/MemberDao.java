@@ -21,6 +21,10 @@ public interface MemberDao {
 
 	int checkBookMark(Map<String, String> map);
 
+	List<Map<String, Object>> couponListBymemberId(String memberId);
+
+	double getDiscount(String eventNo);
+
 	int insertBookMark(Map<String, String> map);
 
 	int deleteBookMark(Map<String, String> map);
@@ -38,6 +42,5 @@ public interface MemberDao {
 	List<Review> reviewList(String memberId);
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
-
 
 }

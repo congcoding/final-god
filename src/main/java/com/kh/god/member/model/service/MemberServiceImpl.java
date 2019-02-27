@@ -51,12 +51,22 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {
+		// TODO Auto-generated method stub
+		return memberDao.couponListBymemberId(memberId);
+	}
+
 	public int insertBookMark(Map<String, String> map) {
 		return memberDao.insertBookMark(map);
 	}
 
 
 	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return memberDao.getDiscount(eventNo);
+	}
+	
 	public int deleteBookMark(Map<String, String> map) {
 		return memberDao.deleteBookMark(map);
 	}

@@ -13,8 +13,6 @@
     	insert into seller values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
     </insert>
     
-
-
 	<update id="updatePwd">
 		update seller set password = #{password} where sellerid = #{sellerId}
 	</update>
@@ -23,6 +21,17 @@
 		update seller set email = #{email} , phone = #{phone}  where sellerid = #{sellerId}
 	</update>
 	
+	<insert id="insertOrderInfo">
+		insert into orderinfo(orderNo,memberid,storeno,totalPrice,cancelFlag,deliveryFlag,originalPrice,priceWay,receiveFlag,request,paymentId) values (SEQ_ORDERINFO.nextval,#{memberId},#{storeNo}, #{totalPrice},'N','N',#{orginalPrice},#{priceWay},'N',#{request},#{paymentId})
+	</insert>
+		
+	<insert id="insertOrderMenu">
+	   <selectKey resultType="_int" keyProperty="orderNo" order="BEFORE">
+	   		select SEQ_ORDERINFO.currval from dual
+	   </selectKey>
+		insert into orderMenu(orderno,ordermenuno,menucode,storeno,amount) values (#{orderNo},SEQ_ORDERMENU.nextval,#{menuCode},#{storeNo},#{amount})		
+	</insert>
+
 	<!-- 종합 보기에서 저번주의 판매량을 가지고 오는 쿼리문 -->
 	<select id="totalSaleVolumeofWeek" resultMap="totalOf">
 		select to_char(ordertime,'dy')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
