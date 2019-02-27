@@ -213,6 +213,31 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+	public int insertOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrder(map);
+	}
+
+	@Override
+	public int insertOrderInfo(Map<String, Object> orderInfoMap) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrderInfo(orderInfoMap);
+	}
+
+	@Override
+	public int insertOrderMenu(Map<String, Object> orderMenuMap) {
+		// TODO Auto-generated method stub
+		return sellerDao.insertOrderMenu(orderMenuMap);
+	}
+
+	//종합 보기에서  저번주의 판매량을 가져온다.
+	@Override
+	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
+		return sellerDao.totalSaleVolume(sellerId,type);
+	}	
+
+
+	@Override
 	public int selectMenuNo(String storeNo) {
 		return sellerDao.selectMenuNo(storeNo);
 	}
@@ -248,6 +273,7 @@ public class SellerServiceImpl implements SellerService {
 		
 		return result;
 	}
+
 
 	
 }

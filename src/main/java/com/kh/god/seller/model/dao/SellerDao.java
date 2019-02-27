@@ -75,6 +75,14 @@ public interface SellerDao {
 
 	int deleteMenu(String menuCode);
 
+	int insertOrder(Map<String, Object> map);
+
+	int insertOrderInfo(Map<String, Object> orderInfoMap);
+
+	int insertOrderMenu(Map<String, Object> orderMenuMap);
+
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+
 	int selectMenuNo(String storeNo);
 
 	/* int insertMenu(Menu menu); */
@@ -86,5 +94,6 @@ public interface SellerDao {
 	int insertMenuAttachment(MenuAttachment a);
 
 	int updateMenuAttachment(MenuAttachment a);
+
 
 }

@@ -3,7 +3,20 @@ package com.kh.god.common.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class Utils {
+	
+	
+	@Autowired
+	BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	
 
 	
 	public static String getPerBar(int totalContents,int cPage,int numPerPage,String loc) {
@@ -230,6 +243,26 @@ public class Utils {
 		}
 		
 	}
+	
+	public static String getRandomPassword(int len) {
+		char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+				'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' }; 
+		
+		int idx = 0;
+		StringBuffer sb = new StringBuffer();
+		
+		System.out.println("charSet.length@SendEmail = " + charSet.length);
+		
+		for(int i = 0; i < len; i++) {
+			idx = (int) (charSet.length * Math.random()); // 36 * 생성된 난수를  Int로 추출 (소숫점제거)
+			System.out.println("idx@SendEmail = " + idx);
+			sb.append(charSet[idx]);
+		}
+		
+		return sb.toString();
+	}
+
+	
 	
 
 

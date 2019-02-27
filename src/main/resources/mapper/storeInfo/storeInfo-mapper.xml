@@ -182,34 +182,8 @@
 		update storeinfo set closeflag =  'Y' where storeNo = #{storeNo}
 	</update>
 
-
-	<!-- 종합 보기에서 저번주의 판매량을 가지고 오는 쿼리문 -->
-	<select id="totalSaleVolumeofWeek" resultMap="totalOf">
-		select to_char(ordertime,'dy')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
-		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
-		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and ((TRUNC(sysdate, 'iw')-7)- O.ordertime <![CDATA[<=]]> 0) and (TRUNC(sysdate, 'iw') - O.ordertime >= 0)
-		group by to_char(ordertime,'dy'),  S1.storename, O.storeno,S1.sellerid
+	<select id="reviewList" resultType="review">
+		SELECT * FROM REVIEW WHERE STORENO = #{storeNo}
 	</select>
-	<select id="totalSaleVolumeofToday" resultMap="totalOf">
-		select to_char(ordertime,'hh24')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
-		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
-		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and (TRUNC(sysdate)- O.ordertime <![CDATA[<=]]> 0) and (TRUNC(sysdate)+1 - O.ordertime >= 0)
-		group by to_char(ordertime,'hh24'), S1.storename, O.storeno,S1.sellerid
-	</select>
-	<select id="totalSaleVolumeofMonth" resultMap="totalOf">
-		select to_char(ordertime,'MM/dd')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
-		from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
-		where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and extract(month from sysdate)-extract(month from ordertime)=1 
-		group by to_char(ordertime,'MM/dd'), S1.storename, O.storeno,S1.sellerid
-	</select>
-	<select id="totalSaleVolumeof3Month" resultMap="totalOf">
-	select to_char(ordertime,'MM')as orderday,sum(O.totalprice)as totalprice,S1.storename ,sum(O.originalprice)as originalprice, S1.sellerid, O.storeno
-	from orderinfo O left join storeinfo S1 on O.storeno = S1.storeno join seller S2 on S1.sellerid = S2.sellerid
-	where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and extract(month from sysdate)-extract(month from ordertime) >= 1 and  extract(month from sysdate)-extract(month from ordertime) <![CDATA[<=]]> 3
-	group by to_char(ordertime,'MM'), S1.storename, O.storeno,S1.sellerid
-	</select>
-	<resultMap type="map" id="totalOf">
-		<result column="originalprice" property="ORIGINALPRICE" javaType="string"/>
-		<result column="totalprice" property="TOTALPRICE" javaType="string"/>
-	</resultMap>
+	
 </mapper>

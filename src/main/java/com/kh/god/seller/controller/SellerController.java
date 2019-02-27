@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
@@ -39,6 +40,7 @@ import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 
 @Controller
@@ -100,7 +102,18 @@ public class SellerController {
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
 	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 			ModelAndView mav , HttpSession session) {
-
+		
+	
+		/* @RequestParam(name="autoLogin") String autoLogin , */
+		/*
+		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
+		 * //기존에 LOGIN세션값 존재하면 제거 }
+		 */
+		
+		
+		
+		
+		
 		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
 		
 
@@ -110,14 +123,12 @@ public class SellerController {
 		if(logger.isDebugEnabled())
 			logger.debug("로그인 요청!");
 		
+		//로그인 성공시 Seller 반환
 		Seller s = sellerService.selectOneSeller(memberId);
 		
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
-
-		
-	  
 
 	     boolean loginFlag = true;
 	     
@@ -125,7 +136,15 @@ public class SellerController {
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
-	      } else {
+	         
+	      } else {//로그인 성공시 
+	    	  
+	    	//  dto.setPassword(password);
+	    	  
+	    	 // if(dto.isUseCookie()) {
+	    		  
+	    	  //}
+	    	  
 	    	  Set<String> keyValue = memberSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
@@ -211,7 +230,8 @@ public class SellerController {
 		}
 		
 		List<StoreInfo> store = sellerService.myStore(sellerId);
-		
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,"today");
+		logger.debug("오늘자 판매량ㅇ ::"+saleVolume);
 //		List<Menu> menu = sellerService.myStoreMenu(sellerId);
 		
 //		System.out.println("메뉴 나오라" + menu);
@@ -220,7 +240,7 @@ public class SellerController {
 		//페이지바 만들기
 		model.addAttribute("store", store);
 //		model.addAttribute("menu", menu);
-
+		model.addAttribute("saleVolume",saleVolume);
 		return "seller/goMyStore";
 
 	}
@@ -828,6 +848,21 @@ public class SellerController {
 		model.addAttribute("view", view);
 
 		return "redirect:/seller/myStoreMenu.do?storeNo=" + menu.getStoreNo();
+	}
+	
+	/**
+     * 종합 보기에서 저번주의 매장 판매량을 가지고 온다.
+     * @param sellerId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/chart/totalSaleVolume.do")
+    public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
+    	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
+    	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
+    	logger.debug(saleVolume);
+    	return saleVolume;
+    }
 
 	}
-}
+

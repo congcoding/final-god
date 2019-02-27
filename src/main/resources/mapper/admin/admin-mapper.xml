@@ -197,29 +197,47 @@
 	</update>
 	
 	<select id="selectStorePMSList" resultType="storeInfo">
-		select * from storeInfo where pmsflag='N'
+		select * from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="countStorePMSList" resultType="_int">
-		select count(*) from storeInfo where pmsflag='N'
+		select count(*) from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="selectStoreList" resultType="storeInfo">
-		select * from storeInfo
+		select * from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
-		select count(*) from storeInfo
+		select count(*) from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">
 		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
 	</insert>
+	<update id="couponAmount">
+		update event set amount = amount -1 where eventNo = #{eventNo}
+	</update>
 
 	<select id="timeChart" resultType="string">
 		<![CDATA[ select to_char(ordertime, 'hh24') from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
 	</select>
 	
+	<select id="totalCostByMonthly" resultType="_int">
+		<![CDATA[ select totalPrice from orderinfo where to_char(ordertime, 'mm') >= to_char(sysdate, 'mm') and to_char(ordertime, 'mm')<(to_char(sysdate,'mm')+1) ]]>
+	</select>
+	
+	<select id="adCostByMonthly" resultType="_int">
+		<![CDATA[ select price from ad where to_char(enddate, 'mm') >= to_char(sysdate, 'mm') and to_char(enddate, 'mm')<(to_char(sysdate,'mm')+1) ]]>
+	</select>
+	
+	<select id="chartByMonth" resultType="string">
+		<![CDATA[ select to_char(ordertime, 'mm') as month from orderinfo where to_char(ordertime, 'yyyy') = #{year} ]]>
+	</select>
+	
+	<select id="couponList" resultType="coupon">
+		select eventNo from coupon where memberId = #{memberId}
+	</select>
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}
@@ -230,7 +248,7 @@
 	</select>
 	
 	<update id="storePMSOk">
-		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+		update storeInfo set pmsflag='Y', rejectInfo=null where storeNo=#{storeNo}
 	</update>
 	
 	<update id="storePMSReject">
@@ -255,6 +273,23 @@
 		where O.storeNo = S.storeNo
 		group by categoryNo
 		order by categoryNo
+	</select>
+	
+	<select id="chartByWeek" resultType="_int">
+		<![CDATA[
+		select nvl(column3, 0)
+		from (select column1, column2 from (SELECT TO_CHAR(TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+LEVEL-1, 'YYYY/MM/DD') column1 FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{weeklyEndDate}, 'YYYY/MM/DD')-TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+1)), (SELECT LEVEL column2 FROM DUAL CONNECT BY LEVEL <= 7)) A
+		left join (select to_char(O.deliveryEnd, 'yyyy/mm/dd') column4, S.categoryno, nvl(sum(O.originalPrice), 0) column3 from orderInfo O, storeInfo S where O.storeNo = S.storeNo and (O.deliveryend between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1)
+		group by to_char(O.deliveryEnd, 'yyyy/mm/dd'), S.categoryno) B on A.column2 = B.categoryno and A.column1 = B.column4 order by column1, column2
+		]]>
+	</select>
+	
+	<select id="chartByCategoryAmount" resultType="_int">
+		select count(*) 
+		from orderinfo O, storeinfo S
+		where O.storeno = S.storeno and to_char(O.deliveryend, 'mm') = (select to_char(sysdate, 'mm') from dual)
+		group by categoryno
+		order by categoryno
 	</select>
 	
 </mapper>
