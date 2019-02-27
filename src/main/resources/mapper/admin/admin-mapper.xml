@@ -205,7 +205,7 @@
 	</select>
 	
 	<select id="selectStoreList" resultType="storeInfo">
-		select * from storeInfo
+		select * from storeInfo where pmsflag='Y'
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
