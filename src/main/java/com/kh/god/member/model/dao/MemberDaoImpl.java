@@ -134,7 +134,6 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public double getDiscount(String eventNo) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne("member.getDiscount", eventNo);
 	}
 
@@ -151,6 +150,16 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public int updateMemberFindPwd(Member m) {
 		return sqlSession.update("member.updateMemberFindPwd" , m);
+	}
+	
+	@Override
+	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
+		return sqlSession.selectList("member.selectOrderMenuList", orderNo);
+	}
+
+	@Override
+	public int deleteMemberReview(String reviewNo) {
+		return sqlSession.update("member.deleteMemberReview",reviewNo);
 	}
 
 }

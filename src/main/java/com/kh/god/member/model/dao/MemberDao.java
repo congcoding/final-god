@@ -54,4 +54,9 @@ public interface MemberDao {
 
 	int updateMemberFindPwd(Member m);
 
+	List<Map<String, String>> selectOrderMenuList(String orderNo);
+
+	int deleteMemberReview(String reviewNo);
+
+
 }
