@@ -67,6 +67,9 @@ div#addReviewPhoto{
     border : 1px solid #858796;
     width: 50%;	
 }
+.checked {
+  color: orange;
+}
 
 
 </style>
@@ -127,8 +130,17 @@ div#addReviewPhoto{
 		  	
 		  	
 		  	<!--  평점 -->
-		  	
-		  	
+		  	<div class="form-group row">
+		  	<label for="inputWriter" class="col-sm-3">평점</label>
+    			<div id="star" name="rate">
+    				<span class="fa fa-star"></span>
+      				<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+    			</div>
+		  	</div>
+ 	
 		  	
 		  	<!-- 리뷰 내용 -->
 		  	<div class="form-group row">
@@ -184,6 +196,9 @@ function addReviewPhoto(){
 
 }
 
+$(function(){
+	
+}
 
 
 </script>
