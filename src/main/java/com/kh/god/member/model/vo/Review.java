@@ -26,6 +26,8 @@ public class Review {
 	private int good;
 	private int hate;
 	private Date rDate;
+	private String delFlag;
+	private int commentLevel; 
 	
 	public Date getrDate() {
 		return rDate;
