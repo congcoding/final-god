@@ -146,4 +146,6 @@ public interface AdminService {
 
 	List<Integer> chartByWeek(Map<String, String> map);
 
+	List<Integer> chartByCategoryAmount();
+
 }

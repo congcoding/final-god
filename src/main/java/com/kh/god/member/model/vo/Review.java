@@ -25,6 +25,16 @@ public class Review {
 	private int rate;
 	private int good;
 	private int hate;
-	private Date rDate;        
+	private Date rDate;
+	
+	public Date getrDate() {
+		return rDate;
+	}
+	public void setrDate(Date rDate) {
+		this.rDate = rDate;
+	}   
+	
+	
+	
 	
 }

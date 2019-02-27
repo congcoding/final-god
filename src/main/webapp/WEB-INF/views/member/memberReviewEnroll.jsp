@@ -67,6 +67,9 @@ div#addReviewPhoto{
     border : 1px solid #858796;
     width: 50%;	
 }
+.checked {
+  color: orange;
+}
 
 
 </style>
@@ -81,6 +84,9 @@ div#addReviewPhoto{
 			</li>
 			<li>
 				<a href="${pageContext.request.contextPath}/member/orderList.do?memberId=${memberLoggedIn.memberId}">구매 내역</a>
+			</li>
+			<li>
+				<a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">내 리뷰 보기</a>
 			</li>
 			<li>
 				<a href="${pageContext.request.contextPath}/member/bookMarkList.do?memberId=${memberLoggedIn.memberId}">즐겨찾는 매장</a>	
@@ -124,8 +130,17 @@ div#addReviewPhoto{
 		  	
 		  	
 		  	<!--  평점 -->
-		  	
-		  	
+		  	<div class="form-group row">
+		  	<label for="inputWriter" class="col-sm-3">평점</label>
+    			<div id="star" name="rate">
+    				<span class="fa fa-star"></span>
+      				<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+    			</div>
+		  	</div>
+ 	
 		  	
 		  	<!-- 리뷰 내용 -->
 		  	<div class="form-group row">
@@ -172,15 +187,18 @@ function addReviewPhoto(){
 	//사진 추가 창 추가
 	var html = "";
 	
-	if($('input[name="upFile"]').length <5){
+	if($('input[name="upFile"]').length <3){
 		html += "<input type='file' name='upFile'>";
 		$('#inputReviewPhoto').append(html);
 	}else{
-		alert('사진은 최대 5개까지 가능합니다.');
+		alert('사진은 최대 3개까지 가능합니다.');
 	}
 
 }
 
+$(function(){
+	
+}
 
 
 </script>

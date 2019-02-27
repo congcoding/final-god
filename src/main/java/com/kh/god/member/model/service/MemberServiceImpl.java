@@ -52,12 +52,22 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public List<Map<String, Object>> couponListBymemberId(String memberId) {
+		// TODO Auto-generated method stub
+		return memberDao.couponListBymemberId(memberId);
+	}
+
 	public int insertBookMark(Map<String, String> map) {
 		return memberDao.insertBookMark(map);
 	}
 
 
 	@Override
+	public double getDiscount(String eventNo) {
+		// TODO Auto-generated method stub
+		return memberDao.getDiscount(eventNo);
+	}
+	
 	public int deleteBookMark(Map<String, String> map) {
 		return memberDao.deleteBookMark(map);
 	}
@@ -98,10 +108,18 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.findId(email);
 	}
 
+	public List<Review> reviewList(String memberId) {
+		return memberDao.reviewList(memberId);
+	}
+
 
 	@Override
 	public Seller sellerfindId(String email) {
-		return memberDao.sellerfindId(email);
+		return memberDao.sellerfindId(email);	
+	}
+
+	public List<RAttachment> selectRAttachmentList(int reviewNo) {
+		return memberDao.selectRAttachmentList(reviewNo);
 	}
 
 

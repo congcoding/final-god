@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
@@ -62,6 +63,12 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	@Override
 	public int closedStore(String storeNo) {
 		return sqlSession.update("storeInfo.closedStore", storeNo);
+	}
+
+	@Override
+	public List<Review> reviewList(String storeNo) {
+		List<Review> reviewList = sqlSession.selectList("storeInfo.reviewList",storeNo);
+		return reviewList;
 	}
 
 

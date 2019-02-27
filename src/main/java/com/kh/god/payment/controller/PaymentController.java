@@ -1,7 +1,11 @@
 package com.kh.god.payment.controller;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.god.common.message.MessageSend;
+import com.kh.god.member.model.service.MemberService;
 import com.kh.god.seller.model.service.SellerService;
 import com.siot.IamportRestHttpClientJava.request.CancelData;
 import com.siot.IamportRestHttpClientJava.response.IamportResponse;
@@ -21,6 +26,9 @@ public class PaymentController {
 	
 	@Autowired
 	SellerService sellerService;
+	@Autowired
+	MemberService memberService;
+
 	
 	Logger logger = Logger.getLogger(getClass());
 
@@ -36,21 +44,81 @@ public class PaymentController {
 	//결제준비페이지
 	@RequestMapping("/payment/goPaymentPage.do")
 	public String goPaymentPage(@RequestParam("storeName") String storeName,
-			@RequestParam("storeNo") String storeNo
+			@RequestParam("storeNo") String storeNo,
+			@RequestParam(value="memberId", required=false) String memberId
 			,Model model) {
-		System.out.println(storeName);
-		System.out.println("여기에 나오면돼요 흙흙"+storeNo);
+		List<Map<String,Object>> couponListBymemberId = null;
+		if(!memberId.equals("")) {			
+			couponListBymemberId = memberService.couponListBymemberId(memberId);
+		}
 		model.addAttribute("storeName",storeName);
 		model.addAttribute("storeNo",storeNo);
+		model.addAttribute("couponList",couponListBymemberId);
 
 		return "payment/paymentPreparations";
 	}
 	
 	
-	//결제완료시
+	//결제완료시 -> 폼제출
 	@RequestMapping("/payment/paymentEnd.do")
-	public String paymentEnd(@RequestParam("paymentId") String paymentId) {
-		System.out.println("@@@페이먼트아이디"+paymentId);		
+	public String paymentEnd(
+			@RequestParam("storeNo") String storeNo,
+			@RequestParam("paymentPrice") int totalPrice, //결제 가격
+			@RequestParam("orginalPrice") int orginalPrice, //실제 가격
+			@RequestParam("fixedAddress") String fixedAddress,
+			@RequestParam("address") String address,
+			@RequestParam("tel") String tel,
+			@RequestParam("orderMenu") String orderMenu,
+			@RequestParam(value="request", required=false) String request,
+			@RequestParam(value="memberId", required=false) String memberId,
+			@RequestParam("methodForController") String paymentMethod,
+			@RequestParam(value="paymentId", required=false) String paymentId) {
+
+		System.out.println(orginalPrice);
+		System.out.println(totalPrice);
+		System.out.println(orderMenu);
+
+		String[] list = orderMenu.split("/|:");
+		System.out.println(Arrays.toString(list));
+		
+		address = fixedAddress+address;
+	    StringBuffer tel_ = new StringBuffer(tel);
+	    tel_.insert(3, "-");
+	    tel_.insert(8, "-");
+	    
+	    Map<String, Object> orderInfoMap = new HashMap<>();
+	    Map<String, Object> orderMenuMap = new HashMap<>();
+		orderInfoMap.put("storeNo", storeNo);
+		orderInfoMap.put("totalPrice", totalPrice);
+		orderInfoMap.put("orginalPrice", orginalPrice);
+		orderInfoMap.put("address", address);
+		orderInfoMap.put("tel", tel_);	
+		orderInfoMap.put("memberId",memberId!=null?memberId:"비회원");		
+		orderInfoMap.put("request",!request.equals("")?request:"");
+		orderInfoMap.put("paymentId",!paymentId.equals("")?paymentId:"");
+		orderInfoMap.put("priceWay", paymentMethod.equals("now_card")?"Y":"N");
+
+		
+	    int orderInfo=sellerService.insertOrderInfo(orderInfoMap);
+		System.out.println(orderInfo>0?"오더인포성공":"실패");
+
+	    int orderMenu2 = 0;
+	    String menuCode = "";
+	    for(int i=0; i<list.length; i++) {	    	
+	    	if(i==0 || i%2==0) {
+	    		menuCode = list[i];
+	    	}
+	    	if(i%2!=0) {
+	    		orderMenuMap.put("storeNo", storeNo);
+	    		orderMenuMap.put("menuCode", menuCode);
+	    		orderMenuMap.put("amount", list[i]);	    		
+	    		orderMenu2 = sellerService.insertOrderMenu(orderMenuMap);
+	    		System.out.println(orderMenu2>0?"오더메뉴성공":"실패");
+	    	}
+			
+	    }
+
+
 		//int putPaymentId = paymentService.putPaymentId(paymentId);
 		return "payment/paymentEnd";
 	}
@@ -76,7 +144,7 @@ public class PaymentController {
 		}
 		MessageSend ms = new MessageSend();
 		String flag = "cancel";
-		//ms.main(reason,memberPhoneForCancel,flag);
+		ms.main(reason,memberPhoneForCancel,flag);
 
 		int result = sellerService.cancelOrder(orderNo);	
 

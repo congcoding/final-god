@@ -11,10 +11,17 @@
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 
 <div id="container">
-	<div id="deliveryInformation-container">
-		<form name=deliveryFrm action="${pageContext.request.contextPath}/payment/paymentEnd.do">
+  <div id="deliveryInformation-container">
+	<form name=deliveryFrm action="${pageContext.request.contextPath}/payment/paymentEnd.do" method="POST">
 		<input type="hidden" name="storeNo" id="storeNo" value="${storeNo}">
+		<input type="hidden" name="memberId" id="memberId" value="${memberLoggedIn.memberId}">
 		<input type="hidden" name="paymentId" id="paymentId">
+		<input type="hidden" name="originalPrice" id="originalPrice">
+		<input type="hidden" name="paymentPrice" id="paymentPrice">
+		<input type="hidden" name="methodForController" id="methodForController">
+		<input type="hidden" name="orginalPrice" id="orginalPrice">
+		<input type="hidden" name="orderMenu" id="orderMenu">
+		
 			<table class="table" id="deliveryInformation">
 			  <thead class="thead-light">
 			    <tr><th scope="col">배달정보</th></tr>
@@ -24,15 +31,17 @@
 			      <td>
 			      <label for="inputEmail3" class="col-sm-2 col-form-label">주소</label>
 						<div class="col-sm-10">
-			  			<input type="text" class="form-control" id="fixedAddress" readonly='readonly'>
+			  			<input type="text" class="form-control" name="fixedAddress" id="fixedAddress" required>
 			  			<br>
-			  		    <input type="text" class="form-control" id="address" placeholder="(필수)상세주소 입력" required>
+			  		    <input type="text" class="form-control" id="address" name="address" placeholder="(필수)상세주소 입력" required>
 			  		    <span id="addressWarning">상세한 주소를 입력해주세요.</span>
 				    </div>
 				    <label for="inputEmail3" class="col-sm-2 col-form-label">전화번호</label>
 						<div class="col-sm-10">
-			  			<input type="tel" class="form-control" id="tel" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
+			  			<input type="tel" class="form-control" id="tel" name="tel" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
 			  			 <span id="telWarning">휴대전화번호는 숫자만 입력해주세요.</span> 
+			  		     <span id="tel11Warning">휴대전화번호는 11자 이내로 입력해주세요.</span>
+			  			 
 				    </div>
 				  </td>
 			    </tr>
@@ -61,7 +70,7 @@
 			  <tbody>
 			    <tr>
 			      <td>  
-			      <input type="hidden" name="methodForController">
+			     
 			      	<div class="laterPayment">
 					      	만나서 결제
 					      	<br>
@@ -88,8 +97,25 @@
 			      	<td>
 					    <label for="inputPassword3" class="col-sm-2 col-form-label">쿠폰</label>
 					    <div class="col-sm-10">
-					      <input type="text" class="form-control" id="coupon" placeholder="웹에서 결제시 가능합니다." readonly>
+					  <!-- 쿠폰이 있을 경우 -->
+					   <c:if test="${not empty couponList}">
+					   <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="couponList" name="couponList" disabled="true">
+						   <c:forEach items="${couponList}" var="couponList">						  
+						      	 <option value="${couponList.EVENTNO}" name="eventCoupon">${couponList.EVENTTITLE}</option>						      	 
+						   </c:forEach>
+					   </select>
+					   </c:if>
+					   <c:if test="${empty couponList}">
+					   		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="couponList" name="couponList" disabled="true">
+					   			<option>사용하실 수 있는 쿠폰이 없습니다.</option>						      	 
+					   		
+					   		</select>
+					   	
+					   </c:if>
 					      <button type="button" class="btn btn-info" id="couponBtn">적용</button>
+						  <button type="button" class="close" aria-label="닫기" id="couponCancel">
+			  					<span aria-hidden="true">&times;</span>
+						  </button>
 					    </div>
 					</td>
 			    </tr>
@@ -131,20 +157,46 @@ $(document).ready(function(){
 
 	//cartTable 채우기
 	var html = "";
+	var orderMenu ="";
 	var sum = 0;
 	html += "<tr><td colspan = '2'>${storeName}</td></tr>";
 	for (var i=0; i<cart.length; i++){
+		orderMenu += cart[i].menuCode + ":" + cart[i].amount+"/";
 	 	<!-- 주문메뉴 -->
 	    html += "<tr class= 'checkOut'><td>"+cart[i].menuName+"</td><td>"+cart[i].amount+"개</td></tr>";	    
 	    sum += cart[i].menuPrice*cart[i].amount;
 	}
 	
-  	html += "<tr id='totalPrice' class='checkOut'><td id='totalPriceSpan'>총 주문내역</td><td>"+sum+"</td></tr>";	
+  	html += "<tr id='totalPrice' class='checkOut'><td id='totalPriceSpan'>총 주문내역</td><td id='totalPriceNum'>"+sum+"</td></tr>";	
 	$('#cartTbl tbody').html(html);
-	
+	$("#orginalPrice").val(sum);
+	$("#orderMenu").val(orderMenu);
+
 	
 });
-
+/* 쿠폰적용 */
+$("#couponBtn").on("click", function(){
+	console.log($("[name=eventCoupon]:selected").val());
+	var eventNo = $("[name=eventCoupon]:selected").val();
+	var sum=0;
+	for (var i=0; i<cart.length; i++){
+	 	<!-- 주문메뉴 -->
+	    sum += cart[i].menuPrice*cart[i].amount;
+	}
+	$.ajax({
+		url :  "${pageContext.request.contextPath}/member/getDiscount.do",
+		data : {eventNo:eventNo,price:sum},
+		success : function(data){
+			console.log("에이젝스 성공");
+			sessionStorage.setItem("totalPrice",JSON.stringify(data));
+			var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
+			$("#totalPriceNum").html(totalPrice.totalPrice);
+			
+		},error:function(){
+			console.log("에이젝스 오류");
+		}
+	});
+});
 function getLocation(){
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
@@ -185,14 +237,20 @@ getLocation();
 $("#tel").keyup(function() {
  	var data = $("#tel").val();
  	
- 	if(data.indexOf("-") != -1){
+ 	if(data.indexOf("-") != -1||data.trim().length>11){
  		$("#tel").addClass(" is-invalid");
+ 		if(data.indexOf("-") != -1){
  		$("#telWarning").css("display","inline");
+ 		}else if(data.trim().length>11){
+ 		$("#tel11Warning").css("display","inline");
+ 		}
  	} else{
  		$("#tel").removeClass(" is-invalid");
  		$("#telWarning").css("display","none");
+ 		$("#tel11Warning").css("display","none");
 
  	}
+
 });
 //주소 입력하지않고 전화번호를 클릭했을 시
 $("#tel").on("click", function(){
@@ -207,55 +265,7 @@ $("#address").keyup(function() {
 		$("#addressWarning").css("display","none");
 });
 
-$("#orderEndBtn").on("click",function(){
-
-	var sum=0;
-	for (var i=0; i<cart.length; i++){
-	 	<!-- 주문메뉴 -->
-	    sum += cart[i].menuPrice*cart[i].amount;
-	}
-	
-	//11자
-	 var method = $("input[name=methodForController]").val();
-	 if(method=='now_card'){
-		 IMP.request_pay({
-		       pg : 'inicis', // version 1.1.0부터 지원.
-		       pay_method : 'card',
-		       merchant_uid : 'merchant_' + new Date().getTime(),//주문번호
-		       name : '${storeName}', //메뉴
-		       amount : sum, //가격
-		       buyer_email : 'iamport@siot.do', //멤버 전화번호
-		       
-		       buyer_tel : '010-1234-5678', //멤버 전화번호
-		   }, function(rsp) {
-		       if ( rsp.success ) {
-		    	   //컨트롤러단에 보내기
-		           var msg = '결제가 완료되었습니다.';
-		           msg += '고유ID : ' + rsp.imp_uid;
-		           msg += '상점 거래ID : ' + rsp.merchant_uid;
-		           msg += '결제 금액 : ' + rsp.paid_amount;
-		           msg += '카드 승인번호 : ' + rsp.apply_num;
-		           $("#paymentId").val(rsp.imp_uid);
-		           $("[name=deliveryFrm]").submit();
-		           console.log("결제ajax완료");
-		       } else {
-		           var msg = '결제에 실패하였습니다.';
-		           msg += '에러내용 : ' + rsp.error_msg;
-		       }
-		       alert(msg);
-		   });
-
-	 } else if(method=="later_cash"||method=="later_card"){
-		 $("[name=deliveryFrm]").submit();
-         console.log("나중에 결제 폼 전송");
-	 } else {
-		 alert("결제수단을 선택해주세요.");
-		 return;
-	 }
-
-});
-
-
+//paymentMethod
 /* 만나서 결제클릭시  */
 $(".laterPayment").on("click", function(){
 	$("#coupon").prop('readonly', true);
@@ -269,8 +279,91 @@ $(".nowPayment").on("click", function(){
 
 /* 결제수단클릭시 */
  $("[name=method]").on("click", function(){
-		$("input[name=methodForController]").val($(this).val());
+	 console.log($(this).val());
+	 if($(this).val()=='now_card'){
+	 	$("#couponList").attr("disabled",false);		 
+	 }else{
+		$("#couponList").attr("disabled",true);		 
+	 }
+
+	$("input[name=methodForController]").val($(this).val());
+	
+	
 })
+
+/* 쿠폰취소 누르기 */
+$("#couponCancel").on("click", function(){
+	sessionStorage.removeItem("totalPrice");
+});
+
+$("#orderEndBtn").on("click",function(){
+	var address = $("#address").val().trim().length;
+	var tel = $("#tel").val().trim().length;
+
+	if($("input[type=text]").hasClass("is-invalid")==true||address==0||tel==0){
+		alert("배달정보를 제대로 완성해주세요");
+		return;
+	}
+	var sum=0;
+	for (var i=0; i<cart.length; i++){
+	 	<!-- 주문메뉴 -->
+	    sum += cart[i].menuPrice*cart[i].amount;
+	}
+	$("#originalPrice").val(sum); //원가격
+	var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
+	if(totalPrice!=null){
+		sum = totalPrice.totalPrice; 
+	}
+	/* totalPrice = totalPrice.totalPrice=="null"?"":"totalPrice.totalPrice";
+	console.log(totalPrice.totalPrice); */
+	
+	//11자
+	 var method = $("input[name=methodForController]").val();
+	 if(method=='now_card'){
+		 
+		 IMP.request_pay({
+		       pg : 'inicis', // version 1.1.0부터 지원.
+		       pay_method : 'card',
+		       merchant_uid : 'merchant_' + new Date().getTime(),//주문번호
+		       name : '${storeName}', //메뉴
+		       amount : 1000, //가격
+		       buyer_email : 'iamport@siot.do', //멤버 전화번호
+		       
+		       buyer_tel : '010-1234-5678', //멤버 전화번호
+		   }, function(rsp) {
+		       if ( rsp.success ) {
+		    	   //컨트롤러단에 보내기
+		           var msg = '결제가 완료되었습니다.';
+		           msg += '고유ID : ' + rsp.imp_uid;
+		           msg += '상점 거래ID : ' + rsp.merchant_uid;
+		           msg += '결제 금액 : ' + rsp.paid_amount;
+		           msg += '카드 승인번호 : ' + rsp.apply_num;
+		           $("#paymentId").val(rsp.imp_uid);
+		           $("#paymentPrice").val(rsp.paid_amount);
+
+		           $("[name=deliveryFrm]").submit();
+		           console.log("결제ajax완료");
+		       } else {
+		           var msg = '결제에 실패하였습니다.';
+		           msg += '에러내용 : ' + rsp.error_msg;
+		           location.href = "${pageContext.request.contextPath}/menu/menuList.do?storeNo="+$("#storeNo").val();
+		       }
+		       alert(msg);
+		   });
+
+	 } else if(method=="later_cash"||method=="later_card"){
+		 
+		 $("#paymentPrice").val(sum);
+       
+		$("[name=deliveryFrm]").submit();
+         console.log("나중에 결제 폼 전송");
+	 } else {
+		 alert("결제수단을 선택해주세요.");
+		 return;
+	 }
+
+});
+
 
 </script>
 

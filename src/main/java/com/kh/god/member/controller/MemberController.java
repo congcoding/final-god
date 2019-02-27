@@ -528,8 +528,11 @@ public class MemberController {
 		 return map;
 	 }
 	 
-	 
-	 
+	/*
+	 * @RequestMapping(value="/member/findPwd.do" ,method = RequestMethod.POST )
+	 * 
+	 * @ResponseBody public Map<String, Object> findPwd
+	 */
 	 
 	 
 	 

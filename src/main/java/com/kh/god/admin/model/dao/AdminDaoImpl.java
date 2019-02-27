@@ -358,4 +358,9 @@ public class AdminDaoImpl implements AdminDao {
 	public List<Integer> chartByWeek(Map<String, String> map) {
 		return sqlSession.selectList("admin.chartByWeek", map);
 	}
+
+	@Override
+	public List<Integer> chartByCategoryAmount() {
+		return sqlSession.selectList("admin.chartByCategoryAmount");
+	}
 }

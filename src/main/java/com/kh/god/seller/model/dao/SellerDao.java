@@ -75,14 +75,20 @@ public interface SellerDao {
 
 	int deleteMenu(String menuCode);
 
-	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
+	int insertOrder(Map<String, Object> map);
 
+	int insertOrderInfo(Map<String, Object> orderInfoMap);
+
+	int insertOrderMenu(Map<String, Object> orderMenuMap);
+
+	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
 
 	int selectMenuNo(String storeNo);
 
 	int insertMenu(Menu menu);
 
 	StoreInfo selectStoreInfo(String storeNo);
+
 
 
 }

@@ -42,8 +42,10 @@ function addComma(num) {
 	}
 
 $(function(){
-	google.charts.load('current', {packages: ['corechart', 'bar']});
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(chartByCategoryAmount);
 	google.charts.setOnLoadCallback(drawBasic);
+	
 });
 function drawBasic() {
 	var one = 0;
@@ -106,7 +108,40 @@ function drawBasic() {
 		} /* success function end */
       
 	}); /* ajax end  */
+	
 }
+
+/* 이번달 카테고리별 판매량 (파이 차트) */
+function chartByCategoryAmount() {
+
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/chartByCategoryAmount.do",
+		type : "post",
+		async : "false",
+		success : function(data){
+			
+			  var chartData = google.visualization.arrayToDataTable([
+			    ['Category', 'Total Amount'],
+			    ['치킨', data.chartByCategoryAmountList[0]],
+			    ['피자', data.chartByCategoryAmountList[1]],
+			    ['보쌈/족발', data.chartByCategoryAmountList[2]],
+			    ['분식', data.chartByCategoryAmountList[3]],
+			    ['중식', data.chartByCategoryAmountList[4]],
+			    ['일식', data.chartByCategoryAmountList[5]],
+			    ['한식', data.chartByCategoryAmountList[6]],
+			  ]);
+
+			  var options = {
+					chartArea:{top:"20%", left:"10%", width:"100%", height:"100%"},
+					is3D: true
+			  };
+
+			  var chart = new google.visualization.PieChart(document.getElementById('chartByCategoryAmount'));
+
+			  chart.draw(chartData, options);		
+			}
+		});
+};
 
 $(function(){
 	var total = 0;
@@ -123,7 +158,6 @@ $(function(){
 		}
 	});
 });
-
 </script>
 
 <!-- Page Wrapper -->
@@ -147,48 +181,14 @@ $(function(){
 
           <!-- Content Row -->
           <div class="row">
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-primary shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">이번달 광고 수입</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="adCostByMonthly"></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">월간 판매량</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalCostByMonthly"></div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
+          
+          	<!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">새로운 판매자 신청</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">새로운 가게 신청</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">${storePMSCount }건</div>
@@ -224,6 +224,41 @@ $(function(){
                 </div>
               </div>
             </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">이번달 광고 수입</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="adCostByMonthly"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">이번달 판매량</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800" id="totalCostByMonthly"></div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
 
           <!-- Content Row -->
@@ -250,7 +285,7 @@ $(function(){
                   <h6 class="m-0 font-weight-bold text-primary">이번달 카테고리별 판매량</h6>
                 </div>
                 <div class="card-body">
-                  <div class="chart-bar" id="chart-time">
+                  <div class="chart-bar" id="chartByCategoryAmount">
                     
                   </div>
                   </div>
@@ -274,21 +309,3 @@ $(function(){
   <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
   </a> 
-
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="${pageContext.request.contextPath}/resources/js/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="${pageContext.request.contextPath }/resources/js/sb-admin-2.js"></script>s
-
-  <!-- Page level plugins -->
-  <script src="vendor/chart.js/Chart.min.js"></script>
-
-  <!-- Page level custom scripts -->
-  <script src="js/demo/chart-area-demo.js"></script>
-  <script src="js/demo/chart-pie-demo.js"></script>
-  <script src="${pageContext.request.contextPath}/resources/js/demo/chart-bar-demo.js"></script>

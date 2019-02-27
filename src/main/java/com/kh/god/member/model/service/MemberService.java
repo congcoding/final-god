@@ -22,6 +22,10 @@ public interface MemberService {
 
 	int checkBookMark(Map<String, String> map);
 
+	List<Map<String, Object>> couponListBymemberId(String memberId);
+
+	double getDiscount(String eventNo);
+
 	int insertBookMark(Map<String, String> map);
 
 	int deleteBookMark(Map<String, String> map);
@@ -39,6 +43,10 @@ public interface MemberService {
 	Member findId(String email);
 
 	Seller sellerfindId(String email);
+	
+	List<Review> reviewList(String memberId);
+
+	List<RAttachment> selectRAttachmentList(int reviewNo);
 
 
 	

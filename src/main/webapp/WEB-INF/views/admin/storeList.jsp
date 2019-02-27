@@ -51,6 +51,7 @@ $(function(){
 				<th>가게 등급</th>
 				<th>카테고리</th>
 				<th>사장님 아이디</th>
+				<th>영업 중지 여부</th>
 			</tr>
 			<c:if test="${not empty list}">
 				<c:forEach items="${list }" var="store">
@@ -71,6 +72,7 @@ $(function(){
 							</c:choose>
 						</td>
 						<td>${store.sellerId }</td>
+						<td>${store.pmsFlag=='C'?"중지":"" }</td>
 					</tr>
 				</c:forEach>
 			</c:if>
@@ -103,19 +105,3 @@ $(function(){
 
   </div>
   <!-- End of Page Wrapper -->
-
-  <!-- Scroll to Top Button-->
-  <a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
-
-  <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
-

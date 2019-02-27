@@ -95,6 +95,9 @@ select#selectMonth, select#selectDay{ width : 65px;}
 				<a href="${pageContext.request.contextPath}/member/orderList.do?memberId=${memberLoggedIn.memberId}">구매 내역</a>
 			</li>
 			<li>
+				<a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">내 리뷰 보기</a>
+			</li>
+			<li>
 				<a href="${pageContext.request.contextPath}/member/bookMarkList.do?memberId=${memberLoggedIn.memberId}">즐겨찾는 매장</a>	
 			</li>
 		</ul>	

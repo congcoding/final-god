@@ -197,19 +197,19 @@
 	</update>
 	
 	<select id="selectStorePMSList" resultType="storeInfo">
-		select * from storeInfo where pmsflag='N'
+		select * from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="countStorePMSList" resultType="_int">
-		select count(*) from storeInfo where pmsflag='N'
+		select count(*) from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="selectStoreList" resultType="storeInfo">
-		select * from storeInfo
+		select * from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
-		select count(*) from storeInfo
+		select count(*) from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">
@@ -248,7 +248,7 @@
 	</select>
 	
 	<update id="storePMSOk">
-		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+		update storeInfo set pmsflag='Y', rejectInfo=null where storeNo=#{storeNo}
 	</update>
 	
 	<update id="storePMSReject">
@@ -282,6 +282,14 @@
 		left join (select to_char(O.deliveryEnd, 'yyyy/mm/dd') column4, S.categoryno, nvl(sum(O.originalPrice), 0) column3 from orderInfo O, storeInfo S where O.storeNo = S.storeNo and (O.deliveryend between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1)
 		group by to_char(O.deliveryEnd, 'yyyy/mm/dd'), S.categoryno) B on A.column2 = B.categoryno and A.column1 = B.column4 order by column1, column2
 		]]>
+	</select>
+	
+	<select id="chartByCategoryAmount" resultType="_int">
+		select count(*) 
+		from orderinfo O, storeinfo S
+		where O.storeno = S.storeno and to_char(O.deliveryend, 'mm') = (select to_char(sysdate, 'mm') from dual)
+		group by categoryno
+		order by categoryno
 	</select>
 	
 </mapper>

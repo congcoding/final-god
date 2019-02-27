@@ -860,5 +860,14 @@ public class AdminController {
 		returnMap.put("chartByWeekList", chartByWeek);
 		return returnMap;
 	}
+	
+	@ResponseBody
+	@RequestMapping("admin/chartByCategoryAmount.do")
+	public Map<String, Object> chartByCategoryAmount(){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Integer> chartByCategoryAmount = adminService.chartByCategoryAmount();
+		map.put("chartByCategoryAmountList", chartByCategoryAmount);
+		return map;
+	}
 
 }

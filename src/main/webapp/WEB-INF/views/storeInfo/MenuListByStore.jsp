@@ -125,8 +125,38 @@
 					</c:if>
 				</table> <!-- menuTable -->
 		
-				<!-- 클린리뷰테이블 -->
-				
+				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
+				<div class="inner_border" style="height: 800px;">
+				<table class="table" id="sellerReviewList">
+					<c:if test="${empty reviewList}">
+						<tr style="border-bottom:0.2px solid lightgray;">
+							<td colspan="4" align="center" height="100px">리뷰가 없습니다.</td>
+						</tr>
+					</c:if>
+					
+					<c:if test="${not empty reviewList}">
+						<c:forEach items="${reviewList}" var="review">
+							<tr> <!-- 아이디, 작성일 -->
+								<td>
+									${review.writer } 님 | ${review.rDate }
+								</td>
+							</tr>
+							<tr> <!-- 평점 -->
+								<td>${review.rate }</td>
+							</tr>
+							<tr> <!-- 사진이 있으면 사진을 없으면 이 행은 존재하지않음 -->
+							
+							</tr>
+							<tr> <!-- review 제목 -->
+								<td>${review.title }</td>
+							</tr>
+							<tr> <!-- review 내용(제목클릭해야 보임) -->
+								<td>${review.content }</td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</table>
+				</div>
 			
 				<!-- 사업자정보 -->
 				<table class="table" id="sellerInformation">
@@ -450,11 +480,16 @@ function emptyCart(newMenuCode){
 
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
-
-	var bool = confirm("주문 하시겠습니까?");
+	var memberid= "${memberLoggedIn.memberId}";
+	var bool = "";
+	if(memberid==""){
+		bool =  confirm("비회원으로 주문 하시겠습니까?");
+	} else {
+		bool =  confirm("주문 하시겠습니까?");
+	}
 	
 	if(bool){
-		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val();	
+		location.href = "${pageContext.request.contextPath}/payment/goPaymentPage.do?storeName="+$('#storeName').text()+"&storeNo="+$('#storeNoForPayment').val()+"&memberId="+memberid;	
 	}	
 }; 
 
@@ -464,7 +499,10 @@ $("#clickreview").click("on", function(){
 	$("#clickreview").addClass("active");
 	$("#clickMenu").removeClass("active");
 	$("#clickInformation").removeClass("active");
+	
 	//클린리뷰 보이기
+	
+	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
 	//가게정보 숨기기

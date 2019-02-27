@@ -188,6 +188,22 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public int insertOrder(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrder",map);
+	}
+
+	@Override
+	public int insertOrderInfo(Map<String, Object> orderInfoMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrderInfo",orderInfoMap);
+	}
+
+	@Override
+	public int insertOrderMenu(Map<String, Object> orderMenuMap) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.insertOrderMenu",orderMenuMap);
+	}
 
 	public List<Map<String, String>> totalSaleVolume(String sellerId,String type) {
 		List<Map<String,String>> resultList = null;
@@ -230,7 +246,6 @@ public class SellerDaoImpl implements SellerDao {
 	public StoreInfo selectStoreInfo(String storeNo) {
 		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
 	}
-
 
 
 }
