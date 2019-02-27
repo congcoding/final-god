@@ -48,6 +48,12 @@ public interface MemberService {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	Seller selectOneSeller(String id);
+
+	int updateFindPwd(Seller s);
+
+	int updateMemberFindPwd(Member m);
+
 
 	
 

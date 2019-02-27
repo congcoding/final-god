@@ -123,5 +123,23 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	@Override
+	public Seller selectOneSeller(String id) {
+		return memberDao.selectOneSeller(id);
+	}
+
+
+	@Override
+	public int updateFindPwd(Seller s) {
+		return memberDao.updateFindPwd(s);
+	}
+
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return memberDao.updateMemberFindPwd(m);
+	}
+
+
 
 }

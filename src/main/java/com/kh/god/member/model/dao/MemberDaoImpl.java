@@ -138,4 +138,19 @@ public class MemberDaoImpl implements MemberDao {
 		return sqlSession.selectOne("member.getDiscount", eventNo);
 	}
 
+	@Override
+	public Seller selectOneSeller(String sellerId) {
+		return sqlSession.selectOne("seller.selectOneSeller" , sellerId);
+	}
+
+	@Override
+	public int updateFindPwd(Seller s) {
+		return sqlSession.update("seller.updatePwd" , s );
+	}
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return sqlSession.update("member.updateMemberFindPwd" , m);
+	}
+
 }

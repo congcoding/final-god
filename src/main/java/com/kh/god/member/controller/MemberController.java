@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.kh.god.common.email.SendEmail;
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.service.MemberService;
@@ -528,11 +529,77 @@ public class MemberController {
 		 return map;
 	 }
 	 
-	/*
-	 * @RequestMapping(value="/member/findPwd.do" ,method = RequestMethod.POST )
-	 * 
-	 * @ResponseBody public Map<String, Object> findPwd
-	 */
+	
+	  @RequestMapping(value="/member/findPwd.do" ,method = RequestMethod.POST )
+	  @ResponseBody 
+	  public Map<String, Object> findPwd(@RequestParam("id") String id , @RequestParam("phone") String phone){
+		  Map<String, Object> map = new HashMap<>();
+		  
+		  Member m = memberService.selectOneMember(id) ;
+		  String userPhone="";
+		  String msg = "임시비밀번호가 핸드폰으로 발송 되었습니다.";
+		  boolean phoneEquals ;
+		  String rndPwd ;
+		  int result ;
+		  String temp ;
+			 
+			 if(m == null) {
+				 
+				 Seller s = memberService.selectOneSeller(id);
+				 if(s == null) {
+					 msg = "등록된 아이디가 없습니다.";
+				 }else {
+					 //셀러 핸드폰으로 임시 번호 발송 및 데이터 업데이트
+					 userPhone = s.getPhone();
+					 if(userPhone.contains("-")) {
+							userPhone = userPhone.replaceAll("-", "");
+							phoneEquals = userPhone.equals(phone);
+							
+							if(phoneEquals == true) {
+								rndPwd = new Utils().getRandomPassword(10);
+								temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+								s.setPassword(temp);
+								logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
+								logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
+								result = memberService.updateFindPwd(s);
+								new MessageSend().findPwd(rndPwd , s.getPhone());
+								
+							}else {
+								msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+							}
+							
+						}
+				 }
+				 
+			 }else {
+				 	//멤버 헨드폰으로 임시 번호 발송 및 데이터 업데이트 
+				 userPhone = m.getPhone();
+				 if(userPhone.contains("-")) {
+						userPhone = userPhone.replaceAll("-", "");
+						phoneEquals = userPhone.equals(phone);
+						
+						if(phoneEquals == true) {
+							rndPwd = new Utils().getRandomPassword(10);
+							temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+							m.setPassword(temp);
+							logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
+							logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
+							result = memberService.updateMemberFindPwd(m);
+							new MessageSend().findPwd(rndPwd , m.getPhone());
+							
+						}else {
+							msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+						}
+						
+					}
+				 
+			 }
+			 map.put("msg" , msg);
+		  
+		  return map ;
+		  
+	  }
+	
 	 
 	 
 	 
