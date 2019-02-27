@@ -49,8 +49,39 @@ div#memberViewFrm-container{
     opacity: 0.8;
     /* cursor: pointer; */
 }
+#reviewTable{
+	width: 70%;
+	margin: 0 auto;
+}
+#reviewTable tbody{
+	
+}
+#reviewTable tr{
+
+}
+#reviewTable th{
+	width : 100px;
+	border : none;
+	border-right : 1px solid #dddfeb;
+}
+
+.deleteReviewCls{
+  text-align: right;
+  color : red;
+  cursor: pointer;
+}
+
+#reviewTable td{
+	border : none;
+}
+.checked {
+  color: orange;
+}
+
+
 
 </style>
+
 
 <!-- 일반회원 정보조회 -->
 <div id="MemberView-wapper">
@@ -78,34 +109,58 @@ div#memberViewFrm-container{
 		<div class = "memberViewCategory">		
 			
 			<h2>내 리뷰 보기</h2>
-			<br /><hr /><br />		
+			<br /><br />	
 			
 			<table class="table table-hover active" id="reviewTable">				  
 				<c:if test="${not empty reviewList }">
-					<c:forEach var="review" items="${reviewList }">
-						<tr>
-							<td>${review.reviewNo }</td>
-						</tr>
-						<tr>
-							<td>${review.title }</td>
-						</tr>
-						<tr>
-							<td>${review.content }</td>
-						</tr>
-						
-						<!-- 리뷰 첨부파일 꺼내기 -->
-						<c:if test="${not empty attachList}">
+					<tbody>					
+						<c:forEach var="review" items="${reviewList }" varStatus="status">
+							<tr style="border-bottom : 1px solid #dddfeb;">
+								<td colspan="2" class="deleteReviewCls" onclick="deleteReview(${review.reviewNo});">삭제하기</td>
+							</tr>						
 							<tr>
-							<c:forEach var="a" items="${attachList }">
-								<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->
-								<c:if test="${review.reviewNo == a.reviewNo }">
-									<td><img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"></td>
-								</c:if>
-							</c:forEach>
+								<th>제목</th>
+								<td>${review.title }</td>
 							</tr>
-						</c:if>					
-					
-					</c:forEach> <!-- reviewList를 돌면서 review 꺼내기 -->
+							
+							<tr>
+								<th>작성일</th>
+								<td>${review.rDate }</td>
+							</tr>							
+							<tr>
+								<th>평점</th>	
+								<td>
+								<c:forEach var="i" begin="1" end="${review.rate }">								
+				    				<span class="fa fa-star checked"></span>
+				      			</c:forEach>
+				      			<c:forEach var="i" begin="${review.rate+1}" end='5'>
+				      				<span class="fa fa-star"></span>
+				      			</c:forEach>	
+								</td>
+							</tr>							
+							<tr>
+								<th>내용</th>
+								<td>${review.content }</td>
+							</tr>
+						
+							<!-- 리뷰 첨부파일 꺼내기 -->
+							<c:if test="${not empty attachList}">	
+								<tr style="border-bottom : 1px solid #dddfeb;">
+									<th>후기사진</th>
+									<td class="attachList-td">
+										<c:forEach var="a" items="${attachList }">
+											<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->															
+											<c:if test="${review.reviewNo == a.reviewNo }">										
+												<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
+													 style="max-width : 100px; margin:0 10px;" >
+											</c:if>									
+										</c:forEach>
+									</td>
+								</tr>					
+							</c:if>
+																					
+						</c:forEach> <!-- reviewList를 돌면서 review 꺼내기 -->
+					</tbody>
 				</c:if>
 				<c:if test="${empty reviewList }">
 					<tbody><tr><td>작성한 리뷰가 없습니다.</td></tr></tbody>
@@ -119,11 +174,29 @@ div#memberViewFrm-container{
 </div> <!-- div#MemberView-container -->
 
 
+<form name="memberDeleteReviewFrm" method="POST" 
+	  action="${pageContext.request.contextPath}/member/memberReviewDelete.do">
+    <input type="hidden" name="reviewNo" id="reviewNoFrm" />
+        <input type="hidden" name="writer" id="FrmWriter"/>
+</form>
+
+
 <script>
-
-
+function deleteReview(reviewNo){
+	
+	if(confirm("정말 삭제하시겠습니까?")){
+		
+		$('input#reviewNoFrm').val(reviewNo);			
+		$('input#FrmWriter').val("${memberLoggedIn.memberId}");
+		
+		$('[name="memberDeleteReviewFrm"]').submit();	
+	}
+	
+}
+	
 
 </script>
+
 
 
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	

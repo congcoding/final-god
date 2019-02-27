@@ -52,7 +52,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public List<Map<String, Object>> couponListBymemberId(String memberId) {
-		// TODO Auto-generated method stub
 		return memberDao.couponListBymemberId(memberId);
 	}
 
@@ -63,7 +62,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public double getDiscount(String eventNo) {
-		// TODO Auto-generated method stub
 		return memberDao.getDiscount(eventNo);
 	}
 	
@@ -111,6 +109,18 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<RAttachment> selectRAttachmentList(int reviewNo) {
 		return memberDao.selectRAttachmentList(reviewNo);
+	}
+
+
+	@Override
+	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
+		return memberDao.selectOrderMenuList(orderNo);
+	}
+
+
+	@Override
+	public int deleteMemberReview(String reviewNo) {
+		return memberDao.deleteMemberReview(reviewNo);
 	}
 
 

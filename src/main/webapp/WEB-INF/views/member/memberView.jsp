@@ -188,7 +188,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 				<!-- 이메일 -->
 				<div class="form-group row">
 					<input type="hidden" name="email" />
-		    		<label for="inputEmail" class="col-sm-3">이메일<span style="color:red;">&nbsp;*</span></label>
+		    		<label for="inputEmail" class="col-sm-3">이메일</label>
 		    		<div class="form-inline">
 		      			<input type="text" class="form-control" id="inputEmailAddress1">
 		      			&nbsp;@&nbsp;

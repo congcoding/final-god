@@ -43,12 +43,7 @@
     <select id="getDiscount" resultType="_double">
 		select discount from event where eventno=#{eventNo}
     </select>
-    
-    <select id="">
-		select count(*) from bookmark 
-		WHERE memberId = #{memberId} and storeNo = #{storeNo}
-	</select>
-	
+
 	<insert id="insertBookMark">
 		INSERT INTO bookmark (BOOKMARKNO, MEMBERID, STORENO)
 		VALUES (seq_bookmarkno.nextval, #{memberId}, #{storeNo})
@@ -74,11 +69,17 @@
 		
 	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>
 	
+	<select id="selectOrderMenuList" resultType="map">
+		select * 
+		from ordermenu o
+		left join menu m on o.menucode = m.menucode
+		Left join storeinfo s on o.storeNo = s.storeNo
+		where orderNo = #{orderNo}
+	</select>	
 	
 	<select id="reviewList" resultType="review">
-		SELECT * FROM REVIEW
-		WHERE writer = #{memberId}
-	</select>
+		SELECT * FROM REVIEW WHERE writer = #{memberId} AND DELFLAG = 'N'
+	</select>	
 	
 	<select id="selectRAttachmentList" resultType="RAttachment">
 		SELECT * FROM RATTACHMENT
@@ -86,8 +87,8 @@
 	</select>
 	
 	<insert id="insertMemberReview">
-		INSERT INTO review (REVIEWNO, STORENO, ORDERNO, TITLE, WRITER, CONTENT, RATE, GOOD, HATE, RDATE)
-		VALUES (SEQ_REVIEWNO.nextval, #{storeNo}, #{orderNo}, #{title}, #{writer}, #{content}, #{rate}, default, default, sysdate)
+		INSERT INTO review (REVIEWNO, STORENO, ORDERNO, TITLE, WRITER, CONTENT, RATE, GOOD, HATE, RDATE, DELFLAG, COMMENTLEVEL)     
+		VALUES (SEQ_REVIEWNO.nextval, #{storeNo}, #{orderNo}, #{title}, #{writer}, #{content}, #{rate}, default, default, sysdate, default, 1)
 	</insert>
 	
 	<select id="selectOneReview" resultType="review">
@@ -99,5 +100,15 @@
 		INSERT INTO RAttachment (ATTACHMENTNO, REVIEWNO, ORIGINALFILENAME, RENAMEDFILENAME, UPLOADDATE, DOWNLOADCOUNT, STATUS)
 		VALUES(seq_rattachmentno.nextval, #{reviewNo}, #{originalFileName}, #{renamedFileName}, sysdate, default, default)
 	</insert>
-		
+			
+	<update id="deleteMemberReview">
+		UPDATE REVIEW SET DELFLAG = 'Y' WHERE REVIEWNO = #{reviewNo}
+	</update>
+
+	    
+    <select id="">
+		select count(*) from bookmark 
+		WHERE memberId = #{memberId} and storeNo = #{storeNo}
+	</select>
+
 </mapper>

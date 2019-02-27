@@ -251,12 +251,16 @@ public class MemberController {
 		return view; 				
 	}
 	
-	/** 리뷰 내역 조회 : orderList */
+	
+	
+	/** 리뷰 내역 조회 : reviewList */
 	@RequestMapping("/member/reviewList.do")
 	public String reviewList(@RequestParam String memberId, Model model) {	
 		
 		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = memberService.reviewList(memberId);
+		logger.debug(reviewList);
+		
 		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
 		List<RAttachment> attachList = new ArrayList<>();
 		
@@ -264,11 +268,9 @@ public class MemberController {
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
 			for(Review r : reviewList) {			
 				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
-			}
-			
+			}			
 		}
-		
-		
+				
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("attachList", attachList);
 		
@@ -276,6 +278,8 @@ public class MemberController {
 		return view; 				
 	}
 
+	
+	
 	/** 리뷰작성 페이지 이동: memberReviewEnroll */
 	@RequestMapping("/member/memberReviewEnroll.do")
 	public String memberReviewEnroll(@RequestParam(name="orderNo") String orderNo,
@@ -286,11 +290,14 @@ public class MemberController {
 			logger.debug("회원 리뷰작성'페이지' 요청"); //다음을 실행해라 (성능변화가 없음)			
 		}
 		
+		List<Map<String,String>> orderMenuList = memberService.selectOrderMenuList(orderNo);
+		
 		model.addAttribute("orderNo", orderNo);
+		model.addAttribute("orderMenuList", orderMenuList);	
 		model.addAttribute("storeNo", storeNo);
 		model.addAttribute("writer", writer);
 		
-		return "/member/memberReviewEnroll";	// 
+		return "/member/memberReviewEnroll"; 
 	}
 	
 	/** 리뷰등록 : memberReviewEnrollEnd */
@@ -356,20 +363,16 @@ public class MemberController {
 		for(RAttachment a : attachList) {
 			a.setReviewNo(review.getReviewNo());
 			attachResult += memberService.insertRAttachment(a);//사진 등록
-			System.out.println(a);
 		}
+		
 		
 		logger.debug("첨부파일 갯수"+attachList.size());
 		logger.debug("성공한 첨부파일 등록 결과값"+attachResult);
 		
-	
-		
-		
-		
-		if(result>0 && attachResult>0) {
-			msg = "리뷰 등록 성공"; 
-			//loc = "/member/memberReviewList.do?memberId="+review.getWriter(); 				
-		}else if(result<0 || attachResult<0){
+		if(result>0) {
+			msg = "리뷰 등록 성공";
+			loc = "/member/reviewList.do?memberId="+review.getWriter(); 				
+		}else{
 			msg = "리뷰 등록 실패"; 
 		}
 		
@@ -382,10 +385,37 @@ public class MemberController {
 		}
 		
 		return mav;
-		}
+	}
 
+	/** 리뷰 삭제 페이지 : */
+	@RequestMapping("/member/memberReviewDelete.do")
+	public ModelAndView deleteMemberReview(@RequestParam(name="reviewNo") String reviewNo,
+										   @RequestParam(name="writer") String writer, ModelAndView mav) {
+		
+		logger.debug("리뷰삭제 요청");		
+
+		//리뷰등록 진행 : storeNo 안들어가는중
+		int result = memberService.deleteMemberReview(reviewNo); //리뷰등록
+		
+		
+		String loc="/"; 
+		String msg ="";
+		String view = "common/msg";		
 	
-	
+		if(result>0) {
+			msg = "리뷰 삭제 성공";
+			loc = "/member/reviewList.do?memberId="+writer;				
+		}else{
+			msg = "리뷰 삭제 실패"; 
+		}
+		
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+		
+
+		return mav;
+	}
 	
 	/** 즐겨찾는 매장 조회 : bookMarkList */
 	@RequestMapping("/member/bookMarkList.do")

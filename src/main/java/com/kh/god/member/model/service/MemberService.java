@@ -43,6 +43,10 @@ public interface MemberService {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	List<Map<String, String>> selectOrderMenuList(String orderNo);
+
+	int deleteMemberReview(String reviewNo);
+
 
 	
 
