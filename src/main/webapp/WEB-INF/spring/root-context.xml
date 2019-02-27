@@ -81,5 +81,21 @@
       <aop:pointcut id="serviceMethod" expression="execution(* com.kh.god..*ServiceImpl.*(..)))"/>
       <aop:advisor id="transactionAdvisor" advice-ref="txAdvice" pointcut-ref="serviceMethod"/>
    </aop:config>
-      
+   
+     <!-- 메일보내기 -->
+   <bean id="mailSender" class = "org.springframework.mail.javamail.JavaMailSenderImpl">
+      <property name="host" value="smtp.naver.com" />
+      <property name="port" value="587" />
+      <property name="username" value="escape_if_you_can@naver.com" />
+      <property name="password" value="escapeifyoucan!" />
+      <property name="javaMailProperties">
+         <props>
+               <prop key="mail.transport.protocol">smtp</prop>
+               <prop key="mail.smtp.auth">true</prop>
+               <prop key="mail.smtp.starttls.enable">true</prop>
+               <prop key="mail.debug">true</prop>
+         </props>
+      </property>
+ 
+   </bean>
 </beans>

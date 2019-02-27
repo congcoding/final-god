@@ -7,7 +7,7 @@
 		from storeInfo 
 		where categoryno = A.categoryno) categorycount 
 	from storeInfo A 
-	where categoryno = #{categoryno}
+	where categoryno = #{categoryno} and pmsFlag = 'Y'
 	order by storegrade
 	</select>
 	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
@@ -51,9 +51,15 @@
    	select * from menuAttachment where storeNo = #{storeNo}
    </select>
    
-   <select id="selectMenuList" resultType="menu">
+<!--    <select id="selectMenuList" resultType="menu">
 		select m.menuName, m.menuPrice, m.menuCode, m.storeNo, m.soldoutFlag
 		from storeinfo s join menu m on s.storeNo = m.storeNo
+		where s.storeNo = #{storeNo}
+   </select> -->
+   
+   <select id="selectMenuList" resultType="menu">
+		select *
+		from menu m left join menuattachment ma on m.menuCode = ma.menuCode left join storeinfo s on m.storeno = s.storeno
 		where s.storeNo = #{storeNo}
    </select>
    

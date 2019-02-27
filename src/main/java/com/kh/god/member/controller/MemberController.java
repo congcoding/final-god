@@ -27,12 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.email.SendEmail;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -248,9 +250,10 @@ public class MemberController {
 		model.addAttribute("orderList", orderList);
 		
 		String view = "member/memberOrder";
-		return view; 				
+		return view; 
+				
 	}
-	
+
 	
 	
 	/** 리뷰 내역 조회 : reviewList */
@@ -421,11 +424,11 @@ public class MemberController {
 	@RequestMapping("/member/bookMarkList.do")
 	public String bookMarkList(@RequestParam String memberId, Model model) {	
 	
-		List<StoreInfo> bookmarkList = memberService.bookMarkList(memberId);
+		List<StoreInfo> sList = memberService.bookMarkList(memberId);
 		
-		model.addAttribute("bookmarkList", bookmarkList);
+		model.addAttribute("sList", sList);
 		
-		String view = "member/memberBookMark";
+		String view = "member/memberView";
 				
 		return view; 
 	}
@@ -520,30 +523,6 @@ public class MemberController {
 	 
 	 }
 	 
-	/*  */
-	 @RequestMapping("/member/getDiscount.do")
-	 @ResponseBody
-	 public  Map<String,Object>  getDiscount(@RequestParam("eventNo") String eventNo,
-			 @RequestParam("price") int price) {
-	 //처리된 값을 받아둘 model 객체 선ㅇ너
-	 
-		 logger.debug("이벤트넘 : "+eventNo);
-		 logger.debug("결제가격 : "+price); 
-
-		 Map<String,Object>map = new HashMap<>();
-		 double discount = memberService.getDiscount(eventNo); 
-		 if(discount<1) {
-			 price = (int) (price*discount);
-		 } else {
-			 price = (int) (price-discount);
-		 }
-
-		 map.put("totalPrice", price);
-
-		 return map; //BeanNameViewResolver에 의해 처리될 bean 객체 
-	 
-	 }
-
 	 /** 일반회원 북마크 관리 : checkBookMark */
 	 @RequestMapping("/member/checkBookMark.do")
 	 @ResponseBody
@@ -575,8 +554,43 @@ public class MemberController {
 		 return checkedBookMark;
 	 }
 	 
+	 @RequestMapping("/member/findId.do")
+	 @ResponseBody
+	 public Map<String, Object> findId(@RequestParam("email") String email){
+		 Map<String, Object> map = new HashMap<>();
+		 
+		 Member m = memberService.findId(email) ;
+		 String msg = "아이디가 이메일로 발송 되었습니다.";
+		 
+		 if(m == null) {
+			 Seller s = memberService.sellerfindId(email);	
+			 if(s == null) {
+				 msg = "등록된 이메일이 없습니다.";
+			 }else {
+				msg = "아이디가 이메일로 발송 되었습니다.";
+				
+				new SendEmail().mailSending(s.getEmail() , s.getSellerName() , s.getSellerId());
+			 }
+		 }else {
+			 
+			new SendEmail().mailSending(m.getEmail() , m.getMemberName() , m.getMemberId());
+		 }
+		
+		 map.put("msg" , msg);
+		 
+		 
+		 return map;
+	 }
 	 
-	
+	/*
+	 * @RequestMapping(value="/member/findPwd.do" ,method = RequestMethod.POST )
+	 * 
+	 * @ResponseBody public Map<String, Object> findPwd
+	 */
+	 
+	 
+	 
+	 
 	
 	
 }

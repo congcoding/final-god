@@ -121,6 +121,12 @@ function fileDownload(oName, rName){
 					<th>최소주문금액</th>
 					<td>${store.deliveryMinPrice }원</td>
 				</tr>
+				<c:if test="${store.rejectInfo != null }">
+				<tr>
+					<th>가게 신청 거절 사유</th>
+					<td>${store.rejectInfo}</td>
+				</tr>
+				</c:if>
 				
 			</table>
 			
