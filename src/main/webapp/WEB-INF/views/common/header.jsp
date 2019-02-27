@@ -187,6 +187,10 @@ span.srchVal{
 	width: 400px;
 	display: inline;
 } 
+#find-pwd1{
+	width: 400px;
+	display: inline;
+}
 
 </style>
 </head>
@@ -410,7 +414,7 @@ span.srchVal{
 		      	<span id="find-id-pw" style="width: 556px; cursor: pointer;">
 		      		
 		      		
-				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#updateMenuModal" id="find-btn" >아이디/비밀번호찾기</button>
+				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#FindModal" id="find-btn" >아이디/비밀번호찾기</button>
 		      	</span>
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
 	     
@@ -438,7 +442,7 @@ span.srchVal{
 	  </div>
 	</div>
 	
-	<div class="modal fade" id="updateMenuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal fade" id="FindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -459,8 +463,8 @@ span.srchVal{
 	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
 	            <textarea class="form-control" id="message-text"></textarea> -->
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
-	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="password"/>
-	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="password"/>
+	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
+	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
 	            <button class="btn btn-outline-success" style="margin-top: -7px;" onclick="findPwd();"> 찾기</button>
 	          </div>
 	      </div>
@@ -906,9 +910,14 @@ span.srchVal{
 		});
 		
 	};
-	function findpwd(){
+	function findPwd(){
 		var id = $("#find-pwd").val().trim();
 		var phone = $("#find-pwd1").val().trim();
+		
+		if(phone.length <= 0){
+			alert("핸드폰 번호를 입력해 주세요.");
+			return false;
+		}
 		console.log(id);
 		
 		$.ajax({
