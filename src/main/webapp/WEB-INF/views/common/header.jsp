@@ -168,6 +168,29 @@ span.srchVal{
 	color : red;
 	
 }
+#find-btn{
+	padding: 0px;
+    margin: 0px;
+    border: none;
+    color: black;
+}
+#find-btn:hover{
+	background-color: none !important;
+	border-color: none !important;
+}
+#find-id{
+	width: 400px;
+	display: inline;
+} 
+#find-pwd{
+	width: 400px;
+	display: inline;
+} 
+#find-pwd1{
+	width: 400px;
+	display: inline;
+}
+
 </style>
 </head>
 	<!-- chatting modal -->
@@ -375,15 +398,79 @@ span.srchVal{
 	      <!-- 3 -->
 	      
 	      <div class="modal-footer">
-	      	<div id="modal-checkbox" style="padding-right :80px">
+	      	<div id="modal-checkbox" style="padding-right :80px;     width: 602px;">
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
-	      		<span style="color:red;">&nbsp;회원유형을 체크하세요</span>
+	      		<br />
+	      		<input type="checkbox" name="login" value="sell" /> &nbsp;로그인 상태 유지
+	      		<span style="color:red;margin: -13px;">&nbsp;회원유형을 체크하세요</span>
+		      	<br />
 	      	</div>
+	      	<br />
+	      	<br />
+	      	<br />
 	      	<!-- <input type="checkbox" name="autoLogin" /> -->
+		      	<span id="find-id-pw" style="width: 556px; cursor: pointer;">
+		      		
+		      		
+				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#FindModal" id="find-btn" >아이디/비밀번호찾기</button>
+		      	</span>
 	        <button type="button" class="btn btn-outline-success" onclick="check();" >로그인</button>
+	     
 	      </div>
 		  </form>
+	<!-- 	  <div id="find" style="text-align: center; border-color: black;">
+		  			<table>
+		  				<tr colspan="2">아이디 찾기</tr>
+		  				<tr>
+		  					<td><input type="email" placeholder="이메일을 입력하세요"/></td>
+		  					<td><button  type="button">찾기</button></td>
+		  				</tr>
+		  				<tr colspan="2">비밀번호 찾기</tr>
+		  				<tr>
+		  					<td><input type="email" placeholder="이메일을 입력하세요"/></td>
+		  					<td><button  type="button">찾기</button></td>
+		  				</tr>
+		  				
+		  				
+		  			</table>
+		  		
+		  </div>
+		   -->
+	    </div>
+	  </div>
+	</div>
+	
+	<div class="modal fade" id="FindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">아이디/비밀번호 찾기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        
+	          <div class="form-group">
+	            <label for="email" class="col-form-label">아이디 찾기</label>
+	            <input type="text" class="form-control" id="find-id" name="email" placeholder="등록했던 이메일을 입력해 주세요."/>
+	            <button class="btn btn-outline-success" onclick="findId();" style="margin-top: -7px;"> 찾기</button>
+	          
+	          </div>
+	          <div class="form-group">
+	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
+	            <textarea class="form-control" id="message-text"></textarea> -->
+	              <label for="password" class="col-form-label">비밀번호찾기</label>
+	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
+	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
+	            <button class="btn btn-outline-success" style="margin-top: -7px;" onclick="findPwd();"> 찾기</button>
+	          </div>
+	      </div>
+	      <div class="modal-footer">
+	        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	        <button type="submit" class="btn btn-primary">수정</button> -->
+	      </div>
 	    </div>
 	  </div>
 	</div>
@@ -797,9 +884,58 @@ span.srchVal{
 		if($("input[name=searchPerson]").val().trim().length == 0){
 			$("input[name=confirmContent]").attr('placeholder','아이디를 입력해주세요');
 		}else{
-			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?');
+			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?.');
 			
 		}
+	});
+	
+	function  findId(){
+		var email = $("#find-id").val();
+		console.log(email);
+		
+		$.ajax({
+			url :  "${pageContext.request.contextPath}/member/findId.do",
+			data : {email : email},
+			dataType : "json",
+			success: function(data){
+				console.log(data);
+				alert(data.msg);
+				
+			},
+			error : function(){
+				console.log("ajax요청 에러!");
+			}
+			
+		});
+		
+	};
+	function findPwd(){
+		var id = $("#find-pwd").val().trim();
+		var phone = $("#find-pwd1").val().trim();
+		
+		if(phone.length <= 0){
+			alert("핸드폰 번호를 입력해 주세요.");
+			return false;
+		}
+		console.log(id);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/member/findPwd.do",
+			type : "post",
+			data : {id : id , phone : phone},
+			dataType : "json",
+			success: function(data){
+				console.log(data);
+				alert(data.msg);
+			},
+			error : function(){
+				console.log("ajax요청 에러!");
+			}
+		});
+	};
+	
+	$("find-pwd1").on("keyup", function(){
+		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
 	
 	</script>

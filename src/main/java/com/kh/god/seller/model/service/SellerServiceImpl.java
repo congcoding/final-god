@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,16 +11,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
+import com.kh.god.storeInfo.exception.StoreInfoException;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
+import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
 public class SellerServiceImpl implements SellerService {
+
 	Logger logger = Logger.getLogger(getClass());
+
 	@Autowired
 	SellerDao sellerDao;
 
@@ -103,13 +109,11 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	public List<OrderInfo> myStoreOrderInfo(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.myStoreOrderInfo(storeNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> orderList1(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.orderList1(storeNo);
 	}
 
@@ -149,36 +153,59 @@ public class SellerServiceImpl implements SellerService {
 	}
 	
 	public int receiveOrder(Map<String, Object> map) {
-		// TODO Auto-generated method stub
 		return sellerDao.receiveOrder(map);
 	}
 
 	@Override
 	public List<Map<String, Object>> orderList2(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.orderList2(storeNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> orderList3(String storeNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.orderList3(storeNo);
 	}
 
 	@Override
 	public int deliveryEnd(int orderNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.deliveryEnd(orderNo);
 	}
 
 	@Override
 	public int cancelOrder(int orderNo) {
-		// TODO Auto-generated method stub
 		return sellerDao.cancelOrder(orderNo);
 	} 
 	
+//	public int updateMenu(Map<String, Object> map) {
+//		return sellerDao.updateMenu(map);
+//	}
+	
 	public int updateMenu(Map<String, Object> map) {
-		return sellerDao.updateMenu(map);
+		int result = 0;
+		String menuCode = "";
+		
+		result = sellerDao.updateMenu(map);
+		menuCode = (String) map.get("menuCode");
+		logger.debug("메뉴 코드 = " + menuCode);
+		
+		if (result == 0) {
+			throw new MenuException("메뉴 수정 실패!");
+		}
+		
+		List<MenuAttachment> menuAttachList = (List<MenuAttachment>) map.get("menuAttachList");
+		
+		if(menuAttachList.size() > 0) {
+			for(MenuAttachment a : menuAttachList) {
+				a.setMenuCode(menuCode);
+				result = sellerDao.updateMenuAttachment(a);
+				if(result == 0) {
+					throw new MenuException("메뉴사진파일 수정 오류!");
+				}
+				
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
@@ -217,13 +244,35 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int insertMenu(Menu menu) {
-		return sellerDao.insertMenu(menu);
+	public StoreInfo selectStoreInfo(String storeNo) {
+		return sellerDao.selectStoreInfo(storeNo);
 	}
 
 	@Override
-	public StoreInfo selectStoreInfo(String storeNo) {
-		return sellerDao.selectStoreInfo(storeNo);
+	public int insertMenu(Menu menu, List<MenuAttachment> menuAttachList) {
+		int result = 0;
+		String storeNo = "";
+		
+		result = sellerDao.insertMenu(menu);
+		storeNo = menu.getStoreNo();
+		logger.debug("사업자 번호 = " + storeNo);
+		
+		if (result == 0) {
+			throw new MenuException("메뉴 등록 실패!");
+		}
+		
+		if(menuAttachList.size() > 0) {
+			for(MenuAttachment a : menuAttachList) {
+				a.setStoreNo(storeNo);
+				result = sellerDao.insertMenuAttachment(a);
+				if(result == 0) {
+					throw new MenuException("메뉴사진파일 등록 오류!");
+				}
+				
+			}
+		}
+		
+		return result;
 	}
 	@Transactional
 	@Override

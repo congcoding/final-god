@@ -27,12 +27,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
+import com.kh.god.common.email.SendEmail;
+import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -248,15 +251,20 @@ public class MemberController {
 		model.addAttribute("orderList", orderList);
 		
 		String view = "member/memberOrder";
-		return view; 				
+		return view; 
+				
 	}
+
 	
-	/** 리뷰 내역 조회 : orderList */
+	
+	/** 리뷰 내역 조회 : reviewList */
 	@RequestMapping("/member/reviewList.do")
 	public String reviewList(@RequestParam String memberId, Model model) {	
 		
 		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = memberService.reviewList(memberId);
+		logger.debug(reviewList);
+		
 		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
 		List<RAttachment> attachList = new ArrayList<>();
 		
@@ -264,11 +272,9 @@ public class MemberController {
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
 			for(Review r : reviewList) {			
 				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
-			}
-			
+			}			
 		}
-		
-		
+				
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("attachList", attachList);
 		
@@ -276,6 +282,8 @@ public class MemberController {
 		return view; 				
 	}
 
+	
+	
 	/** 리뷰작성 페이지 이동: memberReviewEnroll */
 	@RequestMapping("/member/memberReviewEnroll.do")
 	public String memberReviewEnroll(@RequestParam(name="orderNo") String orderNo,
@@ -286,11 +294,14 @@ public class MemberController {
 			logger.debug("회원 리뷰작성'페이지' 요청"); //다음을 실행해라 (성능변화가 없음)			
 		}
 		
+		List<Map<String,String>> orderMenuList = memberService.selectOrderMenuList(orderNo);
+		
 		model.addAttribute("orderNo", orderNo);
+		model.addAttribute("orderMenuList", orderMenuList);	
 		model.addAttribute("storeNo", storeNo);
 		model.addAttribute("writer", writer);
 		
-		return "/member/memberReviewEnroll";	// 
+		return "/member/memberReviewEnroll"; 
 	}
 	
 	/** 리뷰등록 : memberReviewEnrollEnd */
@@ -356,20 +367,16 @@ public class MemberController {
 		for(RAttachment a : attachList) {
 			a.setReviewNo(review.getReviewNo());
 			attachResult += memberService.insertRAttachment(a);//사진 등록
-			System.out.println(a);
 		}
+		
 		
 		logger.debug("첨부파일 갯수"+attachList.size());
 		logger.debug("성공한 첨부파일 등록 결과값"+attachResult);
 		
-	
-		
-		
-		
-		if(result>0 && attachResult>0) {
-			msg = "리뷰 등록 성공"; 
-			//loc = "/member/memberReviewList.do?memberId="+review.getWriter(); 				
-		}else if(result<0 || attachResult<0){
+		if(result>0) {
+			msg = "리뷰 등록 성공";
+			loc = "/member/reviewList.do?memberId="+review.getWriter(); 				
+		}else{
 			msg = "리뷰 등록 실패"; 
 		}
 		
@@ -382,20 +389,47 @@ public class MemberController {
 		}
 		
 		return mav;
-		}
+	}
 
+	/** 리뷰 삭제 페이지 : */
+	@RequestMapping("/member/memberReviewDelete.do")
+	public ModelAndView deleteMemberReview(@RequestParam(name="reviewNo") String reviewNo,
+										   @RequestParam(name="writer") String writer, ModelAndView mav) {
+		
+		logger.debug("리뷰삭제 요청");		
+
+		//리뷰등록 진행 : storeNo 안들어가는중
+		int result = memberService.deleteMemberReview(reviewNo); //리뷰등록
+		
+		
+		String loc="/"; 
+		String msg ="";
+		String view = "common/msg";		
 	
-	
+		if(result>0) {
+			msg = "리뷰 삭제 성공";
+			loc = "/member/reviewList.do?memberId="+writer;				
+		}else{
+			msg = "리뷰 삭제 실패"; 
+		}
+		
+		mav.addObject("loc", loc);
+		mav.addObject("msg", msg);
+		mav.setViewName(view);
+		
+
+		return mav;
+	}
 	
 	/** 즐겨찾는 매장 조회 : bookMarkList */
 	@RequestMapping("/member/bookMarkList.do")
 	public String bookMarkList(@RequestParam String memberId, Model model) {	
 	
-		List<StoreInfo> bookmarkList = memberService.bookMarkList(memberId);
+		List<StoreInfo> sList = memberService.bookMarkList(memberId);
 		
-		model.addAttribute("bookmarkList", bookmarkList);
+		model.addAttribute("sList", sList);
 		
-		String view = "member/memberBookMark";
+		String view = "member/memberView";
 				
 		return view; 
 	}
@@ -490,30 +524,6 @@ public class MemberController {
 	 
 	 }
 	 
-	/*  */
-	 @RequestMapping("/member/getDiscount.do")
-	 @ResponseBody
-	 public  Map<String,Object>  getDiscount(@RequestParam("eventNo") String eventNo,
-			 @RequestParam("price") int price) {
-	 //처리된 값을 받아둘 model 객체 선ㅇ너
-	 
-		 logger.debug("이벤트넘 : "+eventNo);
-		 logger.debug("결제가격 : "+price); 
-
-		 Map<String,Object>map = new HashMap<>();
-		 double discount = memberService.getDiscount(eventNo); 
-		 if(discount<1) {
-			 price = (int) (price*discount);
-		 } else {
-			 price = (int) (price-discount);
-		 }
-
-		 map.put("totalPrice", price);
-
-		 return map; //BeanNameViewResolver에 의해 처리될 bean 객체 
-	 
-	 }
-
 	 /** 일반회원 북마크 관리 : checkBookMark */
 	 @RequestMapping("/member/checkBookMark.do")
 	 @ResponseBody
@@ -545,8 +555,109 @@ public class MemberController {
 		 return checkedBookMark;
 	 }
 	 
+	 @RequestMapping("/member/findId.do")
+	 @ResponseBody
+	 public Map<String, Object> findId(@RequestParam("email") String email){
+		 Map<String, Object> map = new HashMap<>();
+		 
+		 Member m = memberService.findId(email) ;
+		 String msg = "아이디가 이메일로 발송 되었습니다.";
+		 
+		 if(m == null) {
+			 Seller s = memberService.sellerfindId(email);	
+			 if(s == null) {
+				 msg = "등록된 이메일이 없습니다.";
+			 }else {
+				msg = "아이디가 이메일로 발송 되었습니다.";
+				
+				new SendEmail().mailSending(s.getEmail() , s.getSellerName() , s.getSellerId());
+			 }
+		 }else {
+			 
+			new SendEmail().mailSending(m.getEmail() , m.getMemberName() , m.getMemberId());
+		 }
+		
+		 map.put("msg" , msg);
+		 
+		 
+		 return map;
+	 }
 	 
 	
+	  @RequestMapping(value="/member/findPwd.do" ,method = RequestMethod.POST )
+	  @ResponseBody 
+	  public Map<String, Object> findPwd(@RequestParam("id") String id , @RequestParam("phone") String phone){
+		  Map<String, Object> map = new HashMap<>();
+		  
+		  Member m = memberService.selectOneMember(id) ;
+		  String userPhone="";
+		  String msg = "임시비밀번호가 핸드폰으로 발송 되었습니다.";
+		  boolean phoneEquals ;
+		  String rndPwd ;
+		  int result ;
+		  String temp ;
+			 
+			 if(m == null) {
+				 
+				 Seller s = memberService.selectOneSeller(id);
+				 if(s == null) {
+					 msg = "등록된 아이디가 없습니다.";
+				 }else {
+					 //셀러 핸드폰으로 임시 번호 발송 및 데이터 업데이트
+					 userPhone = s.getPhone();
+					 if(userPhone.contains("-")) {
+							userPhone = userPhone.replaceAll("-", "");
+							phoneEquals = userPhone.equals(phone);
+							
+							if(phoneEquals == true) {
+								rndPwd = new Utils().getRandomPassword(10);
+								temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+								s.setPassword(temp);
+								logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
+								logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
+								result = memberService.updateFindPwd(s);
+								new MessageSend().findPwd(rndPwd , s.getPhone());
+								
+							}else {
+								msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+							}
+							
+						}
+				 }
+				 
+			 }else {
+				 	//멤버 헨드폰으로 임시 번호 발송 및 데이터 업데이트 
+				 userPhone = m.getPhone();
+				 if(userPhone.contains("-")) {
+						userPhone = userPhone.replaceAll("-", "");
+						phoneEquals = userPhone.equals(phone);
+						
+						if(phoneEquals == true) {
+							rndPwd = new Utils().getRandomPassword(10);
+							temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+							m.setPassword(temp);
+							logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
+							logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
+							result = memberService.updateMemberFindPwd(m);
+							new MessageSend().findPwd(rndPwd , m.getPhone());
+							
+						}else {
+							msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+						}
+						
+					}
+				 
+			 }
+			 map.put("msg" , msg);
+		  
+		  return map ;
+		  
+	  }
+	
+	 
+	 
+	 
+	 
 	
 	
 }

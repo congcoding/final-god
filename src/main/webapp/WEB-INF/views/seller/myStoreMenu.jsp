@@ -15,6 +15,8 @@
 <!-- Custom styles for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
+<link href="${pageContext.request.contextPath }/resources/css/seller/myStoreMenu.css" rel="stylesheet">
+
 <script>
 $(function(){
 	var storeNo = "${param.storeNo}"
@@ -33,11 +35,84 @@ function updateMenu(menuName, menuPrice, menuCode, storeNo){
 	$("#updateMenuPrice").val(menuPrice);
 	$("#updateMenuCode").val(menuCode);
 	$("#updateStoreNo").val(storeNo);
+
 }
 
-function deleteMenu(menuCode, storeNo){
-	location.href="${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode="+menuCode+"&storeNo="+storeNo;
+function realUpdate(){
+	if(confirm("정말 수정하시겠습니까?")){
+		realUpdateFrm.submit();
+	};
 }
+
+
+function deleteMenu(menuCode, storeNo){
+	var bool = confirm("정말 삭제하시겠습니까?");
+	if(bool){
+		location.href="${pageContext.request.contextPath}/seller/deleteMenu.do?menuCode="+menuCode+"&storeNo="+storeNo;
+	}
+}
+
+function soldoutFlagN(menuCode, storeNo, soldoutFlag){
+	var bool = confirm("정말 품절 취소 처리하시겠습니까?");
+	if(bool){
+		location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode='+ menuCode + "&storeNo=" + storeNo + "&soldoutFlag=" + soldoutFlag;
+	}
+}
+
+function soldoutFlagY(menuCode, storeNo, soldoutFlag){
+	var bool = confirm("정말 품절 처리하시겠습니까?");
+	if(bool){
+		location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode='+ menuCode + "&storeNo=" + storeNo + "&soldoutFlag=" + soldoutFlag;
+	}
+}
+
+$(document).ready(function(){
+	   var fileTarget = $('.filebox .upload-hidden');
+
+	    fileTarget.on('change', function(){
+	        if(window.FileReader){
+	            // 파일명 추출
+	            var filename = $(this)[0].files[0].name;
+	        } 
+
+	        else {
+	            // Old IE 파일명 추출
+	            var filename = $(this).val().split('/').pop().split('\\').pop();
+	        };
+
+	        $(this).siblings('.upload-name').val(filename);
+	    });
+
+	    //preview image 
+	    var imgTarget = $('.preview-image .upload-hidden');
+
+	    imgTarget.on('change', function(){
+	        var parent = $(this).parent();
+	        parent.children('.upload-display').remove();
+
+	        if(window.FileReader){
+	            //image 파일만
+	            if (!$(this)[0].files[0].type.match("image.*")) return;
+	            
+	            var reader = new FileReader();
+	            reader.onload = function(e){
+	                var src = e.target.result;
+	                parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img src="'+src+'" class="upload-thumb"></div></div>');
+	            }
+	            reader.readAsDataURL($(this)[0].files[0]);
+	        }
+
+	        else {
+	            $(this)[0].select();
+	            $(this)[0].blur();
+	            var imgSrc = document.selection.createRange().text;
+	            parent.prepend('<div class="upload-display"><div class="upload-thumb-wrap"><img class="upload-thumb"></div></div>');
+
+	            var img = $(this).siblings('.upload-display').find('img');
+	            img[0].style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(enable='true',sizingMethod='scale', src=\"" + imgSrc + "\")";        
+	        }
+	    });
+	});
 
 </script>
 
@@ -61,10 +136,11 @@ function deleteMenu(menuCode, storeNo){
           <!-- 여기부터 코드 붙여넣으면 됨 -->
 <table class="table table-bordered" id="menuTable">
 	<tr>
-		<td colspan="4" style="text-align: center;" id="menu-td"><h2>메뉴</h2></td>
+		<td colspan="5" style="text-align: center;" id="menu-td"><h2>메뉴</h2></td>
 	</tr>
 	<tr>
 		<th scope="col">번호</th>
+		<th scope="col">메뉴사진</th>
 		<th scope="col">메뉴명</th>
 		<th scope="col">메뉴가격</th>
 		<th scope="col">변경</th>
@@ -73,24 +149,32 @@ function deleteMenu(menuCode, storeNo){
 	<c:forEach items="${menu}" var="menu" varStatus="vs">
 		<tr>
 			<th scope="row">${vs.count}</th>
+			<td>
+				<c:if test="${menu.renamedFileName ne null}">
+					<img src="${pageContext.request.contextPath }/resources/upload/menu/${menu.renamedFileName }" style="width:100px"/>
+				</c:if>
+				<c:if test="${menu.renamedFileName eq null}">
+					<img src="" style="width:100px"/>
+				</c:if>
+			</td>
 			<td><c:out value="${menu.menuName}" /></td>
 			<td><fmt:formatNumber value="${menu.menuPrice }"/>원</td>
 			<td>
 				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#updateMenuModal" id="menuUpdate-btn" onclick="updateMenu('${menu.menuName}', ${menu.menuPrice }, '${menu.menuCode }', '${menu.storeNo}');">수정</button>
 				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="deleteMenu('${menu.menuCode}', '${menu.storeNo }');">삭제</button>
 				<c:if test="${menu.soldoutFlag eq 'N'}">
-					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}&storeNo=${menu.storeNo }&soldoutFlag=${menu.soldoutFlag }'">품절</button>
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagY('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}');">품절</button>
 				</c:if>
 				<c:if test="${menu.soldoutFlag eq 'Y'}">
-					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="location.href='${pageContext.request.contextPath}/seller/goUpdateMenu.do?menuCode=${menu.menuCode}&storeNo=${menu.storeNo }&soldoutFlag=${menu.soldoutFlag }'">품절취소</button>
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagN('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}');">품절취소</button>
 				</c:if>
 			</td>
 		</tr>
 	</c:forEach>
-	<td colspan="4" style="text-align: right;" id="insertMenu-td"><button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#insertMenuModal" id="menuInsert-btn">추가</button></td>
+	<td colspan="5" style="text-align: right;" id="insertMenu-td"><button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#insertMenuModal" id="menuInsert-btn">추가</button></td>
 </table>
 <!-- updateMenuModal -->
-<form action="${pageContext.request.contextPath}/seller/updateMenu.do">
+<form action="${pageContext.request.contextPath}/seller/updateMenu.do"  enctype="multipart/form-data" method="post" id="realUpdateFrm">
 	<div class="modal fade" id="updateMenuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
@@ -112,13 +196,18 @@ function deleteMenu(menuCode, storeNo){
 	          </div>
 	          <div class="form-group">
 	            <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea>
-	          </div>
+	            <!-- <textarea class="form-control" id="message-text"></textarea> -->
+				<div class="filebox bs3-primary preview-image">
+					<input class="upload-name" value="파일선택" disabled="disabled" style="width: 200px;"> 
+						<label for="update_file">업로드</label>
+					<input type="file" id="update_file" class="upload-hidden" name="upFile">
+				</div>
+			 </div>
 	        </form>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	        <button type="submit" class="btn btn-primary">수정</button>
+	        <button type="button" class="btn btn-primary" onclick="realUpdate();">수정</button>
 	      </div>
 	    </div>
 	  </div>
@@ -126,7 +215,7 @@ function deleteMenu(menuCode, storeNo){
 </form>
 
 <!-- insertMenuModal -->
-<form action="${pageContext.request.contextPath}/seller/insertMenu.do">
+<form action="${pageContext.request.contextPath}/seller/insertMenu.do" enctype="multipart/form-data" method="post">
 	<div class="modal fade" id="insertMenuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
@@ -161,13 +250,18 @@ function deleteMenu(menuCode, storeNo){
 				</div>
 	            
 	          </div>
-	          <div class="form-group">
-	            <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea>
-	          </div>
-	        </form>
-	      </div>
-	      <div class="modal-footer">
+				<div class="form-group">
+					<label for="message-text" class="col-form-label">메뉴사진</label>
+					<!-- <textarea class="form-control" id="message-text"></textarea> -->
+					<div class="filebox bs3-primary preview-image">
+						<input class="upload-name" value="파일첨부" disabled="disabled" style="width: 200px;">
+
+						<label for="input_file">업로드</label> 
+						<input type="file" id="input_file" class="upload-hidden" name="upFile"> 
+					</div>
+					
+				</div>
+		  <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	        <button type="submit" class="btn btn-info">추가</button>
 	      </div>

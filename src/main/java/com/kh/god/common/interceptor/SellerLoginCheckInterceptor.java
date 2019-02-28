@@ -35,22 +35,22 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn"); 
 
 		
-		if(sellerLoggedIn != null) {
-			
-			if(!sellerId.equals(sellerLoggedIn.getSellerId())) { 
-				request.setAttribute("msg", "올바른 접근이 아닙니다");
-				request.setAttribute("loc", "/");
-				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
-						
-				return false; 				
-			}
-			
-		}else { 
-			request.setAttribute("msg", "로그인 후 진행하세요");
-			request.setAttribute("loc", "/");
-			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
-			return false;
-		}
+//		if(sellerLoggedIn != null) {
+//			
+//			if(!sellerId.equals(sellerLoggedIn.getSellerId())) { 
+//				request.setAttribute("msg", "올바른 접근이 아닙니다");
+//				request.setAttribute("loc", "/");
+//				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+//						
+//				return false; 				
+//			}
+//			
+//		}else { 
+//			request.setAttribute("msg", "로그인 후 진행하세요");
+//			request.setAttribute("loc", "/");
+//			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+//			return false;
+//		}
 				
 
 		

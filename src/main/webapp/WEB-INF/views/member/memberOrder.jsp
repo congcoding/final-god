@@ -78,9 +78,9 @@ div#memberViewFrm-container{
 		<div class = "memberViewCategory">		
 			
 			<h2>주문 내역</h2>
-			<br /><hr /><br />		
+			<br /><br />		
 			
-			<table class="table table-hover active" id="orderTable">				  
+			<table class="table table-hover active" id="orderTable" style="width: 96%;">				  
 				<!-- orderList가 존재하면 -->
 				<c:if test="${not empty orderList}">
 					<thead>
@@ -97,13 +97,13 @@ div#memberViewFrm-container{
 							<td>${o.TOTALPRICE}</td>
 							<td>
 								<c:if test="${o.REVIEWNO == null}">
-									<button type="button" id="inputReviewBtn"
+									<button type="button" id="inputReviewBtn" class="btn btn-outline-success header-btn"
 											onclick = "reviewEnroll('${o.ORDERNO}', '${o.STORENO}');" >
-										리뷰작성하기
+										리뷰작성
 									</button>
 								</c:if>
 								<c:if test="${o.REVIEWNO != null}">
-									리뷰보러가기(준비중)
+									<a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">리뷰보기</a>
 								</c:if>
 							</td>
 											

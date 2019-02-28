@@ -78,9 +78,9 @@ div#memberViewFrm-container{
 		<div class = "memberViewCategory">		
 			
 			<h2>즐겨찾는 매장 확인</h2>
-			<br /><hr /><br />		
+			<br /><br />		
 			
-			<table class="table table-hover active" id="bookmarkTable">				  
+			<table class="table table-hover active" id="bookmarkTable" style="width: 96%;">				  
 				<!-- orderList가 존재하면 -->
 				<c:if test="${not empty bookmarkList}">
 					<thead>
@@ -88,7 +88,6 @@ div#memberViewFrm-container{
 							<th>매장명</th>
 							<th>매장번호</th>
 							<th>매장주소</th>
-							<th>삭제하기</th>
 						  </tr>
 					</thead>
 					<tbody>				
@@ -96,13 +95,13 @@ div#memberViewFrm-container{
 						<tr>
 							<td><a href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${b.storeNo }">${b.storeName}</a></td>
 							<td>${b.storeTel}</td>
-							<td>${b.storeAddress}</td>
-							<td></td>											
+							<td>${b.storeAddress}</td>									
 						</tr>
 					</c:forEach>
 					</tbody>					
 				</c:if>
 				<c:if test="${empty bookmarkList}">
+					<thead></thead>
 					<tbody><tr><td>즐겨찾는 매장이 없습니다.</td></tr></tbody>
 				</c:if>			
 			</table>

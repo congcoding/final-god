@@ -47,7 +47,6 @@ public interface SellerService {
 
 	List<Map<String, Object>> orderList1(String storeNo);
 
-
 	List<Map<String, String>> adSelectAll(int cPage, int numPerPage, String storeNo);
 
 	List<Map<String, String>> adSelectNow(int cPage, int numPerPage, String storeNo);
@@ -87,13 +86,16 @@ public interface SellerService {
 
 	int selectMenuNo(String storeNo);
 
-	int insertMenu(Menu menu);
+	/* int insertMenu(Menu menu); */
 
 	StoreInfo selectStoreInfo(String storeNo);
+
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
 	List<Map<String,String>> chartByWeek(Map<String, String> map);
+
+	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
 
 

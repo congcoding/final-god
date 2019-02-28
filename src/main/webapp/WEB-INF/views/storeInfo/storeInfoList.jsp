@@ -48,17 +48,16 @@ $(document).ready(function(){
 <section id="storeInfo-container" class="container">
 	<!-- 전체 게시글 출력 -->
 	<div class="row">
-	
 			<c:forEach items="${list }" var="list" varStatus="status">
 			
 				<c:if test="${list.storeGrade eq 'A'}">
-					<div class="card" style="width: 20rem; border : 1px solid #e9fbfa; background-color:#e9fbfa;" ></div>
+					<div class="card" style="width: 20rem; border : 1px solid #e9fbfa; background-color:#e9fbfa;" >
 				</c:if>
 				<c:if test="${list.storeGrade eq 'B'}">
-					<div class="card" style="width: 20rem; border:1px solid #26d9d0;"></div>
+					<div class="card" style="width: 20rem; border:1px solid #26d9d0;">
 				</c:if>
 				<c:if test="${list.storeGrade eq 'C'}">
-					<div class="card" style="width: 20rem;"  style="border:red;"></div>
+					<div class="card" style="width: 20rem;"  style="border:red;">
 				</c:if>
 					<img class="card-img-top" src="" alt="StoreInfo Thumbnail">
 					<div class="card-body">
@@ -70,43 +69,46 @@ $(document).ready(function(){
 						</p>
 					</div>
 					
-					<ul class="list-group list-group-flush">						
-						<c:if test="${list.storeGrade eq 'A'}">
-							<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>영업시간 </strong> <c:out
-									value="${list.operatingHours }" /></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>전화번호 </strong> <c:out
-									value="${list.storeTel }" /></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>배달최소금액 </strong> <c:out
-									value="${list.deliveryMinPrice }" /></li>
-						</c:if>
-						
-						<c:if test="${list.storeGrade eq 'B'}">
-							<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>영업시간 </strong> <c:out
-									value="${list.operatingHours }" /></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>전화번호 </strong> <c:out
-									value="${list.storeTel }" /></li>
-							<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>배달최소금액 </strong> <c:out
-									value="${list.deliveryMinPrice }" /></li>
-						</c:if>
-						
-						<c:if test="${list.storeGrade eq 'C'}">
-							<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
-							<li class="list-group-item" ><strong>영업시간 </strong> <c:out
-									value="${list.operatingHours }" /></li>
-							<li class="list-group-item" ><strong>전화번호 </strong> <c:out
-									value="${list.storeTel }" /></li>
-							<li class="list-group-item" ><strong>배달최소금액 </strong> <c:out
-									value="${list.deliveryMinPrice }" /></li>
-						</c:if>
-					</ul>
+						<ul class="list-group list-group-flush">
+					
+					<c:if test="${list.storeGrade eq 'A'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>영업시간 </strong> <c:out
+								value="${list.operatingHours }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>전화번호 </strong> <c:out
+								value="${list.storeTel }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>배달최소금액 </strong> <c:out
+								value="${list.deliveryMinPrice }" /></li>
+					</c:if>
+					
+					<c:if test="${list.storeGrade eq 'B'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>영업시간 </strong> <c:out
+								value="${list.operatingHours }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>전화번호 </strong> <c:out
+								value="${list.storeTel }" /></li>
+						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>배달최소금액 </strong> <c:out
+								value="${list.deliveryMinPrice }" /></li>
+					</c:if>
+					
+					<c:if test="${list.storeGrade eq 'C'}">
+						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+						<li class="list-group-item" ><strong>영업시간 </strong> <c:out
+								value="${list.operatingHours }" /></li>
+						<li class="list-group-item" ><strong>전화번호 </strong> <c:out
+								value="${list.storeTel }" /></li>
+						<li class="list-group-item" ><strong>배달최소금액 </strong> <c:out
+								value="${list.deliveryMinPrice }" /></li>
+					</c:if>
+						</ul>
 					<div class="card-body">
 						<a class="btn btn-primary" href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${list.storeNo }">주문하기</a>
 					</div>
-						
+				</div>
+		
+				
 			</c:forEach>
-	</div> <!-- div.row -->
+	</div>
 
 	<%
 		int totalContents = (int) request.getAttribute("totalContents");
