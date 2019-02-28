@@ -481,8 +481,8 @@ $(function(){
 					  if(storeName[i] != sale.STORENAME){
 					  }else{
 						  for(var k = 0; k < 24; k++){
+							  if(hour == k){
 								  day[i][k] = 0;
-							  if(hour == k+1){
 								  day[i][k] += totalPrice;
 							  }
 						  }
@@ -662,12 +662,25 @@ $(function(){
   }//end of drawChat
   
   google.charts.load('current', {'packages':['corechart']});
-  
+  window.onload=function(){
+	  console.log('${saleVolume}');
+	  var storeInfo = new Array();
+	    <c:forEach items="${saleVolume}" var="info">
+	    	var json = new Object();
+	    	json.originalPrice = '${info.originalPrice}';
+	    	json.STORENAME = '${info.STORENAME}';
+	    	json.storeNo = '${info.STORENO}';
+	    	json.TOTALPRICE = '${info.TOTALPRICE}';
+	    	json.ORDERDAY = '${info.ORDERDAY}';
+	    	json.SELLERID = '${info.SELLERID}';
+	    	storeInfo.push(json);
+	    </c:forEach>
   if(!'${saleVolume}'){
 	  google.charts.setOnLoadCallback(drawChart('${saleVolume}','today'));
   }else{
 	  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
 	  $(".timeChart").html(noData);
+  }
   }
   
   

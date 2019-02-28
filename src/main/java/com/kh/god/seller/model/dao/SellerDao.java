@@ -89,6 +89,12 @@ public interface SellerDao {
 
 	StoreInfo selectStoreInfo(String storeNo);
 
+	List<Map<String,String>> chartByWeek(Map<String, String> map);
+
+	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
+
+	Map<String, String> getStoreName(Map<String, String> map);
+
 
 
 }

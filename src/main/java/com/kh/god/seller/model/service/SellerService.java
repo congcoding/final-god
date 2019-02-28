@@ -91,7 +91,9 @@ public interface SellerService {
 
 	StoreInfo selectStoreInfo(String storeNo);
 
-	List<Map<String, String>> totalSaleVolume(String sellerId, String storeNo, String string);
+	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
+
+	List<Map<String,String>> chartByWeek(Map<String, String> map);
 
 
 

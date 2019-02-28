@@ -25,7 +25,6 @@
 <link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
 <!-- 구글 차트 API -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
@@ -341,7 +340,7 @@ span.srchVal{
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
 		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
 		  </c:if>
 		</c:if>
 		

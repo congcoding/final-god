@@ -215,8 +215,8 @@ public class SellerController {
 	}
 		
 	//내 가게 
-	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+	@RequestMapping("/seller/goMyStore.do")
+	public String goMyStore(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
@@ -689,30 +689,29 @@ public class SellerController {
     }
     @RequestMapping(value = "/seller/myStoreChart.do" )
 	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {
-		logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
-		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,storeNo,"today");
-
-//		model.addAttribute("orderList1",orderList1);
-		
+		//logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
+		Map<String,String> info = new HashMap<>();
+		info.put("storeNo",storeNo);
+		info.put("sellerId",sellerId);
+		info.put("type","today");
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(info);
+		logger.debug("오늘 자 판매량 데이터 : "+saleVolume);
+		model.addAttribute("saleVolume",saleVolume);
+		model.addAttribute("storeNo",storeNo);
 
 		
 		return "seller/myChart";
 	}
+    @ResponseBody
 	@RequestMapping("seller/chartByWeek.do")
-	public Map<String, Object> chartByWeek(@RequestParam(name="weeklyStartDate") Date weeklyStartDate, @RequestParam(name="weeklyEndDate") Date weeklyEndDate) {
-		Map<String, Object> returnMap = new HashMap<String, Object>();
-		logger.debug("시작 날짜 : "+weeklyStartDate+ "종료 날짜 : "+weeklyEndDate);
-		Map<String, Date> map = new HashMap<>();
+	public List<Map<String, String>> chartByWeek(@RequestParam(name="weeklyStartDate") String weeklyStartDate, @RequestParam(name="weeklyEndDate") String weeklyEndDate, @RequestParam(name="storeNo") String storeNo) {
+		Map<String, String> map = new HashMap<>();
 		map.put("weeklyStartDate", weeklyStartDate);
 		map.put("weeklyEndDate", weeklyEndDate);
+		map.put("storeNo",storeNo);
+		List<Map<String,String>> chartByWeek = sellerService.chartByWeek(map);
+		logger.debug(chartByWeek);
 		
-		
-		
-//		List<OrderInfo> list = null;
-//		if(month.equals("now")) {
-//			list = adminService.timeChart();
-//		}
-//		map.put("list", list);
-		return returnMap;
+		return chartByWeek;
 	}
 }

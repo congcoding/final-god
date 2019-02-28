@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.RowBounds;
+import org.apache.log4j.Logger;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
 public class SellerDaoImpl implements SellerDao {
-
+	Logger logger = Logger.getLogger(getClass());
 	@Autowired
 	SqlSessionTemplate sqlSession;
 
@@ -245,6 +246,23 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public StoreInfo selectStoreInfo(String storeNo) {
 		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
+	}
+
+	@Override
+	public List<Map<String,String>> chartByWeek(Map<String, String> map) {
+		return sqlSession.selectList("seller.chartByWeek", map);
+	}
+
+	@Override
+	public List<Map<String, String>> totalSaleVolume(Map<String,String> info) {
+		List<Map<String,String>> map = sqlSession.selectList("seller.chartOfToday", info);
+		logger.debug(map);
+		return map;
+	}
+
+	@Override
+	public Map<String, String> getStoreName(Map<String, String> map) {
+		return sqlSession.selectOne("seller.getStoreName", map);
 	}
 
 
