@@ -51,6 +51,42 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		}
 		
   }
+	public static void findPwd(String password, String memberPhone) {
+		
+		//flag=receive 일 경우 howLongChecked => 얼마나 걸릴지
+		//flag=cancel 일 경우 howLongChecked => 취소 사유
+		
+		System.out.println("@@@@여기 메세지 샌드부분"+ password);
+		System.out.println("@@@@여기 메세지 샌드부분"+memberPhone);
+		if(memberPhone.contains("-")) {
+			memberPhone = memberPhone.replaceAll("-", "");
+			System.out.println("@@치환후 번호"+memberPhone);		
+		}
+		
+		String api_key = "NCSVKGTPW3QU8AIA"; 
+		String api_secret ="DTUEHVLPZ1QRMFMUAL3XOPT7TELFSFRA"; 
+		Message coolsms = new Message(api_key,api_secret);
+		
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+			params.put("to", memberPhone); 
+			params.put("from", "01084345390");
+			params.put("type", "SMS"); 
+			params.put("text", "임시 비밀번호는 "+password+"입니다. 로그인 후 비밀번호를 바꾸시길 바랍니다.");
+			params.put("app_version", "test app 1.2"); // application name and version
+		
+		// 4 params(to, from, type, text) are mandatory. must be filled
+		
+		
+		try { 
+			JSONObject obj = (JSONObject) coolsms.send(params);
+			System.out.println(obj.toString()); 
+		} catch (CoolsmsException e) {
+			System.out.println(e.getMessage()); 
+			System.out.println(e.getCode()); 
+		}
+		
+	}
 
 
 }

@@ -67,6 +67,12 @@ div#addReviewPhoto{
     border : 1px solid #858796;
     width: 50%;	
 }
+.checked {
+  color: orange;
+}
+.fa-star{
+	cursor : pointer;
+}
 
 
 </style>
@@ -100,9 +106,8 @@ div#addReviewPhoto{
 			<br /><hr /><br />
 			
 		<form name="memberEnrollEndFrm" method="post" 
-		 		  action="${pageContext.request.contextPath}/member/memberReviewEnrollEnd.do" 
-		  		  onsubmit="return validate();" 
-		  		  enctype="multipart/form-data">
+		 	  action="${pageContext.request.contextPath}/member/memberReviewEnrollEnd.do"  
+		  	  enctype="multipart/form-data">
 		  	<!-- storeNo -->	  
 		  	<input type="hidden" name="storeNo" value="${storeNo}"/>
 			<!-- orderNo -->
@@ -123,12 +128,39 @@ div#addReviewPhoto{
     			</div>
 		  	</div>
 		  	
-		  	<!-- 주문한 메뉴 -->		  	
+		  	<!-- 주문 매장 -->
+		  	<div class="form-group row">
+		  		<label for="inputWriter" class="col-sm-3">주문매장</label>
+    			<div class="orderInfo">
+					${orderMenuList[0].STORENAME }
+    			</div>
+		  	</div>
 		  	
+		  	<!-- 주문한 메뉴 -->		  	
+		  	<!-- orderMenuList는 존재한다-->
+		  	<div class="form-group row">
+		  		<label for="inputWriter" class="col-sm-3">주문메뉴</label>
+    			<div>
+    				<table class="orderInfo">
+      					<c:forEach var="m" items="${orderMenuList }">
+      						<tr><td>${m.MENUNAME } X ${m.AMOUNT } </td></tr>	      				
+      					</c:forEach>
+      				</table>
+    			</div>
+		  	</div>
 		  	
 		  	<!--  평점 -->
-		  	
-		  	
+		  	<div class="form-group row">
+		  	<label for="inputWriter" class="col-sm-3">평점</label>
+    			<div id="star" >
+    				<span class="fa fa-star checked"></span>
+      				<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+					<span class="fa fa-star"></span>
+    			</div>
+		  	</div>
+ 			<input type="hidden" name="rate"/>
 		  	
 		  	<!-- 리뷰 내용 -->
 		  	<div class="form-group row">
@@ -160,15 +192,27 @@ div#addReviewPhoto{
 			
 	</div> <!-- div#memberViewFrm-container -->
 	
-	
-	
-	
-	
 </div> <!-- div#MemberView-container -->
 
 
 
 <script>
+var cnt = 1;
+//평점 
+$('.fa-star').on("click",function(){
+
+	var checkIndex = $(this).index()+1;
+
+	$('.fa-star').removeClass( 'checked' );
+	$('.fa-star:nth-child(-n+'+checkIndex+')').addClass( 'checked' );
+
+	cnt = $('span.checked').length;
+	
+	
+});
+
+$('input[name="rate"]').val(cnt);
+
 
 function addReviewPhoto(){
 	
@@ -182,8 +226,7 @@ function addReviewPhoto(){
 		alert('사진은 최대 3개까지 가능합니다.');
 	}
 
-}
-
+};
 
 
 </script>

@@ -32,6 +32,8 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChartByCategory);
 
 function drawChartByCategory() {
+
+
 	var data0 = ${chartByCategoryList[0]};
 	var data1 = ${chartByCategoryList[1]};
 	var data2 = ${chartByCategoryList[2]};
@@ -39,6 +41,8 @@ function drawChartByCategory() {
 	var data4 = ${chartByCategoryList[4]};
 	var data5 = ${chartByCategoryList[5]};
 	var data6 = ${chartByCategoryList[6]};
+
+
   var data = google.visualization.arrayToDataTable([
 	    ['Category', 'Total Price'],
 	    ['치킨', data0],
@@ -48,6 +52,7 @@ function drawChartByCategory() {
 	    ['중식', data4],
 	    ['일식', data5],
 	    ['한식', data6],
+
   ]);
 
   var options = {
@@ -86,6 +91,9 @@ $(function(){
             setTimeout("applyWeeklyHighlight()", 100);
         },
 		beforeShow : function() {
+			setTimeout("applyWeeklyHighlight()", 100);
+		},
+		onChangeMonthYear: function(year, month, widget) {
 			setTimeout("applyWeeklyHighlight()", 100);
 		}
     });

@@ -197,19 +197,19 @@
 	</update>
 	
 	<select id="selectStorePMSList" resultType="storeInfo">
-		select * from storeInfo where pmsflag='N'
+		select * from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="countStorePMSList" resultType="_int">
-		select count(*) from storeInfo where pmsflag='N'
+		select count(*) from storeInfo where pmsflag='N' or pmsflag='R'
 	</select>
 	
 	<select id="selectStoreList" resultType="storeInfo">
-		select * from storeInfo
+		select * from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
-		select count(*) from storeInfo
+		select count(*) from storeInfo where pmsflag='Y' or pmsflag='C'
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">
@@ -248,7 +248,7 @@
 	</select>
 	
 	<update id="storePMSOk">
-		update storeInfo set pmsflag='Y' where storeNo=#{storeNo}
+		update storeInfo set pmsflag='Y', rejectInfo=null where storeNo=#{storeNo}
 	</update>
 	
 	<update id="storePMSReject">

@@ -208,8 +208,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		</div>
 		<hr />
 		
-		<input type="submit" class="btn btn-outline-success" value="가입하기" >
-	
+		<input type="submit" class="btn btn-outline-success" value="가입하기" >	
 	</form>
 	
 </div>

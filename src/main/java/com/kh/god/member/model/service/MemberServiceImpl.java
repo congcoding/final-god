@@ -11,6 +11,7 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Service
@@ -52,7 +53,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public List<Map<String, Object>> couponListBymemberId(String memberId) {
-		// TODO Auto-generated method stub
 		return memberDao.couponListBymemberId(memberId);
 	}
 
@@ -63,7 +63,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public double getDiscount(String eventNo) {
-		// TODO Auto-generated method stub
 		return memberDao.getDiscount(eventNo);
 	}
 	
@@ -103,14 +102,50 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public Member findId(String email) {
+		return memberDao.findId(email);
+	}
+
 	public List<Review> reviewList(String memberId) {
 		return memberDao.reviewList(memberId);
 	}
 
 
 	@Override
+	public Seller sellerfindId(String email) {
+		return memberDao.sellerfindId(email);	
+	}
+
 	public List<RAttachment> selectRAttachmentList(int reviewNo) {
 		return memberDao.selectRAttachmentList(reviewNo);
+	}
+
+
+	@Override
+	public Seller selectOneSeller(String id) {
+		return memberDao.selectOneSeller(id);
+	}
+	
+	@Override
+	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
+		return memberDao.selectOrderMenuList(orderNo);
+	}
+
+
+	@Override
+	public int updateFindPwd(Seller s) {
+		return memberDao.updateFindPwd(s);
+	}
+
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return memberDao.updateMemberFindPwd(m);
+	}
+	
+	@Override
+	public int deleteMemberReview(String reviewNo) {
+		return memberDao.deleteMemberReview(reviewNo);
 	}
 
 

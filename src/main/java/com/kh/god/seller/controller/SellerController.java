@@ -1,11 +1,20 @@
 package com.kh.god.seller.controller;
 
+
+import java.sql.Date;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -19,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -28,6 +38,8 @@ import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.common.message.MessageSend;
+import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
@@ -215,8 +227,8 @@ public class SellerController {
 	}
 		
 	//내 가게 
-	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+	@RequestMapping("/seller/goMyStore.do")
+	public String goMyStore(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
@@ -569,48 +581,152 @@ public class SellerController {
 	}
 	
 
+//	@RequestMapping("/seller/updateMenu.do")
+//	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
+//								   @RequestParam("menuName") String menuName, 
+//								   @RequestParam("menuPrice") int menuPrice,
+//								   @RequestParam("storeNo") String storeNo,
+//								   @RequestParam(name="upFile" , required=false) MultipartFile[] upFiles, 
+//								   HttpServletRequest request,
+//								   ModelAndView mav) {
+//		if (logger.isDebugEnabled()) {
+//			logger.debug("updateMenu() 요청!");
+//		}
+//
+//		logger.debug("fileName = " + upFiles[0].getOriginalFilename());
+//		logger.debug("size = " + upFiles[0].getSize());
+//		
+//		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
+//		logger.debug("☆★☆★☆★☆★☆★메뉴이름 왔냐? " + menuName);
+//		logger.debug("☆★☆★☆★☆★☆★메뉴가격 왔냐? " + menuPrice);
+//		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
+//		logger.debug("☆★☆★☆★☆★☆★첨부파일 왔냐? " + upFiles);
+//
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("menuCode", menuCode);
+//		map.put("menuName", menuName);
+//		map.put("menuPrice", menuPrice);
+//		map.put("storeNo", storeNo);
+//		map.put("upFiles", upFiles);
+//
+//		int result = sellerService.updateMenu(map);
+//
+//		String loc = "/";
+//		String msg = "";
+//		String view = "common/msg";
+//
+//		if (result > 0) {
+//			msg = "메뉴 수정 성공!";
+//			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+//		} else {
+//			msg = "메뉴 수정 실패!";
+//			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+//		}
+//
+//		mav.addObject("loc", loc);
+//		mav.addObject("msg", msg);
+//		mav.addObject("map", map);
+//		mav.setViewName(view);
+//
+//		return mav;
+//
+//	}
+	
 	@RequestMapping("/seller/updateMenu.do")
-	public ModelAndView updateMenu(@RequestParam("menuCode") String menuCode,
-								   @RequestParam("menuName") String menuName, 
-								   @RequestParam("menuPrice") int menuPrice,
-								   @RequestParam("storeNo") String storeNo,
+	public ModelAndView updateMenu(@RequestParam(value="menuCode", required = false) String menuCode,
+								   @RequestParam(value="menuName", required = false) String menuName, 
+								   @RequestParam(value="menuPrice", required = false) int menuPrice,
+								   @RequestParam(value="storeNo", required = false) String storeNo,
+								   @RequestParam(name="upFile" , required=false) MultipartFile[] upFiles, 
+								   HttpServletRequest request,
 								   ModelAndView mav) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateMenu() 요청!");
 		}
-
+		
+		//logger.debug("fileName = " + upFiles[0].getOriginalFilename());
+		//logger.debug("size = " + upFiles[0].getSize());
+		
 		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
 		logger.debug("☆★☆★☆★☆★☆★메뉴이름 왔냐? " + menuName);
 		logger.debug("☆★☆★☆★☆★☆★메뉴가격 왔냐? " + menuPrice);
 		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
-
-		Map<String, Object> map = new HashMap<>();
-		map.put("menuCode", menuCode);
-		map.put("menuName", menuName);
-		map.put("menuPrice", menuPrice);
-		map.put("storeNo", storeNo);
-
-		int result = sellerService.updateMenu(map);
-
+		logger.debug("☆★☆★☆★☆★☆★첨부파일 왔냐? " + upFiles);
+		
+		
 		String loc = "/";
 		String msg = "";
 		String view = "common/msg";
+		
+		List<MenuAttachment> menuAttachList = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
+		MenuAttachment attach = new MenuAttachment();
+		
+		try {
+			// 1. 파일업로드 (실제경로를 얻어내는 방법은 세션-서블릿-리얼패스)
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/menu");
 
-		if (result > 0) {
-			msg = "메뉴 수정 성공!";
-			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
-		} else {
-			msg = "메뉴 수정 실패!";
-			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+			logger.debug("saveDirectory = " + saveDirectory);
+
+			
+			// MultipartFile 처리
+			for (MultipartFile f : upFiles) {
+				if (!f.isEmpty()) {
+					// 사용자가 업로드한 파일명 구하기
+					String originalFileName = f.getOriginalFilename();
+
+					// 서버저장용 파일명
+					String renamedFileName = Utils.getRenamedFileName(originalFileName);
+					logger.debug("renamedFileName = " + renamedFileName);
+
+					// 실제서버에 파일저장
+					try {
+						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+
+					// 첨부파일객체 생성. 리스트 추가
+					attach.setOriginalFileName(originalFileName);
+					attach.setRenamedFileName(renamedFileName);
+					menuAttachList.add(attach);
+					
+					logger.debug("-_-_-_-_-_- menuAttachList -_-_-_-_-_- " + menuAttachList);
+					
+					
+				}
+			}
+			
+			map.put("menuCode", menuCode);
+			map.put("menuName", menuName);
+			map.put("menuPrice", menuPrice);
+			map.put("storeNo", storeNo);
+			map.put("upFiles", upFiles);
+			map.put("menuAttachList", menuAttachList);
+			
+			// 2. 업무로직
+			int result = sellerService.updateMenu(map);
+			
+			if (result > 0) {
+				msg = "메뉴 수정 성공!";
+				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+			} else {
+				msg = "메뉴 수정 실패!";
+				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+			}
+
+		} catch (Exception e) {
+			logger.error("메뉴 수정 에러", e);
+			throw new MenuException("메뉴 수정 에러", e);
 		}
-
+		
 		mav.addObject("loc", loc);
 		mav.addObject("msg", msg);
 		mav.addObject("map", map);
 		mav.setViewName(view);
-
+		
 		return mav;
-
+		
 	}
 	
 	@RequestMapping("/seller/deleteMenu.do")
@@ -640,38 +756,103 @@ public class SellerController {
 	}
 	
 	@RequestMapping("seller/insertMenu.do")
-	public String insertMenu(@RequestParam(name = "menuOptions") String menuOptions, Model model, Menu menu) {
+	public String insertMenu(Menu menu,
+							 @RequestParam(name = "menuOptions") String menuOptions,
+							 @RequestParam(name = "upFile", required = false) MultipartFile[] upFiles,
+							 HttpServletRequest request,
+							 Model model) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("insertMenu() 요청!");
 		}
+
+		logger.debug("fileName = " + upFiles[0].getOriginalFilename());
+		logger.debug("size = " + upFiles[0].getSize());
 		
-		int menuNo = sellerService.selectMenuNo(menu.getStoreNo());
-		String menuCode = "";
-		
-		if(menuNo == 0) {
-			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 있냐? " + menuNo);
-			menuNo = 1;
-			logger.debug("☆★☆★☆★☆★☆★메뉴넘버 몇이냐? " + menuNo);
-		} 
-		
-		else {
-			++menuNo;
-			logger.debug("☆★☆★☆★☆★☆★메뉴넘버가 있다면 몇이냐? " + menuNo);
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+
+		try {
+			// 1. 파일업로드 (실제경로를 얻어내는 방법은 세션-서블릿-리얼패스)
+			String saveDirectory = request.getSession().getServletContext().getRealPath("/resources/upload/menu");
+
+			logger.debug("saveDirectory = " + saveDirectory);
+
+			List<MenuAttachment> menuAttachList = new ArrayList<>();
 			
+			MenuAttachment attach = new MenuAttachment();
+			// MultipartFile 처리
+			for (MultipartFile f : upFiles) {
+				if (!f.isEmpty()) {
+					// 사용자가 업로드한 파일명 구하기
+					String originalFileName = f.getOriginalFilename();
+
+					// 서버저장용 파일명
+					String renamedFileName = Utils.getRenamedFileName(originalFileName);
+					logger.debug("renamedFileName = " + renamedFileName);
+
+					// 실제서버에 파일저장
+					try {
+						f.transferTo(new File(saveDirectory + "/" + renamedFileName));
+					} catch (IllegalStateException | IOException e) {
+						e.printStackTrace();
+					}
+
+					// 첨부파일객체 생성. 리스트 추가
+					
+					attach.setOriginalFileName(originalFileName);
+					attach.setRenamedFileName(renamedFileName);
+					
+				}
+			}
+
+			// 2. 업무로직
+			int menuNo = sellerService.selectMenuNo(menu.getStoreNo());
+			String menuCode = "";
+
+			if (menuNo == 0) {
+				logger.debug("☆★☆★☆★☆★☆★메뉴넘버 있냐? " + menuNo);
+				menuNo = 1;
+				logger.debug("☆★☆★☆★☆★☆★메뉴넘버 몇이냐? " + menuNo);
+			}
+
+			else {
+				++menuNo;
+				logger.debug("☆★☆★☆★☆★☆★메뉴넘버가 있다면 몇이냐? " + menuNo);
+
+			}
+
+			menuCode = menu.getStoreNo() + menuOptions + menuNo;
+			menu.setMenuCode(menuCode);
+			menu.setMenuNo(menuNo);
+			
+			attach.setMenuCode(menuCode);
+			menuAttachList.add(attach);
+			
+			logger.debug("menuAttachList ---------- " + menuAttachList);
+			
+			// 2-1. 업무로직
+			int result = sellerService.insertMenu(menu, menuAttachList);
+
+			if (result > 0) {
+				msg = "메뉴 추가 성공!";
+			} else {
+				msg = "메뉴 추가 실패!";
+			}
+
+			
+		} catch (Exception e) {
+			logger.error("메뉴 등록 에러", e);
+			throw new MenuException("메뉴 등록 에러", e);
 		}
 		
-		menuCode = menu.getStoreNo()+ menuOptions + menuNo;
-		menu.setMenuCode(menuCode);
-		menu.setMenuNo(menuNo);
-		
-		
-		int result = sellerService.insertMenu(menu);
-			
-		
-		return "redirect:/seller/myStoreMenu.do?storeNo="+menu.getStoreNo();
-		
-	}
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+		model.addAttribute("view", view);
 
+		return "redirect:/seller/myStoreMenu.do?storeNo=" + menu.getStoreNo();
+	}
+	
 	/**
      * 종합 보기에서 저번주의 매장 판매량을 가지고 온다.
      * @param sellerId
@@ -685,6 +866,7 @@ public class SellerController {
     	logger.debug(saleVolume);
     	return saleVolume;
     }
+
     
 	/* 리뷰관리로 들어가기 */
     @RequestMapping("/seller/goSellerReview.do")
@@ -700,5 +882,35 @@ public class SellerController {
 
     	return "seller/sellerReview";
     }
+    @RequestMapping(value = "/seller/myStoreChart.do" )
+	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {
+		//logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
+		Map<String,String> info = new HashMap<>();
+		info.put("storeNo",storeNo);
+		info.put("sellerId",sellerId);
+		info.put("type","today");
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(info);
+		logger.debug("오늘 자 판매량 데이터 : "+saleVolume);
+		model.addAttribute("saleVolume",saleVolume);
+		model.addAttribute("storeNo",storeNo);
 
-}
+
+		
+		return "seller/myChart";
+	}
+    @ResponseBody
+	@RequestMapping("seller/chartByWeek.do")
+	public List<Map<String, String>> chartByWeek(@RequestParam(name="weeklyStartDate") String weeklyStartDate, @RequestParam(name="weeklyEndDate") String weeklyEndDate, @RequestParam(name="storeNo") String storeNo) {
+		Map<String, String> map = new HashMap<>();
+		map.put("weeklyStartDate", weeklyStartDate);
+		map.put("weeklyEndDate", weeklyEndDate);
+		map.put("storeNo",storeNo);
+		List<Map<String,String>> chartByWeek = sellerService.chartByWeek(map);
+		logger.debug(chartByWeek);
+		
+		return chartByWeek;
+	}
+
+	}
+
+

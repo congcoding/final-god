@@ -59,6 +59,50 @@
 	where S1.sellerid = #{sellerId} and O.cancelflag = 'N' and extract(month from sysdate)-extract(month from ordertime) >= 1 and  extract(month from sysdate)-extract(month from ordertime) <![CDATA[<=]]> 3
 	group by to_char(ordertime,'MM'), S1.storename, O.storeno,S1.sellerid
 	</select>
+	
+	<select id="chartByWeek" resultMap="byWeek">
+		<![CDATA[select period,nvl(column3, 0)as oneSum, nvl(totalSum,0)as totalSum, nvl(D.num,0)as num
+			from
+			(SELECT TO_CHAR(TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+LEVEL-1, 'YYYY/MM/DD') period
+			FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{weeklyEndDate}, 'YYYY/MM/DD')-TO_DATE(#{weeklyStartDate}, 'YYYY/MM/DD')+1)) A
+			left join 
+			(select to_char(O.ordertime, 'yyyy/mm/dd') column4, nvl(sum(o.totalprice), 0) column3 
+			from orderInfo O
+			where O.storeno = #{storeNo} and (O.ordertime between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+			group by to_char(O.ordertime, 'yyyy/mm/dd')) B on  A.period = B.column4 
+			left join
+			(select to_char(O.ordertime, 'yyyy/mm/dd') column5, nvl(sum(O.totalPrice), 0) totalSum 
+			from orderInfo O left join storeinfo S on O.storeno = S.storeno
+			where S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+			group by to_char(O.ordertime, 'yyyy/mm/dd')) C on  A.period = C.column5
+			left join
+			(select to_char(O.ordertime, 'yyyy/mm/dd')column1, count( distinct O.storeno) as num
+			from orderInfo O left join storeinfo S on O.storeno = S.storeno
+			where S.categoryno = 1 and (O.ordertime between to_date(#{weeklyStartDate}, 'yyyy/mm/dd') and to_date(#{weeklyEndDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm/dd')) D
+			on D.column1 = A.period
+			order by period
+		]]>
+	</select>
+	<select id="chartOfToday" resultMap="totalOf">
+		select S.storename,sum(O.totalprice) as totalprice,to_char(ordertime,'hh24') as orderday,sum(originalprice) as originalprice
+		from orderinfo O left join storeinfo S on O.storeno = s.storeno
+		where sellerid = #{sellerId} and O.storeno = #{storeNo} and ordertime between trunc(sysdate)and trunc(sysdate)+1 
+		group by S.storename,to_char(ordertime,'hh24')
+	</select>
+	
+	<select id="getStoreName" resultType="map">
+		select distinct S.storename, S.storeno
+		from orderinfo O left join storeinfo S on O.storeno = s.storeno
+		where sellerid = #{sellerId} and O.storeno = #{storeNo}
+	</select>
+	
+	<resultMap type="map" id="byWeek">
+		<result column="oneSum" property="ONESUM" javaType="string"/>
+		<result column="totalSum" property="TOTALSUM" javaType="string"/>
+		<result column="num" property="NUM" javaType="string"/>
+		<result column="period" property="PERIOD" javaType="string"/>
+	</resultMap>
+	
 	<resultMap type="map" id="totalOf">
 		<result column="originalprice" property="ORIGINALPRICE" javaType="string"/>
 		<result column="totalprice" property="TOTALPRICE" javaType="string"/>
@@ -72,4 +116,8 @@
 		select * from review where storeno=#{storeNo} and commentLevel=2
 	</select>
 	
+
+	<select id="sellerfindId" resultType="seller">
+		select * from seller where email = #{email}
+	</select>
 </mapper>

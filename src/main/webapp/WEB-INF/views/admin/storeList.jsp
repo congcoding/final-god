@@ -51,6 +51,7 @@ $(function(){
 				<th>가게 등급</th>
 				<th>카테고리</th>
 				<th>사장님 아이디</th>
+				<th>영업 중지 여부</th>
 			</tr>
 			<c:if test="${not empty list}">
 				<c:forEach items="${list }" var="store">
@@ -71,6 +72,7 @@ $(function(){
 							</c:choose>
 						</td>
 						<td>${store.sellerId }</td>
+						<td>${store.pmsFlag=='C'?"중지":"" }</td>
 					</tr>
 				</c:forEach>
 			</c:if>

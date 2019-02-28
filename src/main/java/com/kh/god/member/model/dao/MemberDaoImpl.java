@@ -3,6 +3,7 @@ package com.kh.god.member.model.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 @Repository
@@ -96,6 +98,29 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public Member findId(String email) {
+		Member m = null;
+		
+		 try{
+			m = sqlSession.selectOne("member.findId" , email);
+		 }
+		 catch(TooManyResultsException e) {
+			 
+		 }
+		 return m;
+	}
+
+	@Override
+	public Seller sellerfindId(String email) {
+		Seller s = null;
+		 try{
+			s = sqlSession.selectOne("seller.sellerfindId" , email);
+		 }
+		 catch(TooManyResultsException e) {
+			 
+		 }
+		return s;
+	}
 	public List<Review> reviewList(String memberId) {
 		List<Review> reviewList = sqlSession.selectList("member.reviewList", memberId);
 		return reviewList;
@@ -109,8 +134,32 @@ public class MemberDaoImpl implements MemberDao {
 
 	@Override
 	public double getDiscount(String eventNo) {
-		// TODO Auto-generated method stub
 		return sqlSession.selectOne("member.getDiscount", eventNo);
+	}
+
+	@Override
+	public Seller selectOneSeller(String sellerId) {
+		return sqlSession.selectOne("seller.selectOneSeller" , sellerId);
+	}
+
+	@Override
+	public int updateFindPwd(Seller s) {
+		return sqlSession.update("seller.updatePwd" , s );
+	}
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return sqlSession.update("member.updateMemberFindPwd" , m);
+	}
+	
+	@Override
+	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
+		return sqlSession.selectList("member.selectOrderMenuList", orderNo);
+	}
+
+	@Override
+	public int deleteMemberReview(String reviewNo) {
+		return sqlSession.update("member.deleteMemberReview",reviewNo);
 	}
 
 }
