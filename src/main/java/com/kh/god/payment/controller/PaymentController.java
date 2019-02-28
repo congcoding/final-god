@@ -148,9 +148,6 @@ public class PaymentController {
 	    	}
 			
 	    }
-
-
-		//int putPaymentId = paymentService.putPaymentId(paymentId);
 		return "payment/paymentEnd";
 	}
 	

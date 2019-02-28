@@ -188,7 +188,6 @@ function fn_eventView(eventNo){
 	</div>
 </section>	
 <script>
-//21897f5bf48b00dcb812e4f648ac8393
 function getLocation(){
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
@@ -196,7 +195,6 @@ function getLocation(){
 			var lat = position.coords.longitude; //x
 		
 			$.ajax({
-				//https://developers.kakao.com/docs/restapi/local#좌표-행정구역정보-변환
 			    url: 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x='+lat+'&y='+lon,
 			    type: 'GET',
 			    cache: false,

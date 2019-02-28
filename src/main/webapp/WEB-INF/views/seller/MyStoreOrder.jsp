@@ -139,14 +139,19 @@ $(function(){
 				      </td>
 				      <td class="orderAddress">${orderList2.ADDRESS}</td>
 				      <td class="orderPhone">${orderList2.PHONE}</td>
-				      <c:if test="${orderList2.REQUEST eq null}">
+				      				  <!--요청사항 -->    
+				      <c:if test="${not empty orderList2.REQUEST}">
 				      <td class="orderRequest">${orderList2.REQUEST}</td>
+				      </c:if>
+				      
+				      <c:if test="${empty orderList2.REQUEST}">
+				      <td class="orderRequest"></td>
 				      </c:if>
 				      
 				      <c:if test="${orderList2.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList2.REQUEST=='N'}">
+				      <c:if test="${orderList2.PRICEWAY=='N'}">
 				      <td class="orderWay">만나서결제</td>
 				      </c:if>
 				     
@@ -189,14 +194,19 @@ $(function(){
 				      </td>
 				      <td class="orderAddress">${orderList3.ADDRESS}</td>
 				      <td class="orderPhone">${orderList3.PHONE}</td>
-				      <c:if test="${orderList3.REQUEST eq null}">
+				      
+				      <c:if test="${not empty orderList3.REQUEST}">
 				      <td class="orderRequest">${orderList3.REQUEST}</td>
+				      </c:if>
+				      
+				      <c:if test="${empty orderList3.REQUEST}">
+				      <td class="orderRequest"></td>
 				      </c:if>
 				      
 				      <c:if test="${orderList3.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList3.REQUEST=='N'}">
+				      <c:if test="${orderList3.PRICEWAY=='N'}">
 				      <td class="orderWay">만나서결제</td>
 				      </c:if>
 				     

@@ -27,13 +27,13 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		if(flag.equals("receive")) {
-			params.put("to", "01084345390"); 
+			params.put("to", memberPhone); 
 			params.put("from", "01084345390");
 			params.put("type", "SMS"); 
 			params.put("text", "주문이 접수되었습니다 배달예정시간은"+howLongChecked+"입니다:) 주문해주셔서 감사합니다");
 			params.put("app_version", "test app 1.2"); // application name and version
 		}else if(flag.equals("cancel")) {
-			params.put("to", "01084345390"); 
+			params.put("to", memberPhone); 
 			params.put("from", "01084345390");
 			params.put("type", "SMS"); 
 			params.put("text", "주문접수가 취소되었습니다.취소 사유는 "+howLongChecked);

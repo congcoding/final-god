@@ -421,8 +421,6 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	
-//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
     	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }

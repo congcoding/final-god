@@ -339,20 +339,17 @@ $("#orderEndBtn").on("click",function(){
 	}
 	phoneCheck
 	var memberId = $("#memberId").val();
-	console.log("비회원일시 [",memberId,"]");
 	/* 비회원일 시 모달창 */
- 	if(memberId==""){
+/*  	if(memberId==""){
  		phoneCheck();
  		return;
-	} 
+	}  */
 	
 	$("#originalPrice").val(sum); //원가격
 	var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
 	if(totalPrice!=null){
 		sum = totalPrice.totalPrice; 
 	}
-	/* totalPrice = totalPrice.totalPrice=="null"?"":"totalPrice.totalPrice";
-	console.log(totalPrice.totalPrice); */
 	
 	//11자
 	 var method = $("input[name=methodForController]").val();
@@ -393,7 +390,6 @@ $("#orderEndBtn").on("click",function(){
 		 $("#paymentPrice").val(sum);
        
 		$("[name=deliveryFrm]").submit();
-         console.log("나중에 결제 폼 전송");
 	 } else {
 		 alert("결제수단을 선택해주세요.");
 		 return;
