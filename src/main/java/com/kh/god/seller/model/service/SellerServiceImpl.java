@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
 import com.kh.god.seller.model.vo.OrderInfo;
@@ -222,6 +223,18 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public StoreInfo selectStoreInfo(String storeNo) {
 		return sellerDao.selectStoreInfo(storeNo);
+	}
+
+	@Override
+	public List<Review> getReview1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview1(storeNo);
+	}
+
+	@Override
+	public List<Review> getReview2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview2(storeNo);
 	}
 
 

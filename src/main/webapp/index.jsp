@@ -109,8 +109,8 @@ function fn_eventView(eventNo){
 		</div>
 		
 	   	<div id="search-container">
-		   <form class="form-inline my-2 my-lg-0">
-		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+		   <form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath }/member/searchByLoaction">
+		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="location">
 		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		   </form>
 		</div>
@@ -204,10 +204,6 @@ function getLocation(){
 			    crossOrigin: true,
 			    headers:{'Authorization' : 'KakaoAK 4c6d6939204abedb25e64dcf1adfaaf2'},
 			    success: function(data) {
-			    	console.log(data);
-
-			    	console.log(data.documents[0].region_2depth_name);
-			    	console.log(data.documents[0].address_name);
 			    	var address=data.documents[0].address_name;
 			    	$("#search").val(address);
 			    },error:function(request,status,error){

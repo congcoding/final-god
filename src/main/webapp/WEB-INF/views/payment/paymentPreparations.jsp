@@ -105,12 +105,16 @@
 						   </c:forEach>
 					   </select>
 					   </c:if>
-					   <c:if test="${empty couponList}">
-					   		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="couponList" name="couponList" disabled="true">
+					   <c:if test="${empty couponList&&memberLoggedIn != null}">
+					   		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="noCouponList" name="noCouponList" disabled="true">
 					   			<option>사용하실 수 있는 쿠폰이 없습니다.</option>						      	 
-					   		
 					   		</select>
-					   	
+					   </c:if>
+					   
+					 <c:if test="${memberLoggedIn == null}">
+					   		<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="noLoginCouponList" name="noLoginCouponList" disabled="true">
+					   			<option>로그인후 이용하실 수 있습니다.</option>						      	 
+					   		</select>
 					   </c:if>
 					      <button type="button" class="btn btn-info" id="couponBtn">적용</button>
 						  <button type="button" class="close" aria-label="닫기" id="couponCancel">
@@ -143,7 +147,32 @@
 	<from name="paymentEndFrm">
 	
 	</from>
-	
+<!-- 전화번호 인증 모달 -->
+<div class="modal fade" id="phoneCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">전화번호 인증</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="form-control-label">인증번호:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+        <button type="button" class="btn btn-primary">인증</button>
+      </div>
+    </div>
+  </div>
+</div>	
 </div> <!-- div#container -->
 
 <script src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
@@ -190,7 +219,9 @@ $("#couponBtn").on("click", function(){
 			console.log("에이젝스 성공");
 			sessionStorage.setItem("totalPrice",JSON.stringify(data));
 			var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
-			$("#totalPriceNum").html(totalPrice.totalPrice);
+		  	var html = "<tr id='couponPrice' class='checkOut' style='color: blue;''><td id='checkOutSpan'>쿠폰적용가격</td><td id='totalPriceNum'>"+totalPrice.totalPrice+"</td></tr>";	
+			$("#cartTbl tbody").append(html);
+			/* $("#totalPriceNum").html(totalPrice.totalPrice); */
 			
 		},error:function(){
 			console.log("에이젝스 오류");
@@ -212,10 +243,6 @@ function getLocation(){
 			    crossOrigin: true,
 			    headers:{'Authorization' : 'KakaoAK 4c6d6939204abedb25e64dcf1adfaaf2'},
 			    success: function(data) {
-			    	console.log(data);
-
-			    	console.log(data.documents[0].region_2depth_name);
-			    	console.log(data.documents[0].address_name);
 			    	var address=data.documents[1].address_name;
 			    	$("#fixedAddress").val(address);
 			    },error:function(request,status,error){
@@ -294,6 +321,7 @@ $(".nowPayment").on("click", function(){
 /* 쿠폰취소 누르기 */
 $("#couponCancel").on("click", function(){
 	sessionStorage.removeItem("totalPrice");
+	$("#couponPrice").css("display","none");
 });
 
 $("#orderEndBtn").on("click",function(){
@@ -309,6 +337,15 @@ $("#orderEndBtn").on("click",function(){
 	 	<!-- 주문메뉴 -->
 	    sum += cart[i].menuPrice*cart[i].amount;
 	}
+	phoneCheck
+	var memberId = $("#memberId").val();
+	console.log("비회원일시 [",memberId,"]");
+	/* 비회원일 시 모달창 */
+ 	if(memberId==""){
+ 		phoneCheck();
+ 		return;
+	} 
+	
 	$("#originalPrice").val(sum); //원가격
 	var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
 	if(totalPrice!=null){
@@ -326,7 +363,7 @@ $("#orderEndBtn").on("click",function(){
 		       pay_method : 'card',
 		       merchant_uid : 'merchant_' + new Date().getTime(),//주문번호
 		       name : '${storeName}', //메뉴
-		       amount : 1000, //가격
+		       amount : sum, //가격
 		       buyer_email : 'iamport@siot.do', //멤버 전화번호
 		       
 		       buyer_tel : '010-1234-5678', //멤버 전화번호
@@ -364,6 +401,10 @@ $("#orderEndBtn").on("click",function(){
 
 });
 
+/* 비회원일때 휴대폰인증 */
+function phoneCheck(){
+	$('#phoneCheck').modal('show');
+}
 
 </script>
 
