@@ -42,7 +42,7 @@ $(function(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4" id="summary">
             <h1 class="h3 mb-0 text-gray-800">요약</h1>
           </div>
 
@@ -663,7 +663,6 @@ $(function(){
   
   google.charts.load('current', {'packages':['corechart']});
   window.onload=function(){
-	  console.log('${saleVolume}');
 	  var storeInfo = new Array();
 	    <c:forEach items="${saleVolume}" var="info">
 	    	var json = new Object();
@@ -675,8 +674,9 @@ $(function(){
 	    	json.SELLERID = '${info.SELLERID}';
 	    	storeInfo.push(json);
 	    </c:forEach>
-  if(!'${saleVolume}'){
-	  google.charts.setOnLoadCallback(drawChart('${saleVolume}','today'));
+	    console.log(storeInfo);
+  if(storeInfo.length > 0){
+	  google.charts.setOnLoadCallback(drawChart(storeInfo,'today'));
   }else{
 	  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
 	  $(".timeChart").html(noData);

@@ -27,11 +27,12 @@ div#search-container{
     padding: 50px 0 35px 0;
     margin: 0 auto;
 }
-.card{
+div.card{
 	width: 250px;
     height: 250px;
     float: left;
     margin: 10px;
+    cursor : pointer;
 }
 </style>
 <script>

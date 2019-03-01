@@ -884,13 +884,14 @@ public class SellerController {
 		return "seller/myChart";
 	}
     @ResponseBody
-	@RequestMapping("seller/chartByWeek.do")
-	public List<Map<String, String>> chartByWeek(@RequestParam(name="weeklyStartDate") String weeklyStartDate, @RequestParam(name="weeklyEndDate") String weeklyEndDate, @RequestParam(name="storeNo") String storeNo) {
+	@RequestMapping("seller/chartByPeriod.do")
+	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, @RequestParam(name="storeNo") String storeNo) {
+		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate);
 		Map<String, String> map = new HashMap<>();
-		map.put("weeklyStartDate", weeklyStartDate);
-		map.put("weeklyEndDate", weeklyEndDate);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
 		map.put("storeNo",storeNo);
-		List<Map<String,String>> chartByWeek = sellerService.chartByWeek(map);
+		List<Map<String,String>> chartByWeek = sellerService.chartByPeriod(map);
 		logger.debug(chartByWeek);
 		
 		return chartByWeek;

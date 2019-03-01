@@ -289,8 +289,8 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public List<Map<String,String>> chartByWeek(Map<String, String> map) {
-		return sellerDao.chartByWeek(map);
+	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
+		return sellerDao.chartByPeriod(map);
 	}
 
 

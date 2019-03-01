@@ -26,7 +26,7 @@
      
     
        <li class="nav-item" id="dashBoard">
-        <a class="nav-link" href="${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}">
+        <a class="nav-link" href="${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>요약</span></a>
       </li>

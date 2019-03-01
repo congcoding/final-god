@@ -266,8 +266,24 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public List<Map<String,String>> chartByWeek(Map<String, String> map) {
-		return sqlSession.selectList("seller.chartByWeek", map);
+	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
+		int startMonth = Integer.parseInt(map.get("startDate").substring(5,7));
+		int endMonth = Integer.parseInt(map.get("endDate").substring(5,7));
+		int subMonth = endMonth-startMonth;
+		List<Map<String,String>> resultList = null;
+		if(subMonth == 0) {
+			resultList = new ArrayList<>();
+			resultList = sqlSession.selectList("seller.chartByPeriod", map);
+		}else {
+			endMonth = endMonth == 12 ? 1:endMonth+1;
+			map.put("startDate",map.get("startDate").substring(0,7));
+			map.put("endDate",map.get("endDate").substring(0,4)+"/"+endMonth);
+			logger.debug("시작 날짜 : "+map.get("startDate"));
+			logger.debug("끝 날짜 : "+map.get("endDate"));
+			resultList = new ArrayList<>();
+			resultList = sqlSession.selectList("seller.chartBy3Month",map);
+		}
+		return resultList;
 	}
 
 	@Override

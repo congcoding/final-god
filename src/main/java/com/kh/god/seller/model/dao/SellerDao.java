@@ -90,7 +90,7 @@ public interface SellerDao {
 	StoreInfo selectStoreInfo(String storeNo);
 
 
-	List<Map<String,String>> chartByWeek(Map<String, String> map);
+	List<Map<String,String>> chartByPeriod(Map<String, String> map);
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
