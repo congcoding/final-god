@@ -22,7 +22,9 @@
 	</update>
 	
 	<insert id="insertOrderInfo">
-		insert into orderinfo(orderNo,memberid,storeno,totalPrice,cancelFlag,deliveryFlag,originalPrice,priceWay,receiveFlag,request,paymentId) values (SEQ_ORDERINFO.nextval,#{memberId},#{storeNo}, #{totalPrice},'N','N',#{orginalPrice},#{priceWay},'N',#{request},#{paymentId})
+		insert into orderinfo(
+		orderNo,phone,address,memberid,storeno,totalPrice,cancelFlag,deliveryFlag,originalPrice,priceWay,receiveFlag,request,paymentId) 
+		values (SEQ_ORDERINFO.nextval,#{phone},#{address},#{memberId},#{storeNo}, #{totalPrice},'N','N',#{orginalPrice},#{priceWay},'N',#{request},#{paymentId})
 	</insert>
 		
 	<insert id="insertOrderMenu">
@@ -124,11 +126,20 @@
 		<result column="period" property="PERIOD" javaType="string"/>
 	</resultMap>
 	
-		<resultMap type="map" id="totalOf">
+	<resultMap type="map" id="totalOf">
 		<result column="originalprice" property="ORIGINALPRICE" javaType="string"/>
 		<result column="totalprice" property="TOTALPRICE" javaType="string"/>
 	</resultMap>
 	
+	<select id="getReview1" resultType="review">
+		select * from review where storeno=#{storeNo} and commentLevel=1
+	</select>
+	
+	<select id="getReview2" resultType="review">
+		select * from review where storeno=#{storeNo} and commentLevel=2
+	</select>
+	
+
 	<select id="sellerfindId" resultType="seller">
 		select * from seller where email = #{email}
 	</select>

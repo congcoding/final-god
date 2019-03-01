@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
@@ -296,6 +297,18 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public Map<String, String> getStoreName(Map<String, String> map) {
 		return sqlSession.selectOne("seller.getStoreName", map);
+	}
+
+	@Override
+	public List<Review> getReview1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("seller.getReview1", storeNo);
+	}
+
+	@Override
+	public List<Review> getReview2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("seller.getReview2", storeNo);
 	}
 
 

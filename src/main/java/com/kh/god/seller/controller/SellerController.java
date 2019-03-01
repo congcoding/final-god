@@ -36,6 +36,7 @@ import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.exception.MenuException;
@@ -432,8 +433,6 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	
-//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
     	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
@@ -866,6 +865,22 @@ public class SellerController {
     	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
     	logger.debug(saleVolume);
     	return saleVolume;
+    }
+
+    
+	/* 리뷰관리로 들어가기 */
+    @RequestMapping("/seller/goSellerReview.do")
+    public String goSellerReview(@RequestParam("storeNo") String storeNo,Model model) {
+    	System.out.println(storeNo);
+    	//댓글 가져오기
+    	List<Review> review1 = sellerService.getReview1(storeNo);
+    	//답댓글 가져오기
+    	List<Review> review2 = sellerService.getReview2(storeNo);
+
+    	model.addAttribute("review1", review1);
+    	model.addAttribute("review2", review2);
+
+    	return "seller/sellerReview";
     }
     @RequestMapping(value = "/seller/myStoreChart.do" )
 	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {

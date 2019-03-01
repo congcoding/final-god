@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
@@ -291,6 +292,18 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
 		return sellerDao.chartByPeriod(map);
+	}
+
+	@Override
+	public List<Review> getReview1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview1(storeNo);
+	}
+
+	@Override
+	public List<Review> getReview2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview2(storeNo);
 	}
 
 
