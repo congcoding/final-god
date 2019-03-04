@@ -460,8 +460,6 @@ span.srchVal{
 	          
 	          </div>
 	          <div class="form-group">
-	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea> -->
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
 	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
