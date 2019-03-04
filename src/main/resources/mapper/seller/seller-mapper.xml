@@ -220,4 +220,7 @@
 	<select id="sellerfindId" resultType="seller">
 		select * from seller where email = #{email}
 	</select>
+	<select id="notReadMessage" resultType="_int">
+		select count(*) as notRead  from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
+	</select>
 </mapper>
