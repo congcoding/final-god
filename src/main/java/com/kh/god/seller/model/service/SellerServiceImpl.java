@@ -306,6 +306,11 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.getReview2(storeNo);
 	}
 
+	@Override
+	public int notReadMessage(String memberId) {
+		return sellerDao.notReadMessage(memberId);
+	}
+
 
 	
 }

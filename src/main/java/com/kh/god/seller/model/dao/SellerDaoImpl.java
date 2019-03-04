@@ -329,5 +329,10 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("seller.getReview2", storeNo);
 	}
 
+	@Override
+	public int notReadMessage(String memberId) {
+		return sqlSession.selectOne("seller.notReadMessage", memberId);
+	}
+
 
 }
