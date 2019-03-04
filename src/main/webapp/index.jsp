@@ -34,6 +34,9 @@ div.card{
     margin: 10px;
     cursor : pointer;
 }
+.carousel-indicators{
+	bottom:-8px;
+}
 </style>
 <script>
 function categoryList(item){
