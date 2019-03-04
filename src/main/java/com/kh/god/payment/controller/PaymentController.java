@@ -1,9 +1,14 @@
 package com.kh.god.payment.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
+import java.util.RandomAccess;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +60,14 @@ public class PaymentController {
 		model.addAttribute("storeNo",storeNo);
 		model.addAttribute("couponList",couponListBymemberId);
 
+		/* 인증번호 */
+		int randomint = (int)(Math.random() * 10000000) + 1; 
+		System.out.println("randomint=>"+randomint);
+
+		
 		return "payment/paymentPreparations";
 	}
-	
+
 	
 	//결제완료시 -> 폼제출
 	@RequestMapping("/payment/paymentEnd.do")
@@ -74,17 +84,38 @@ public class PaymentController {
 			@RequestParam("methodForController") String paymentMethod,
 			@RequestParam(value="paymentId", required=false) String paymentId) {
 
-		System.out.println(orginalPrice);
-		System.out.println(totalPrice);
-		System.out.println(orderMenu);
 
+		String noMemId = "";
+		/* 비회원일시 */
+		if(memberId.equals("")) {
+			/* 비회원 아이디 생성 */
+			Date date = new Date();
+			SimpleDateFormat SimpleDateFormat = new SimpleDateFormat ("MMdd", Locale.KOREA );
+			String fTime = SimpleDateFormat.format(date);
+			
+			Random rnd =new Random();
+			StringBuffer buf =new StringBuffer();
+			for(int i=0;i<5;i++){
+			    if(rnd.nextBoolean()){
+			        buf.append((char)((int)(rnd.nextInt(26))+97));
+			    }else{
+			        buf.append((rnd.nextInt(10))); 
+			    }
+			}
+			noMemId = "guest_"+buf+"_"+fTime;
+			logger.debug("비회원일시 Id생성=>"+noMemId);
+		}
+
+		/* 주문메뉴 */
 		String[] list = orderMenu.split("/|:");
 		System.out.println(Arrays.toString(list));
 		
-		address = fixedAddress+address;
+		address = fixedAddress+" "+address;
 	    StringBuffer tel_ = new StringBuffer(tel);
 	    tel_.insert(3, "-");
 	    tel_.insert(8, "-");
+	    tel = tel_.toString();
+	    
 	    
 	    Map<String, Object> orderInfoMap = new HashMap<>();
 	    Map<String, Object> orderMenuMap = new HashMap<>();
@@ -92,8 +123,8 @@ public class PaymentController {
 		orderInfoMap.put("totalPrice", totalPrice);
 		orderInfoMap.put("orginalPrice", orginalPrice);
 		orderInfoMap.put("address", address);
-		orderInfoMap.put("tel", tel_);	
-		orderInfoMap.put("memberId",memberId!=null?memberId:"비회원");		
+		orderInfoMap.put("phone",tel);	
+		orderInfoMap.put("memberId",memberId.equals("")?noMemId:memberId);		
 		orderInfoMap.put("request",!request.equals("")?request:"");
 		orderInfoMap.put("paymentId",!paymentId.equals("")?paymentId:"");
 		orderInfoMap.put("priceWay", paymentMethod.equals("now_card")?"Y":"N");
@@ -117,9 +148,6 @@ public class PaymentController {
 	    	}
 			
 	    }
-
-
-		//int putPaymentId = paymentService.putPaymentId(paymentId);
 		return "payment/paymentEnd";
 	}
 	

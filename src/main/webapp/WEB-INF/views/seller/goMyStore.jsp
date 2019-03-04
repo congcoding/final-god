@@ -42,7 +42,7 @@ $(function(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <div class="d-sm-flex align-items-center justify-content-between mb-4">
+          <div class="d-sm-flex align-items-center justify-content-between mb-4" id="summary">
             <h1 class="h3 mb-0 text-gray-800">요약</h1>
           </div>
 
@@ -132,7 +132,7 @@ $(function(){
           <div class="row">
 
             <!-- Area Chart -->
-            <!-- Bar Chart -->
+            <!-- Time Chart -->
               <div class="card shadow mb-4" style="width : 35rem; height : 30rem;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
                   <h6 class="m-0 font-weight-bold text-primary">시간대별 판매량</h6>
@@ -386,7 +386,7 @@ $(function(){
 	 	 chart.clearChart();
 	  }
   }
-  //한주의 판매량 차트 그리기
+  //판매량 차트 그리기
   function drawChart(data,types){
 	  if(types === 'week'){
 		//금액 초기화
@@ -481,8 +481,8 @@ $(function(){
 					  if(storeName[i] != sale.STORENAME){
 					  }else{
 						  for(var k = 0; k < 24; k++){
+							  if(hour == k){
 								  day[i][k] = 0;
-							  if(hour == k+1){
 								  day[i][k] += totalPrice;
 							  }
 						  }
@@ -662,12 +662,25 @@ $(function(){
   }//end of drawChat
   
   google.charts.load('current', {'packages':['corechart']});
-  
-  if(!'${saleVolume}'){
-	  google.charts.setOnLoadCallback(drawChart('${saleVolume}','today'));
+  window.onload=function(){
+	  var storeInfo = new Array();
+	    <c:forEach items="${saleVolume}" var="info">
+	    	var json = new Object();
+	    	json.originalPrice = '${info.originalPrice}';
+	    	json.STORENAME = '${info.STORENAME}';
+	    	json.storeNo = '${info.STORENO}';
+	    	json.TOTALPRICE = '${info.TOTALPRICE}';
+	    	json.ORDERDAY = '${info.ORDERDAY}';
+	    	json.SELLERID = '${info.SELLERID}';
+	    	storeInfo.push(json);
+	    </c:forEach>
+	    console.log(storeInfo);
+  if(storeInfo.length > 0){
+	  google.charts.setOnLoadCallback(drawChart(storeInfo,'today'));
   }else{
 	  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
 	  $(".timeChart").html(noData);
+  }
   }
   
   

@@ -27,11 +27,12 @@ div#search-container{
     padding: 50px 0 35px 0;
     margin: 0 auto;
 }
-.card{
+div.card{
 	width: 250px;
     height: 250px;
     float: left;
     margin: 10px;
+    cursor : pointer;
 }
 </style>
 <script>
@@ -109,8 +110,8 @@ function fn_eventView(eventNo){
 		</div>
 		
 	   	<div id="search-container">
-		   <form class="form-inline my-2 my-lg-0">
-		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search">
+		   <form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath }/member/searchByLoaction">
+		     <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="location">
 		     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		   </form>
 		</div>
@@ -188,7 +189,6 @@ function fn_eventView(eventNo){
 	</div>
 </section>	
 <script>
-//21897f5bf48b00dcb812e4f648ac8393
 function getLocation(){
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
@@ -196,7 +196,6 @@ function getLocation(){
 			var lat = position.coords.longitude; //x
 		
 			$.ajax({
-				//https://developers.kakao.com/docs/restapi/local#좌표-행정구역정보-변환
 			    url: 'https://dapi.kakao.com/v2/local/geo/coord2regioncode.json?x='+lat+'&y='+lon,
 			    type: 'GET',
 			    cache: false,
@@ -204,10 +203,6 @@ function getLocation(){
 			    crossOrigin: true,
 			    headers:{'Authorization' : 'KakaoAK 4c6d6939204abedb25e64dcf1adfaaf2'},
 			    success: function(data) {
-			    	console.log(data);
-
-			    	console.log(data.documents[0].region_2depth_name);
-			    	console.log(data.documents[0].address_name);
 			    	var address=data.documents[0].address_name;
 			    	$("#search").val(address);
 			    },error:function(request,status,error){
