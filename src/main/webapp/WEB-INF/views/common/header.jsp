@@ -5,9 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page import="com.kh.god.seller.model.vo.*" %>
 <%
-	Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-	if(sellerLoggedIn != null){
+	if(session.getAttribute("sellerLoggedIn") != null){
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
+	}
+	int messageCount = 0;
+	if(session.getAttribute("messageCount") != null){
+		messageCount = (Integer)session.getAttribute("messageCount");
+		
 	}
 %>
 <!DOCTYPE html>
@@ -353,7 +358,7 @@ span.srchVal{
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-envelope fa-fw"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">7</span>
+                <span class="badge badge-danger badge-counter" id="messageCount"><%=messageCount%></span>
               </a>
               <!-- Dropdown - Messages -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown" id="messageDropdownBox" style="width : 30rem;">
@@ -462,8 +467,6 @@ span.srchVal{
 	          
 	          </div>
 	          <div class="form-group">
-	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea> -->
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
 	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
@@ -479,6 +482,9 @@ span.srchVal{
 	</div>
 	
 	<script>
+	$(function(){
+		console.log(messageCount);
+	});
 	function memberLogOut(){
 		sessionStorage.clear();
 		location.href=
@@ -708,7 +714,9 @@ span.srchVal{
 	var hasFocusRoom = 0;
 	var messageData = "";
 	var timeStamp = "";
-	 function receiveMessage(alertType,messageType){
+	var messageCount = 0;
+	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
+	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
@@ -724,10 +732,11 @@ span.srchVal{
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 	},150);
 		 }else{
+			 $("#messageCount").html(parseInt($("#messageCount").text().trim().length != 0 ? $("#messageCount").text():0)+1);
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
 		 		//alert("dd");
 		 		setTimeout(function(){
-		 			$("#socketAlert").css("display","block");
+		 			$("#socketAlert").css("display","none");
 		 		},3000); 
 		 }
 		 
@@ -849,6 +858,8 @@ span.srchVal{
 				addId : $("input[name=searchPerson]").val(),
 				loginId : '${sellerLoggedIn.sellerId}'				
 		};
+		if(searchId.addId != searchId.loginId){
+			
 		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
 		$.ajax({
 			url : "${pageContext.request.contextPath}/chat/addPerson.do",
@@ -877,6 +888,10 @@ span.srchVal{
 	 		}
 		});//end of ajax
 		}else{
+			$("#confirmModal").modal('hide');
+		}
+		}else{
+			alert('자신의 아이디를 초대할 수 없습니다.');
 			$("#confirmModal").modal('hide');
 		}
 		

@@ -272,7 +272,7 @@
 	</update>
 	
 	<select id="carouselEvent" resultMap="eventMap">
-		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+		<![CDATA[ select * from event where startdate <= sysdate and enddate >= sysdate order by eventNo desc ]]>
 	</select>
 	
 	<select id="chartByCategory" resultType="_int">

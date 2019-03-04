@@ -36,8 +36,22 @@ $(function(){
 
 /* textarea에도 required속성을 적용가능하지만, 공백이 입력된 경우 대비 유효성검사를 실시함. */
 function validate(){
+	var discountType = $("input[name=discountType]:checked").val();
+	if(discountType == 'percent'){
+		$("#discount").val((100-$("#discount").val())/100)
+	}
 	return true;
 }
+
+$(function(){
+	$("#discount").on("focusout", function(){
+		var discountType = $("input[name=discountType]:checked").val();
+		var discount = $("#discount").val();
+		if(discountType == 'percent' && (discount>99 || discount<1)){
+			alert("할인율은 1~99 사이로 입력해주세요");
+		}
+	});
+});
 
 //부트스트랩 : 파일 벼경시 파일명 보이기 
 $(function(){
@@ -89,19 +103,14 @@ $(function() {
 		<form name="eventFrm" action="${pageContext.request.contextPath }/admin/insertEvent.do" method="post" onsubmit="return validate();" enctype="multipart/form-data">
 			<input type="text" class="form-control" placeholder="제목" name="eventTitle" id="eventTitle" required>
 
-			<div class="input-group" style="width:200px; display:inline-block; ">
-				  <select class="custom-select" name="discount" id="discount" style="width:200px;">
-				    <option selected>할인</option>
-				    <option value="1000">1000원 할인</option>
-				    <option value="2000">2000원 할인</option>
-				    <option value="3000">3000원 할인</option>
-				    <option value="0.9">10% 할인</option>
-				    <option value="0.8">20% 할인</option>
-				  </select>
+			<div class="form-check form-check-inline" style="width:400px;">
+				<input type="number" class="form-control" name="discount" id="discount" style="width:100px;"/>&nbsp;
+				<input type="radio" class="form-check-input" name="discountType" id="won" value="won" checked>
+				<label for="won" class="form-check-label">원 할인</label>&nbsp;
+				<input type="radio" class="form-check-input" name="discountType" id="percent" value="percent">
+				<label for="percent" class="form-check-label">% 할인</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="number" class="form-control" name="amount" id="amount" min="10" placeholder = "쿠폰 수량" style="width:120px;"/>
 			</div>
-			<div style="width:160px; display:inline-block; margin-left:30px;" >
-		    <input type="number" class="form-control" name="amount" id="amount" min="10"placeholder = "쿠폰 수량" />
-		    </div>
 		
 			<!-- input:file소스 : https://getbootstrap.com/docs/4.1/components/input-group/#custom-file-input -->
 			<div class="input-group mb-3" style="padding:0px;">
