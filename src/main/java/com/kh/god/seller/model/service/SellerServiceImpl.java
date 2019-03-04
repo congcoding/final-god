@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.kh.god.storeInfo.exception.StoreInfoException;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -304,6 +306,24 @@ public class SellerServiceImpl implements SellerService {
 	public List<Review> getReview2(String storeNo) {
 		// TODO Auto-generated method stub
 		return sellerDao.getReview2(storeNo);
+	}
+	
+	//자동로그인 TEST
+	@Override
+	public void keepLogin(String sellerId, String sessionId ,Date next) throws Exception{
+		sellerDao.keepLogin(sellerId, sessionId, next);
+	}
+	
+	
+	@Override
+	public Seller checkUserWithSessionKey(String sessionId){
+		
+		return sellerDao.checkUserWithSessionKey(sessionId);
+	}
+
+	@Override
+	public Seller login(Seller s) {
+		return sellerDao.login(s);
 	}
 
 
