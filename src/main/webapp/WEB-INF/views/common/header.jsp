@@ -25,7 +25,6 @@
 <link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
 <!-- 구글 차트 API -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
@@ -246,6 +245,7 @@ span.srchVal{
 	</div><!-- end of comfirm modal -->
 
 <body>
+<!-- 알람 -->
 <div id="socketAlert" class="alert alert-success" role="alert" ></div>
 <div id="container">
    <header>
@@ -264,9 +264,11 @@ span.srchVal{
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
-		      <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
-		      </li>
+		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
+		     	 <li class="nav-item">
+		        	<a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
+		     	 </li>
+		      </c:if>
 		    </ul>
 		    
 			<!-- 회원 로그인,회원가입 버튼 -->
@@ -364,7 +366,7 @@ span.srchVal{
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
 		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
 		  </c:if>
 		</c:if>
 		
@@ -536,7 +538,7 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> <div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
+							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
 						
 						messageForm.append(messageData);
 						
@@ -721,9 +723,9 @@ span.srchVal{
 		 	},150);
 		 }else{
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
-		 		
+		 		//alert("dd");
 		 		setTimeout(function(){
-		 			$("#socketAlert").css("display","none");
+		 			$("#socketAlert").css("display","block");
 		 		},3000); 
 		 }
 		 
@@ -846,7 +848,6 @@ span.srchVal{
 				loginId : '${sellerLoggedIn.sellerId}'				
 		};
 		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
-			
 		$.ajax({
 			url : "${pageContext.request.contextPath}/chat/addPerson.do",
 			data : searchId,
@@ -883,7 +884,7 @@ span.srchVal{
 		if($("input[name=searchPerson]").val().trim().length == 0){
 			$("input[name=confirmContent]").attr('placeholder','아이디를 입력해주세요');
 		}else{
-			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?.');
+			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?');
 			
 		}
 	});

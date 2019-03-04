@@ -59,6 +59,7 @@
 				   
 		<typeAlias type="com.kh.god.admin.model.vo.Report"
 				   alias="report" />
+
 	</typeAliases>
 	
 	

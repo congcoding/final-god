@@ -13,6 +13,8 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.admin.model.vo.Report;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
@@ -362,5 +364,51 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public List<Integer> chartByCategoryAmount() {
 		return sqlSession.selectList("admin.chartByCategoryAmount");
+	}
+
+	@Override
+	public List<Map<String, String>> reportList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectReportList",null,rowBounds);
+	}
+
+	@Override
+	public int countReportList() {
+		return sqlSession.selectOne("admin.countReportList");
+	}
+
+	@Override
+	public Report reportView(int reportNo) {
+		return sqlSession.selectOne("admin.reportView", reportNo);
+	}
+
+	@Override
+	public Review reviewReportView(int reviewNo) {
+		return sqlSession.selectOne("admin.reviewReportView", reviewNo);
+	}
+
+	@Override
+	public int updateReviewReportFlagY(Map<String, String> map) {
+		return sqlSession.update("admin.updateReviewReportFlagY", map);
+	}
+
+	@Override
+	public int updateReportFlagR(String reportNo) {
+		return sqlSession.update("admin.updateReportFlagR", reportNo);
+	}
+
+	@Override
+	public StoreInfo storeReportStoreInfoView(String storeNo) {
+		return sqlSession.selectOne("admin.storeReportStoreInfoView", storeNo);
+	}
+
+	@Override
+	public Seller storeReportSellerView(String sellerId) {
+		return sqlSession.selectOne("admin.storeReportSellerView", sellerId);
+	}
+
+	@Override
+	public int updateStoreReportFlagY(Map<String, String> map) {
+		return sqlSession.update("admin.updateStoreReportFlagY", map);
 	}
 }

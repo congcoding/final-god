@@ -31,6 +31,9 @@
 		    </span>
 	    </li>
 	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
+	    <input type="hidden" value=" ${storeInfo.deliveryMinPrice}" id="deliveryMinPrice">
+	    <input type="hidden" id="checkSum">
+
 	    <li class="list-group-item">
 	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
 	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
@@ -417,7 +420,7 @@ function cartHtml(){
 	    		
 	    		html += "<tr><td colspan ='2'>합계</td><td>"+sum+"</td></tr>"; 
 	    		$('#btn-order').removeAttr("disabled");
-	    		
+	    		$("#checkSum").val(sum);
 	    	}else{
 				html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
 				$('#btn-order').attr("disabled","disabled");
@@ -524,11 +527,25 @@ function emptyCart(newMenuCode){
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
 	var memberid= "${memberLoggedIn.memberId}";
+	var deliveryMinPrice = $("#deliveryMinPrice").val();
+	var checkSum = $("#checkSum").val();
+	
+	console.log("외않되죠deliveryMinPrice..?",deliveryMinPrice);
+	console.log("외않되죠checkSum..?",checkSum);
+
 	var bool = "";
 	if(memberid==""){
 		bool =  confirm("비회원으로 주문 하시겠습니까?");
+		if(checkSum<deliveryMinPrice){
+			alert("최소금액을 주문하셔야합니다.");
+			return;
+		}
 	} else {
 		bool =  confirm("주문 하시겠습니까?");
+		if(checkSum<deliveryMinPrice){
+			alert("최소금액을 주문하셔야합니다.");
+			return;
+		}
 	}
 	
 	if(bool){

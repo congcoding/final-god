@@ -51,3 +51,14 @@
 		color:red;	
     display: none;
 }
+#couponBtn{
+    position: relative;
+    left: 104%;
+    top: -36px;
+}
+#couponCancel{
+	    position: relative;
+    left: 24%;
+    top: -33px;
+	
+}
