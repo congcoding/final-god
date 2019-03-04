@@ -386,7 +386,7 @@ $(function(){
 	 	 chart.clearChart();
 	  }
   }
-  //한주의 판매량 차트 그리기
+  //판매량 차트 그리기
   function drawChart(data,types){
 	  if(types === 'week'){
 		//금액 초기화

@@ -245,6 +245,7 @@ span.srchVal{
 	</div><!-- end of comfirm modal -->
 
 <body>
+<!-- 알람 -->
 <div id="socketAlert" class="alert alert-success" role="alert" ></div>
 <div id="container">
    <header>
@@ -537,7 +538,7 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> <div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
+							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
 						
 						messageForm.append(messageData);
 						
@@ -722,9 +723,9 @@ span.srchVal{
 		 	},150);
 		 }else{
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
-		 		
+		 		//alert("dd");
 		 		setTimeout(function(){
-		 			$("#socketAlert").css("display","none");
+		 			$("#socketAlert").css("display","block");
 		 		},3000); 
 		 }
 		 
@@ -847,7 +848,6 @@ span.srchVal{
 				loginId : '${sellerLoggedIn.sellerId}'				
 		};
 		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
-			
 		$.ajax({
 			url : "${pageContext.request.contextPath}/chat/addPerson.do",
 			data : searchId,
@@ -884,7 +884,7 @@ span.srchVal{
 		if($("input[name=searchPerson]").val().trim().length == 0){
 			$("input[name=confirmContent]").attr('placeholder','아이디를 입력해주세요');
 		}else{
-			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?.');
+			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?');
 			
 		}
 	});
