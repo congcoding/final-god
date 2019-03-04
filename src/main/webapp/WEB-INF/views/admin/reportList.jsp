@@ -17,6 +17,7 @@
 
 <script>
 $(function(){
+	$("#collapsePages").addClass("show");	
 	$("#reportControl").addClass("active");	
 });
 </script>
@@ -37,6 +38,8 @@ $(function(){
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">신고 관리</h1>
+          
+          
 
         </div>
         <!-- /.container-fluid -->

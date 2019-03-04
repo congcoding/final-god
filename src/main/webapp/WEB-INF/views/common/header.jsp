@@ -263,9 +263,11 @@ span.srchVal{
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
-		      <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
-		      </li>
+		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
+		     	 <li class="nav-item">
+		        	<a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
+		     	 </li>
+		      </c:if>
 		    </ul>
 		    
 			<!-- 회원 로그인,회원가입 버튼 -->
