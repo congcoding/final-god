@@ -901,12 +901,14 @@ public class SellerController {
 	}
     @ResponseBody
 	@RequestMapping("seller/chartByPeriod.do")
-	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, @RequestParam(name="storeNo") String storeNo) {
-		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate);
+	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, 
+												   @RequestParam(name="storeNo") String storeNo, @RequestParam(name="type") String type) {
+		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate+", 타입 : "+type);
 		Map<String, String> map = new HashMap<>();
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("storeNo",storeNo);
+		map.put("type",type);
 		List<Map<String,String>> chartByWeek = sellerService.chartByPeriod(map);
 		logger.debug(chartByWeek);
 		

@@ -34,12 +34,17 @@ $(function(){
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">통계</h1>
+          
+          <h1 class="h3 mb-4 text-gray-800" >통계</h1>
            </div>
+           
            <div class="card-header py-3">
+           </div>
+           
+           <div class="row" style="margin : 1rem;">
            <div class="card shadow mb-4" style="width : 35rem; height : 30rem;">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
-                  <h6 class="m-0 font-weight-bold text-primary" id="saleVolumeTitle"> 판매량</h6>
+                  <h6 class="m-0 font-weight-bold text-primary" id="saleVolumeTitle">기간별 판매량</h6>
                   <div class="dropdown no-arrow">
                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -53,7 +58,7 @@ $(function(){
                   </div> 
                 </div>
                 <!-- card body -->
-                <div class="card-body" id="saleVolumeBody" style="text-align : center;">
+                <div class="card-body" id="saleVolumeBody" style="text-align : center;" value="saleVolume">
                  <input class='form-control' type='text' id='weeklyDatePicker' placeholder='Select Week' readonly style="width:15rem; display :none;"/>&nbsp
                  <button type='button' class='btn btn-light' id='btnByWeek' value="week" style="display : none;">조회</button>
                  <input class='form-control' type='text' id='monthlyDatePicker' placeholder='Select Month' readonly style="width:15rem; display :none;"/>&nbsp
@@ -64,7 +69,36 @@ $(function(){
                   </div>
               </div>
              
-          </div>
+       
+         <div class="col-xl-4 col-lg-5">
+           <div class="card shadow mb-4" style="width : 35rem; height : 30rem;">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                  <h6 class="m-0 font-weight-bold text-primary" id="saleVolumeTitleOfMember">회원/비회원 판매량</h6>
+                  <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" id="chartofSaleVolume">
+                      <div class="dropdown-header" >Sales volume by period:</div>
+                      <div class="dropdown-item" id="memberSaleVolumeofWeek" value="week">Week</div>
+                      <div class="dropdown-item" id="memberSaleVolumeofMonth" value="month">Month</div>
+                      <div class="dropdown-item" id="memberSaleVolumeof3Month" value="3month">Three Month</div>
+                    </div> 
+                  </div> 
+                </div>
+                <!-- card body -->
+                <div class="card-body" id="saleVolumeBodyOfMember" style="text-align : center;" value="saleVolumeOfMember">
+                 <input class='form-control' type='text' id='weeklyDatePickerOfMember' placeholder='Select Week' readonly style="width:15rem; display :none;"/>&nbsp
+                 <button type='button' class='btn btn-light' id='btnFromMemberWeek' value="week" style="display : none;">조회</button>
+                 <input class='form-control' type='text' id='monthlyDatePickerOfMember' placeholder='Select Month' readonly style="width:15rem; display :none;"/>&nbsp
+                 <button type='button' class='btn btn-light' id='btnFromMemberMonth' value="month" style="display : none;">조회</button>
+                 <input class='form-control' type='text' id='3monthlyDatePickerOfMember' placeholder='Select End Month' readonly style="width:15rem; display :none;"/>&nbsp
+                 <button type='button' class='btn btn-light' id='btnFromMember3Month' value="3month" style="display : none;">조회</button>
+                 <div class='timeChartOfMember' style='height : 90%;'></div>
+                  </div>
+              </div>
+             </div>
+             </div>
         <!-- /.container-fluid -->
 
       </div>
@@ -80,6 +114,44 @@ var chart = null;
 google.charts.load('current', {'packages':['corechart']});
 var chartData;
 $("div[id^=totalSaleVolumeof]").css("cursor","pointer");
+$("div[id^=memberSaleVolumeof]").css("cursor","pointer");
+//일반 판매량에서 기간을 선택시 발생하는 이벤트
+$("div[id^=memberSaleVolumeof]").on('click',function(){
+	clearChart();
+	$("#saleVolumeTitleOfMember").text(($(this).text())+" (회원/비회원) 판매량");
+	if($(this).text() === 'Week'){
+		$("#weeklyDatePickerOfMember").css("display","inline-block");
+		$("#btnFromMemberWeek").css("display","inline");
+		$("#monthlyDatePickerOfMember").css("display","none");
+		$("#btnFromMemberMonth").css("display","none");
+		$("#3monthlyDatePickerOfMember").css("display","none");
+		$("#btnFromMember3Month").css("display","none");
+		$("#weeklyDatePickerOfMember").val("");
+		$("#monthlyDatePickerOfMember").val("");
+		$("#3monthlyDatePickerOfMember").val("");
+	}else if($(this).text() === 'Month'){
+		$("#weeklyDatePickerOfMember").css("display","none");
+		$("#btnFromMemberWeek").css("display","none");
+		$("#monthlyDatePickerOfMember").css("display","inline-block");
+		$("#btnFromMemberMonth").css("display","inline-block");
+		$("#3monthlyDatePickerOfMember").css("display","none");
+		$("#btnFromMember3Month").css("display","none");
+		$("#weeklyDatePickerOfMember").val("");
+		$("#monthlyDatePickerOfMember").val("");
+		$("#3monthlyDatePickerOfMember").val("");
+	}else{
+		$("#weeklyDatePickerOfMember").css("display","none");
+		$("#btnFromMemberWeek").css("display","none");
+		$("#monthlyDatePickerOfMember").css("display","none");
+		$("#btnFromMemberMonth").css("display","none");
+		$("#3monthlyDatePickerOfMember").css("display","inline-block");
+		$("#btnFromMember3Month").css("display","inline-block");
+		$("#weeklyDatePickerOfMember").val("");
+		$("#monthlyDatePickerOfMember").val("");
+		$("#3monthlyDatePickerOfMember").val("");
+	}
+});
+//회원/비회원에대한 기간을 선택시 발생하는 이벤트
 $("div[id^=totalSaleVolumeof]").on('click',function(){
 	clearChart();
 	$("#saleVolumeTitle").text(($(this).text())+" 판매량");
@@ -116,17 +188,18 @@ $("div[id^=totalSaleVolumeof]").on('click',function(){
 	}
 });
 
-//주간 판매량을 볼 수 있다.
+//일반 판매량data를 가져온다.
 $('button[id^=btnBy]').on("click", function(){
 	var startDate;
 	var endDate;
+	var type = $("#saleVolumeBody").attr("value");
 		$("#hasData").css("display","none");
 		if($(this).attr("value") === 'week'){
 		startDate = $("#weeklyDatePicker").val().substring(0, 10);
 		endDate = $("#weeklyDatePicker").val().substring(11, 21);
 		
 		$.ajax({
-			url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}',
+			url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
 			type : "post",
 			success : function(data){
 				if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
@@ -142,7 +215,7 @@ $('button[id^=btnBy]').on("click", function(){
 			startDate = $("#monthlyDatePicker").val().substring(0, 10);
 			endDate = $("#monthlyDatePicker").val().substring(11, 21);
 			$.ajax({
-				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}',
+				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
 				type : "post",
 				success : function(data){
 					if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
@@ -159,7 +232,7 @@ $('button[id^=btnBy]').on("click", function(){
 			startDate = $("#3monthlyDatePicker").val().substring(0, 10);
 			endDate = $("#3monthlyDatePicker").val().substring(11, 21);
 			$.ajax({
-				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}',
+				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
 				type : "post",
 				success : function(data){
 					if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
@@ -174,7 +247,66 @@ $('button[id^=btnBy]').on("click", function(){
 			
 		}
 });
-
+// (회원/비회원)에 대한 기간별 판매량data를 가져온다.
+$('button[id^=btnFromMember]').on("click", function(){
+	var startDate;
+	var endDate;
+	var type = $("#saleVolumeBodyOfMember").attr("value");
+		$("#hasDataOfMemer").css("display","none");
+		if($(this).attr("value") === 'week'){
+		startDate = $("#weeklyDatePickerOfMember").val().substring(0, 10);
+		endDate = $("#weeklyDatePickerOfMember").val().substring(11, 21);
+		
+		$.ajax({
+			url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
+			type : "post",
+			success : function(data){
+				if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
+		  		  	google.charts.setOnLoadCallback(drawChart(data,'week'));
+				  }else{
+					  var noData = $("<span id='hasDataOfMember' style='position : relative;  top : 9rem; display : inline;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+					  $(".timeChartOfMember").html(noData);
+				  }
+			}
+	     
+		});//end of ajax by week
+		}else if($(this).attr("value") === 'month'){
+			startDate = $("#monthlyDatePickerOfMember").val().substring(0, 10);
+			endDate = $("#monthlyDatePickerOfMember").val().substring(11, 21);
+			$.ajax({
+				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
+				type : "post",
+				success : function(data){
+					if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
+			  		  	google.charts.setOnLoadCallback(drawChart(data,'month'));
+					  }else{
+						  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem; display : inline;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+						  $(".timeChart").html(noData);
+					  }
+				}
+		     
+			});//end of ajax by month
+			
+		}else{
+			startDate = $("#3monthlyDatePickerOfMember").val().substring(0, 10);
+			endDate = $("#3monthlyDatePickerOfMember").val().substring(11, 21);
+			$.ajax({
+				url : "${pageContext.request.contextPath}/seller/chartByPeriod.do?startDate="+startDate+"&endDate="+endDate+"&storeNo="+'${storeNo}&type='+type,
+				type : "post",
+				success : function(data){
+					if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
+			  		  	google.charts.setOnLoadCallback(drawChart(data,'3month'));
+					  }else{
+						  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem; display : inline;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
+						  $(".timeChart").html(noData);
+					  }
+				}
+		     
+			});//end of ajax by 3month
+			
+		}
+});
+//현재 들어온 가게의 이름을 담는 변수.
 var storeNameForOne = "";
 window.onload=function(){
     // 페이지가 로딩된 후 실행해야 되는 코드를 추가한다.
@@ -200,7 +332,7 @@ window.onload=function(){
 $(function(){
 	var startDate;
     var endDate;
-    	$("#weeklyDatePicker").datepicker({
+    	$("input[id^=weeklyDatePicker]").datepicker({
         	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
             dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
             monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
@@ -219,7 +351,7 @@ $(function(){
     			var dateFormat = 'yy/mm/dd'
                 startDate = $.datepicker.formatDate( dateFormat, startDate, inst.settings );
                 endDate = $.datepicker.formatDate( dateFormat, endDate, inst.settings );
-    			$('#weeklyDatePicker').val(startDate + '~' + endDate);
+    			$(this).val(startDate + '~' + endDate);
                 
                 setTimeout("applyWeeklyHighlight()", 100);
             },
@@ -230,7 +362,7 @@ $(function(){
     			setTimeout("applyWeeklyHighlight()", 100);
     		}
         }); //end of week datepicker
-    	$("#monthlyDatePicker").datepicker({
+    	$("input[id^=monthlyDatePicker]").datepicker({
         	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
             dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
             monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
@@ -253,7 +385,7 @@ $(function(){
     			var dateFormat = 'yy/mm/dd'
                 startDate = $.datepicker.formatDate( dateFormat, startDate, inst.settings );
                 endDate = $.datepicker.formatDate( dateFormat, endDate, inst.settings );
-    			$('#monthlyDatePicker').val(startDate + '~' + endDate);
+    			$(this).val(startDate + '~' + endDate);
                 
                 setTimeout("applyMonthlyHighlight()", 100);
             },
@@ -265,7 +397,7 @@ $(function(){
     		}
         }); //end of  month datepicker
         
-    	$("#3monthlyDatePicker").datepicker({
+    	$("input[id^=3monthlyDatePicker]").datepicker({
         	dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
             dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'], 
             monthNamesShort: ['1','2','3','4','5','6','7','8','9','10','11','12'],
@@ -289,7 +421,7 @@ $(function(){
     			var dateFormat = 'yy/mm/dd'
                 startDate = $.datepicker.formatDate( dateFormat, startDate, inst.settings );
                 endDate = $.datepicker.formatDate( dateFormat, endDate, inst.settings );
-    			$('#3monthlyDatePicker').val(startDate + '~' + endDate);
+    			$(this).val(startDate + '~' + endDate);
                 
                 setTimeout("applyMonthlyHighlight()", 100);
             },
@@ -353,7 +485,7 @@ function clearChart(){
 	  }
 }
 
-//한주의 판매량 차트 그리기
+//판매량 차트 그리기
 function drawChart(data,types){
 	
 	  if(types === 'week'){
@@ -369,6 +501,7 @@ function drawChart(data,types){
 			  var number = parseInt(sale.NUM);
 			  var one = parseInt(sale.ONESUM);
 			  var averagePrice = 0;
+			  
 	          if(number != 0){
 	          	averagePrice = totalSum/number;
 	          }
@@ -486,24 +619,54 @@ function drawChart(data,types){
 			  
 		
 	  }else if(types === 'month'){
-		  day = []
-		  for(var i = 0; i < 2; i++){
-			  day[i] = new Array();
+		  day = [];
+		  if(data[0].MEMBERSUM){
+		  	for(var i = 0; i < 4; i++){
+			  	day[i] = new Array();
+		  	}
+		  }else{
+			  for(var i = 0; i < 2; i++){
+				  	day[i] = new Array();
+			  	}
 		  }
-		  var storeName = [storeNameForOne,'같은 업종 평균 판매량'];
+		  var storeName ;
 		  for(var i in data){
 			  var sale = data[i];
-			  var totalSum = parseInt(sale.TOTALSUM);
+			  var totalSum = 0; //같은 업종의 판매량(자기 가게 포함)
+			  var totalSumNonMember = 0; //회원/비회원
 			  var number = parseInt(sale.NUM);
-			  var one = parseInt(sale.ONESUM);
+			  var one = 0; //자기 가게에 판매량
+			  var oneNonMember = 0;
 			  var averagePrice = 0;
-	          if(number != 0){
-	          	averagePrice = totalSum/number;
-	          }
+			  var averagePriceNon = 0;
+			  if(!sale.MEMBERSUM){
+			   storeName = [storeNameForOne,'같은 업종 평균 판매량'];
+			   totalSum = parseInt(sale.TOTALSUM);
+			   one = parseInt(sale.ONESUM);
+	          	if(number != 0){
+	          		averagePrice = totalSum/number;
+	         	 }
+	          	 day[0].push(one);
+				 day[1].push(averagePrice);
+			  }else{
+			   storeName = ['(회원)'+storeNameForOne,'같은 업종 회원 평균 판매량','(비회원)'+storeNameForOne,'같은 업종 비회원 평균 판매량'];
+			   totalSum = parseInt(sale.MEMBERTOTALSUM);
+			   totalSumNonMember = parseInt(sale.NONMEMBERTOTALSUM);
+			   one = parseInt(sale.MEMBERSUM);
+			   oneNonMember = parseInt(sale.NONMEMBERSUM);
+			   if(number != 0){
+	          		averagePrice = totalSum/number;
+	          		averagePriceNon = totalSumNonMember/number;
+	         	 }
+			   day[0].push(one);
+			   day[1].push(averagePrice);
+			   day[2].push(oneNonMember);
+			   day[3].push(averagePriceNon);
+			  }
 			 // day[0].push(sale.PERIOD);
-			  day[0].push(one);
-			  day[1].push(averagePrice);
+			 
 		  }// end of for in
+		  console.log(day);
 		  //2차 배열 생성
 		  var info = [];
 		  for(var i = 0; i < 32; i++){
@@ -516,15 +679,14 @@ function drawChart(data,types){
 		  	info[0][i+1] = storeName[i];
 		 	for(var k = 1; k <= 31; k++ ){
 			  info[k][0] = k+'일';
-			  if(day[i][k] > 0){
-			  	//console.log(day[i][k]+" i: "+i+" k: "+k +" i+1:"+(i+1));
+				if(day[i][k] > 0){
+					//console.log(day[i][k]+" i: "+i+" k: "+k +" i+1:"+(i+1));
 				  info[k][i+1] = day[i][k];
-			  }else{
+				}else{
 				  info[k][i+1] = 0;
-			  }
-		  
-		 	}
-			}//end of for
+				}
+		 	}//end of for k
+			}//end of for i
 		 // console.log(info);
 	  }else if(types === '3month'){
 		  day = []
@@ -578,10 +740,14 @@ function drawChart(data,types){
 	      hAxis: {title: 'Time'},
 	      legend: { position: 'bottom' },
 	      seriesType: 'bars',
-	      series: {1: {type: 'line'}}
+	      series: {1: {type: 'line'},
+	      		   3 : {type:'line'}}
 	    };
-
+		if(day.length == 2){
 	    chart = new google.visualization.ComboChart($(".timeChart")[0]);
+		}else if(day.length == 4){
+			chart = new google.visualization.ComboChart($(".timeChartOfMember")[0]);
+		}
 	    chart.draw(chartData, options);
 		  
 	  

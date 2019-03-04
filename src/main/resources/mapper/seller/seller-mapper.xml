@@ -78,7 +78,7 @@
 			left join
 			(select to_char(O.ordertime, 'yyyy/mm/dd')column1, count( distinct O.storeno) as num
 			from orderInfo O left join storeinfo S on O.storeno = S.storeno
-			where S.categoryno = 1 and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm/dd')) D
+			where S.categoryno =  (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm/dd')) D
 			on D.column1 = A.period
 			order by period
 		]]>
@@ -101,7 +101,77 @@
 	left join
 	(select to_char(O.ordertime, 'yyyy/mm')column1, count( distinct O.storeno) as num
 	from orderInfo O left join storeinfo S on O.storeno = S.storeno
-	where S.categoryno = 1 and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm')) D
+	where S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm')) D
+	on D.column1 = A.period
+	order by period
+	]]>
+	</select>
+	
+	<select id="byMemberChartPeriod" resultMap="byMemberChart">
+	<![CDATA[
+	select period,nvl(B.column3, 0)as memberSum, nvl(E.column3,0)as nonmemberSum,nvl(totalSum1,0)as membertotalSum,nvl(totalSum2,0)as nonmembertotalSum, nvl(D.num,0)as num
+	from
+	(SELECT TO_CHAR(TO_DATE(#{startDate}, 'YYYY/MM/DD')+LEVEL-1, 'YYYY/MM/DD') period
+	FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{endDate}, 'YYYY/MM/DD')-TO_DATE(#{startDate}, 'YYYY/MM/DD')+1)) A
+	left join 
+	(select to_char(O.ordertime, 'yyyy/mm/dd') column4, nvl(sum(o.totalprice), 0) column3 
+	from orderInfo O
+	where O.storeno = #{storeNo} and memberid not  like 'guest_%' and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm/dd')) B on  A.period = B.column4 
+	left join 
+	(select to_char(O.ordertime, 'yyyy/mm/dd') column4, nvl(sum(o.totalprice), 0) column3 
+	from orderInfo O
+	where O.storeno = #{storeNo} and memberid  like 'guest_%' and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm/dd')) E on A.period = E.column4
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm/dd') column5, nvl(sum(O.totalPrice), 0) totalSum1 
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where memberid not like 'guest_%' and S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm/dd')) C on  A.period = C.column5
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm/dd') column5, nvl(sum(O.totalPrice), 0) totalSum2 
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where memberid  like 'guest_%' and S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm/dd')) F on A.period = F.column5
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm/dd')column1, count(distinct O.storeno) as num
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where S.categoryno =  (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm/dd') and to_date(#{endDate}, 'yyyy/mm/dd')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm/dd')) D
+	on D.column1 = A.period
+	order by period	
+	]]>
+	</select>
+	
+	<select id="byMemberChart3Month" resultMap="byMemberChart">
+	<![CDATA[
+	select period,nvl(B.column3, 0)as memberSum, nvl(E.column3,0)as nonmemberSum,nvl(totalSum1,0)as membertotalSum,nvl(totalSum2,0)as nonmembertotalSum, nvl(D.num,0)as num
+	from
+	(SELECT distinct(TO_CHAR(TO_DATE(#{startDate}, 'YYYY/MM')+LEVEL-1, 'YYYY/MM')) period
+	FROM DUAL CONNECT BY LEVEL <= (TO_DATE(#{endDate}, 'YYYY/MM')-TO_DATE(#{startDate}, 'YYYY/MM')+1)) A
+	left join 
+	(select to_char(O.ordertime, 'yyyy/mm') column4, nvl(sum(o.totalprice), 0) column3 
+	from orderInfo O
+	where O.storeno = #{storeNo} and memberid not like 'guest_%' and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm')) B on  A.period = B.column4 
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm') column4, nvl(sum(o.totalprice), 0) column3 
+	from orderInfo O
+	where O.storeno = #{storeNo} and memberid  like 'guest_%' and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm')) E on A.period = E.column4
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm') column5, nvl(sum(O.totalPrice), 0) totalSum1 
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where memberid not like 'guest_%'and  S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm')) C on  A.period = C.column5
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm') column5, nvl(sum(O.totalPrice), 0) totalSum2 
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where memberid  like 'guest_%' and S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y'
+	group by to_char(O.ordertime, 'yyyy/mm')) F on A.period = F.column5
+	left join
+	(select to_char(O.ordertime, 'yyyy/mm')column1, count( distinct O.storeno) as num
+	from orderInfo O left join storeinfo S on O.storeno = S.storeno
+	where S.categoryno = (select  categoryno from storeinfo where storeno = #{storeNo}) and (O.ordertime between to_date(#{startDate}, 'yyyy/mm') and to_date(#{endDate}, 'yyyy/mm')+1) and cancelflag = 'N' and deliveryflag='Y' group by to_char(O.ordertime, 'yyyy/mm')) D
 	on D.column1 = A.period
 	order by period
 	]]>
@@ -118,7 +188,14 @@
 		from orderinfo O left join storeinfo S on O.storeno = s.storeno
 		where sellerid = #{sellerId} and O.storeno = #{storeNo}
 	</select>
-	
+	<resultMap type="map" id="byMemberChart">
+		<result column="memberSum" property="MEMBERSUM" javaType="string"/>
+		<result column="nonmemberSum" property="NONMEMBERSUM" javaType="string"/>
+		<result column="membertotalSum" property="MEMBERTOTALSUM" javaType="string"/>
+		<result column="nonmembertotalSum" property="NONMEMBERTOTALSUM" javaType="string"/>
+		<result column="num" property="NUM" javaType="string"/>
+		<result column="period" property="PERIOD" javaType="string"/>
+	</resultMap>
 	<resultMap type="map" id="byPeriod">
 		<result column="oneSum" property="ONESUM" javaType="string"/>
 		<result column="totalSum" property="TOTALSUM" javaType="string"/>

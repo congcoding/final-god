@@ -265,25 +265,43 @@ public class SellerDaoImpl implements SellerDao {
 		System.out.println("########################### update a => " + a);
 		return sqlSession.update("menu.updateMenuAttachment", a );
 	}
-
+	//기간별 통계내는 부분(일반 판매량,(회원/비회원)판매량)
 	@Override
 	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
 		int startMonth = Integer.parseInt(map.get("startDate").substring(5,7));
 		int endMonth = Integer.parseInt(map.get("endDate").substring(5,7));
 		int subMonth = endMonth-startMonth;
 		List<Map<String,String>> resultList = null;
-		if(subMonth == 0) {
+		switch(map.get("type")) {
+		case "saleVolume" :
+		if(subMonth == 0) { //3달인지 1달인지 거르기 위한 분기문. 3달이면 시작 달과 끝 달이 다르므로 0이 아닌점을 이용.
 			resultList = new ArrayList<>();
 			resultList = sqlSession.selectList("seller.chartByPeriod", map);
 		}else {
-			endMonth = endMonth == 12 ? 1:endMonth+1;
+			endMonth = endMonth == 12 ? 1:endMonth+1;//오라클에서 달로만 계산하려니 마지막달은 1일 00시까지라 그 다음달 1일 00시까지 하고 view단에서 거름.
 			map.put("startDate",map.get("startDate").substring(0,7));
 			map.put("endDate",map.get("endDate").substring(0,4)+"/"+endMonth);
 			logger.debug("시작 날짜 : "+map.get("startDate"));
 			logger.debug("끝 날짜 : "+map.get("endDate"));
 			resultList = new ArrayList<>();
 			resultList = sqlSession.selectList("seller.chartBy3Month",map);
+		} break;
+		case "saleVolumeOfMember" :  
+			if(subMonth == 0) { //3달인지 1달인지 거르기 위한 분기문. 3달이면 시작 달과 끝 달이 다르므로 0이 아닌점을 이용.
+				resultList = new ArrayList<>();
+				resultList = sqlSession.selectList("seller.byMemberChartPeriod", map);
+			}else {
+				endMonth = endMonth == 12 ? 1:endMonth+1;//오라클에서 달로만 계산하려니 마지막달은 1일 00시까지라 그 다음달 1일 00시까지 하고 view단에서 거름.
+				map.put("startDate",map.get("startDate").substring(0,7));
+				map.put("endDate",map.get("endDate").substring(0,4)+"/"+endMonth);
+				logger.debug("시작 날짜 : "+map.get("startDate"));
+				logger.debug("끝 날짜 : "+map.get("endDate"));
+				resultList = new ArrayList<>();
+				resultList = sqlSession.selectList("seller.byMemberChart3Month",map);
+			}
+			break;
 		}
+		
 		return resultList;
 	}
 
