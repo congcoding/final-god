@@ -269,9 +269,11 @@ span.srchVal{
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
-		      <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
-		      </li>
+		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
+		     	 <li class="nav-item">
+		        	<a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
+		     	 </li>
+		      </c:if>
 		    </ul>
 		    
 			<!-- 회원 로그인,회원가입 버튼 -->
@@ -465,8 +467,6 @@ span.srchVal{
 	          
 	          </div>
 	          <div class="form-group">
-	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea> -->
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
 	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />

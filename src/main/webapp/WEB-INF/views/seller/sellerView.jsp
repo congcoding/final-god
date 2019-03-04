@@ -269,10 +269,21 @@ span#passworderror3{
 								<c:if test="${storeInfo.pmsFlag eq 'Y'}">
 									허가 완료
 								</c:if> 
+								<c:if test="${storeInfo.pmsFlag eq 'C'}">
+									거래 중지
+								</c:if> 
+								<c:if test="${storeInfo.pmsFlag eq 'R'}">
+									거래 중지
+								</c:if> 
 								</td>
 								<td>${storeInfo.storeName }</td>
 								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}');" value="수정" class="btn btn-outline-success"  />&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" /></td>
 							</tr>
+								<c:if test="${storeInfo.pmsFlag eq 'R'}">
+									<c:if test="${storeInfo.rejectInfo != null}">
+										<tr><td  colspan="3">거절사유 : ${storeInfo.rejectInfo}</td></tr>
+									</c:if> 
+								</c:if> 
 						</c:forEach>
 					</c:if>
 				</table>

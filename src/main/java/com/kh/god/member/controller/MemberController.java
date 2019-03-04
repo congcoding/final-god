@@ -663,12 +663,6 @@ public class MemberController {
 		  
 	  }
 	
-	 
-	 
-	 
-	 
-	
-	
 }
 
 

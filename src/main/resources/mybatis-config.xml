@@ -56,6 +56,10 @@
 				   
 		<typeAlias type="com.kh.god.admin.model.vo.Coupon"
 				   alias="coupon" />
+				   
+		<typeAlias type="com.kh.god.admin.model.vo.Report"
+				   alias="report" />
+
 	</typeAliases>
 	
 	

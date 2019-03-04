@@ -292,5 +292,9 @@
 		SELECT * FROM REVIEW WHERE
 		STORENO = #{storeNo}
 	</select>
+	
+	<insert id="insertReport">
+		insert into report values(seq_report_reportno.nextval , #{category} ,null , #{storeNo} , #{reportDetails}, default)
+	</insert>
 
 </mapper>
