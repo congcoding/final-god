@@ -92,6 +92,9 @@ public class AdminController {
 		}else if(status.equals("end")){
 			list = adminService.eventEndList(cPage,numPerPage);
 			totalContents= adminService.countEventEndList();
+		}else if(status.equals("store")) {
+			list = adminService.eventStoreList(cPage,numPerPage);
+			totalContents = adminService.countEventStoreList();
 		}
 		
 		model.addAttribute("cPage",cPage);
