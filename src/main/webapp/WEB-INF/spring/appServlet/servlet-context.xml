@@ -79,11 +79,6 @@
 			<mapping path="/**"/> <!-- /** <- 모든요청 -->
 			<beans:bean id="loggerInterceptor" class="com.kh.god.common.interceptor.LoggerInterceptor" /> 
 		</interceptor>
-		
- 		<interceptor>
-			<mapping path="/index.do"/>
-			<beans:bean id="SellerLoginCheckInterceptor" class="com.kh.god.common.interceptor.SellerLoginCheckInterceptor" /> 
-		</interceptor>
 			
 		<interceptor>			
 			<mapping path="/member/memberView.do" />
