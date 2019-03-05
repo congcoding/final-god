@@ -124,6 +124,10 @@ public interface AdminDao {
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);
+	
+	List<Map<String, String>> selectEventStoreList(int cPage, int numPerPage);
+
+	int countEventStoreList();
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);

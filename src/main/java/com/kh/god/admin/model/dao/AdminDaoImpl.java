@@ -314,6 +314,17 @@ public class AdminDaoImpl implements AdminDao {
 		return sqlSession.selectList("admin.couponList",memberId);
 	}
 	
+	@Override
+	public List<Map<String, String>> selectEventStoreList(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
+		return sqlSession.selectList("admin.selectEventStoreList",null,rowBounds);
+	}
+
+	@Override
+	public int countEventStoreList() {
+		return sqlSession.selectOne("admin.countEventStoreList");
+	}
+	
 //	---------------------------------------------------------
 
 	@Override

@@ -238,6 +238,14 @@
 	<select id="couponList" resultType="coupon">
 		select eventNo from coupon where memberId = #{memberId}
 	</select>
+	
+	<select id="selectEventStoreList" resultMap = "eventMap">
+		<![CDATA[ select e.* from event e join coupon c on e.eventNo = c.eventNo where c.enddate >= sysdate and c.storeNo not like 'all' order by c.eventNo desc ]]>
+	</select>
+	
+	<select id="countEventStoreList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from coupon where enddate >= sysdate and storeNo not like 'all']]>
+	</select>
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}
@@ -264,7 +272,7 @@
 	</update>
 	
 	<select id="carouselEvent" resultMap="eventMap">
-		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+		<![CDATA[ select * from event where startdate <= sysdate and enddate >= sysdate order by eventNo desc ]]>
 	</select>
 	
 	<select id="chartByCategory" resultType="_int">
