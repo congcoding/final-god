@@ -22,5 +22,5 @@ public interface ChatDao {
 	ChatRoom searchChatRoom(ChatRoom roomId) ;
 
 	int creatChatRoom(ChatRoom roomId);
-
+	String notReadMessage(String memberId);
 }

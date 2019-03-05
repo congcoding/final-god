@@ -58,4 +58,5 @@ public interface MemberService {
 
 	int deleteMemberReview(String reviewNo);
 
+
 }

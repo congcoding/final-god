@@ -101,4 +101,9 @@ public class ChatServiceImpl implements ChatService {
 		}
 		return chatList;
 	}
+	
+	@Override
+	public String notReadMessage(String memberId) {
+		return chatDao.notReadMessage(memberId);
+	}
 }

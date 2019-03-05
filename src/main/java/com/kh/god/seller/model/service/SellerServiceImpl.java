@@ -307,9 +307,11 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int notReadMessage(String memberId) {
-		return sellerDao.notReadMessage(memberId);
+	public String selectSellerIdByStoreNo(String storeNo) {
+		return sellerDao.selectSellerIdByStoreNo(storeNo);
 	}
+
+	
 
 
 	

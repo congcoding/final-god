@@ -108,7 +108,9 @@ public interface SellerDao {
 
 	int updateMenuAttachment(MenuAttachment a);
 
-	int notReadMessage(String memberId);
+	String selectSellerIdByStoreNo(String storeNo);
+
+
 
 
 

@@ -102,7 +102,9 @@ public interface SellerService {
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
-	int notReadMessage(String memberId);
+	String selectSellerIdByStoreNo(String storeNo);
+
+	
 
 
 

@@ -330,9 +330,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public int notReadMessage(String memberId) {
-		return sqlSession.selectOne("seller.notReadMessage", memberId);
+	public String selectSellerIdByStoreNo(String storeNo) {
+		return sqlSession.selectOne("seller.selectSellerIdByStoreNo", storeNo);
 	}
+
+	
 
 
 }

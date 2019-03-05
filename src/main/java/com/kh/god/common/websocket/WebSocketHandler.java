@@ -92,7 +92,7 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    	
 //	    	protocol : 
 //	    	1. cmd(채팅),메세지 보낸자 ,메세지 받는자, 메세지 내용 (축소), 채팅방 번호, 보낸시간 ex) chat,sender,receiver,content , chatRoomNo, sendTime
-//	    	2. cmd(댓글),댓글 작성자, 게시글 작성자, 게시글 번호 ex) reply,replyUser,boardWriterUser,boardNo
+//	    	2. cmd(리뷰),리뷰 작성자, 가게이름, 가게번호, 가게사장아이디 ex) review,writer,storeName,storeNo,sellerId
 	    	String msg = message.getPayload();
 //	    	알람 식별 JSON
 	    	Map<String, String> alertMap = new HashMap<>();
@@ -108,7 +108,7 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    		}
 	    		
 	    		
-	    		if(strs != null && strs.length == 6) {
+	    		if(strs != null && strs.length == 6) {//채팅
 	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
 	    			String[] chatSender = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
 	    			String[] receiver = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
@@ -135,7 +135,30 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    				logger.debug("다시 클라이언트로 보내기전 : " + tmpMsg);
 	    				chatSendSession.sendMessage(tmpMsg);
 	    			}
+	    		}else if(strs != null && strs.length == 5) {//리뷰
+	    			logger.debug("리뷰들어옴!");
+	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
+	    			String[] reviewWriter = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
+	    			String[] storeName = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
+	    			String[] storeNo = strs[3].substring(strs[3].indexOf(":")+2).split("\"");
+	    			String[] receiver = strs[4].substring(strs[4].indexOf(":")+2).split("\"");
+	    			logger.debug("받는 아이디 :"+receiver[0]);
+	    			alertMap.put("reviewWriter", reviewWriter[0]);
+	    			alertMap.put("cmd", cmd[0]);
+	    			alertMap.put("storeName", storeName[0]);
+	    			alertMap.put("storeNo", storeNo[0]);
+	    			sendInfo.add(alertMap);
+	    			Gson gson = new Gson();
+	    			String sendGson = gson.toJson(sendInfo);
+	    			WebSocketSession reviewSendSession =  userSession.get(receiver[0]);
+	    			logger.debug("리뷰를 다시 클라이언트에 보내기 전 : "+reviewSendSession);
+	    			if("review".equals(cmd[0]) && reviewSendSession != null) {
+	    				TextMessage tmpMsg = new TextMessage(sendGson);
+	    				logger.debug("다시 클라이언트로 보내기전 : " + tmpMsg);
+	    				reviewSendSession.sendMessage(tmpMsg);
+	    			}
 	    		}//메세지를 받았을 때 프로토콜
+	    		
 	    	}//end of if(!StringUtils.isEmpty(msg)) 비었는지.
 	    }
 	

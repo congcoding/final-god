@@ -35,6 +35,7 @@ import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
@@ -50,7 +51,8 @@ public class MemberController {
 	//DI : 스프링은 빈을 관리시, 기본적으로 싱글턴을 처리한다.
 	@Autowired
 	MemberService memberService;
-	
+	@Autowired
+	SellerService sellerService;
 	//bean 하나 더 가져오기
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder; 
@@ -291,11 +293,16 @@ public class MemberController {
 									 @RequestParam(name="writer") String writer, Model model) {	
 
 		if(logger.isDebugEnabled()) { //지금 디버그 모드라면 
-			logger.debug("회원 리뷰작성'페이지' 요청"); //다음을 실행해라 (성능변화가 없음)			
+			logger.debug("회원 리뷰작성'페이지' 요청"); //다음을 실행해라 (성능변화가 없음)		
+			logger.debug("리뷰페이지의 : "+storeNo);
 		}
 		
 		List<Map<String,String>> orderMenuList = memberService.selectOrderMenuList(orderNo);
+		//리뷰 작성할 가게 사장님 아이디 구해오기(알람용)
+		String sellerId = sellerService.selectSellerIdByStoreNo(storeNo);
+		logger.debug(sellerId);
 		
+		model.addAttribute("sellerId", sellerId);
 		model.addAttribute("orderNo", orderNo);
 		model.addAttribute("orderMenuList", orderMenuList);	
 		model.addAttribute("storeNo", storeNo);

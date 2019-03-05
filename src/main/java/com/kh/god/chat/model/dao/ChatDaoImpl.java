@@ -78,5 +78,9 @@ public class ChatDaoImpl implements ChatDao {
 		logger.debug(roomId.getSellerId()+" : "+roomId.getSellerId2());
 		return sqlSession.insert("chat.createChatRoom", roomId);
 	}
+	@Override
+	public String notReadMessage(String memberId) {
+		return sqlSession.selectOne("chat.notReadMessage", memberId);
+	}
 	
 }

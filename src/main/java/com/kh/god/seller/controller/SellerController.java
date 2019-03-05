@@ -135,8 +135,6 @@ public class SellerController {
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
-	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
-	     int messageCount = 0;
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {
@@ -172,10 +170,6 @@ public class SellerController {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
 	            session.setAttribute("login",s.getSellerId());
-	            //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
-	            messageCount = sellerService.notReadMessage(memberId);
-	            logger.debug("안읽은 메세지 개수 : "+messageCount);
-	            session.setAttribute("messageCount", messageCount);
 	          
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
