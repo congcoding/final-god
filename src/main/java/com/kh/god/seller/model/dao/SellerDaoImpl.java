@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.dao;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 @Repository
 public class SellerDaoImpl implements SellerDao {
@@ -329,10 +331,37 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("seller.getReview2", storeNo);
 	}
 
+<<<<<<< HEAD
 	@Override
 	public int notReadMessage(String memberId) {
 		return sqlSession.selectOne("seller.notReadMessage", memberId);
 	}
 
+=======
+	//자동로그인 TEST
+	@Override
+	public void keepLogin(String sellerId, String sessionId, Date next) throws Exception{
+			
+			Map<String, Object> paramMap =new HashMap<String, Object>();
+			paramMap.put("sellerId", sellerId);
+			paramMap.put("sessionId", sessionId);
+			paramMap.put("next", next);
+			  // Mapper.xml로 데이터를 전달할 때 한 객체밖에 전달 못함으로 map으로 묶어서 보내줌 단... 주의할 점은
+	        // Mapper.xml 안에서 #{} 이 안에 지정한 이름이랑 같아야함.. 자동으로 매핑될 수 있도록
+	        // 아래가 수행되면서, 사용자 테이블에 세션id와 유효시간이 저장됨
+			sqlSession.insert("seller.keepLogin", paramMap);
+	}
+		
+	@Override
+	public Seller checkUserWithSessionKey(String sessionId){
+>>>>>>> autologin
 
+	        // 유효시간이 남아있고(>now()) 전달받은 세션 id와 일치하는 사용자 정보를 꺼낸다.
+		return sqlSession.selectOne("seller.checkUserWithSessionKey", sessionId);
+	}
+
+	@Override
+	public Seller login(Seller s) {
+		return sqlSession.selectOne("seller.login" , s);
+	}
 }

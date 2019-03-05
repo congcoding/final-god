@@ -34,9 +34,12 @@ div.card{
     margin: 10px;
     cursor : pointer;
 }
+<<<<<<< HEAD
 .carousel-indicators{
 	bottom:15px;
 }
+=======
+>>>>>>> autologin
 </style>
 <script>
 function categoryList(item){
