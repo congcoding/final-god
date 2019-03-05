@@ -79,6 +79,7 @@
 			<mapping path="/**"/> <!-- /** <- 모든요청 -->
 			<beans:bean id="loggerInterceptor" class="com.kh.god.common.interceptor.LoggerInterceptor" /> 
 		</interceptor>
+			
 		<interceptor>			
 			<mapping path="/member/memberView.do" />
 			<mapping path="/member/memberUpdate.do" />
@@ -122,5 +123,7 @@
     </websocket:handlers>
     
   <beans:bean id="myHandler" class="com.kh.god.common.websocket.WebSocketHandler"/>
+  
+  
 	
 </beans:beans>

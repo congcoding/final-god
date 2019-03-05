@@ -220,7 +220,23 @@
 	<select id="sellerfindId" resultType="seller">
 		select * from seller where email = #{email}
 	</select>
+
+		<!-- 자동로그인 TEST -->
+	<update id="keepLogin">
+		update seller set sessionKey = #{sessionId} , sessionLimit = #{next} where sellerId = #{sellerId}
+	</update>
+	<!-- 	set sessionKey=#{sessionId}, sessionLimit=#{next} where uid=#{uid} -->
+	
+	<select id="checkUserWithSessionKey" resultType="seller">
+		select * from seller where sessionKey = #{sessionId} and sessionLimit > sysdate
+	</select>
+	
+	<select id="login" resultType="seller">
+		select * from seller where memberid = #{memberId}  and password = #{password}
+	</select>
+
 	<select id="notReadMessage" resultType="_int">
 		select count(*) as notRead  from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
+
 	</select>
 </mapper>
