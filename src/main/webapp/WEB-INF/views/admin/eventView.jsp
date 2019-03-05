@@ -60,7 +60,7 @@ function fileDownload(fileName){
 					<tr>
 						<th>이벤트 내역</th>
 						<c:if test="${event.discount < 1.0}">
-							<td>${100-(event.discount*100)}% 할인</td>
+							<td><fmt:parseNumber value="${100-(event.discount*100)}" integerOnly="true" />% 할인</td>
 						</c:if>
 						<c:if test="${event.discount > 1.0}">
 							<td>${event.discount }원 할인</td>

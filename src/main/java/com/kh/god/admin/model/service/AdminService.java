@@ -126,6 +126,10 @@ public interface AdminService {
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);
+	
+	List<Map<String, String>> eventStoreList(int cPage, int numPerPage);
+
+	int countEventStoreList();
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);

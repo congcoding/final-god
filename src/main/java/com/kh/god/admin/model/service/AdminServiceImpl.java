@@ -297,6 +297,16 @@ public class AdminServiceImpl implements AdminService {
 	public int couponAmount(int eventNo) {
 		return adminDao.couponAmount(eventNo);
 	}
+	
+	@Override
+	public List<Map<String, String>> eventStoreList(int cPage, int numPerPage) {
+		return adminDao.selectEventStoreList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventStoreList() {
+		return adminDao.countEventStoreList();
+	}
 
 //	---------------------------------------------------------
 	

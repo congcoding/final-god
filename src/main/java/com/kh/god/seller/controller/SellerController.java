@@ -134,18 +134,33 @@ public class SellerController {
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
-		
-		
-		if (s == null) {//로그인실패
-	         //아이디 존재하지 않음
-	    	  loc = "/";
-	    	  returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
-	    	  
-	      } else { 
+
+	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+	     int messageCount = 0;
+	     boolean loginFlag = true;
+	     
+	     if (s == null || s.getDelFlag().equals("Y")) {//로그인실패
+
+	         msg = "아이디가 존재하지 않습니다.";
+	         loc = "/";
+	         returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
+	         
+	      } else { //로그인 검사 
 	         // 비밀번호 비교
+	    	  if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
-	        	 //로그인이 성공하면 Member객체를 반환함.
 	        	 
+	        	 
+	        	 //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+		            messageCount = sellerService.notReadMessage(memberId);
+		            logger.debug("안읽은 메세지 개수 : "+messageCount);
+		            session.setAttribute("messageCount", messageCount);
+		          
+		         //사이드바
+		            List<StoreInfo> store = sellerService.myStore(memberId);
+		            session.setAttribute("storeSideBar", store);
+		            
+		         //자동로그인 설정부분
 	        	 Seller s2 = sellerService.selectOneSeller(memberId);
 	        	 session.setAttribute("sellerLoggedIn" ,s);
 	        	 //dto설정
@@ -186,13 +201,15 @@ public class SellerController {
 	     		 }
 	         } else { //로그인 실패
 	            //비밀번호 불일치 
-	        	 loc = "/";
+	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
+		            loc = "/";
 	        	 returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         }
+		      }
 	      }
 		
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
-	return "redirect:/";
+		return "redirect:/" ;
 		
 	}
 //	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)

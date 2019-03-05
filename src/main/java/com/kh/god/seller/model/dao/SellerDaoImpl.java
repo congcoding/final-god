@@ -345,9 +345,15 @@ public class SellerDaoImpl implements SellerDao {
 			sqlSession.insert("seller.keepLogin", paramMap);
 	}
 		
+
+	@Override
+	public int notReadMessage(String memberId) {
+		return sqlSession.selectOne("seller.notReadMessage", memberId);
+	}
+
+
 	@Override
 	public Seller checkUserWithSessionKey(String sessionId){
-
 	        // 유효시간이 남아있고(>now()) 전달받은 세션 id와 일치하는 사용자 정보를 꺼낸다.
 		return sqlSession.selectOne("seller.checkUserWithSessionKey", sessionId);
 	}
