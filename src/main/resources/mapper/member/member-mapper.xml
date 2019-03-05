@@ -64,7 +64,7 @@
 	<select id="orderList" resultType="map">
 		select o.*, r.reviewNo
 		from orderInfo o left join review r on o.orderNo = r.orderNo
-		where memberid = #{memberId} and receiveFlag = 'Y'
+		where memberid = #{memberId} and DELIVERYFLAG = 'Y'
 	</select>
 		
 	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>
