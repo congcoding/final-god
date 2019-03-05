@@ -260,7 +260,7 @@ span.srchVal{
 		    <a class="navbar-brand" href="${pageContext.request.contextPath}">God of Delivery</a>
 		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		      <li class="nav-item active">
-		        <a class="nav-link" href="${pageContext.request.contextPath}">Home <span class="sr-only">(current)</span></a>
+		        <a class="nav-link" href="${pageContext.request.contextPath}" id="sweetHome">Home <span class="sr-only">(current)</span></a>
 		      </li>
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
@@ -406,7 +406,8 @@ span.srchVal{
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<br />
-	      		<input type="checkbox" name="login" value="sell" /> &nbsp;로그인 상태 유지
+	      		<input type="checkbox" id="autologin" value="no" /> &nbsp;로그인 상태 유지
+	      		 	<input type="hidden" id="autologin1" name="autologin" value="no"/>
 	      		<span style="color:red;margin: -13px;">&nbsp;회원유형을 체크하세요</span>
 		      	<br />
 	      	</div>
@@ -1027,6 +1028,7 @@ span.srchVal{
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
+
 	//로딩 되면 판매자일때 안읽은 메세지 뜨게함.
 	$(function(){
 		if('$(sellerLoggedIn)' != null){
@@ -1042,5 +1044,18 @@ span.srchVal{
 			});		
 		}
 	});
+
+	
+	$("#autologin").on("click" , function(){
+		console.log("클릭 먹니?");
+		if($("#autologin").is(":checked")){
+			$("#autologin1").val("yes");
+		}else{
+			$("#autologin1").val("no");
+		}
+		
+	});
+	
+
 	</script>
    <section id="content">

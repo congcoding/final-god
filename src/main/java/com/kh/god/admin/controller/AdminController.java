@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +46,18 @@ public class AdminController {
 	
 	@Autowired
 	AdminService adminService;
+	
+	@RequestMapping(value = "/index.do")
+	public Model index(Model model) {
+		
+		//현재 진행중인 이벤트 목록 받아오기
+		List<Event> eventList = adminService.carouselEvent();
+		model.addAttribute("carouselEvent", eventList);
+		
+		
+		model.addAttribute("index");
+		return model;
+	}
 	
 	@RequestMapping("/admin/qnaboard.do")
 	public String selectBoardList(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
@@ -835,15 +848,6 @@ public class AdminController {
 		mav.setViewName("common/msg");
 		
 		return mav;
-	}
-	
-	@ResponseBody
-	@RequestMapping("/admin/carouselEvent.do")
-	public Map<String, Object> carouselEvent() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Event> eventList = adminService.carouselEvent();
-		map.put("carouselEvent", eventList);
-		return map;
 	}
 	
 	@RequestMapping("admin/chart.do")

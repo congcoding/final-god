@@ -432,11 +432,11 @@ public class MemberController {
 	@RequestMapping("/member/bookMarkList.do")
 	public String bookMarkList(@RequestParam String memberId, Model model) {	
 	
-		List<StoreInfo> sList = memberService.bookMarkList(memberId);
+		List<StoreInfo> bookmarkList = memberService.bookMarkList(memberId);
 		
-		model.addAttribute("sList", sList);
+		model.addAttribute("bookmarkList", bookmarkList);
 		
-		String view = "member/memberView";
+		String view = "member/memberBookMark";
 				
 		return view; 
 	}
