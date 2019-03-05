@@ -51,7 +51,7 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 		if(obj == null) { //로그인된 세션이 없는경우 
 			//우리가 만들어 논 쿠키를 꺼내온다. 
 			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
+//			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
 			
 			if(loginCookie != null) { //쿠키가 존재하는 경우(이전에 로그인될때 생성된 쿠키가 존재한다는 것.)
 				//loginCookie의 값을 꺼내오고 -> 즉 , 저장해논 세션 ID를 꺼내오고
@@ -66,7 +66,7 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
                 	session.setAttribute("sellerLoggedIn", userVO);
                 	System.out.println("@@@@@@@@@@@@@@@@@@"+userVO);
                 	logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@5555555555555555555555555");
-                	return true;
+            		return true;
                 }
 			}
 			
@@ -79,20 +79,20 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@66666666666666666666666");
 		//prehandler의 return은 컨트롤러 요청으로 uri로 가도 되냐 안되냐를 허가하는 의미임.
 		//따라서 true로하면 컨트롤러 uri로 가게됨.
-        return true;
+		return true;
 	}
 
 	
 	 // 컨트롤러가 수행되고 화면이 보여지기 직전에 수행되는 메서드
-   @Override
-   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-           ModelAndView modelAndView) throws Exception {
-	   
-	   HttpSession session = request.getSession();
-		//login 처리를 담당하는 사용자 저보를 담고 있는 객체를 가져옴
-		Object obj = session.getAttribute("sellerLoggedIn");
-       // TODO Auto-generated method stub
-       super.postHandle(request, response, handler, modelAndView);
-   }
+//   @Override
+//   public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+//           ModelAndView modelAndView) throws Exception {
+//	   
+//	   HttpSession session = request.getSession();
+//		//login 처리를 담당하는 사용자 저보를 담고 있는 객체를 가져옴
+//		Object obj = session.getAttribute("sellerLoggedIn");
+//       // TODO Auto-generated method stub
+//       super.postHandle(request, response, handler, modelAndView);
+//   }
 }
 
