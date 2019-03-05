@@ -523,6 +523,7 @@ span.srchVal{
 	
 	 //채팅방 목록 구현
 	 $("#messagesDropdown").on('click',function(){
+			sendRealTimeMember();
 		if($("#messagesDropdown").attr('aria-expanded') === 'false'){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/chat/chatRoomList.do",
@@ -531,11 +532,28 @@ span.srchVal{
 				dataType : "json",
 				success : function(data){
 					timeStamp = "";
+					var messageForm ;
 					var mform = $("<div><h6 class='dropdown-header'>Message Center <div class='btn btn-link'  id='openChatRoom' data-toggle='modal' data-target='#createChatRoom' > <i class='fas fa-comment-dots'></i></div></h6></div>");
 					var bodyForm = $("<div class='dropdown-body'></div>");
 					for(var i in data){
-						var messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
 						var message = data[i];
+						var chatPerson = "";
+						if(message.SELLERID === '${sellerLoggedIn.sellerId}'){
+							chatPerson = message.SELLERID2;
+						}else{
+							chatPerson = message.SELLERID;
+						}
+						if(alertType != null){
+							for(var j in alertType){
+								if(alertType[j] == chatPerson){
+									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
+									break;
+								}else{
+									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
+								}
+							
+							}
+						}//end of if(alertType != null)
 						var messageData = "";
 						var notRead = 0;
 						if(message.SENDMEMBER != '${sellerLoggedIn.sellerId}'){
@@ -569,9 +587,9 @@ span.srchVal{
 	//채팅방에서 메세지 전송을 누르면 웹소켓을 통해서 메세지가 전달됨.
 	$(document).on('click', 'button[id="sendMessage"]', function(evt){
 			evt.preventDefault();
-			sendMsgTime = getTimeStamp;
+			sendMsgTime = getTimeStamp();
 			var sendContent = $("input[name=messageContent]").val();
-			
+			$("input[name=messageContent]").val("");
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
 			var message = {
 					sendId : '${sellerLoggedIn.sellerId}',
@@ -583,11 +601,10 @@ span.srchVal{
 			 $.ajax({
 				url : "${pageContext.request.contextPath}/chat/insertChatLog.do",
 				data : message,
-				type : post,
 				success : function(data){
-					 
 				 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
-			 		$("#chatView").append(messageData);
+			 		console.log(messageData);
+				 	$("#chatView").append(messageData);
 			 		setTimeout(function(){
 		 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 			},100);
@@ -606,7 +623,6 @@ span.srchVal{
 	});
 	//1. cmd(채팅),메세지 보낸자 ,메세지 받는자, 메세지 내용 (축소), 채팅방 번호, 보낸시간 ex) chat,sendUser,receiver,messageContent , chatRoomNo, sendTime
 	function sendMessage(){
-		
 		var msg ={};
 		msg.cmd = "chat";
 		msg.sender = "${sellerLoggedIn.sellerId}";
@@ -631,6 +647,13 @@ span.srchVal{
 		msg.storeName = '${orderMenuList[0].STORENAME }';
 		msg.storeNo = '${storeNo}';
 		msg.sellerId = '${sellerId}';
+		socket.send(JSON.stringify(msg));
+	}
+	//3. cmd(실시간 접속자), 현재로그인되어있는사람
+	function sendRealTimeMember(){
+		var msg = {};
+		msg.cmd = "realTimeMember";
+		msg.loginId = '${sellerLoggedIn.sellerId}';
 		socket.send(JSON.stringify(msg));
 	}
 	function getTimeStamp() {
@@ -664,7 +687,7 @@ span.srchVal{
 	 
 	//개별 상세 채팅방 구현
 	 $(document).on('click', 'div[id^="messageView"]', function(){
-		 	
+			sendRealTimeMember();
 		 	var notRead =  $(this).children().eq(2).children().text();
 		 	var allNotRead ;
 		 	if($("#messageCount").text().trim().length == 0){
@@ -703,8 +726,20 @@ span.srchVal{
 	 function successLodingChatLogs(data){
 		 	messageData = "";
 			var myId = '${sellerLoggedIn.sellerId}';
+			var youId = (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID);
 			var chatForm = $("<div style='height : 100%; padding: 0;'></div>");
-			var chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID) +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
+			var chatHeader;
+			if(alertType != null){
+				for(var j in alertType){
+					if(alertType[j] == youId){
+						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
+						break;
+					}else{
+						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
+					}
+				
+				}
+			}//end of if(alertType != null)
 			var chatBody = $("<div class='shadow rounded border border-success' id='chatView' style='height : 29rem;' ></div>");
 			var chatFooter = $("<div class='modal-footer' style='width : 100%;'><input type='hidden' id='sendChatRoomNo' value="+data[0].chatRoomNo+" /><input type='text' class='form-control' name='messageContent' placeholder='메세지를 입력하세요.' id='messageContent' /><button type='button' class='btn btn-outline-success' id='sendMessage'>전송</button></div> ");
 			for(var i in data){
@@ -730,13 +765,14 @@ span.srchVal{
 	 }
 	 
 	var sendMsgTime = null;
-	var alertType = null ;
+	var alertType = null;
 	var messageType = null;
 	 //사용자가 어느 채팅방에 들어가 있는지 확인하는 변수
 	var hasFocusRoom = 0;
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
+
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
@@ -757,20 +793,20 @@ span.srchVal{
 			
 			 $("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
-		 		//alert("dd");
 		 		setTimeout(function(){
 		 			$("#socketAlert").css("display","none");
 		 		},3000); 
 		 }
-		 if(alertType.cmd == 'review'){
-			 console.log("dd");
+		 
+	 }
+   function	alertMessage(alertType,type){
+	   if(type === 'review'){
 			 $("#socketAlert").css("display","block").text(alertType.reviewWriter+"님이 "+alertType.storeName+"에("+alertType.storeNo +")리뷰를 작성");
-		 		//alert("dd");
 		 	setTimeout(function(){
 		 		$("#socketAlert").css("display","none");
 		 	},3000);
 		 }
-	 }
+	}
 	 function connectWebSocket(){
 	 	var ws = new SockJS("<c:url value="/echo"/>"); 
 	 	socket = ws;
@@ -781,12 +817,16 @@ span.srchVal{
 	 		alertType = null;
 	 		messageType = null;
 	 		var message = JSON.parse(event.data);
-	 		
 	 		for(var i = 0; i < message.length; i++){
 		 		if(message[i].cmd === "alert")
 		 			  alertType = message[i];
-		 		else if(message[i].cmd === "review")
+		 		else if(message[i].cmd === "review"){
 		 			alertType = message[i];
+					alertMessage(alertType,"review");		 			
+		 		}else if(message[i].cmd === "realTimeMember"){
+		 			alertType = message[1];
+		 			break;
+		 		}
 		 		else
 		 			 messageType = message[i];
 	 		}

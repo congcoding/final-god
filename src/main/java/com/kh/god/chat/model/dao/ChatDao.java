@@ -23,4 +23,6 @@ public interface ChatDao {
 
 	int creatChatRoom(ChatRoom roomId);
 	String notReadMessage(String memberId);
+
+	Seller selectSeller(String addId);
 }

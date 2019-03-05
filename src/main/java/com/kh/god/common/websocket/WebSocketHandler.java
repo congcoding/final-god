@@ -23,12 +23,13 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	private static List<WebSocketSession> sessionList;
 	//실제 로그인한 session의 아이디정보, session정보
 	private static Map<String,WebSocketSession> userSession;
-	//실제 session의 아이디정보, room정보
-	private Map<String,String> userRoomList;
+	//실제 session의 아이디정보 유저정보
+	private static Map<String,String> userInfo;
 	
 	private WebSocketHandler() {
 		userSession = new HashMap<>();
 		sessionList = new ArrayList<>();
+		userInfo = new HashMap<>();
 	}
 	
 	public static WebSocketHandler getInstance() {
@@ -59,7 +60,8 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	        logger.info("afterConnectionEstablished: "+session);
 	        
 	        userSession.put(getId(session),session);
-	        logger.debug("유저목록 리스트(로그인,비로그인) : "+sessionList);
+	        userInfo.put(getId(session), getId(session));
+	        logger.debug("유저목록 리스트(로그인,비로그인) : "+sessionList+" : "+userInfo);
 	        logger.debug("유저목록 리스트(로그인) : "+getUserList()+" : "+getUserList().size());
 	        
 	    }
@@ -71,6 +73,7 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 	        logger.debug("연결이 끊어 집니다. 리스트에서 사라질 ID : "+getId(session));
 	        userSession.remove(getId(session));
+	        userInfo.remove(getId(session));
 	    	sessionList.remove(session);
 //	    	userList.remove(getId(session));
 	    }
@@ -136,7 +139,6 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    				chatSendSession.sendMessage(tmpMsg);
 	    			}
 	    		}else if(strs != null && strs.length == 5) {//리뷰
-	    			logger.debug("리뷰들어옴!");
 	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
 	    			String[] reviewWriter = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
 	    			String[] storeName = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
@@ -151,13 +153,28 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    			Gson gson = new Gson();
 	    			String sendGson = gson.toJson(sendInfo);
 	    			WebSocketSession reviewSendSession =  userSession.get(receiver[0]);
-	    			logger.debug("리뷰를 다시 클라이언트에 보내기 전 : "+reviewSendSession);
 	    			if("review".equals(cmd[0]) && reviewSendSession != null) {
 	    				TextMessage tmpMsg = new TextMessage(sendGson);
-	    				logger.debug("다시 클라이언트로 보내기전 : " + tmpMsg);
+	    				reviewSendSession.sendMessage(tmpMsg);
+	    			}
+	    		}else if(strs != null && strs.length == 2) {//실시간 사용자 받아오기
+	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
+	    			String[] receiver = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
+	    			alertMap.put("cmd", cmd[0]);
+	    			if(cmd[0].equals("realTimeMember")) {
+	    				sendInfo.add(alertMap);
+	    				sendInfo.add(userInfo);
+	    			}
+	    			Gson gson = new Gson();
+	    			String sendGson = gson.toJson(sendInfo);
+	    			logger.debug("다시 나에게로 돌아가기전 : "+sendInfo);
+	    			WebSocketSession reviewSendSession =  userSession.get(receiver[0]);
+	    			if("realTimeMember".equals(cmd[0]) && reviewSendSession != null) {
+	    				TextMessage tmpMsg = new TextMessage(sendGson);
 	    				reviewSendSession.sendMessage(tmpMsg);
 	    			}
 	    		}//메세지를 받았을 때 프로토콜
+	    		
 	    		
 	    	}//end of if(!StringUtils.isEmpty(msg)) 비었는지.
 	    }

@@ -82,5 +82,9 @@ public class ChatDaoImpl implements ChatDao {
 	public String notReadMessage(String memberId) {
 		return sqlSession.selectOne("chat.notReadMessage", memberId);
 	}
+	@Override
+	public Seller selectSeller(String addId) {
+		return sqlSession.selectOne("chat.selectSeller", addId);
+	}
 	
 }

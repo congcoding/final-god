@@ -60,4 +60,8 @@
 	<resultMap type="String" id="count">
 		<result column="notread" property="NOTREAD" javaType="string"/>
 	</resultMap>
+	<select id="selectSeller" resultType="seller">
+		select * from seller where sellerid = #{addId}
+	</select>
+	
 </mapper>
