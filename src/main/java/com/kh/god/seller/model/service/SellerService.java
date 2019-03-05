@@ -104,11 +104,7 @@ public interface SellerService {
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
-<<<<<<< HEAD
-	int notReadMessage(String memberId);
 
-
-=======
 	//자동로그인 TEST
 	
 	// 자동로그인 체크한 경우에 사용자 테이블에 세션과 유효시간을 저장하기 위한 메서드
@@ -118,7 +114,9 @@ public interface SellerService {
 	public Seller checkUserWithSessionKey(String sessionId);
 			
 	Seller login(Seller login);
->>>>>>> autologin
+
+	int notReadMessage(String memberId);
+
 
 
 }

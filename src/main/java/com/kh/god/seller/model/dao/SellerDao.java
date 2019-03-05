@@ -115,12 +115,10 @@ public interface SellerDao {
 		
 	public Seller checkUserWithSessionKey(String sessionId);
 
-<<<<<<< HEAD
+	Seller login(Seller s);
+
 	int notReadMessage(String memberId);
 
-=======
-	Seller login(Seller s);
->>>>>>> autologin
 
 
 }
