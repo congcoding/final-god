@@ -48,8 +48,15 @@ public interface MemberDao {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	Seller selectOneSeller(String id);
+
+	int updateFindPwd(Seller s);
+
+	int updateMemberFindPwd(Member m);
+
 	List<Map<String, String>> selectOrderMenuList(String orderNo);
 
 	int deleteMemberReview(String reviewNo);
+
 
 }

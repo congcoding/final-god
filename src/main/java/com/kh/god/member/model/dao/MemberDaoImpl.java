@@ -138,6 +138,21 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public Seller selectOneSeller(String sellerId) {
+		return sqlSession.selectOne("seller.selectOneSeller" , sellerId);
+	}
+
+	@Override
+	public int updateFindPwd(Seller s) {
+		return sqlSession.update("seller.updatePwd" , s );
+	}
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return sqlSession.update("member.updateMemberFindPwd" , m);
+	}
+	
+	@Override
 	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
 		return sqlSession.selectList("member.selectOrderMenuList", orderNo);
 	}

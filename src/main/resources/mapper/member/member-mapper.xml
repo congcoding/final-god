@@ -113,5 +113,9 @@
 	<select id="findId" resultType="member">
 		select * from member where email = #{email}
 	</select>
+	
+	<update id="updateMemberFindPwd">
+		update seller set password = #{password} where memberid = #{memberId}
+	</update>
 
 </mapper>

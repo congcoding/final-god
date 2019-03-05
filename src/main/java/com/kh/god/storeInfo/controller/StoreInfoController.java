@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kh.god.admin.model.vo.Report;
 import com.kh.god.common.util.Utils;
 import com.kh.god.storeInfo.model.service.StoreInfoService;
 import com.kh.god.storeInfo.model.vo.SAttachment;
@@ -100,9 +101,8 @@ public class StoreInfoController {
 		logger.debug("@@@@@@@@@@@brno"+ no);
 		String brno = no ;
 
-//		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver");
-		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe");
-		//String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver");
+//		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe"); //for Windows
+		String loc = "/usr/lib/chromium-browser/chromedriver"; //for Linux
 
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
@@ -396,6 +396,30 @@ public class StoreInfoController {
     	
     	return map;
     }
+    
+    @RequestMapping(value="/storeInfo/report.do" , method=RequestMethod.POST)
+    public String stroeReport(Report r , Model model)	{
+    	
+    	logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+r);
+    	String loc = "/menu/menuList.do?storeNo="+r.getStoreNo();
+		String msg = "";
+		String view = "common/msg";
+    	
+    	
+    	int result = storeInfoService.insertReport(r);
+    	
+    	if(result > 0) {
+    		msg ="신고가 완료 되었습니다.";
+    	}else {
+    		msg ="신고 오류 : 다시 신고해주세요.";
+    	}
+    	///menu/menuList.do?storeNo=257-86-00648 성공시
+    	model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+    	
+    	return view;
+    }
+    
     
     
 	

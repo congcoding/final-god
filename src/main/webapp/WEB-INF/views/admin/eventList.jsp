@@ -22,6 +22,7 @@ table#tbl-event tr td a {text-decoration:none !important;}
 input#btn-add2{float : right;}
 input#btn-add1{float : right;}
 input#btn-add3{float : right;}
+input#btn-add5{float : right;}
 </style>
 <script>
 $(function(){
@@ -40,6 +41,9 @@ function fn_goEventEnd(){
 };
 function fn_goEventAll(){
 	location.href = "${pageContext.request.contextPath}/admin/eventList.do?status=all";
+};
+function fn_goStoreEvent(){
+	location.href = "${pageContext.request.contextPath}/admin/eventList.do?status=store";
 };
 </script>
 
@@ -62,6 +66,7 @@ function fn_goEventAll(){
 
 		<input type="button" value="끝난 이벤트" id="btn-add2" class="btn btn-info" onclick="fn_goEventEnd();"/>
 		<input type="button" value="진행중인 이벤트" id="btn-add1" class="btn btn-info" onclick="fn_goEventIng();"/>
+		<input type="button" value="가게 이벤트" id="btn-add5" class="btn btn-info" onclick="fn_goStoreEvent();"/>
 		<input type="button" value="전체 이벤트" id="btn-add3" class="btn btn-info" onclick="fn_goEventAll();"/>
 		<input type="button" value="이벤트 등록" id="btn-add4" class="btn btn-outline-success" onclick="fn_goEventForm();"/>
 		<br /> <br />

@@ -1,9 +1,14 @@
 package com.kh.god.seller.controller;
 
+
+import java.sql.Date;
+
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +37,7 @@ import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.exception.MenuException;
@@ -129,7 +135,8 @@ public class SellerController {
 		 String loc = "/";
 	     String msg = "";
 	     String view = "common/msg";
-
+	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+	     int messageCount = 0;
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {
@@ -165,7 +172,11 @@ public class SellerController {
 	            // 비밀번호 일치했을시 세션 상태 유지
 	            mav.addObject("sellerLoggedIn", s);
 	            session.setAttribute("login",s.getSellerId());
-
+	            //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+	            messageCount = sellerService.notReadMessage(memberId);
+	            logger.debug("안읽은 메세지 개수 : "+messageCount);
+	            session.setAttribute("messageCount", messageCount);
+	          
 	            //사이드바
 	            List<StoreInfo> store = sellerService.myStore(memberId);
 	            
@@ -222,8 +233,8 @@ public class SellerController {
 	}
 		
 	//내 가게 
-	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+	@RequestMapping("/seller/goMyStore.do")
+	public String goMyStore(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
@@ -428,8 +439,6 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	
-//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
     	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
@@ -864,5 +873,53 @@ public class SellerController {
     	return saleVolume;
     }
 
+    
+	/* 리뷰관리로 들어가기 */
+    @RequestMapping("/seller/goSellerReview.do")
+    public String goSellerReview(@RequestParam("storeNo") String storeNo,Model model) {
+    	System.out.println(storeNo);
+    	//댓글 가져오기
+    	List<Review> review1 = sellerService.getReview1(storeNo);
+    	//답댓글 가져오기
+    	List<Review> review2 = sellerService.getReview2(storeNo);
+
+    	model.addAttribute("review1", review1);
+    	model.addAttribute("review2", review2);
+
+    	return "seller/sellerReview";
+    }
+    @RequestMapping(value = "/seller/myStoreChart.do" )
+	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {
+		//logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
+		Map<String,String> info = new HashMap<>();
+		info.put("storeNo",storeNo);
+		info.put("sellerId",sellerId);
+		info.put("type","today");
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(info);
+		logger.debug("오늘 자 판매량 데이터 : "+saleVolume);
+		model.addAttribute("saleVolume",saleVolume);
+		model.addAttribute("storeNo",storeNo);
+
+
+		
+		return "seller/myChart";
 	}
+    @ResponseBody
+	@RequestMapping("seller/chartByPeriod.do")
+	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, 
+												   @RequestParam(name="storeNo") String storeNo, @RequestParam(name="type") String type) {
+		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate+", 타입 : "+type);
+		Map<String, String> map = new HashMap<>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("storeNo",storeNo);
+		map.put("type",type);
+		List<Map<String,String>> chartByWeek = sellerService.chartByPeriod(map);
+		logger.debug(chartByWeek);
+		
+		return chartByWeek;
+	}
+
+	}
+
 

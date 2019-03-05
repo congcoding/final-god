@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
@@ -90,7 +91,18 @@ public interface SellerService {
 
 	StoreInfo selectStoreInfo(String storeNo);
 
+	List<Review> getReview1(String storeNo);
+
+	List<Review> getReview2(String storeNo);
+
+
+	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
+
+	List<Map<String,String>> chartByPeriod(Map<String, String> map);
+
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
+
+	int notReadMessage(String memberId);
 
 
 

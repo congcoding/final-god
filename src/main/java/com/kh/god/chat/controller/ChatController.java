@@ -112,7 +112,7 @@ public class ChatController {
 	}
 	@ResponseBody
 	@RequestMapping(value="/chat/addPerson.do")
-	public List<Map<String,String>> addPerson(@RequestParam String addId , @RequestParam String loginId) {
+	public List<Map<String,String>> addPerson(@RequestParam(name="addId") String addId , @RequestParam(name="loginId") String loginId) {
 		logger.debug("addPerson searchId: "+addId + " : "+loginId);
 		ChatRoom roomId = new ChatRoom();
 		roomId.setSellerId(loginId);

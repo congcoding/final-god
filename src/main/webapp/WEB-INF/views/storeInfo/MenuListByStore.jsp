@@ -17,6 +17,7 @@
 	    <li class="list-group-item" id=storeName>
 		    ${storeInfo.storeName}
 		    <span style="float : right">
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
@@ -30,6 +31,9 @@
 		    </span>
 	    </li>
 	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
+	    <input type="hidden" value=" ${storeInfo.deliveryMinPrice}" id="deliveryMinPrice">
+	    <input type="hidden" id="checkSum">
+
 	    <li class="list-group-item">
 	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
 	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
@@ -239,6 +243,48 @@
 
 </div> <!-- #last-container -->
 
+<!-- 신고 모달 -->
+<div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">신고하기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action="${pageContext.request.contextPath}/storeInfo/report.do" method="post" id="report-frm">
+	      <div class="modal-body">
+		        <c:forEach items="${storeInfo}" var="storeInfo">
+		          <div class="form-group">
+		            <label for="email" class="col-form-label" style="font-size:large;">상호명</label>
+		            <br />
+		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.storeName}" disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="storeNo" value="${storeInfo.storeNo}" />
+		          	<input type="hidden" name="category" value="S" />
+		          </div>
+		          <div class="form-group">
+		              <label for="password" class="col-form-label" style="font-size:large;">신고사유</label>
+						<select name="reportDetails" class="form-control" style="width:400px;">
+						    <option value="">신고사유선택</option>
+						    <option value="위생불량">위생불량</option>
+						    <option value="불친절한 서비스">불친절한 서비스</option>
+						    <option value="카드결제 거부">카드결제 거부</option>
+						    <option value="배달시간 초과">배달시간 초과</option>
+						    <option value="기타" id="ect">기타</option>
+						</select>
+		          </div>
+		        </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" onclick="checkSelect();">신고</button> 
+	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+
 
 <!--스크립트------------------------------------------------------------>
 <script>
@@ -374,7 +420,7 @@ function cartHtml(){
 	    		
 	    		html += "<tr><td colspan ='2'>합계</td><td>"+sum+"</td></tr>"; 
 	    		$('#btn-order').removeAttr("disabled");
-	    		
+	    		$("#checkSum").val(sum);
 	    	}else{
 				html += "<tr><td>주문표에 담긴 메뉴가 없습니다.</td></tr>";
 				$('#btn-order').attr("disabled","disabled");
@@ -481,11 +527,25 @@ function emptyCart(newMenuCode){
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
 	var memberid= "${memberLoggedIn.memberId}";
+	var deliveryMinPrice = $("#deliveryMinPrice").val();
+	var checkSum = $("#checkSum").val();
+	
+	console.log("외않되죠deliveryMinPrice..?",deliveryMinPrice);
+	console.log("외않되죠checkSum..?",checkSum);
+
 	var bool = "";
 	if(memberid==""){
 		bool =  confirm("비회원으로 주문 하시겠습니까?");
+		if(checkSum<deliveryMinPrice){
+			alert("최소금액을 주문하셔야합니다.");
+			return;
+		}
 	} else {
 		bool =  confirm("주문 하시겠습니까?");
+		if(checkSum<deliveryMinPrice){
+			alert("최소금액을 주문하셔야합니다.");
+			return;
+		}
 	}
 	
 	if(bool){
@@ -530,6 +590,17 @@ $("#clickInformation").click("on", function(){
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 });
+
+function checkSelect(){
+	
+	if($("[name=reportDetails] option:eq(0)").is(":selected")){
+		alert("신고사유를 선택해주세요.");
+		return false;
+	}else{
+	
+	$("#report-frm").submit();
+	}
+};
 
 </script>
 

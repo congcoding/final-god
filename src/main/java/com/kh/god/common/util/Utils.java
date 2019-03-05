@@ -250,12 +250,10 @@ public class Utils {
 		
 		int idx = 0;
 		StringBuffer sb = new StringBuffer();
-		
-		System.out.println("charSet.length@SendEmail = " + charSet.length);
+	
 		
 		for(int i = 0; i < len; i++) {
 			idx = (int) (charSet.length * Math.random()); // 36 * 생성된 난수를  Int로 추출 (소숫점제거)
-			System.out.println("idx@SendEmail = " + idx);
 			sb.append(charSet[idx]);
 		}
 		

@@ -122,11 +122,27 @@ public class MemberServiceImpl implements MemberService {
 
 
 	@Override
+	public Seller selectOneSeller(String id) {
+		return memberDao.selectOneSeller(id);
+	}
+	
+	@Override
 	public List<Map<String, String>> selectOrderMenuList(String orderNo) {
 		return memberDao.selectOrderMenuList(orderNo);
 	}
 
 
+	@Override
+	public int updateFindPwd(Seller s) {
+		return memberDao.updateFindPwd(s);
+	}
+
+
+	@Override
+	public int updateMemberFindPwd(Member m) {
+		return memberDao.updateMemberFindPwd(m);
+	}
+	
 	@Override
 	public int deleteMemberReview(String reviewNo) {
 		return memberDao.deleteMemberReview(reviewNo);
