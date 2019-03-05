@@ -46,6 +46,18 @@ public class AdminController {
 	@Autowired
 	AdminService adminService;
 	
+	@RequestMapping(value = "/index.do")
+	public Model index(Model model) {
+		
+		//현재 진행중인 이벤트 목록 받아오기
+		List<Event> eventList = adminService.carouselEvent();
+		model.addAttribute("carouselEvent", eventList);
+		
+		
+		model.addAttribute("index");
+		return model;
+	}
+	
 	@RequestMapping("/admin/qnaboard.do")
 	public String selectBoardList(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
 		

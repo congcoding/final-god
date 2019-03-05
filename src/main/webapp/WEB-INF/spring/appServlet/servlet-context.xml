@@ -95,6 +95,7 @@
 		<interceptor>
 			<mapping path="/seller/sellerView.do"/>
 			<mapping path="/seller/sellerUpdate.do"/>
+			<mapping path="/index.do"/>			
 			<beans:bean id="sellerloginCheckInterceptor" class="com.kh.god.common.interceptor.SellerLoginCheckInterceptor" />
 		</interceptor>	
 		
