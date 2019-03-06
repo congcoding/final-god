@@ -50,12 +50,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.checkBookMark(map);
 	}
 
-
-	@Override
-	public List<Map<String, Object>> couponListBymemberId(String memberId) {
-		return memberDao.couponListBymemberId(memberId);
-	}
-
 	public int insertBookMark(Map<String, String> map) {
 		return memberDao.insertBookMark(map);
 	}
@@ -149,7 +143,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+<<<<<<< HEAD
 	
+=======
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
+		return memberDao.couponListBymemberId(map);
+	}
+>>>>>>> 46d30f42a718340a9098c721f8bdaaf252e8b5cc
 
 
 

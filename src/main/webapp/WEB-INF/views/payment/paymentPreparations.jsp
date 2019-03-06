@@ -21,6 +21,8 @@
 		<input type="hidden" name="methodForController" id="methodForController">
 		<input type="hidden" name="orginalPrice" id="orginalPrice">
 		<input type="hidden" name="orderMenu" id="orderMenu">
+		<input type="hidden" name="couponNo" id="couponNo">
+		
 		
 			<table class="table" id="deliveryInformation">
 			  <thead class="thead-light">
@@ -38,9 +40,29 @@
 				    </div>
 				    <label for="inputEmail3" class="col-sm-2 col-form-label">전화번호</label>
 						<div class="col-sm-10">
+						
+						<c:if test="${memberLoggedIn!=null}">
+						<input type="tel" class="form-control" id="tel" name="tel" value="${memberPhone}" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
+						</c:if>
+						
+		                <c:if test="${memberLoggedIn==null}">						
 			  			<input type="tel" class="form-control" id="tel" name="tel" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
+			  			 </c:if>
+			  			 
+			  			 <c:if test="${memberLoggedIn==null}">
+			  			 <button type="button" class="btn btn-info" id="phoneCheckBtn" onclick="phoneCheck();">휴대폰인증</button>
+			  			 </c:if>
+			  			 <!-- 보낸인증번호 -->
+			  			 <input type="hidden" id="rndNoToTel">
+			  			 <span id="phoneChkTxt">휴대폰 정보로 인증번호6자리를 보냈습니다!</span>
+			  			 <div id="phoneChk-container"> 
+			  			 <input type="text" class="form-control" id="phoneChkNum" name="phoneChkNum" placeholder="입력 후 확인버튼을 눌러주세요." required>
+			  		     <span id="notEqualsRndNo">인증번호가 올바르지 않습니다.다시 시도해주세요.</span>
+			  		     <span id="equalsRndNo">인증이 완료되었습니다.</span>
+			  			 </div>
 			  			 <span id="telWarning">휴대전화번호는 숫자만 입력해주세요.</span> 
 			  		     <span id="tel11Warning">휴대전화번호는 11자 이내로 입력해주세요.</span>
+
 			  			 
 				    </div>
 				  </td>
@@ -140,39 +162,21 @@
 			<!-- 카트세션에서 꺼내옴 -->	
 		  </tbody>
 		</table>
+		<c:if test="${memberLoggedIn!=null}">
 		<button type="button" class="btn btn-info" id="orderEndBtn">주문완료</button>
+		</c:if>
+		<c:if test="${memberLoggedIn==null}">
+		<button type="button" class="btn btn-info guestOrderBtn" id="orderEndBtn" disabled>주문완료</button>
+		</c:if>
+
+		
 	</div> <!-- div#cart -->
 	
 	<!-- 결제후 폼제출 -->
 	<from name="paymentEndFrm">
 	
 	</from>
-<!-- 전화번호 인증 모달 -->
-<div class="modal fade" id="phoneCheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">전화번호 인증</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label for="recipient-name" class="form-control-label">인증번호:</label>
-            <input type="text" class="form-control" id="recipient-name">
-          </div>
-          
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary">인증</button>
-      </div>
-    </div>
-  </div>
-</div>	
+
 </div> <!-- div#container -->
 
 <script src="https://nsp.pay.naver.com/sdk/js/naverpay.min.js"></script>
@@ -207,6 +211,7 @@ $(document).ready(function(){
 $("#couponBtn").on("click", function(){
 	console.log($("[name=eventCoupon]:selected").val());
 	var eventNo = $("[name=eventCoupon]:selected").val();
+	console.log("이벤트번호인가요?",eventNo);
 	var sum=0;
 	for (var i=0; i<cart.length; i++){
 	 	<!-- 주문메뉴 -->
@@ -337,13 +342,7 @@ $("#orderEndBtn").on("click",function(){
 	 	<!-- 주문메뉴 -->
 	    sum += cart[i].menuPrice*cart[i].amount;
 	}
-	phoneCheck
-	var memberId = $("#memberId").val();
-	/* 비회원일 시 모달창 */
-/*  	if(memberId==""){
- 		phoneCheck();
- 		return;
-	}  */
+	 
 	
 	$("#originalPrice").val(sum); //원가격
 	var totalPrice = JSON.parse(sessionStorage.getItem("totalPrice"));
@@ -396,10 +395,38 @@ $("#orderEndBtn").on("click",function(){
 	 }
 
 });
+$("#phoneCheckBtn").on("click",function(){
+		$("#phoneChkTxt").css("display","inline");
+		$("#phoneChk-container").show(1000);
 
+});
 /* 비회원일때 휴대폰인증 */
 function phoneCheck(){
-	$('#phoneCheck').modal('show');
+	var tel = $("#tel").val();
+	$.ajax({
+		url: "${pageContext.request.contextPath}/guest/phoneCheck.do",
+	    type: 'POST',
+	    data : {tel:tel},
+	    success: function(data) {
+			$("#rndNoToTel").val(data);
+			console.log(data);	
+	        $("#phoneChkNum").keyup(function() {
+	        	if($("#phoneChkNum").val()==$("#rndNoToTel").val()){
+	    			$("#notEqualsRndNo").css("display","none");
+	    			$("#equalsRndNo").css("display","inline");
+					$("#orderEndBtn").attr("disabled",false);
+	        	}else{		
+	    			$("#notEqualsRndNo").css("display","inline");
+	    			$("#equalsRndNo").css("display","none");
+	    			$("#orderEndBtn").attr("disabled",true);
+	        	}
+	   		 })
+	    },error:function(){
+	        console.log("휴대폰인증에이젝스오류");
+	    }
+	});
+	
+
 }
 
 </script>

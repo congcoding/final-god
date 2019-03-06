@@ -241,11 +241,6 @@ public class SellerDaoImpl implements SellerDao {
 		return menuNo;
 	}
 
-	/*
-	 * @Override public int insertMenu(Menu menu) { return
-	 * sqlSession.insert("menu.insertMenu", menu); }
-	 */
-
 	@Override
 	public StoreInfo selectStoreInfo(String storeNo) {
 		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);

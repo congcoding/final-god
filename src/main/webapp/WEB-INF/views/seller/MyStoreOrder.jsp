@@ -97,8 +97,12 @@ $(function(){
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
 				      
-				      <c:if test="${orderList1.PRICEWAY=='N'}">
-				      <td class="orderWay">만나서결제</td>
+				      <c:if test="${orderList1.PRICEWAY=='현금'}">
+				      <td class="orderWay">만나서결제(현금)</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList1.PRICEWAY=='카드'}">
+				      <td class="orderWay">만나서결제(카드)</td>
 				      </c:if>
 				     
 				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>

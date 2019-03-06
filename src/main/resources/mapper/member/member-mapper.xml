@@ -36,7 +36,7 @@
     </select>
     
     <select id="couponListBymemberId" resultType="map">
-    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberid} and useflag='N'
+    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag,C.storeno from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberId} and useflag='N' and storeno='all' or storeno=#{storeNo}
     </select>
     
     
@@ -64,7 +64,7 @@
 	<select id="orderList" resultType="map">
 		select o.*, r.reviewNo
 		from orderInfo o left join review r on o.orderNo = r.orderNo
-		where memberid = #{memberId} and receiveFlag = 'Y'
+		where memberid = #{memberId} and DELIVERYFLAG = 'Y'
 	</select>
 		
 	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>

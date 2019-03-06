@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.member.model.service.MemberService;
+import com.kh.god.member.model.vo.Member;
 import com.kh.god.seller.model.service.SellerService;
 import com.siot.IamportRestHttpClientJava.request.CancelData;
 import com.siot.IamportRestHttpClientJava.response.IamportResponse;
@@ -45,6 +46,14 @@ public class PaymentController {
 		client = new IamportClient(api_key, api_secret);
 	}
 	
+	//비회원일 경우 : 결제 전 핸드폰인증	
+	@RequestMapping("/guest/phoneCheck.do")
+	@ResponseBody
+	public String phoneCheck(@RequestParam("tel") String tel) {
+		MessageSend ms = new MessageSend();
+		String rndNo = ms.guestPhoneCheck(tel);
+		return rndNo;
+	}
 	
 	//결제준비페이지
 	@RequestMapping("/payment/goPaymentPage.do")
@@ -52,17 +61,27 @@ public class PaymentController {
 			@RequestParam("storeNo") String storeNo,
 			@RequestParam(value="memberId", required=false) String memberId
 			,Model model) {
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("memberId",memberId);
+	    map.put("storeNo",storeNo);
+
 		List<Map<String,Object>> couponListBymemberId = null;
+		Member memberInfo = null;
+		
 		if(!memberId.equals("")) {			
-			couponListBymemberId = memberService.couponListBymemberId(memberId);
+			couponListBymemberId = memberService.couponListBymemberId(map);
+			memberInfo = memberService.selectOneMember(memberId);
+			String memberPhone=memberInfo.getPhone();
+			memberPhone = memberPhone.replaceAll("-", "");
+			System.out.println(memberPhone);
+			model.addAttribute("memberPhone",memberPhone);
 		}
+		
 		model.addAttribute("storeName",storeName);
 		model.addAttribute("storeNo",storeNo);
 		model.addAttribute("couponList",couponListBymemberId);
 
-		/* 인증번호 */
-		int randomint = (int)(Math.random() * 10000000) + 1; 
-		System.out.println("randomint=>"+randomint);
+	
 
 		
 		return "payment/paymentPreparations";
@@ -115,7 +134,11 @@ public class PaymentController {
 	    tel_.insert(3, "-");
 	    tel_.insert(8, "-");
 	    tel = tel_.toString();
-	    
+	    if(paymentMethod.equals("later_cash")) {
+	    	paymentMethod="현금";
+	    }else if(paymentMethod.equals("later_card")) {
+	    	paymentMethod="카드";
+	    }
 	    
 	    Map<String, Object> orderInfoMap = new HashMap<>();
 	    Map<String, Object> orderMenuMap = new HashMap<>();
@@ -127,7 +150,7 @@ public class PaymentController {
 		orderInfoMap.put("memberId",memberId.equals("")?noMemId:memberId);		
 		orderInfoMap.put("request",!request.equals("")?request:"");
 		orderInfoMap.put("paymentId",!paymentId.equals("")?paymentId:"");
-		orderInfoMap.put("priceWay", paymentMethod.equals("now_card")?"Y":"N");
+		orderInfoMap.put("priceWay", paymentMethod.equals("now_card")?"Y":paymentMethod);
 
 		
 	    int orderInfo=sellerService.insertOrderInfo(orderInfoMap);

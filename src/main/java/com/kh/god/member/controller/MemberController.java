@@ -531,6 +531,30 @@ public class MemberController {
 	 
 	 }
 	 
+	 @RequestMapping("/member/getDiscount.do")
+	 @ResponseBody
+	 public Map<String,Object> getDiscount(@RequestParam("eventNo") String eventNo,
+			 @RequestParam("price") int price) {
+	 //처리된 값을 받아둘 model 객체 선ㅇ너
+	 
+		 logger.debug("이벤트넘 : "+eventNo);
+		 logger.debug("결제가격 : "+price); 
+
+		 Map<String,Object>map = new HashMap<>();
+		 double discount = memberService.getDiscount(eventNo); 
+		 if(discount<1) {
+			 price = (int) (price*discount);
+		 } else {
+			 price = (int) (price-discount);
+		 }
+
+		 map.put("totalPrice", price);
+
+		 return map; //BeanNameViewResolver에 의해 처리될 bean 객체 
+	 
+	 }
+
+	 
 	 /** 일반회원 북마크 관리 : checkBookMark */
 	 @RequestMapping("/member/checkBookMark.do")
 	 @ResponseBody

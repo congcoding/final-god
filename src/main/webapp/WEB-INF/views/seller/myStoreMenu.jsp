@@ -40,9 +40,96 @@ function updateMenu(menuName, menuPrice, menuCode, storeNo){
 
 function realUpdate(){
 	if(confirm("정말 수정하시겠습니까?")){
+		if($("#updateMenuName").val() == ""){
+			alert("메뉴명을 기재해주세요.");
+			return false;
+		}
+		
+		if($("#updateMenuPrice").val() == ""){
+			alert("메뉴가격을 기재해주세요.");
+			return false;
+		}
+		
 		realUpdateFrm.submit();
 	};
 }
+
+
+
+$(function(){
+	
+	$("#insertMenuName").on("keyup", function(){
+		console.log("insertKeyup 도달");
+		
+		if($("#insertMenuName").val().length == 0){
+			$(".warning").css("display", "none");
+			$(".okay").css("display", "none");
+		}
+		
+		if($(".menuNameCheck").val() == $("#insertMenuName").val()){
+			$(".warning").css("display", "inline");
+			$(".okay").css("display", "none");
+			$("#insertMenuName").val("");
+		}
+		
+		
+		if(!$("#insertMenuName").val().length == 0 &&
+			$(".menuNameCheck").val() != $("#insertMenuName").val()){
+			$(".okay").css("display", "inline");
+			$(".warning").css("display", "none");
+		}
+	});
+	
+	$("#updateMenuName").keyup(function(){
+		console.log("updateKeyup 도달");
+		
+		if($("#updateMenuName").val().length == 0){
+			$(".warning").css("display", "none");
+			$(".okay").css("display", "none");
+		}
+		
+		if($(".menuNameCheck").val() == $("#updateMenuName").val()){
+			$(".warning").css("display", "inline");
+			$(".okay").css("display", "none");
+			$("#updateMenuName").val("");
+		}
+		
+		
+		if(!$("#updateMenuName").val().length == 0 &&
+			$(".menuNameCheck").val() != $("#updateMenuName").val()){
+			$(".okay").css("display", "inline");
+			$(".warning").css("display", "none");
+		}
+	});
+	
+
+});
+
+	function realInsert(){
+
+		if(confirm("정말 추가하시겠습니까?")){
+			if($("#insertMenuName").val() == ""){
+				alert("메뉴명을 기재해주세요.");
+				return false;
+			}
+			
+			if($("#insertMenuPrice").val() == ""){
+				alert("메뉴가격을 기재해주세요.");
+				return false;
+			}
+			
+			if($(".okay").css("display", "inline")){
+				realInsertFrm.submit();
+			}
+			
+			if(!$(".okay").css("display", "none")){
+				alert("안돼요");
+				return false;
+			}
+		}
+	}
+
+	
 
 
 function deleteMenu(menuCode, storeNo){
@@ -158,6 +245,7 @@ $(document).ready(function(){
 				</c:if>
 			</td>
 			<td><c:out value="${menu.menuName}" /></td>
+			<input type="hidden" class="menuNameCheck" value="${menu.menuName}" />
 			<td><fmt:formatNumber value="${menu.menuPrice }"/>원</td>
 			<td>
 				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#updateMenuModal" id="menuUpdate-btn" onclick="updateMenu('${menu.menuName}', ${menu.menuPrice }, '${menu.menuCode }', '${menu.storeNo}');">수정</button>
@@ -215,7 +303,7 @@ $(document).ready(function(){
 </form>
 
 <!-- insertMenuModal -->
-<form action="${pageContext.request.contextPath}/seller/insertMenu.do" enctype="multipart/form-data" method="post">
+<form action="${pageContext.request.contextPath}/seller/insertMenu.do" enctype="multipart/form-data" method="post" id="realInsertFrm">
 	<div class="modal fade" id="insertMenuModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
@@ -231,6 +319,8 @@ $(document).ready(function(){
 	          	<input type="hidden" class="form-control" id="insertCategoryNo" name="categoryNo" value="${categoryNo}"/>
 	          	<input type="hidden" class="form-control" id="insertStoreNo" name="storeNo" value="${storeNo}"/>
 	            <label for="menuName" class="col-form-label">메뉴명</label>
+	            <span class="warning">사용 할 수 없는 메뉴명입니다.</span>
+	            <span class="okay">사용 가능한 메뉴명입니다.</span>
 	            <input type="text" class="form-control" id="insertMenuName" name="menuName"/>
 	            <label for="menuPrice" class="col-form-label">메뉴가격</label>
 	            <input type="text" class="form-control" id="insertMenuPrice" name="menuPrice"/>
@@ -263,7 +353,7 @@ $(document).ready(function(){
 				</div>
 		  <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	        <button type="submit" class="btn btn-info">추가</button>
+	        <button type="button" class="btn btn-info" onclick="realInsert();">추가</button>
 	      </div>
 	    </div>
 	  </div>
@@ -296,4 +386,6 @@ $(document).ready(function(){
 
   <!-- Custom scripts for all pages-->
   <script src="js/sb-admin-2.min.js"></script>
+<script>
 
+</script>
