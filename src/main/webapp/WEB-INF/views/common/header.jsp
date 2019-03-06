@@ -520,11 +520,13 @@ span.srchVal{
 		
 		
 	}
-	
-	
+	//참여하는 채팅 유저
+	var chatUserList = new Array();
+	//맨처음만 채팅유저 리스트를 받아오게하려고 0일때만 작동하도록함.
+	var init = 0;
 	 //채팅방 목록 구현
 	 $("#messagesDropdown").on('click',function(){
-			sendRealTimeMember();
+		 console.log("목록 누를때 접속한 모든 유저들!: "+connectUser);
 		if($("#messagesDropdown").attr('aria-expanded') === 'false'){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/chat/chatRoomList.do",
@@ -544,17 +546,23 @@ span.srchVal{
 						}else{
 							chatPerson = message.SELLERID;
 						}
-						if(alertType != null){
-							for(var j in alertType){
-								if(alertType[j] == chatPerson){
+						if(init == 0){
+							chatUserList.push(chatPerson);
+						}
+						if(connectUser.length != 0){
+							console.log("채팅방 목록 만들기전에 들어옴");
+							for(var j in connectUser){
+								if(connectUser[j] == chatPerson){
+									//console.log("접속중!");
 									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
 									break;
 								}else{
+									//console.log("아직 없음!");
 									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
 								}
 							
 							}
-						}//end of if(alertType != null)
+						}//end of if(connectUser.length != 0)
 						var messageData = "";
 						var notRead = 0;
 						if(message.SENDMEMBER != '${sellerLoggedIn.sellerId}'){
@@ -564,8 +572,8 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCount'>"+notRead+"</span></div>";
-							
+						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCount'>"+notRead+"</span></div>";
+						
 						messageForm.append(messageData);
 						
 						bodyForm.append(messageForm);
@@ -573,7 +581,7 @@ span.srchVal{
 						mform.append(bodyForm);
 					
 					$("#messageDropdownBox").html(mform);
-				
+					init += 1;
 				},
 				error : function(jqxhr,textStatus,errorTrown){
 					console.log("채팅 목록 가져오는중 에러 남!");
@@ -654,7 +662,6 @@ span.srchVal{
 	function sendRealTimeMember(){
 		var msg = {};
 		msg.cmd = "realTimeMember";
-		msg.loginId = '${sellerLoggedIn.sellerId}';
 		socket.send(JSON.stringify(msg));
 	}
 	function getTimeStamp() {
@@ -688,7 +695,6 @@ span.srchVal{
 	 
 	//개별 상세 채팅방 구현
 	 $(document).on('click', 'div[id^="messageView"]', function(){
-			sendRealTimeMember();
 		 	var notRead =  $(this).children().eq(2).children().text();
 		 	var allNotRead ;
 		 	if($("#messageCount").text().trim().length == 0){
@@ -730,17 +736,20 @@ span.srchVal{
 			var youId = (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID);
 			var chatForm = $("<div style='height : 100%; padding: 0;'></div>");
 			var chatHeader;
-			if(alertType != null){
-				for(var j in alertType){
-					if(alertType[j] == youId){
+			if(connectUser.length != 0){
+				console.log("채팅방 목록 만들기전에 들어옴");
+				for(var j in connectUser){
+					if(connectUser[j] == youId){
+						//console.log("접속중!");
 						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
 						break;
 					}else{
+						//console.log("아직 없음!");
 						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
 					}
 				
 				}
-			}//end of if(alertType != null)
+			}//end of if(connectUser.length != 0)
 			var chatBody = $("<div class='shadow rounded border border-success' id='chatView' style='height : 29rem;' ></div>");
 			var chatFooter = $("<div class='modal-footer' style='width : 100%;'><input type='hidden' id='sendChatRoomNo' value="+data[0].chatRoomNo+" /><input type='text' class='form-control' name='messageContent' placeholder='메세지를 입력하세요.' id='messageContent' /><button type='button' class='btn btn-outline-success' id='sendMessage'>전송</button></div> ");
 			for(var i in data){
@@ -773,7 +782,7 @@ span.srchVal{
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
-
+	var connectUser = new Array();
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
@@ -784,8 +793,6 @@ span.srchVal{
 			}else{
 				 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
 			}
-			
-			
 			 $("#chatView").append(messageData);
 			 setTimeout(function(){
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
@@ -812,8 +819,10 @@ span.srchVal{
 	 	var ws = new SockJS("<c:url value="/echo"/>"); 
 	 	socket = ws;
 	 	ws.onopen = function(){
+	 		sendRealTimeMember();
 	 		console.log("Info : connection opened.");
 	 	};
+	 	//서버로부터 메세지를 받을 때
 	 	ws.onmessage = function(event){
 	 		alertType = null;
 	 		messageType = null;
@@ -824,8 +833,39 @@ span.srchVal{
 		 		else if(message[i].cmd === "review"){
 		 			alertType = message[i];
 					alertMessage(alertType,"review");		 			
-		 		}else if(message[i].cmd === "realTimeMember"){
-		 			alertType = message[1];
+		 		}else if(message[i] === "realTimeMember"){
+		 			for(var j = 1; j < message.length; j++){
+		 				console.log(message[j]);
+		 				connectUser.push(message[j]);
+		 			}
+		 			console.log("실시간 chatUserList: "+chatUserList);
+		 			console.log("실시간 connectUser: "+connectUser);
+		 			//실시간으로 바꿔줌.
+		 			for(var j = 0; j < chatUserList.length; j++){
+		 				for(var k = 0; k < connectUser.length; k++){
+		 					var chatUser = chatUserList[j];
+		 					console.log("실시간 connect "+connectUser[k]);
+			 				if(chatUser == connectUser[k]){
+			 					$("div[id^=messageView]").each(function(i){
+			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+			 						console.log("dd : "+loginSeller);
+			 						if(loginSeller === chatUserList[j]){
+			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-success");
+			 						}
+			 					});
+			 					$("#memberstatus").attr("class","status-indicator bg-success");
+			 				}else{
+			 					$("div[id^=messageView]").each(function(i){
+			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+			 						console.log("ss : "+loginSeller);
+			 						if(loginSeller === chatUserList[j]){
+			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-light");
+			 						}
+			 					});
+			 					$("#memberstatus").attr("class","status-indicator bg-light");
+			 				}
+		 				}
+		 			}
 		 			break;
 		 		}
 		 		else
@@ -838,6 +878,7 @@ span.srchVal{
 	 		
 	 	};
 	 	ws.onclose = function(event){
+	 		sendRealTimeMember();
 	 		console.log("Info : connection closed.");
 	 	};
 	 	ws.onerror = function(err){
@@ -1047,7 +1088,7 @@ span.srchVal{
 
 	
 	$("#autologin").on("click" , function(){
-		console.log("클릭 먹니?");
+		//console.log("클릭 먹니?");
 		if($("#autologin").is(":checked")){
 			$("#autologin1").val("yes");
 		}else{
