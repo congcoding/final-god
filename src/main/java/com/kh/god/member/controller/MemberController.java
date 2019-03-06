@@ -425,11 +425,11 @@ public class MemberController {
 	@RequestMapping("/member/bookMarkList.do")
 	public String bookMarkList(@RequestParam String memberId, Model model) {	
 	
-		List<StoreInfo> sList = memberService.bookMarkList(memberId);
+		List<StoreInfo> bookmarkList = memberService.bookMarkList(memberId);
 		
-		model.addAttribute("sList", sList);
+		model.addAttribute("bookmarkList", bookmarkList);
 		
-		String view = "member/memberView";
+		String view = "member/memberBookMark";
 				
 		return view; 
 	}
@@ -555,6 +555,15 @@ public class MemberController {
 		 return checkedBookMark;
 	 }
 	 
+	 //지역별 검색
+	 @RequestMapping("/member/searchByLoaction")
+	 public String searchByLoaction(@RequestParam("location") String location) {
+		 String[] locationArr = location.split(" ");
+		 location = locationArr[0] + locationArr[1];	 
+		 //List<StoreInfo> searchByLoaction = memberService.searchByLoaction(location);
+		 return "storeInfo/searchByLocation";
+	 }
+
 	 @RequestMapping("/member/findId.do")
 	 @ResponseBody
 	 public Map<String, Object> findId(@RequestParam("email") String email){
@@ -653,12 +662,6 @@ public class MemberController {
 		  return map ;
 		  
 	  }
-	
-	 
-	 
-	 
-	 
-	
 	
 }
 

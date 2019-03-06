@@ -106,9 +106,7 @@ div#memberViewFrm-container{
 				</c:if>			
 			</table>
 
-		</div>
-		
-		
+		</div>		
 	</div> <!-- div#memberViewFrm-container -->
 </div> <!-- div#MemberView-container -->
 

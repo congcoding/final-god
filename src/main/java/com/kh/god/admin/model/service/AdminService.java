@@ -8,6 +8,8 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.admin.model.vo.Report;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
@@ -124,6 +126,10 @@ public interface AdminService {
 	List<Coupon> couponList(String memberId);
 	
 	int couponAmount(int eventNo);
+	
+	List<Map<String, String>> eventStoreList(int cPage, int numPerPage);
+
+	int countEventStoreList();
 //	---------------------------------------------------------
 
 	StoreInfo storePMSView(String storeNo);
@@ -147,5 +153,23 @@ public interface AdminService {
 	List<Integer> chartByWeek(Map<String, String> map);
 
 	List<Integer> chartByCategoryAmount();
+
+	List<Map<String, String>> reportList(int cPage, int numPerPage);
+
+	int countReportList();
+
+	Report reportView(int reportNo);
+
+	Review reviewReportView(int reviewNo);
+
+	int updateReviewReportFlagY(Map<String, String> map);
+
+	int updateReportFlagR(String reportNo);
+
+	StoreInfo storeReportStoreInfoView(String storeNo);
+
+	Seller storeReportSellerView(String sellerId);
+
+	int updateStoreReportFlagY(Map<String, String> map);
 
 }

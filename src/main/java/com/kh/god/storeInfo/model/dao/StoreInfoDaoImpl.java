@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.god.admin.model.vo.Report;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -69,6 +70,11 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 	public List<Review> reviewList(String storeNo) {
 		List<Review> reviewList = sqlSession.selectList("storeInfo.reviewList",storeNo);
 		return reviewList;
+	}
+
+	@Override
+	public int insertReport(Report r) {
+		return sqlSession.insert("storeInfo.insertReport" , r);
 	}
 
 

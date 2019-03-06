@@ -1,16 +1,23 @@
 package com.kh.god.seller.controller;
 
+
+import java.sql.Date;
+
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -27,19 +34,23 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.util.WebUtils;
 
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
+import com.kh.god.seller.model.vo.LoginDTO;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 
 
@@ -100,99 +111,203 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
-			ModelAndView mav , HttpSession session) {
-		
-	
-		/* @RequestParam(name="autoLogin") String autoLogin , */
-		/*
-		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
-		 * //기존에 LOGIN세션값 존재하면 제거 }
-		 */
+	public String SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
+			@RequestParam("autologin") String autologin,HttpSession session) {
 		
 		
+		logger.debug("$#@$@#$@#$@#$"+autologin);
+		String returnURL = "";
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111"+ session.getAttribute("sellerLoggedIn"));
+//		Member member = null ;
+		if(session.getAttribute("sellerLoggedIn") != null) {
+			//기존에 login이란 세션값이 존재한다면
+//			Seller login = (Member)session.getAttribute("login");
+//			member = sellerService.login(login);
+			session.removeAttribute("sellerLoggedIn"); //기존값을 제거해준다.
+			
+		}
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
 		
+		String loc = "/";
+	      String msg = "";
+	      String view = "common/msg";
 		
-		
-		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
-		
-
-		memberSession = WebSocketHandler.getInstance().getUserList();
-		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
-
-		if(logger.isDebugEnabled())
-			logger.debug("로그인 요청!");
-		
-		//로그인 성공시 Seller 반환
 		Seller s = sellerService.selectOneSeller(memberId);
 		
-		 String loc = "/";
-	     String msg = "";
-	     String view = "common/msg";
 
+	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+	     int messageCount = 0;
 	     boolean loginFlag = true;
 	     
-	     if (s == null || s.getDelFlag().equals("Y")) {
+	     if (s == null || s.getDelFlag().equals("Y")) {//로그인실패
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
+	         returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         
-	      } else {//로그인 성공시 
-	    	  
-	    	//  dto.setPassword(password);
-	    	  
-	    	 // if(dto.isUseCookie()) {
-	    		  
-	    	  //}
-	    	  
-	    	  Set<String> keyValue = memberSession.keySet();
-				logger.debug("keyValue : "+keyValue);
-				Iterator<String> iterator = keyValue.iterator();
-				while(iterator.hasNext()) {
-					String loginId = iterator.next();
-					logger.debug("로그인 되어있는 아이디!"+ loginId);
-					if(s.getSellerId().equals(loginId)) {
-						msg = "이미 로그인한 아이디가 있습니다.";
-						loc="/";
-						loginFlag = false;
-					}
-					
-				}
-//				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
+	      } else { //로그인 검사 
 	         // 비밀번호 비교
-			if(loginFlag == true) {
-	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
-	            // 비밀번호 일치했을시 세션 상태 유지
-	            mav.addObject("sellerLoggedIn", s);
-	            session.setAttribute("login",s.getSellerId());
+	    	  if(loginFlag == true) {
+	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
+	        	 
+	        	 
+	        	 //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
+		            messageCount = sellerService.notReadMessage(memberId);
+		            logger.debug("안읽은 메세지 개수 : "+messageCount);
+		            session.setAttribute("messageCount", messageCount);
+		          
+		         //사이드바
+		            List<StoreInfo> store = sellerService.myStore(memberId);
+		            session.setAttribute("storeSideBar", store);
+		            
+		         //자동로그인 설정부분
+	        	 Seller s2 = sellerService.selectOneSeller(memberId);
+	        	 session.setAttribute("sellerLoggedIn" ,s);
+	        	 //dto설정
+	        	 LoginDTO dto = new LoginDTO();
+	     		 dto.setUid(memberId);
+	     		 dto.setUpw(s2.getPassword());
+	     		 if(autologin.equals("no")) {
+	    			dto.setUseCookie(false);	
+	    		 }else {
+	    			dto.setUseCookie(true);
+	    		 }
+	     		 
+	     		 /*[세션추가되는부분]*/
+	     		 //1.로그인이 성공되면 
+	     		 if(dto.isUseCookie()) {
+	     			 //쿠키사용한다고 체크되어 있으면
+	     			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
+	     			 Cookie cookie = new Cookie("loginCookie" , session.getId());
+	     			  //쿠키를 찾을 경로를 컨텍스트 경로로 변경해 줌.
+	     			 cookie.setPath("/");
+	     			 int amount = 60*60*24*7;
+	     			 cookie.setMaxAge(amount); //단위는 (초)임으로 7일정도로 유효시간을 서정해줌.
+	     			 //쿠키적용해줌
+	     			 response.addCookie(cookie);
+	     			 
+	     			 //currentTimeMills()가 1/100초 단위임으로 1000곱해서 더해야함.
+	     			Date sessionLimit = new Date(System.currentTimeMillis() + (1000*amount));
+	     		// 현재 세션 id와 유효시간을 사용자 테이블에 저장한다.
+	                try {
+						sellerService.keepLogin(s2.getSellerId(), session.getId(), sessionLimit);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@111111111111111111111");
 
-	            //사이드바
-	            List<StoreInfo> store = sellerService.myStore(memberId);
-	            
-	            session.setAttribute("storeSideBar", store);
-
-	            view = "redirect:/";
-	            
-	         } else {
-	            msg = "비밀번호를 잘못 입력하셨습니다.";
-	            loc = "/";
+	     			 
+	     		 }
+	         } else { //로그인 실패
+	            //비밀번호 불일치 
+	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
+		            loc = "/";
+	        	 returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         }
-			}
+		      }
 	      }
-	     
-	     mav.addObject("loc", loc);
-	     mav.addObject("msg", msg);
-	     mav.setViewName(view);
 		
-		return mav;
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
+		return "redirect:/" ;
 		
 	}
+//	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
+//	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
+//			ModelAndView mav , HttpSession session) {
+//		
+//		
+//		/* @RequestParam(name="autoLogin") String autoLogin , */
+//		/*
+//		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
+//		 * //기존에 LOGIN세션값 존재하면 제거 }
+//		 */
+//		
+//		
+//		
+//		
+//		
+//		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
+//		
+//		
+//		memberSession = WebSocketHandler.getInstance().getUserList();
+//		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
+//		
+//		if(logger.isDebugEnabled())
+//			logger.debug("로그인 요청!");
+//		
+//		//로그인 성공시 Seller 반환
+//		Seller s = sellerService.selectOneSeller(memberId);
+//		
+//		String loc = "/";
+//		String msg = "";
+//		String view = "common/msg";
+//		
+//		boolean loginFlag = true;
+//		
+//		if (s == null || s.getDelFlag().equals("Y")) {
+//			
+//			msg = "아이디가 존재하지 않습니다.";
+//			loc = "/";
+//			
+//		} else {//로그인 성공시 
+//			
+//			//  dto.setPassword(password);
+//			
+//			// if(dto.isUseCookie()) {
+//			
+//			//}
+//			
+//			Set<String> keyValue = memberSession.keySet();
+//			logger.debug("keyValue : "+keyValue);
+//			Iterator<String> iterator = keyValue.iterator();
+//			while(iterator.hasNext()) {
+//				String loginId = iterator.next();
+//				logger.debug("로그인 되어있는 아이디!"+ loginId);
+//				if(s.getSellerId().equals(loginId)) {
+//					msg = "이미 로그인한 아이디가 있습니다.";
+//					loc="/";
+//					loginFlag = false;
+//				}
+//				
+//			}
+////				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
+//			// 비밀번호 비교
+//			if(loginFlag == true) {
+//				if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
+//					// 비밀번호 일치했을시 세션 상태 유지
+//					mav.addObject("sellerLoggedIn", s);
+//					session.setAttribute("login",s.getSellerId());
+//					
+//					//사이드바
+//					List<StoreInfo> store = sellerService.myStore(memberId);
+//					
+//					session.setAttribute("storeSideBar", store);
+//					
+//					view = "redirect:/";
+//					
+//				} else {
+//					msg = "비밀번호를 잘못 입력하셨습니다.";
+//					loc = "/";
+//				}
+//			}
+//		}
+//		
+//		mav.addObject("loc", loc);
+//		mav.addObject("msg", msg);
+//		mav.setViewName(view);
+//		
+//		return mav;
+//		
+//	}
 	
 	@RequestMapping("/seller/sellerLogout.do")
-	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session) {
+	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session,HttpServletRequest request, HttpServletResponse response)
+{
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
-		session.setAttribute("login",null);
+//		session.setAttribute("sellerLoggedIn",null);
+//		session.removeAttribute("sellerLoggedIn");
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청!"); 
 		WebSocketHandler.getInstance().getUserList().remove(sellerId);
@@ -201,7 +316,37 @@ public class SellerController {
 	         sessionStatus.setComplete();
 	      }
 	      
-	      return "redirect:/";
+	      
+	      
+	      
+	      Object obj = session.getAttribute("sellerLoggedIn");
+	        if ( obj != null ){
+	            Seller vo = (Seller)obj;
+	            // null이 아닐 경우 제거
+	            session.removeAttribute("sellerLoggedIn");
+	            session.invalidate(); // 세션 전체를 날려버림
+	            //쿠키를 가져와보고
+	            Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+	            if ( loginCookie != null ){
+	                // null이 아니면 존재하면!
+	                loginCookie.setPath("/");
+	                // 쿠키는 없앨 때 유효시간을 0으로 설정하는 것 !!! invalidate같은거 없음.
+	                loginCookie.setMaxAge(0);
+	                // 쿠키 설정을 적용한다.
+	                response.addCookie(loginCookie);
+	                 
+	                // 사용자 테이블에서도 유효기간을 현재시간으로 다시 세팅해줘야함.
+	                Date date = new Date(System.currentTimeMillis());
+	                try {
+						sellerService.keepLogin(vo.getSellerId(), "none", date);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            }
+	        }
+	      
+	            return "redirect:/";
 	 }
 	
 	@RequestMapping("/seller/sellerView.do")
@@ -222,8 +367,8 @@ public class SellerController {
 	}
 		
 	//내 가게 
-	@RequestMapping("/seller/goMyShop.do")
-	public String goMyShop(@RequestParam("sellerId") String sellerId, Model model) {
+	@RequestMapping("/seller/goMyStore.do")
+	public String goMyStore(@RequestParam("sellerId") String sellerId, Model model) {
 		
 		if(logger.isDebugEnabled()) {
 			logger.debug("내 가게 보기 요청!"); 
@@ -428,8 +573,6 @@ public class SellerController {
     	
     	System.out.println("storeNo=>"+storeNo);
 
-    	
-//http://localhost:9090/spring/seller/goUpdateMyStore.do?storeNo=511-25-93434
     	return "redirect:/seller/goUpdateMyStore.do?storeNo="+storeNo;
 
     }
@@ -864,5 +1007,53 @@ public class SellerController {
     	return saleVolume;
     }
 
+    
+	/* 리뷰관리로 들어가기 */
+    @RequestMapping("/seller/goSellerReview.do")
+    public String goSellerReview(@RequestParam("storeNo") String storeNo,Model model) {
+    	System.out.println(storeNo);
+    	//댓글 가져오기
+    	List<Review> review1 = sellerService.getReview1(storeNo);
+    	//답댓글 가져오기
+    	List<Review> review2 = sellerService.getReview2(storeNo);
+
+    	model.addAttribute("review1", review1);
+    	model.addAttribute("review2", review2);
+
+    	return "seller/sellerReview";
+    }
+    @RequestMapping(value = "/seller/myStoreChart.do" )
+	public String myStoreChart(@RequestParam("storeNo") String storeNo,@RequestParam("sellerId") String sellerId ,Model model) {
+		//logger.debug("통계 페이지 넘어가기 전에 : "+storeNo+ " : " +sellerId);
+		Map<String,String> info = new HashMap<>();
+		info.put("storeNo",storeNo);
+		info.put("sellerId",sellerId);
+		info.put("type","today");
+		List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(info);
+		logger.debug("오늘 자 판매량 데이터 : "+saleVolume);
+		model.addAttribute("saleVolume",saleVolume);
+		model.addAttribute("storeNo",storeNo);
+
+
+		
+		return "seller/myChart";
 	}
+    @ResponseBody
+	@RequestMapping("seller/chartByPeriod.do")
+	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, 
+												   @RequestParam(name="storeNo") String storeNo, @RequestParam(name="type") String type) {
+		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate+", 타입 : "+type);
+		Map<String, String> map = new HashMap<>();
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("storeNo",storeNo);
+		map.put("type",type);
+		List<Map<String,String>> chartByWeek = sellerService.chartByPeriod(map);
+		logger.debug(chartByWeek);
+		
+		return chartByWeek;
+	}
+
+	}
+
 

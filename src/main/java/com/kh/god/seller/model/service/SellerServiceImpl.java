@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,8 +9,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.dao.SellerDao;
@@ -20,11 +23,12 @@ import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.SAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
+
 @Service
 public class SellerServiceImpl implements SellerService {
-	
+
 	Logger logger = Logger.getLogger(getClass());
-	
+
 	@Autowired
 	SellerDao sellerDao;
 
@@ -272,6 +276,59 @@ public class SellerServiceImpl implements SellerService {
 		}
 		
 		return result;
+	}
+	@Transactional
+	@Override
+	public List<Map<String, String>> totalSaleVolume(Map<String,String> info) {
+		Map<String,String> storeName = sellerDao.getStoreName(info);
+		List<Map<String,String>> week = null;
+		week = sellerDao.totalSaleVolume(info);
+		if(week.size() == 0) {
+			storeName.put("originalPrice","noData");
+			week.add(storeName);
+			logger.debug("데이터 없을 때 : "+week);
+		}
+		return week;
+	}
+
+	@Override
+	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
+		return sellerDao.chartByPeriod(map);
+	}
+
+	@Override
+	public List<Review> getReview1(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview1(storeNo);
+	}
+
+	@Override
+	public List<Review> getReview2(String storeNo) {
+		// TODO Auto-generated method stub
+		return sellerDao.getReview2(storeNo);
+	}
+	
+	//자동로그인 TEST
+	@Override
+	public void keepLogin(String sellerId, String sessionId ,Date next) throws Exception{
+		sellerDao.keepLogin(sellerId, sessionId, next);
+	}
+	
+	
+	@Override
+	public Seller checkUserWithSessionKey(String sessionId){
+		
+		return sellerDao.checkUserWithSessionKey(sessionId);
+	}
+
+	@Override
+	public Seller login(Seller s) {
+		return sellerDao.login(s);
+	}
+
+	@Override
+	public int notReadMessage(String memberId) {
+		return sellerDao.notReadMessage(memberId);
 	}
 
 

@@ -1,15 +1,18 @@
 package com.kh.god.seller.model.dao;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.kh.god.admin.model.vo.Ad;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 public interface SellerDao {
 
@@ -89,11 +92,33 @@ public interface SellerDao {
 
 	StoreInfo selectStoreInfo(String storeNo);
 
+	List<Review> getReview1(String storeNo);
+
+	List<Review> getReview2(String storeNo);
+
+
+	List<Map<String,String>> chartByPeriod(Map<String, String> map);
+
+	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
+
+	Map<String, String> getStoreName(Map<String, String> map);
+
+
 	int insertMenu(Menu menu);
 
 	int insertMenuAttachment(MenuAttachment a);
 
 	int updateMenuAttachment(MenuAttachment a);
+	
+	//자동로그인 TEST	
+	public void keepLogin(String sellerId, String sessionId,Date next) throws Exception;
+		
+	public Seller checkUserWithSessionKey(String sessionId);
+
+	Seller login(Seller s);
+
+	int notReadMessage(String memberId);
+
 
 
 }

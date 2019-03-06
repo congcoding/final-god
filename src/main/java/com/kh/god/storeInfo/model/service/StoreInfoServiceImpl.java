@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.god.admin.model.vo.Report;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.storeInfo.exception.StoreInfoException;
 import com.kh.god.storeInfo.model.dao.StoreInfoDao;
@@ -109,6 +110,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	@Override
 	public List<Review> reviewList(String storeNo) {
 		return storeInfoDao.reviewList(storeNo);
+	}
+
+	@Override
+	public int insertReport(Report r) {
+		return storeInfoDao.insertReport(r);
 	}
 	
 	

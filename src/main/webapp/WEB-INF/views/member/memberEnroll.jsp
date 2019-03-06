@@ -75,7 +75,7 @@ select#selectMonth, select#selectDay{ width : 65px;}
 		<div class="form-group row">
     		<label for="inputMemberId" class="col-sm-3">아이디<span style="color:red;">&nbsp;*</span></label>
     		<div>
-      			<input type="text" class="form-control" id="inputMemberId" name="memberId" required>
+      			<input type="text" class="form-control" id="inputMemberId" name="memberId" required placeholder="영어, 숫자 4글자 이상">
     		</div>
   		</div>	
   		
@@ -215,14 +215,23 @@ select#selectMonth, select#selectDay{ width : 65px;}
 
 <script>
 
+
 /* 유효성 검사 */
 function validate(){ 
 	
-	//아이디 글자수 확인
+	//아이디 글자수 확인 
 	if($("#inputMemberId").val().trim().length < 4){
 	      alert("아이디는 4글자 이상 입력해주세요");
 	      return false;	      
  	}
+	
+	var regExp = /^[a-z0-9_]{4,20}$/;
+	
+	if(!regExp.test($("#inputMemberId").val())){
+			alert("아이디에 특수문자는 사용하실 수 없습니다.");
+	      return false;	  
+	}
+	
  	
  	//비밀번호 일치 여부 검사
 	if($("#inputPassword").val() != $("#checkPassword").val()){

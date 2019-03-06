@@ -5,9 +5,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page import="com.kh.god.seller.model.vo.*" %>
 <%
-	Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
-	if(sellerLoggedIn != null){
+	if(session.getAttribute("sellerLoggedIn") != null){
+		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
+	}
+	int messageCount = 0;
+	if(session.getAttribute("messageCount") != null){
+		messageCount = (Integer)session.getAttribute("messageCount");
+		
 	}
 %>
 <!DOCTYPE html>
@@ -25,7 +30,6 @@
 <link rel="shortcut icon" type="image/x-icon" href="이미지경로" />
 <!-- 구글 차트 API -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
 <!-- 사용자작성 css -->
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/style.css" />
 
@@ -246,6 +250,7 @@ span.srchVal{
 	</div><!-- end of comfirm modal -->
 
 <body>
+<!-- 알람 -->
 <div id="socketAlert" class="alert alert-success" role="alert" ></div>
 <div id="container">
    <header>
@@ -259,14 +264,16 @@ span.srchVal{
 		    <a class="navbar-brand" href="${pageContext.request.contextPath}">God of Delivery</a>
 		    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		      <li class="nav-item active">
-		        <a class="nav-link" href="${pageContext.request.contextPath}">Home <span class="sr-only">(current)</span></a>
+		        <a class="nav-link" href="${pageContext.request.contextPath}" id="sweetHome">Home <span class="sr-only">(current)</span></a>
 		      </li>
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
 		      </li>		    
-		      <li class="nav-item">
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
-		      </li>
+		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
+		     	 <li class="nav-item">
+		        	<a class="nav-link" href="${pageContext.request.contextPath }/admin/dashBoard.do">관리자</a>
+		     	 </li>
+		      </c:if>
 		    </ul>
 		    
 			<!-- 회원 로그인,회원가입 버튼 -->
@@ -351,7 +358,7 @@ span.srchVal{
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-envelope fa-fw"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter">7</span>
+                <span class="badge badge-danger badge-counter" id="messageCount"><%=messageCount%></span>
               </a>
               <!-- Dropdown - Messages -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown" id="messageDropdownBox" style="width : 30rem;">
@@ -364,7 +371,7 @@ span.srchVal{
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
 		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyShop.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
 		  </c:if>
 		</c:if>
 		
@@ -403,7 +410,8 @@ span.srchVal{
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<br />
-	      		<input type="checkbox" name="login" value="sell" /> &nbsp;로그인 상태 유지
+	      		<input type="checkbox" id="autologin" value="no" /> &nbsp;로그인 상태 유지
+	      		 	<input type="hidden" id="autologin1" name="autologin" value="no"/>
 	      		<span style="color:red;margin: -13px;">&nbsp;회원유형을 체크하세요</span>
 		      	<br />
 	      	</div>
@@ -460,8 +468,6 @@ span.srchVal{
 	          
 	          </div>
 	          <div class="form-group">
-	         <!--    <label for="message-text" class="col-form-label">메뉴사진</label>
-	            <textarea class="form-control" id="message-text"></textarea> -->
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
 	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
@@ -477,6 +483,9 @@ span.srchVal{
 	</div>
 	
 	<script>
+	$(function(){
+		console.log(messageCount);
+	});
 	function memberLogOut(){
 		sessionStorage.clear();
 		location.href=
@@ -538,7 +547,7 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> <div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
+							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
 						
 						messageForm.append(messageData);
 						
@@ -706,7 +715,9 @@ span.srchVal{
 	var hasFocusRoom = 0;
 	var messageData = "";
 	var timeStamp = "";
-	 function receiveMessage(alertType,messageType){
+	var messageCount = 0;
+	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
+	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
@@ -722,8 +733,9 @@ span.srchVal{
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 	},150);
 		 }else{
+			 $("#messageCount").html(parseInt($("#messageCount").text().trim().length != 0 ? $("#messageCount").text():0)+1);
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
-		 		
+		 		//alert("dd");
 		 		setTimeout(function(){
 		 			$("#socketAlert").css("display","none");
 		 		},3000); 
@@ -847,8 +859,9 @@ span.srchVal{
 				addId : $("input[name=searchPerson]").val(),
 				loginId : '${sellerLoggedIn.sellerId}'				
 		};
-		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
+		if(searchId.addId != searchId.loginId){
 			
+		if($("input[name=confirmContent]").attr('placeholder') ==='정말로 추가하시겠습니까?' ){
 		$.ajax({
 			url : "${pageContext.request.contextPath}/chat/addPerson.do",
 			data : searchId,
@@ -878,6 +891,10 @@ span.srchVal{
 		}else{
 			$("#confirmModal").modal('hide');
 		}
+		}else{
+			alert('자신의 아이디를 초대할 수 없습니다.');
+			$("#confirmModal").modal('hide');
+		}
 		
 		
 	}
@@ -885,7 +902,7 @@ span.srchVal{
 		if($("input[name=searchPerson]").val().trim().length == 0){
 			$("input[name=confirmContent]").attr('placeholder','아이디를 입력해주세요');
 		}else{
-			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?.');
+			$("input[name=confirmContent]").attr('placeholder','정말로 추가하시겠습니까?');
 			
 		}
 	});
@@ -937,6 +954,16 @@ span.srchVal{
 	
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
+	});
+	
+	$("#autologin").on("click" , function(){
+		console.log("클릭 먹니?");
+		if($("#autologin").is(":checked")){
+			$("#autologin1").val("yes");
+		}else{
+			$("#autologin1").val("no");
+		}
+		
 	});
 	
 	</script>
