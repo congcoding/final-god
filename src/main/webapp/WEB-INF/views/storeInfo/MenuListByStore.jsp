@@ -17,6 +17,7 @@
 	    <li class="list-group-item" id=storeName>
 		    ${storeInfo.storeName}
 		    <span style="float : right">
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
@@ -241,6 +242,48 @@
 	</div>
 
 </div> <!-- #last-container -->
+
+<!-- 신고 모달 -->
+<div class="modal fade" id="ReportModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">신고하기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action="${pageContext.request.contextPath}/storeInfo/report.do" method="post" id="report-frm">
+	      <div class="modal-body">
+		        <c:forEach items="${storeInfo}" var="storeInfo">
+		          <div class="form-group">
+		            <label for="email" class="col-form-label" style="font-size:large;">상호명</label>
+		            <br />
+		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.storeName}" disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="storeNo" value="${storeInfo.storeNo}" />
+		          	<input type="hidden" name="category" value="S" />
+		          </div>
+		          <div class="form-group">
+		              <label for="password" class="col-form-label" style="font-size:large;">신고사유</label>
+						<select name="reportDetails" class="form-control" style="width:400px;">
+						    <option value="">신고사유선택</option>
+						    <option value="위생불량">위생불량</option>
+						    <option value="불친절한 서비스">불친절한 서비스</option>
+						    <option value="카드결제 거부">카드결제 거부</option>
+						    <option value="배달시간 초과">배달시간 초과</option>
+						    <option value="기타" id="ect">기타</option>
+						</select>
+		          </div>
+		        </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" onclick="checkSelect();">신고</button> 
+	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
 
 
 <!--스크립트------------------------------------------------------------>
@@ -547,6 +590,17 @@ $("#clickInformation").click("on", function(){
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 });
+
+function checkSelect(){
+	
+	if($("[name=reportDetails] option:eq(0)").is(":selected")){
+		alert("신고사유를 선택해주세요.");
+		return false;
+	}else{
+	
+	$("#report-frm").submit();
+	}
+};
 
 </script>
 

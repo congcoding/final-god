@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +32,11 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.admin.model.vo.Report;
 import com.kh.god.common.util.Utils;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
+import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
 
 
@@ -42,6 +46,18 @@ public class AdminController {
 	
 	@Autowired
 	AdminService adminService;
+	
+	@RequestMapping(value = "/index.do")
+	public Model index(Model model) {
+		
+		//현재 진행중인 이벤트 목록 받아오기
+		List<Event> eventList = adminService.carouselEvent();
+		model.addAttribute("carouselEvent", eventList);
+		
+		
+		model.addAttribute("index");
+		return model;
+	}
 	
 	@RequestMapping("/admin/qnaboard.do")
 	public String selectBoardList(@RequestParam(value="cPage",defaultValue="1") int cPage, Model model) {
@@ -89,6 +105,9 @@ public class AdminController {
 		}else if(status.equals("end")){
 			list = adminService.eventEndList(cPage,numPerPage);
 			totalContents= adminService.countEventEndList();
+		}else if(status.equals("store")) {
+			list = adminService.eventStoreList(cPage,numPerPage);
+			totalContents = adminService.countEventStoreList();
 		}
 		
 		model.addAttribute("cPage",cPage);
@@ -831,15 +850,6 @@ public class AdminController {
 		return mav;
 	}
 	
-	@ResponseBody
-	@RequestMapping("/admin/carouselEvent.do")
-	public Map<String, Object> carouselEvent() {
-		Map<String, Object> map = new HashMap<String, Object>();
-		List<Event> eventList = adminService.carouselEvent();
-		map.put("carouselEvent", eventList);
-		return map;
-	}
-	
 	@RequestMapping("admin/chart.do")
 	public Model chart(Model model) {
 		List<Integer> chartByCategory = adminService.chartByCategory(); 
@@ -871,8 +881,99 @@ public class AdminController {
 	}
 	
 	@RequestMapping("admin/reportList.do")
-	public String reportList() {
+	public String reportList(@RequestParam(value="cPage", defaultValue="1") int cPage, Model model) {
+		
+		int numPerPage = 10;
+		List<Map<String,String>> list = adminService.reportList(cPage, numPerPage);
+		int totalContents = adminService.countReportList();
+		
+		model.addAttribute("cPage",cPage);
+		model.addAttribute("numPerPage",numPerPage);
+		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("list",list);
+
 		return "admin/reportList";
 	}
+	
+	@RequestMapping("admin/reviewReportView.do")
+	public String reviewReportView(@RequestParam("reportNo") int reportNo, @RequestParam("reviewNo") int reviewNo, Model model) {
+		
+		Report report = adminService.reportView(reportNo);
+		Review review = adminService.reviewReportView(reviewNo);
+				
+		model.addAttribute("report", report);
+		model.addAttribute("review", review);
+		
+		return "admin/reviewReportView";
+	}
+	
+	@RequestMapping("admin/updateReviewReportFlagY.do")
+	public ModelAndView updateReviewReportFlagY(@RequestParam("reportNo") String reportNo, @RequestParam("reviewNo") String reviewNo, @RequestParam("memberId") String memberId, ModelAndView mav) {
+		
+		Map<String,String> map = new HashMap<>();
+		map.put("reportNo", reportNo);
+		map.put("reviewNo", reviewNo);
+		map.put("memberId", memberId);
+		int result = adminService.updateReviewReportFlagY(map);	
 
+		mav.addObject("msg", "블랙리스트 등록 완료");
+		mav.addObject("loc", "/admin/reportList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	@RequestMapping("admin/updateReportFlagR.do")
+	public ModelAndView updateReportFlagR(@RequestParam("reportNo") String reportNo, ModelAndView mav) {
+		
+		int result = adminService.updateReportFlagR(reportNo);
+		
+		String msg = "";
+		if(result>0) {
+			msg="신고 거절 완료";
+		}else {
+			msg = "신고 거절 실패";
+		}
+		
+		mav.addObject("msg",msg);
+		mav.addObject("loc","/admin/reportList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
+
+	}
+	
+	@RequestMapping("admin/storeReportView.do")
+	public String storeReportView(@RequestParam("reportNo") int reportNo, @RequestParam("storeNo") String storeNo, Model model) {
+		
+		Report report = adminService.reportView(reportNo);
+		StoreInfo store = adminService.storeReportStoreInfoView(storeNo);
+		
+		String sellerId = store.getSellerId(); 
+		Seller seller = adminService.storeReportSellerView(sellerId);
+		
+		model.addAttribute("report", report);
+		model.addAttribute("store", store);
+		model.addAttribute("seller", seller);
+		
+		return "admin/storeReportView";
+	}
+	
+	@RequestMapping("admin/updateStoreReportFlagY.do")
+	public ModelAndView updateStoreReportFlagY(@RequestParam("reportNo") String reportNo, @RequestParam("storeNo") String storeNo, @RequestParam("sellerId") String sellerId, ModelAndView mav) {
+		
+		Map<String,String> map = new HashMap<>();
+		map.put("reportNo", reportNo);
+		map.put("storeNo", storeNo);
+		map.put("sellerId", sellerId);
+		int result = adminService.updateStoreReportFlagY(map);	
+
+		mav.addObject("msg", "블랙리스트 등록 완료");
+		mav.addObject("loc", "/admin/reportList.do");
+		mav.setViewName("common/msg");
+		
+		return mav;
+	}
+	
+	
 }

@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.service;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 public interface SellerService {
 
@@ -98,10 +100,22 @@ public interface SellerService {
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
-	List<Map<String,String>> chartByWeek(Map<String, String> map);
+	List<Map<String,String>> chartByPeriod(Map<String, String> map);
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
+
+	//자동로그인 TEST
+	
+	// 자동로그인 체크한 경우에 사용자 테이블에 세션과 유효시간을 저장하기 위한 메서드
+	public void keepLogin(String memberId, String sessionId, Date next ) throws Exception;
+			
+	// 이전에 로그인한 적이 있는지, 즉 유효시간이 넘지 않은 세션을 가지고 있는지 체크한다.
+	public Seller checkUserWithSessionKey(String sessionId);
+			
+	Seller login(Seller login);
+
+	int notReadMessage(String memberId);
 
 
 

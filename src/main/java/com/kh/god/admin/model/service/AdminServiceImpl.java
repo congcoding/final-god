@@ -13,6 +13,8 @@ import com.kh.god.admin.model.vo.Ad;
 import com.kh.god.admin.model.vo.Coupon;
 import com.kh.god.admin.model.vo.Event;
 import com.kh.god.admin.model.vo.QnaBoard;
+import com.kh.god.admin.model.vo.Report;
+import com.kh.god.member.model.vo.Review;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.SAttachment;
@@ -295,6 +297,16 @@ public class AdminServiceImpl implements AdminService {
 	public int couponAmount(int eventNo) {
 		return adminDao.couponAmount(eventNo);
 	}
+	
+	@Override
+	public List<Map<String, String>> eventStoreList(int cPage, int numPerPage) {
+		return adminDao.selectEventStoreList(cPage,numPerPage);
+	}
+
+	@Override
+	public int countEventStoreList() {
+		return adminDao.countEventStoreList();
+	}
 
 //	---------------------------------------------------------
 	
@@ -346,6 +358,51 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public List<Integer> chartByCategoryAmount() {
 		return adminDao.chartByCategoryAmount();
+	}
+
+	@Override
+	public List<Map<String, String>> reportList(int cPage, int numPerPage) {
+		return adminDao.reportList(cPage, numPerPage);
+	}
+
+	@Override
+	public int countReportList() {
+		return adminDao.countReportList();
+	}
+
+	@Override
+	public Report reportView(int reportNo) {
+		return adminDao.reportView(reportNo);
+	}
+
+	@Override
+	public Review reviewReportView(int reviewNo) {
+		return adminDao.reviewReportView(reviewNo);
+	}
+
+	@Override
+	public int updateReviewReportFlagY(Map<String, String> map) {
+		return adminDao.updateReviewReportFlagY(map);
+	}
+
+	@Override
+	public int updateReportFlagR(String reportNo) {
+		return adminDao.updateReportFlagR(reportNo);
+	}
+
+	@Override
+	public StoreInfo storeReportStoreInfoView(String storeNo) {
+		return adminDao.storeReportStoreInfoView(storeNo);
+	}
+
+	@Override
+	public Seller storeReportSellerView(String sellerId) {
+		return adminDao.storeReportSellerView(sellerId);
+	}
+
+	@Override
+	public int updateStoreReportFlagY(Map<String, String> map) {
+		return adminDao.updateStoreReportFlagY(map);
 	}
 
 }

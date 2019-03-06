@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.dao;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 @Repository
 public class SellerDaoImpl implements SellerDao {
@@ -265,10 +267,44 @@ public class SellerDaoImpl implements SellerDao {
 		System.out.println("########################### update a => " + a);
 		return sqlSession.update("menu.updateMenuAttachment", a );
 	}
-
+	//기간별 통계내는 부분(일반 판매량,(회원/비회원)판매량)
 	@Override
-	public List<Map<String,String>> chartByWeek(Map<String, String> map) {
-		return sqlSession.selectList("seller.chartByWeek", map);
+	public List<Map<String,String>> chartByPeriod(Map<String, String> map) {
+		int startMonth = Integer.parseInt(map.get("startDate").substring(5,7));
+		int endMonth = Integer.parseInt(map.get("endDate").substring(5,7));
+		int subMonth = endMonth-startMonth;
+		List<Map<String,String>> resultList = null;
+		switch(map.get("type")) {
+		case "saleVolume" :
+		if(subMonth == 0) { //3달인지 1달인지 거르기 위한 분기문. 3달이면 시작 달과 끝 달이 다르므로 0이 아닌점을 이용.
+			resultList = new ArrayList<>();
+			resultList = sqlSession.selectList("seller.chartByPeriod", map);
+		}else {
+			endMonth = endMonth == 12 ? 1:endMonth+1;//오라클에서 달로만 계산하려니 마지막달은 1일 00시까지라 그 다음달 1일 00시까지 하고 view단에서 거름.
+			map.put("startDate",map.get("startDate").substring(0,7));
+			map.put("endDate",map.get("endDate").substring(0,4)+"/"+endMonth);
+			logger.debug("시작 날짜 : "+map.get("startDate"));
+			logger.debug("끝 날짜 : "+map.get("endDate"));
+			resultList = new ArrayList<>();
+			resultList = sqlSession.selectList("seller.chartBy3Month",map);
+		} break;
+		case "saleVolumeOfMember" :  
+			if(subMonth == 0) { //3달인지 1달인지 거르기 위한 분기문. 3달이면 시작 달과 끝 달이 다르므로 0이 아닌점을 이용.
+				resultList = new ArrayList<>();
+				resultList = sqlSession.selectList("seller.byMemberChartPeriod", map);
+			}else {
+				endMonth = endMonth == 12 ? 1:endMonth+1;//오라클에서 달로만 계산하려니 마지막달은 1일 00시까지라 그 다음달 1일 00시까지 하고 view단에서 거름.
+				map.put("startDate",map.get("startDate").substring(0,7));
+				map.put("endDate",map.get("endDate").substring(0,4)+"/"+endMonth);
+				logger.debug("시작 날짜 : "+map.get("startDate"));
+				logger.debug("끝 날짜 : "+map.get("endDate"));
+				resultList = new ArrayList<>();
+				resultList = sqlSession.selectList("seller.byMemberChart3Month",map);
+			}
+			break;
+		}
+		
+		return resultList;
 	}
 
 	@Override
@@ -295,5 +331,35 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("seller.getReview2", storeNo);
 	}
 
+	//자동로그인 TEST
+	@Override
+	public void keepLogin(String sellerId, String sessionId, Date next) throws Exception{
+			
+			Map<String, Object> paramMap =new HashMap<String, Object>();
+			paramMap.put("sellerId", sellerId);
+			paramMap.put("sessionId", sessionId);
+			paramMap.put("next", next);
+			  // Mapper.xml로 데이터를 전달할 때 한 객체밖에 전달 못함으로 map으로 묶어서 보내줌 단... 주의할 점은
+	        // Mapper.xml 안에서 #{} 이 안에 지정한 이름이랑 같아야함.. 자동으로 매핑될 수 있도록
+	        // 아래가 수행되면서, 사용자 테이블에 세션id와 유효시간이 저장됨
+			sqlSession.insert("seller.keepLogin", paramMap);
+	}
+		
 
+	@Override
+	public int notReadMessage(String memberId) {
+		return sqlSession.selectOne("seller.notReadMessage", memberId);
+	}
+
+
+	@Override
+	public Seller checkUserWithSessionKey(String sessionId){
+	        // 유효시간이 남아있고(>now()) 전달받은 세션 id와 일치하는 사용자 정보를 꺼낸다.
+		return sqlSession.selectOne("seller.checkUserWithSessionKey", sessionId);
+	}
+
+	@Override
+	public Seller login(Seller s) {
+		return sqlSession.selectOne("seller.login" , s);
+	}
 }

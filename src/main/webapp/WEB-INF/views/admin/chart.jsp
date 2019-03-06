@@ -78,6 +78,7 @@ $(function(){
         showOtherMonths: true,
         selectOtherMonths: true,
 		selectWeek:true,
+		maxDate : 0,
         onSelect: function(dateText, inst) { 
             var date = $(this).datepicker('getDate');
             startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());

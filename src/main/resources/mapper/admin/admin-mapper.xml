@@ -238,6 +238,14 @@
 	<select id="couponList" resultType="coupon">
 		select eventNo from coupon where memberId = #{memberId}
 	</select>
+	
+	<select id="selectEventStoreList" resultMap = "eventMap">
+		<![CDATA[ select e.* from event e join coupon c on e.eventNo = c.eventNo where c.enddate >= sysdate and c.storeNo not like 'all' order by c.eventNo desc ]]>
+	</select>
+	
+	<select id="countEventStoreList" resultType="_int">
+		<![CDATA[ select count(*) as cnt from coupon where enddate >= sysdate and storeNo not like 'all']]>
+	</select>
 <!-- ============================================== -->
 	<select id="storePMSView" resultType="storeInfo">
 		select * from storeInfo where storeNo=#{storeNo}
@@ -264,7 +272,7 @@
 	</update>
 	
 	<select id="carouselEvent" resultMap="eventMap">
-		<![CDATA[ select * from event where enddate >= sysdate order by eventNo desc ]]>
+		<![CDATA[ select * from event where startdate <= sysdate and enddate >= sysdate order by eventNo desc ]]>
 	</select>
 	
 	<select id="chartByCategory" resultType="_int">
@@ -291,6 +299,56 @@
 		group by categoryno
 		order by categoryno
 	</select>
+	
+	<select id="selectReportList" resultType="report">
+		select * from report order by reportFlag
+	</select>
+	
+	<select id="countReportList" resultType="_int">
+		select count(*) from report
+	</select>
+	
+	<select id="reportView" resultType="report">
+		select * from report where reportNo=#{reportNo}
+	</select>
+	
+	<select id="reviewReportView" resultType="review">
+		select * from review where reviewNo=#{reviewNo}
+	</select>
+	
+	<update id="updateReviewReportFlagY">
+		{call
+			declare
+			begin
+			update report set reportFlag='Y' where reportNo=#{reportNo};
+			update review set delFlag='Y' where reviewNo=#{reviewNo};
+			update member set blackFlag='Y' where memberId=#{memberId};
+			end
+		}
+	</update>
+	
+	<update id="updateReportFlagR">
+		update report set reportFlag='R' where reportNo=#{reportNo}
+	</update>
+	
+	<select id="storeReportStoreInfoView" resultType="storeInfo">
+		select * from storeInfo where storeNo=#{storeNo}
+	</select>
+	
+	<select id="storeReportSellerView" resultType="seller">
+		select * from seller where sellerId=#{sellerId}
+	</select>
+	
+	<update id="updateStoreReportFlagY">
+		{call
+			declare
+			begin
+			update report set reportFlag='Y' where reportNo=#{reportNo};
+			update storeInfo set pmsFlag='C' where sellerId=#{sellerId};
+			update seller set blackFlag='Y' where sellerId=#{sellerId};
+			end
+		}
+	</update>
 	
 </mapper>
 

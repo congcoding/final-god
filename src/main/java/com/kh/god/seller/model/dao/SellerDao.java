@@ -1,5 +1,6 @@
 package com.kh.god.seller.model.dao;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.MenuAttachment;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
+
 
 public interface SellerDao {
 
@@ -95,7 +97,7 @@ public interface SellerDao {
 	List<Review> getReview2(String storeNo);
 
 
-	List<Map<String,String>> chartByWeek(Map<String, String> map);
+	List<Map<String,String>> chartByPeriod(Map<String, String> map);
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
@@ -107,6 +109,15 @@ public interface SellerDao {
 	int insertMenuAttachment(MenuAttachment a);
 
 	int updateMenuAttachment(MenuAttachment a);
+	
+	//자동로그인 TEST	
+	public void keepLogin(String sellerId, String sessionId,Date next) throws Exception;
+		
+	public Seller checkUserWithSessionKey(String sessionId);
+
+	Seller login(Seller s);
+
+	int notReadMessage(String memberId);
 
 
 
