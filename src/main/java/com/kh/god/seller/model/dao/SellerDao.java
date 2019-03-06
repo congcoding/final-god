@@ -88,8 +88,6 @@ public interface SellerDao {
 
 	int selectMenuNo(String storeNo);
 
-	/* int insertMenu(Menu menu); */
-
 	StoreInfo selectStoreInfo(String storeNo);
 
 	List<Review> getReview1(String storeNo);

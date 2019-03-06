@@ -91,3 +91,13 @@
 .filebox.bs3-primary.preview-image {
     text-align: center;
 }
+
+.warning{
+	display: none;
+	color: red;
+}
+
+.okay{
+	display: none;
+	color: green;
+}
