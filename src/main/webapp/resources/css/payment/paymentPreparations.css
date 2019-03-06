@@ -38,6 +38,48 @@
 #orderEndBtn{
 	width:100%;
 }
+#phoneCheckBtn{
+    position: relative;
+    left: 102%;
+    top: -39px;
+}
+#phoneChkTxt{
+	display:none;
+    position: relative;
+    left: -65px;
+    color: green;
+    top: 1px;
+}
+#notEqualsRndNo{
+	 display:none;
+	   color: red;
+    position: relative;
+    top: 5px;
+    left: 6%;
+}
+#equalsRndNo{
+	display: none;
+	color: green;
+    position: relative;
+    top: 5px;
+    left: 6%;
+	
+}
+#phoneChkNum{
+	position: relative;
+    left: 5%;
+    top: -1px;
+    width: 88%;
+}
+#phoneCheckBtnEnd{
+	
+	position: relative;
+    left: 67%;
+    top: -39px;
+}
+#phoneChk-container{
+	display: none;
+}
 #telWarning{
 	color:red;	
     display: none;

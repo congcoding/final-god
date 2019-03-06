@@ -50,12 +50,6 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.checkBookMark(map);
 	}
 
-
-	@Override
-	public List<Map<String, Object>> couponListBymemberId(String memberId) {
-		return memberDao.couponListBymemberId(memberId);
-	}
-
 	public int insertBookMark(Map<String, String> map) {
 		return memberDao.insertBookMark(map);
 	}
@@ -146,6 +140,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public int deleteMemberReview(String reviewNo) {
 		return memberDao.deleteMemberReview(reviewNo);
+	}
+
+
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
+		return memberDao.couponListBymemberId(map);
 	}
 
 

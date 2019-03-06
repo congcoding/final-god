@@ -183,33 +183,27 @@
    </update>
 
    <select id="orderList1" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,I.address,I.phone,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno) F where m.memberid=F.memberid and storeno=#{storeNo} and receiveFlag='N' and cancelFlag='N'
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='N' and cancelFlag='N' order by I.orderno desc
    </select>
    
     <select id="orderList2" resultType="map">
-		select m.address,m.phone,F.* from member m,(select I.memberid,I.storeno,I.deliveryFlag,I.receiveFlag,I.priceway,I.totalprice,I.request,I.ordertime,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
->>>>>>> 0b3b16d6e8541d3eee05d2ec27f95ad615ec5831
+		select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,I.address,I.phone,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
-		from(select
-		O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M
+		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno
-		and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='N'
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='N' and deliveryFlag='N' order by I.orderno desc
 	</select>
 
 	<select id="orderList3" resultType="map">
-		select I.*,Z.name from Orderinfo I,(select orderno,LISTAGG(list, '/') within
-		group (order by orderno) name
+		select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,I.address,I.phone,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
-		from(select
-		O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M
+		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno
-		and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='Y'
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='Y' order by I.orderno desc
 	</select>
 
 	<update id="receiveOrder">

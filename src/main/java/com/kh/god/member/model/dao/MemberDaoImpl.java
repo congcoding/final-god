@@ -51,11 +51,6 @@ public class MemberDaoImpl implements MemberDao {
 		return result;
 	}
 
-	@Override
-	public List<Map<String, Object>> couponListBymemberId(String memberId) {		
-		return sqlSession.selectList("member.couponListBymemberId", memberId);
-	}
-
 	public int insertBookMark(Map<String, String> map) {
 		int result = sqlSession.insert("member.insertBookMark",map);
 		return result;
@@ -160,6 +155,11 @@ public class MemberDaoImpl implements MemberDao {
 	@Override
 	public int deleteMemberReview(String reviewNo) {
 		return sqlSession.update("member.deleteMemberReview",reviewNo);
+	}
+
+	@Override
+	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
+		return sqlSession.selectList("member.couponListBymemberId", map);
 	}
 
 }

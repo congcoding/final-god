@@ -87,6 +87,36 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		}
 		
 	}
-
-
+	
+	public static String guestPhoneCheck(String memberPhone) {
+		String api_key = "NCSVKGTPW3QU8AIA"; 
+		String api_secret ="DTUEHVLPZ1QRMFMUAL3XOPT7TELFSFRA"; 
+		Message coolsms = new Message(api_key,api_secret);
+		
+		//인증번호
+		int randomint = (int)(Math.random() * 1000000) + 1; 
+		String randomString = Integer.toString(randomint);
+		System.out.println("randomint=>"+randomint);
+		
+		/*HashMap<String, String> params = new HashMap<String, String>();
+		
+			params.put("to", memberPhone); 
+			params.put("from", "01084345390");
+			params.put("type", "SMS"); 
+			params.put("text", "[배달의 신]인증번호는 ["+randomint+"]입니다. 정확히 입력해주세요.");
+			params.put("app_version", "test app 1.2"); // application name and version
+		
+		// 4 params(to, from, type, text) are mandatory. must be filled
+		
+		
+		try { 
+			JSONObject obj = (JSONObject) coolsms.send(params);
+		    System.out.println(obj.toString()); 
+		    } catch (CoolsmsException e) {
+		    System.out.println(e.getMessage()); 
+		    System.out.println(e.getCode()); 
+		}*/
+		
+		return randomString;
+	}
 }
