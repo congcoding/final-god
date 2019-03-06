@@ -14,6 +14,7 @@
    		UPDATE MENUATTACHMENT
    			<trim prefix="SET" suffixOverrides=",">
    				<if test="renamedFileName != null">RENAMEDFILENAME = #{renamedFileName}</if>
+   				<if test="renamedFileName == null">RENAMEDFILENAME = #{renamedFileName}</if>
    			</trim>
    		WHERE MENUCODE = #{menuCode}
    </update>
