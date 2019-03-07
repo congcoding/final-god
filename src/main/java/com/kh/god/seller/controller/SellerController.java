@@ -657,7 +657,6 @@ public class SellerController {
 		}else if(status.equals("now")) {
 			list = sellerService.adSelectNow(cPage,numPerPage,storeNo);
 			totalContents = sellerService.countAdNow(storeNo);
-			logger.debug("wwwww");
 		}else if(status.equals("past")) {
 			list = sellerService.adSelectPast(cPage,numPerPage,storeNo);
 			totalContents = sellerService.countAdPast(storeNo);
@@ -684,6 +683,7 @@ public class SellerController {
 		}else {
 			ad.setStoreGrade("B");
 		}
+		
 		int result = sellerService.adRequest(ad);
 		
 		return "redirect:/seller/myAd.do?storeNo="+storeNo;
