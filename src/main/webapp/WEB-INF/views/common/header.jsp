@@ -9,11 +9,6 @@
 		Seller sellerLoggedIn = (Seller)session.getAttribute("sellerLoggedIn");
 	System.out.println("##################################" + sellerLoggedIn.getSellerId());		
 	}
-	int messageCount = 0;
-	if(session.getAttribute("messageCount") != null){
-		messageCount = (Integer)session.getAttribute("messageCount");
-		
-	}
 %>
 <!DOCTYPE html>
 <html>
@@ -75,25 +70,24 @@ nav.navbar-light{
 .loginbtn:hover{
 	color : white;
 }
-div.profileImage{
-	border : 2px solid lightgray;
-	width : 100%;
-	height : 12vh;
+#profileImage{
+	position : relative;
+	bottom : 0.3em;	
 	border-radius : 0.25em;
 }
-div.profileImage div#memberstatus{
+ div#memberstatus{
 	position : relative;
-	left : 2.8rem; 
-	bottom : 1rem;
+	left : 0.6em; 
 	border-radius : 100%;
 	width : 1rem;
 	height : 1rem;
 	padding : 0;
 }
-div.profileImage div#communicateWith{
+
+div#communicateWith{
 	position : relative;
-	left : 7rem;
-	bottom : 4rem;
+	left : 9rem;
+	bottom : 1rem;
 }
 div#messagePreviewContent{
 	overflow : hidden;
@@ -115,6 +109,7 @@ div#chatView div.messageFormatMyself{
 	text-align : right;
 	border : 1px solid lightgray;
 	border-radius :1em;
+	margin-top: 1rem;
 
 	
 }
@@ -124,7 +119,7 @@ div#chatView div.messageFormatHim{
 	text-align : left;
 	border : 1px solid lightgray;
 	border-radius : 1em;
-	
+	margin-top: 1rem;
 
 }
 div.dropdown-body{
@@ -137,6 +132,7 @@ div#socketAlert{
 }
 div#messageContentShow{
 	white-space : normal;
+	position : relative;
 }
 div#createChatRoomHeader h5{
 	margin : auto;
@@ -358,7 +354,7 @@ span.srchVal{
               <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-envelope fa-fw"></i>
                 <!-- Counter - Messages -->
-                <span class="badge badge-danger badge-counter" id="messageCount"><%=messageCount%></span>
+                <span class="badge badge-danger badge-counter" id="messageCount"></span>
               </a>
               <!-- Dropdown - Messages -->
               <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown" id="messageDropdownBox" style="width : 30rem;">
@@ -483,9 +479,7 @@ span.srchVal{
 	</div>
 	
 	<script>
-	$(function(){
-		console.log(messageCount);
-	});
+	
 	function memberLogOut(){
 		sessionStorage.clear();
 		location.href=
@@ -526,10 +520,13 @@ span.srchVal{
 		
 		
 	}
-	
-	
+	//참여하는 채팅 유저
+	var chatUserList = new Array();
+	//맨처음만 채팅유저 리스트를 받아오게하려고 0일때만 작동하도록함.
+	var init = 0;
 	 //채팅방 목록 구현
 	 $("#messagesDropdown").on('click',function(){
+		 console.log("목록 누를때 접속한 모든 유저들!: "+connectUser);
 		if($("#messagesDropdown").attr('aria-expanded') === 'false'){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/chat/chatRoomList.do",
@@ -538,16 +535,44 @@ span.srchVal{
 				dataType : "json",
 				success : function(data){
 					timeStamp = "";
+					var messageForm ;
 					var mform = $("<div><h6 class='dropdown-header'>Message Center <div class='btn btn-link'  id='openChatRoom' data-toggle='modal' data-target='#createChatRoom' > <i class='fas fa-comment-dots'></i></div></h6></div>");
 					var bodyForm = $("<div class='dropdown-body'></div>");
 					for(var i in data){
-						var messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+" '> <div class='dropdown-list-image mr-3'><img class='rounded-circle' src='https://source.unsplash.com/fn_BT9fwg_E/60x60' alt=''><div class='status-indicator bg-success'></div></div></div>");
 						var message = data[i];
+						var chatPerson = "";
+						if(message.SELLERID === '${sellerLoggedIn.sellerId}'){
+							chatPerson = message.SELLERID2;
+						}else{
+							chatPerson = message.SELLERID;
+						}
+						if(init == 0){
+							chatUserList.push(chatPerson);
+						}
+						if(connectUser.length != 0){
+							console.log("채팅방 목록 만들기전에 들어옴");
+							for(var j in connectUser){
+								if(connectUser[j] == chatPerson){
+									//console.log("접속중!");
+									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
+									break;
+								}else{
+									//console.log("아직 없음!");
+									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
+								}
+							
+							}
+						}//end of if(connectUser.length != 0)
 						var messageData = "";
+						var notRead = 0;
+						if(message.SENDMEMBER != '${sellerLoggedIn.sellerId}'){
+							notRead = message.NOTREADCOUNT;
+						}
+						
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-							messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+"</div>";
+						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCount'>"+notRead+"</span></div>";
 						
 						messageForm.append(messageData);
 						
@@ -556,7 +581,7 @@ span.srchVal{
 						mform.append(bodyForm);
 					
 					$("#messageDropdownBox").html(mform);
-				
+					init += 1;
 				},
 				error : function(jqxhr,textStatus,errorTrown){
 					console.log("채팅 목록 가져오는중 에러 남!");
@@ -571,9 +596,9 @@ span.srchVal{
 	//채팅방에서 메세지 전송을 누르면 웹소켓을 통해서 메세지가 전달됨.
 	$(document).on('click', 'button[id="sendMessage"]', function(evt){
 			evt.preventDefault();
-			sendMsgTime = getTimeStamp;
+			sendMsgTime = getTimeStamp();
 			var sendContent = $("input[name=messageContent]").val();
-			
+			$("input[name=messageContent]").val("");
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
 			var message = {
 					sendId : '${sellerLoggedIn.sellerId}',
@@ -586,9 +611,9 @@ span.srchVal{
 				url : "${pageContext.request.contextPath}/chat/insertChatLog.do",
 				data : message,
 				success : function(data){
-					 
-				 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div></div>";
-			 		$("#chatView").append(messageData);
+				 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
+			 		console.log(messageData);
+				 	$("#chatView").append(messageData);
 			 		setTimeout(function(){
 		 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 			},100);
@@ -602,12 +627,11 @@ span.srchVal{
 		 		}
 			});//end of ajax
 			if(socket.readyState !== 1) return;
-			sendMessage();
+				sendMessage();
 			}
 	});
 	//1. cmd(채팅),메세지 보낸자 ,메세지 받는자, 메세지 내용 (축소), 채팅방 번호, 보낸시간 ex) chat,sendUser,receiver,messageContent , chatRoomNo, sendTime
 	function sendMessage(){
-		
 		var msg ={};
 		msg.cmd = "chat";
 		msg.sender = "${sellerLoggedIn.sellerId}";
@@ -620,7 +644,26 @@ span.srchVal{
 		socket.send(JSON.stringify(msg));
 		$("input[name=messageContent]").val("");
 	}
-
+	//2. cmd(리뷰),리뷰 작성자, 가게이름, 가게번호, 가게사장아이디
+	function sendReviewAlert(){
+		var msg = {};
+		msg.cmd = "review";
+		if(!'$(sellerLoggedIn)'){
+			msg.writer = '${sellerLoggedIn.sellerId}';
+		}else{
+			msg.writer = '${memberLoggedIn.memberId}';
+		}
+		msg.storeName = '${orderMenuList[0].STORENAME }';
+		msg.storeNo = '${storeNo}';
+		msg.sellerId = '${sellerId}';
+		socket.send(JSON.stringify(msg));
+	}
+	//3. cmd(실시간 접속자), 현재로그인되어있는사람
+	function sendRealTimeMember(){
+		var msg = {};
+		msg.cmd = "realTimeMember";
+		socket.send(JSON.stringify(msg));
+	}
 	function getTimeStamp() {
 		   var date = new Date();
 		   var s =
@@ -652,6 +695,14 @@ span.srchVal{
 	 
 	//개별 상세 채팅방 구현
 	 $(document).on('click', 'div[id^="messageView"]', function(){
+		 	var notRead =  $(this).children().eq(2).children().text();
+		 	var allNotRead ;
+		 	if($("#messageCount").text().trim().length == 0){
+		 		allNotRead = 0;
+		 	}else{
+		 	 allNotRead = parseInt($("#messageCount").text());
+		 	$("#messageCount").html(allNotRead-parseInt(notRead));
+		 	}
 		 	var chatroominfo ={
 		 						chatRoomNo : $(this).children().eq(1).attr('value'),
 		 						sendId : $(this).children().eq(2).attr('value')!='${sellerLoggedIn.sellerId}'?$(this).children().eq(2).attr('value'):"<no>"
@@ -682,9 +733,24 @@ span.srchVal{
 	 function successLodingChatLogs(data){
 		 	messageData = "";
 			var myId = '${sellerLoggedIn.sellerId}';
+			var youId = (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID);
 			var chatForm = $("<div style='height : 100%; padding: 0;'></div>");
-			var chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><img class='rounded-circle' src='https://source.unsplash.com/fn_BT9fwg_E/60x60' alt=''><div class='status-indicator bg-success' id='memberstatus'></div><div id='communicateWith'>"+ (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID) +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
-			var chatBody = $("<div class='shadow rounded border border-success' id='chatView' style='height : 25rem;' ></div>");
+			var chatHeader;
+			if(connectUser.length != 0){
+				console.log("채팅방 목록 만들기전에 들어옴");
+				for(var j in connectUser){
+					if(connectUser[j] == youId){
+						//console.log("접속중!");
+						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
+						break;
+					}else{
+						//console.log("아직 없음!");
+						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
+					}
+				
+				}
+			}//end of if(connectUser.length != 0)
+			var chatBody = $("<div class='shadow rounded border border-success' id='chatView' style='height : 29rem;' ></div>");
 			var chatFooter = $("<div class='modal-footer' style='width : 100%;'><input type='hidden' id='sendChatRoomNo' value="+data[0].chatRoomNo+" /><input type='text' class='form-control' name='messageContent' placeholder='메세지를 입력하세요.' id='messageContent' /><button type='button' class='btn btn-outline-success' id='sendMessage'>전송</button></div> ");
 			for(var i in data){
 				//console.log(data[i]);
@@ -693,9 +759,9 @@ span.srchVal{
 					timeStamp = (messageType.sendTime).substring(0,16);
 				
 				if(data[i].SENDMEMBER == myId){
-					 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.SENDMEMBER+" / "+  timeStamp +"</div></div>";
+					 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' style='left : -0.5em;' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500' style='position : relative; left : -0.5em;' id='sendPerson'>"+messageType.SENDMEMBER+" / "+  timeStamp +"</div></div>";
 				}else{
-					 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.SENDMEMBER+" / "+ timeStamp +"</div></div>";
+					 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' style='left : 0.5em;' value="+messageType.chatRoomNo+">"+messageType.CHATCONTENT+"</div> <div class='small text-gray-500'style='position : relative; left : 0.5em;' id='sendPerson'>"+messageType.SENDMEMBER+" / "+ timeStamp +"</div></div>";
 				}
 				}
 				chatBody.append(messageData);
@@ -709,13 +775,14 @@ span.srchVal{
 	 }
 	 
 	var sendMsgTime = null;
-	var alertType = null ;
+	var alertType = null;
 	var messageType = null;
 	 //사용자가 어느 채팅방에 들어가 있는지 확인하는 변수
 	var hasFocusRoom = 0;
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
+	var connectUser = new Array();
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
@@ -726,45 +793,92 @@ span.srchVal{
 			}else{
 				 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
 			}
-			
-			
 			 $("#chatView").append(messageData);
 			 setTimeout(function(){
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 	},150);
 		 }else{
-			 $("#messageCount").html(parseInt($("#messageCount").text().trim().length != 0 ? $("#messageCount").text():0)+1);
+			
+			 $("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
-		 		//alert("dd");
 		 		setTimeout(function(){
 		 			$("#socketAlert").css("display","none");
 		 		},3000); 
 		 }
 		 
 	 }
+   function	alertMessage(alertType,type){
+	   if(type === 'review'){
+			 $("#socketAlert").css("display","block").text(alertType.reviewWriter+"님이 "+alertType.storeName+"에("+alertType.storeNo +")리뷰를 작성");
+		 	setTimeout(function(){
+		 		$("#socketAlert").css("display","none");
+		 	},3000);
+		 }
+	}
 	 function connectWebSocket(){
 	 	var ws = new SockJS("<c:url value="/echo"/>"); 
 	 	socket = ws;
 	 	ws.onopen = function(){
+	 		sendRealTimeMember();
 	 		console.log("Info : connection opened.");
 	 	};
+	 	//서버로부터 메세지를 받을 때
 	 	ws.onmessage = function(event){
 	 		alertType = null;
 	 		messageType = null;
 	 		var message = JSON.parse(event.data);
-	 		
 	 		for(var i = 0; i < message.length; i++){
 		 		if(message[i].cmd === "alert")
 		 			  alertType = message[i];
-		 		else 
+		 		else if(message[i].cmd === "review"){
+		 			alertType = message[i];
+					alertMessage(alertType,"review");		 			
+		 		}else if(message[i] === "realTimeMember"){
+		 			for(var j = 1; j < message.length; j++){
+		 				console.log(message[j]);
+		 				connectUser.push(message[j]);
+		 			}
+		 			console.log("실시간 chatUserList: "+chatUserList);
+		 			console.log("실시간 connectUser: "+connectUser);
+		 			//실시간으로 바꿔줌.
+		 			for(var j = 0; j < chatUserList.length; j++){
+		 				for(var k = 0; k < connectUser.length; k++){
+		 					var chatUser = chatUserList[j];
+		 					console.log("실시간 connect "+connectUser[k]);
+			 				if(chatUser == connectUser[k]){
+			 					$("div[id^=messageView]").each(function(i){
+			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+			 						console.log("dd : "+loginSeller);
+			 						if(loginSeller === chatUserList[j]){
+			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-success");
+			 						}
+			 					});
+			 					$("#memberstatus").attr("class","status-indicator bg-success");
+			 				}else{
+			 					$("div[id^=messageView]").each(function(i){
+			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+			 						console.log("ss : "+loginSeller);
+			 						if(loginSeller === chatUserList[j]){
+			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-light");
+			 						}
+			 					});
+			 					$("#memberstatus").attr("class","status-indicator bg-light");
+			 				}
+		 				}
+		 			}
+		 			break;
+		 		}
+		 		else
 		 			 messageType = message[i];
 	 		}
 	 		if(alertType != null && messageType != null){
+	 			console.log(alertType);
 		 		receiveMessage(alertType,messageType);
 	 		}
 	 		
 	 	};
 	 	ws.onclose = function(event){
+	 		sendRealTimeMember();
 	 		console.log("Info : connection closed.");
 	 	};
 	 	ws.onerror = function(err){
@@ -955,9 +1069,26 @@ span.srchVal{
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
+
+	//로딩 되면 판매자일때 안읽은 메세지 뜨게함.
+	$(function(){
+		if('$(sellerLoggedIn)' != null){
+			$.ajax({
+				url : '${pageContext.request.contextPath}/chat/notReadMessage.do?sellerId='+'${sellerLoggedIn.sellerId}',
+				type : 'post',
+				success : function(data){
+						var count = parseInt(data);
+						$("#messageCount").html(count);
+					
+					
+				}
+			});		
+		}
+	});
+
 	
 	$("#autologin").on("click" , function(){
-		console.log("클릭 먹니?");
+		//console.log("클릭 먹니?");
 		if($("#autologin").is(":checked")){
 			$("#autologin1").val("yes");
 		}else{
@@ -966,5 +1097,6 @@ span.srchVal{
 		
 	});
 	
+
 	</script>
    <section id="content">

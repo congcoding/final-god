@@ -184,7 +184,7 @@ div#addReviewPhoto{
 		  		</div>
 		  	</div>
 		  	
-		  	<input type="submit" class="btn btn-outline-success" value="리뷰등록하기" >
+		  	<input type="button" class="btn btn-outline-success" id="enrollReview" value="리뷰등록하기" >
 		  	
 		</form>
 		 	  
@@ -227,6 +227,11 @@ function addReviewPhoto(){
 	}
 
 };
+$("#enrollReview").click(function(){
+	if(socket.readyState !== 1) return;
+	sendReviewAlert();
+	$("form[name=memberEnrollEndFrm]").submit();
+});
 
 
 </script>
