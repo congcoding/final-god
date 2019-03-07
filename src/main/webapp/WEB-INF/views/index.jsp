@@ -72,7 +72,7 @@ function fn_eventView(eventNo){
 				  	<c:if test="${!status.first}">
 			    		<div class='carousel-item'>
 			    	</c:if>
-				  		<img onclick='fn_eventView("${e.EVENTNO}")' class='d-block w-100' style='height:212px;width:812px;' src='${pageContext.request.contextPath}/resources/upload/event/${e.EVENTSMALL}' />;
+				  		<img onclick='fn_eventView("${e.EVENTNO}")' class='d-block w-100' style='height:212px;width:812px;' src='${pageContext.request.contextPath}/resources/upload/event/${e.EVENTSMALL}' />
 				  		</div>
 				  </c:forEach>
 			  </div>

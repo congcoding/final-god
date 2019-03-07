@@ -7,7 +7,7 @@
 
 
 <footer>
-	<p>&lt;Copyright 2017. <strong>KH정보교육원</strong>. All rights reserved.&gt;</p>
+	<p>&lt;Copyright 2019. <strong>KH정보교육원</strong>. All rights reserved.&gt;</p>
 </footer>
 
 </body>
