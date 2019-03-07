@@ -67,7 +67,7 @@
    <!-- 공용 에러 페이지 등록 -->
    <error-page>
       <location>/WEB-INF/views/common/error.jsp</location>
-   </error-page>
+   </error-page> 
 
 
 </web-app>

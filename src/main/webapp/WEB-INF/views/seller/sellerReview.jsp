@@ -25,6 +25,9 @@ width: 543px;
     left: 85%;
     top: -38px;
 }
+.card{
+margin: 30px;
+}
 </style>
 <!-- Custom fonts for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
@@ -61,20 +64,28 @@ $(function(){
           
           <div id="accordion" role="tablist">
           
+        <c:forEach items="${review1}" var="review1" varStatus="status">
          
 		  <div class="card">
 		    <div class="card-header" role="tab" id="headingOne">
 		      <h5 class="mb-0">
 		        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-		          <span>'qwrfik123'</span>님의 리뷰
+		          '<span>${review1.writer}</span>'님의 리뷰
 		        </a>
-<button type="button" class="btn btn-outline-info" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>		      </h5>
+		        &nbsp;&nbsp;
+				<button type="button" class="btn btn-outline-info" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>
+		        </h5>
 		    </div>
 
 		    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
 		      <div class="comment">
-		        <li class="list-group-item list-group-item-light">맛있어요~ 서비스도 괜찮았습니다~</li>
-		     	<li class="list-group-item list-group-item-primary reply">감사합니다! 다음에 또 주문해주세요:) !</li>    		     		
+		      <c:if test="${review1.commentLevel==1}">
+		        <li class="list-group-item list-group-item-light">${review1.content}</li>
+		      </c:if>
+		      
+		      <c:if test="${review1.commentLevel==2}">
+		        <li class="list-group-item list-group-item-primary reply">${review1.content}</li>
+		      </c:if>
 		      </div>
 		      <!-- 리뷰답댓 -->     
 		      <br>
@@ -82,30 +93,7 @@ $(function(){
 		      <button type="button" class="btn btn-info replyBtn">답글달기</button>
 		    </div>
   	    </div>
-  	   
-  
-  <div class="card">
-    <div class="card-header" role="tab" id="headingTwo">
-      <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          'nanda5050'님의 리뷰
-        </a>
-        <button type="button" class="btn btn-outline-info" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>
-      </h5>
-    </div>
-    <div id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo" data-parent="#accordion">
-      <div class="card-body">
-        	 <div class="comment">
-		        <li class="list-group-item list-group-item-light">너무늦게왔어요;</li>
-		     	<li class="list-group-item list-group-item-primary reply">죄송합니다ㅜㅜ 주문량이많아서요 쿠폰드릴테니 다음에 또 주문해주세요</li>    		     		
-		      </div>
-		           
-		      <br>
-		      <input type="email" class="form-control" id="reply" aria-describedby="emailHelp">
-		      <button type="button" class="btn btn-info replyBtn">답글달기</button>
-      </div>
-    </div>
-  </div> 
+  	</c:forEach>
 
 <div class="modal fade" id="giveCouponModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -118,9 +106,16 @@ $(function(){
       </div>
       <div class="modal-body">
         <form>
-          <div class="form-group">
-            <label for="recipient-name" class="form-control-label">쿠폰명</label>
-            <input type="text" class="form-control" id="recipient-name">
+          <div class="form-group">            
+            <span style="color: green;"> "[가게명] + 대상 + 할인금액" 으로 고객님께 지급됩니다.</span>  
+            <br> 
+             <br>          
+            <label for="recipient-name" class="form-control-label">대상</label> 
+            	<select class="form-control form-control-sm">
+				  <option>단골고객</option>
+				  <option>감사고객</option>
+				  <option>신규고객</option>
+				</select>
           </div>
           
          <div class="form-group">

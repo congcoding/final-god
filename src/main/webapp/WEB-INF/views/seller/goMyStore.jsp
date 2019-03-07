@@ -594,6 +594,7 @@ $(function(){
 		  makeArray(storeName.length);
 		   var date = new Date();
 		   var time =  (date.getMonth() + 1, 2);
+		   console.log("시간 : "+time);
 		  for(var i in data){
 			  var sale = data[i];
 	          var month = parseInt((sale.ORDERDAY));
@@ -622,15 +623,27 @@ $(function(){
 		 for(var i = 0; i < storeName.length; i++){
 		  	info[0][i+1] = storeName[i];
 		 	for(var k = 3; k > 0; k-- ){
+		 		if(time == 1){
 		 		if(time-k == 0){
 		 			info[4-k][0] = '12월';
-		 		}else if(time-k == -1){
+		 		}else if(time-k == -2){
 		 			info[4-k][0] = '11월';
 		 		}else if((time-k) == -2){
 		 			info[4-k][0] = '10월';
 		 		}else{
 					info[4-k][0] = (time-k)+'월';
 		 			
+		 		}
+		 		}else if(time == 2 ){
+		 			if(time-k == -1){
+			 			info[4-k][0] = '12월';
+			 		}else if(time-k == 0){
+			 			info[4-k][0] = '1월';
+			 		}else{
+			 			info[4-k][0] = (time)+'월';
+			 		}
+		 		}else{
+		 			info[4-k][0] = (time-(k-1))+'월';
 		 		}
 			  if(day[i][k] > 0){
 			  	//console.log(day[i][k]+" i: "+i+" k: "+k +" i+1:"+(i+1));

@@ -6,7 +6,7 @@
 	</select>
 	<select id="selectChatLog" resultMap="chatlogmap">
 		select *
-		from(select rownum as rnum, v.* from(select * from chatroom c left join chat c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime desc) v)v
+		from(select rownum as rnum, v.*,(select count(*) from (select * from chatroom c left join chat c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime desc) where readflag='N') as notreadcount from(select * from chatroom c left join chat c1 on c.chatroomno= c1.chatroomno where c.chatroomno = #{chatRoomNo} order by sendtime desc) v)v
 		where rnum = 1
 	</select>
 	
@@ -42,6 +42,7 @@
 		<result column="chatroomno" property="chatroomno" javaType="string"/>
 		<result column="sendtime" property="sendtime" javaType="string"/>
 		<result column="chatroomno_1" property="chatroomno1" javaType="string"/>
+		<result column="notreadcount" property="NOTREADCOUNT" javaType="string"/>
 	</resultMap>
 	
 	<!-- rnum이 포함되어있지 않는 resultMap -->
@@ -52,5 +53,15 @@
 		<result column="chatroomno" property="chatRoomNo" javaType="string"/>
 	</resultMap>
 	<resultMap type="chatRoom" id="chatRoom"></resultMap>
+	
+	<select id="notReadMessage" resultMap="count">
+		select count(*) as notread  from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
+	</select>
+	<resultMap type="String" id="count">
+		<result column="notread" property="NOTREAD" javaType="string"/>
+	</resultMap>
+	<select id="selectSeller" resultType="seller">
+		select * from seller where sellerid = #{addId}
+	</select>
 	
 </mapper>

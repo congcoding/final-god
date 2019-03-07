@@ -79,16 +79,13 @@
 			<mapping path="/**"/> <!-- /** <- 모든요청 -->
 			<beans:bean id="loggerInterceptor" class="com.kh.god.common.interceptor.LoggerInterceptor" /> 
 		</interceptor>
-		
-		<interceptor>
-			<mapping path="/admin/carouselEvent.do"/> <!-- /** <- 모든요청 -->
-			<beans:bean id="SellerLoginCheckInterceptor" class="com.kh.god.common.interceptor.SellerLoginCheckInterceptor" /> 
-		</interceptor>
 			
 		<interceptor>			
 			<mapping path="/member/memberView.do" />
 			<mapping path="/member/memberUpdate.do" />
-			<!-- <mapping path="/storeInfo/**/*.do" /> -->
+			<mapping path="/member/memberReviewEnrollEnd.do" />
+			<mapping path="/member/memberReviewEnroll.do" />
+			<mapping path="/member/bookMarkList.do" />
 			<mapping path="/board/**/*.do" /> <!-- board로 요청하는 모든 주소에 대하여 loginCepterInteceptor를 실행해라 -->
 			
 			<!-- <mapping path="/seller/**/*.do" /> -->
@@ -99,6 +96,7 @@
 		<interceptor>
 			<mapping path="/seller/sellerView.do"/>
 			<mapping path="/seller/sellerUpdate.do"/>
+			<mapping path="/index.do"/>			
 			<beans:bean id="sellerloginCheckInterceptor" class="com.kh.god.common.interceptor.SellerLoginCheckInterceptor" />
 		</interceptor>	
 		

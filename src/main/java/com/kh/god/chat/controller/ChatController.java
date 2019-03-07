@@ -123,5 +123,13 @@ public class ChatController {
 		
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value="/chat/notReadMessage.do")
+	public String notReadMessage(@RequestParam(name="sellerId") String sellerId) {
+		String notReadCount = chatService.notReadMessage(sellerId);
+		logger.debug(notReadCount);
+		return notReadCount;
+	}
 }
 

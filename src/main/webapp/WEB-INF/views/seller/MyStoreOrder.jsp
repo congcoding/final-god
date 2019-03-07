@@ -14,8 +14,8 @@
 <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
 <!-- Custom styles for this template-->
-<link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/resources/css/seller/MyStoreOrder.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
 <script>
 $(function(){
@@ -45,14 +45,14 @@ $(function(){
           
           <!-- 여기부터 코드 붙여넣으면 됨 -->
 <div id="container">
-<div class="row">
-  <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">접수대기</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">접수완료</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">배달완료</a>
+  <div>
+    <div class="list-group" id="list-tab" role="tablist" style="display:inline">
+      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home" style="display:inline">접수대기</a>
+      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile" style="display:inline">접수완료</a>
+      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages" style="display:inline">배달완료</a>
     </div>
   </div>
+<div class="row">
   <div class="col-8">
     <div class="tab-content" id="nav-tabContent">
       <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
@@ -67,7 +67,7 @@ $(function(){
 				      <th scope="col">결제수단</th>
 				      <th scope="col">총 가격</th>
 				      <th scope="col">주문시간</th>     
-				     <th scope="col"></th>
+				      <th scope="col"></th>
 				    </tr>
 				  </thead>
 				  <tbody>
@@ -81,9 +81,9 @@ $(function(){
 				      </c:forEach>
 				      </td>
 				  <!--주소 -->
-				      <td class="orderAddress">${orderList1.ADDRESS}</td>
+				      <td class="orderAddress" >${orderList1.ADDRESS}</td>
 				  <!--전화번호 -->
-				      <td class="orderPhone">${orderList1.PHONE}</td>
+				      <td class="orderPhone" >${orderList1.PHONE}</td>
 				  <!--요청사항 -->    
 				      <c:if test="${not empty orderList1.REQUEST}">
 				      <td class="orderRequest">${orderList1.REQUEST}</td>
@@ -97,8 +97,12 @@ $(function(){
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
 				      
-				      <c:if test="${orderList1.PRICEWAY=='N'}">
-				      <td class="orderWay">만나서결제</td>
+				      <c:if test="${orderList1.PRICEWAY=='현금'}">
+				      <td class="orderWay">만나서결제(현금)</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList1.PRICEWAY=='카드'}">
+				      <td class="orderWay">만나서결제(카드)</td>
 				      </c:if>
 				     
 				      <td class="orderPrice">${orderList1.TOTALPRICE}</td>

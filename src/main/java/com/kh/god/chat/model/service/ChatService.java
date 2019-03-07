@@ -17,5 +17,5 @@ public interface ChatService {
 	List<Seller> searchPerson(String searchId);
 
 	List<Map<String,String>> addPerson(ChatRoom roomId) ;
-
+	String notReadMessage(String memberId);
 }

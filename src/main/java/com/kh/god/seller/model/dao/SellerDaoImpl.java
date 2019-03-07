@@ -241,11 +241,6 @@ public class SellerDaoImpl implements SellerDao {
 		return menuNo;
 	}
 
-	/*
-	 * @Override public int insertMenu(Menu menu) { return
-	 * sqlSession.insert("menu.insertMenu", menu); }
-	 */
-
 	@Override
 	public StoreInfo selectStoreInfo(String storeNo) {
 		return sqlSession.selectOne("storeInfo.selectOnebyStoreNo", storeNo);
@@ -349,6 +344,11 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public int notReadMessage(String memberId) {
 		return sqlSession.selectOne("seller.notReadMessage", memberId);
+	}
+	
+	@Override
+	public String selectSellerIdByStoreNo(String storeNo) {
+		return sqlSession.selectOne("seller.selectSellerIdByStoreNo", storeNo);
 	}
 
 

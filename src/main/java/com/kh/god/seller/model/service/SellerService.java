@@ -1,7 +1,6 @@
 package com.kh.god.seller.model.service;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,10 +85,7 @@ public interface SellerService {
 
 	List<Map<String, String>> totalSaleVolume(String sellerId,String type);
 
-
 	int selectMenuNo(String storeNo);
-
-	/* int insertMenu(Menu menu); */
 
 	StoreInfo selectStoreInfo(String storeNo);
 
@@ -104,6 +100,7 @@ public interface SellerService {
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
+	String selectSellerIdByStoreNo(String storeNo);
 
 	//자동로그인 TEST
 	
@@ -116,6 +113,7 @@ public interface SellerService {
 	Seller login(Seller login);
 
 	int notReadMessage(String memberId);
+
 
 
 

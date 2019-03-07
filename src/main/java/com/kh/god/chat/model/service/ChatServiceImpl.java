@@ -29,7 +29,6 @@ public class ChatServiceImpl implements ChatService {
 		List<ChatRoom> chatRoom = chatDao.selectChatRoomList(sellerId);
 		logger.debug("로그인한 아이디로 검색한 채팅방 리스트 : "+chatRoom);
 		List<Map<String,String>> chatLog = null;
-		
 		if(chatRoom != null) {
 			Map<Integer,Integer> roomMap = new HashMap<>();
 			for(int i = 0; i < chatRoom.size(); i++) {
@@ -66,7 +65,14 @@ public class ChatServiceImpl implements ChatService {
 		ChatRoom chatRoom = null;
 		Map<String, String> map = new HashMap<>();
 		List<Map<String,String>> chatList = null;
-		
+		//방을 만들기전 addId가 유효한 아이디인지 검사하기 위해 
+		Seller seller = chatDao.selectSeller(roomId.getSellerId2());
+		if(seller == null) {
+			logger.debug("ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ");
+			map.put("SELLERID", "존재하지않는아이디");
+			chatList = new ArrayList<>();
+			chatList.add(map);
+		}else {
 		chatRoom =	chatDao.searchChatRoom(roomId);
 		int result = 0;
 		logger.debug("추가할 사람과의 채팅방이 기존에 있는가 ? : "+chatRoom);
@@ -81,7 +87,7 @@ public class ChatServiceImpl implements ChatService {
 				chatList = chatDao.selectChattingLogs(map);
 			}
 		}else {
-			try {
+				
 				result = chatDao.creatChatRoom(roomId);
 				map.put("SELLERID",roomId.getSellerId());
 				map.put("SELLERID2", roomId.getSellerId2());
@@ -90,15 +96,22 @@ public class ChatServiceImpl implements ChatService {
 				map.put("SENDTIME",null);
 				map.put("SENDMEMBER",null);
 				
-			}catch(DataAccessException e) {
-				if(e instanceof DataIntegrityViolationException){
-					logger.debug("무결성 제약 조건 위반");
-					map.put("SELLERID", "존재하지않는아이디");
-				}
-			}
+			
+//			catch(DataAccessException e) {
+//				if(e instanceof DataIntegrityViolationException){
+//					logger.debug("무결성 제약 조건 위반");
+//					map.put("SELLERID", "존재하지않는아이디");
+//				}
+//			}
 			chatList = new ArrayList<>();
 			chatList.add(map);
 		}
+		}
 		return chatList;
+	}
+	
+	@Override
+	public String notReadMessage(String memberId) {
+		return chatDao.notReadMessage(memberId);
 	}
 }

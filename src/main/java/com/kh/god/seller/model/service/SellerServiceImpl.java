@@ -179,35 +179,31 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.cancelOrder(orderNo);
 	} 
 	
-//	public int updateMenu(Map<String, Object> map) {
-//		return sellerDao.updateMenu(map);
-//	}
-	
 	public int updateMenu(Map<String, Object> map) {
 		int result = 0;
 		String menuCode = "";
-		
+
 		result = sellerDao.updateMenu(map);
 		menuCode = (String) map.get("menuCode");
 		logger.debug("메뉴 코드 = " + menuCode);
-		
+
 		if (result == 0) {
 			throw new MenuException("메뉴 수정 실패!");
 		}
-		
+
 		List<MenuAttachment> menuAttachList = (List<MenuAttachment>) map.get("menuAttachList");
-		
-		if(menuAttachList.size() > 0) {
-			for(MenuAttachment a : menuAttachList) {
+
+		if (menuAttachList.size() > 0) {
+			for (MenuAttachment a : menuAttachList) {
 				a.setMenuCode(menuCode);
 				result = sellerDao.updateMenuAttachment(a);
-				if(result == 0) {
+				if (result == 0) {
 					throw new MenuException("메뉴사진파일 수정 오류!");
 				}
-				
+
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -314,7 +310,6 @@ public class SellerServiceImpl implements SellerService {
 		sellerDao.keepLogin(sellerId, sessionId, next);
 	}
 	
-	
 	@Override
 	public Seller checkUserWithSessionKey(String sessionId){
 		
@@ -327,9 +322,16 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int notReadMessage(String memberId) {
-		return sellerDao.notReadMessage(memberId);
+	public String selectSellerIdByStoreNo(String storeNo) {
+		return sellerDao.selectSellerIdByStoreNo(storeNo);
 	}
+
+	@Override
+	public int notReadMessage(String memberId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 
 	
