@@ -51,7 +51,7 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 		if(obj == null) { //로그인된 세션이 없는경우 
 			//우리가 만들어 논 쿠키를 꺼내온다. 
 			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
+			//logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
 			
 			if(loginCookie != null) { //쿠키가 존재하는 경우(이전에 로그인될때 생성된 쿠키가 존재한다는 것.)
 				//loginCookie의 값을 꺼내오고 -> 즉 , 저장해논 세션 ID를 꺼내오고
@@ -72,8 +72,8 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 			
 			//이제 아래는 로그인이 안되잇고 쿠키고 존재하지 않는 경우니까 다시 폼으로 돌려보내면 된다. 
 			//로그인이 안되어 잇는 상태임으로 로그인 폼으로 다시 돌려 보냄. (redirect)
-			//response.sendRedirect("/spring");
-			//return false; //더이상 컨트롤러 요청으로 가지 않도록  false로 반환함.
+			response.sendRedirect("/spring");
+			return false; //더이상 컨트롤러 요청으로 가지 않도록  false로 반환함.
 			
 		}
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@66666666666666666666666");

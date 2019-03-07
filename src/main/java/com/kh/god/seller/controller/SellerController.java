@@ -665,6 +665,7 @@ public class SellerController {
 		model.addAttribute("list",list);
 		model.addAttribute("status",status);
 		
+		
 		return "seller/myAd";
 		
 	}

@@ -162,4 +162,9 @@ public class MemberDaoImpl implements MemberDao {
 		return sqlSession.update("member.deleteMemberReview",reviewNo);
 	}
 
+	@Override
+	public List<StoreInfo> selectAllstoreInfo() {
+		return sqlSession.selectList("storeInfo.selectAllstoreInfo");
+	}
+
 }

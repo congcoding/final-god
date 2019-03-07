@@ -370,8 +370,8 @@ span.srchVal{
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
-		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
+		 	<button class="btn btn-outline-success header-btn" type="button"  id="myStore-btn"
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'" >내가게</button> 
 		  </c:if>
 		</c:if>
 		

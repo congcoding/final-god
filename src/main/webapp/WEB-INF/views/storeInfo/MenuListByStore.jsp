@@ -16,8 +16,9 @@
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
 		    ${storeInfo.storeName}
+		    <span style="float: right;">
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    <span style="float : right">
-		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
@@ -28,6 +29,7 @@
 						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
 					</a>	
 				</c:if>
+		    </span>
 		    </span>
 	    </li>
 	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
@@ -273,6 +275,8 @@
 						    <option value="배달시간 초과">배달시간 초과</option>
 						    <option value="기타" id="ect">기타</option>
 						</select>
+						<br />
+		          	<input type="text" name="reportReason" id="reportReason" class="form-control" placeholder="기타 사유를 작성해주세요" style="display: none;" />
 		          </div>
 		        </c:forEach>
 	      </div>
@@ -597,10 +601,24 @@ function checkSelect(){
 		alert("신고사유를 선택해주세요.");
 		return false;
 	}else{
-	
-	$("#report-frm").submit();
+		if($("#reportReason").val() != ""){
+			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
+		}
+		$("#report-frm").submit();
 	}
 };
+$("[name=reportDetails]").change( function(){
+	var state = $('[name=reportDetails] option:selected').val();
+	
+	if(state == '기타'){
+		$("#reportReason").show();
+		
+	}else{
+		$("#reportReason").hide();
+	}
+
+});
+
 
 </script>
 

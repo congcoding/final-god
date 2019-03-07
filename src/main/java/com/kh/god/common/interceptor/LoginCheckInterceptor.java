@@ -54,6 +54,25 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
 			return false;
 		}
+		
+		if(sellerLoggedIn != null) { // 일반 회원으로 로그인은 했지만,
+			
+			if(!memberId.equals(sellerLoggedIn.getSellerId())) { 
+				request.setAttribute("msg", "올바른 접근이 아닙니다");
+				request.setAttribute("loc", "/");
+				request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+				
+				return false; 				
+			}
+			
+		}else { //memberLoggedIn == null 로그인도 안한 경우
+			request.setAttribute("msg", "로그인 후 진행하세요");
+			request.setAttribute("loc", "/");
+			request.getRequestDispatcher("/WEB-INF/views/common/msg.jsp").forward(request, response);
+			return false;
+		}
+		
+		
 
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}

@@ -149,5 +149,12 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	@Override
+	public List<StoreInfo> selectAllstoreInfo() {
+		
+		return memberDao.selectAllstoreInfo();
+	}
+
+
 
 }
