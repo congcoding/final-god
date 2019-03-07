@@ -1,16 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="storeInfo">
-	<select id="selectStoreInfoList" resultMap="storeInfoMap">
-	select A.*, 
-		(select count(*) 
-		from storeInfo 
-		where categoryno = A.categoryno) categorycount 
-	from storeInfo A 
-	where categoryno = #{categoryno} and pmsFlag = 'Y'
-	order by storegrade
+	<select id="selectStoreInfoList" resultType="map">
+select A.*,M.renamedfilename from storeInfo A LEFT OUTER JOIN
+(select storeno,renamedfilename from menuattachment where thumbflag='Y')M 
+on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 	</select>
-	<resultMap type="storeInfo" id="storeInfoMap"></resultMap>
+	
 
 	<select id="selectStoreInfoTotalContents" resultType="_int">
 		SELECT COUNT(*) FROM STOREINFO WHERE CATEGORYNO = #{categoryno}
@@ -43,12 +39,16 @@
 		where s.sellerId = #{sellerId} and s.storeNo = #{storeNo}
     </select>
 
-   <select id="menuList"  resultType="menu">
-   	select * from menu where storeNo = #{storeNo}
+   <select id="menuList"  resultType="map">
+   	select A.*,M.renamedfilename from menu A LEFT OUTER JOIN
+	(select storeno,renamedfilename from menuattachment)M 
+	on A.storeno=M.storeno where A.storeno=#{storeNo}
    </select>
    
-   <select id="storeInfoList"  resultType="storeInfo">
-   	   select * from storeinfo where storeNo = #{storeNo}
+   <select id="storeInfoList"  resultType="map">
+   	  select A.*,M.renamedfilename from storeinfo A LEFT OUTER JOIN
+	(select storeno,renamedfilename from menuattachment where thumbflag='Y')M 
+	on A.storeno=M.storeno where A.storeno=#{storeNo}
    </select>
 	
    <select id="menuCount"  resultType="_int">

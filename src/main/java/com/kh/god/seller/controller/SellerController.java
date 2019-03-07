@@ -117,7 +117,6 @@ public class SellerController {
 		
 		logger.debug("$#@$@#$@#$@#$"+autologin);
 		String returnURL = "";
-		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111"+ session.getAttribute("sellerLoggedIn"));
 //		Member member = null ;
 		if(session.getAttribute("sellerLoggedIn") != null) {
 			//기존에 login이란 세션값이 존재한다면
@@ -126,7 +125,6 @@ public class SellerController {
 			session.removeAttribute("sellerLoggedIn"); //기존값을 제거해준다.
 			
 		}
-		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
 		
 		String loc = "/";
 	      String msg = "";

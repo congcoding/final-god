@@ -15,32 +15,34 @@
   <ul class="list-group">
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
-		    ${storeInfo.storeName}
+		    ${storeInfo.STORENAME}
 		    <span style="float : right">
 		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
-					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
 					</a>
 				</c:if>
 				<c:if test="${checkedBookMark == 1}">
-					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
 					</a>	
 				</c:if>
 		    </span>
 	    </li>
-	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
-	    <input type="hidden" value=" ${storeInfo.deliveryMinPrice}" id="deliveryMinPrice">
+	    <input type="hidden" value="${storeInfo.STORENO}" id="storeNoForPayment">
+	    <input type="hidden" value=" ${storeInfo.DELIVERYMINPRICE}" id="deliveryMinPrice">
 	    <input type="hidden" id="checkSum">
 
 	    <li class="list-group-item">
-	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
-	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
-	    	<div class="introduce">최소주문금액  ${storeInfo.deliveryMinPrice}</div>
+		    <div>
+		    <c:if test="${not empty storeInfo.RENAMEDFILENAME}"><img src="${pageContext.request.contextPath }/resources/upload/menu/${storeInfo.RENAMEDFILENAME}"></c:if>
+		    <c:if test="${empty storeInfo.RENAMEDFILENAME}"></c:if>  	
+		    </div>
+	    	<div class="introduce">최소주문금액  ${storeInfo.DELIVERYMINPRICE}</div>
 	    	<div class="introduce">결제수단 카드결제,만나서결제</div>
 	    </li>	    
-	    <li class="list-group-item">가게소개 : ${storeInfo.storeIntro}</li>
+	    <li class="list-group-item">가게소개 : ${storeInfo.STOREINTRO}</li>
 	</c:forEach>	
   </ul>
 </div> 
@@ -77,13 +79,18 @@
 					  <thead><tr><th scope="col" colspan="3">주메뉴</th></tr></thead>
 					  <tbody>
 						  <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'M')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'M')}">
 							    <tr id="main-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm"
-											onclick = "inputCart('${menuList.menuCode}');">
+											onclick = "inputCart('${menuList.MENUCODE}');">
 										주문담기
 									</button>
 								  </td>    
@@ -96,13 +103,18 @@
 					  <thead><tr><th scope="col" colspan="3">사이드메뉴</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'S')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'S')}">
 							    <tr id="side-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm" 
-											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+											onclick = "inputCart('${menuList.MENUCODE}');">주문담기</button>
 								  </td>     
 							    </tr>
 							 </c:if>
@@ -113,13 +125,20 @@
 					  <thead><tr><th scope="col" colspan="3">음료</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'D')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'D')}">
 							    <tr id="drink-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm"
-											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+											onclick = "inputCart('${menuList.MENUCODE}');">주문담기</button>
 								  </td>      
 							    </tr>
 							 </c:if>
@@ -130,7 +149,7 @@
 				</table> <!-- menuTable -->
 		
 				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
-				<div class="inner_border" style="height: 800px;">
+				<div class="inner_border">
 				<table class="table" id="sellerReviewList">
 					<c:if test="${empty reviewList}">
 						<tr style="border-bottom:0.2px solid lightgray;">
@@ -166,22 +185,22 @@
 				<table class="table" id="sellerInformation">
 					<c:forEach items="${storeInfo}" var="storeInfo">		
 						<thead><tr><th scope="col">가게명</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeName}</td></tr></tbody>						  				  
+						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>						  				  
 						
 						<thead><tr><th scope="col">가게소개</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeIntro}</td></tr></tbody>
+						<tbody><tr><td>${storeInfo.STOREINTRO}</td></tr></tbody>
 						
 						<thead><tr><th scope="col">가게주소</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeAddress}</td></tr></tbody>			  
+						<tbody><tr><td>${storeInfo.STOREADDRESS}</td></tr></tbody>			  
 						
 						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeTel}</td></tr></tbody>			 
+						<tbody><tr><td>${storeInfo.STORETEL}</td></tr></tbody>			 
 						
 						<thead><tr><th scope="col">휴무일</th></tr></thead>
-						<tbody><tr><td>${storeInfo.personalDay}</td></tr></tbody>			 
+						<tbody><tr><td>${storeInfo.PERSONALDAY}</td></tr></tbody>			 
 						
 						<thead><tr><th scope="col">영업시간</th></tr></thead>
-						<tbody><tr><td>${storeInfo.operatingHours}</td></tr></tbody>
+						<tbody><tr><td>${storeInfo.OPERATINGHOURS}</td></tr></tbody>
 					</c:forEach> <!-- end of ${storeInfo} -->
 				</table> <!-- end of table#sellerInformation -->
 				
@@ -305,7 +324,8 @@ $(document).ready(function() {
     //가게정보숨기기
 	$("#sellerInformation").hide();
     //리뷰숨기기
-    
+    $("#sellerReviewList").hide();
+
     cartHtml();
 });
 
@@ -398,7 +418,7 @@ function cartHtml(){
 	    			html += "<tr><td colspan = '3' style='text-align: left'>"+cart[i].menuName+"</td></tr>"; 
 	    			 			    	
 	    			//삭제 버튼
-	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>ㅍ</button></td>";
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>X</button></td>";
 	    					
 	    			//<i class="fas fa-times"></i>
 	    			//수량 버튼
@@ -561,7 +581,7 @@ $("#clickreview").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	
 	//클린리뷰 보이기
-	
+	$("#sellerReviewList").show();
 	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
@@ -576,6 +596,7 @@ $("#clickMenu").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	//메뉴테이블 보이기
 	$("#menuTable").show();
+	$("#sellerReviewList").hide();
 	//가게정보 숨기기
 	$("#sellerInformation").hide();
 });
@@ -587,8 +608,11 @@ $("#clickInformation").click("on", function(){
 	$("#clickreview").removeClass("active");
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
+	//리뷰테이블
+	$("#sellerReviewList").hide();
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
+
 });
 
 function checkSelect(){
