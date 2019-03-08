@@ -359,4 +359,14 @@ public class SellerDaoImpl implements SellerDao {
 	public Seller login(Seller s) {
 		return sqlSession.selectOne("seller.login" , s);
 	}
+
+	@Override
+	public Seller selectSellerBySellerId(String sellerId) {
+		return sqlSession.selectOne("seller.selectSellerBySellerId",sellerId);
+	}
+
+	@Override
+	public int createChatRoom(Map<String, String> chatId) {
+		return sqlSession.insert("seller.createChatRoom", chatId);
+	}
 }

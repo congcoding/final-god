@@ -115,6 +115,8 @@ public interface SellerService {
 			
 	Seller login(Seller login);
 
+	Seller selectSellerBySellerId(String sellerId);
+
 
 
 

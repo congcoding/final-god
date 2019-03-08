@@ -286,10 +286,78 @@ span.srchVal{
 			<!-- member 로그인후  -->
 			<c:if test="${memberLoggedIn != null}">
 			  <c:if test="${sellerLoggedIn == null}">
+			  	<c:if test="${'admin' == memberLoggedIn.memberId}">
+			  		<ul class="navbar-nav ml-auto">
+            		<li class="nav-item dropdown no-arrow mx-1">
+              		<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter">3+</span>
+              </a>
+              <!-- Dropdown - Alerts -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                  Alerts Center
+                </h6>
+                
+                <div class="dropdown-item d-flex align-items-center">
+                  <div class="mr-3">
+                    <div class="icon-circle bg-primary">
+                      <i class="fas fa-file-alt text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">December 12, 2019</div>
+                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
+                  </div>
+                </div>
+  
+                <div class="dropdown-item d-flex align-items-center" >
+                  <div class="mr-3">
+                    <div class="icon-circle bg-success">
+                      <i class="fas fa-donate text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500"></div>
+                  </div>
+                </div>
+              
+                <div class="dropdown-item d-flex align-items-center" >
+                  <div class="mr-3">
+                    <div class="icon-circle bg-warning">
+                      <i class="fas fa-exclamation-triangle text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500">December 2, 2019</div>
+                    Spending Alert: We've noticed unusually high spending for your account.
+                  </div>
+                </div>
+                
+                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              </div>
+            </li>
+
+            <!-- 메신저 -->
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<i class="fas fa-envelope fa-fw"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter" id="messageCount"></span>
+              </a>
+              <!-- Dropdown - Messages -->
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown" id="messageDropdownBox" style="width : 30rem;">
+             
+              </div>
+            </li>
+            </ul> <!-- ul.navbar-nav ml-auto -->
+			</c:if>	
 			  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
 				<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
 				<button class="btn btn-outline-sucess" type="button" 
 						onclick = "memberLogOut();">로그아웃</button>
+				
 			  </c:if>
 			</c:if>
 			
@@ -524,13 +592,14 @@ span.srchVal{
 	var chatUserList = new Array();
 	//맨처음만 채팅유저 리스트를 받아오게하려고 0일때만 작동하도록함.
 	var init = 0;
+	var chattingId = '${sellerLoggedIn}'.trim().length==0?"admin":"${sellerLoggedIn.sellerId}";
+	console.log(chattingId);
 	 //채팅방 목록 구현
 	 $("#messagesDropdown").on('click',function(){
-		 console.log("목록 누를때 접속한 모든 유저들!: "+connectUser);
 		if($("#messagesDropdown").attr('aria-expanded') === 'false'){
 			$.ajax({
 				url : "${pageContext.request.contextPath}/chat/chatRoomList.do",
-				data : {"sellerId" : '${sellerLoggedIn.sellerId}'},
+				data : {"sellerId" : chattingId},
 				type : "get",
 				dataType : "json",
 				success : function(data){
@@ -541,31 +610,47 @@ span.srchVal{
 					for(var i in data){
 						var message = data[i];
 						var chatPerson = "";
-						if(message.SELLERID === '${sellerLoggedIn.sellerId}'){
+						if(message.SELLERID ===  chattingId){
 							chatPerson = message.SELLERID2;
 						}else{
 							chatPerson = message.SELLERID;
 						}
-						if(init == 0){
-							chatUserList.push(chatPerson);
-						}
-						if(connectUser.length != 0){
+						
+						if(realTimeConnectUser.length != 0){
 							console.log("채팅방 목록 만들기전에 들어옴");
-							for(var j in connectUser){
-								if(connectUser[j] == chatPerson){
-									//console.log("접속중!");
+							var chatUser = new Object();
+							var connectFlag = false;
+							for(var j in realTimeConnectUser){
+								if(realTimeConnectUser[j] != null){
+									
+								if(realTimeConnectUser[j] == chatPerson){
+									if(init == 0){
+										console.log("on임!"+init);
+										chatUser.chatPerson = chatPerson;
+										chatUser.status = "on";
+										chatUserList.push(chatUser);
+									}
 									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
+									connectFlag = true;
 									break;
 								}else{
-									//console.log("아직 없음!");
 									messageForm = $("<div class='dropdown-item d-flex align-items-center' id='messageView"+i+"' style='border : 1px solid gray; cursor : pointer;''> <div class='dropdown-list-image mr-3'>"+chatPerson+"<div class='status-indicator bg-light' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div></div></div>");
 								}
-							
+								}
+							}//end of for
+							if(connectFlag == false){
+								if(init == 0){
+									console.log("off임!"+init);
+									chatUser.chatPerson = chatPerson;
+									chatUser.status = "off";
+									chatUserList.push(chatUser);
+								}
 							}
+							
 						}//end of if(connectUser.length != 0)
 						var messageData = "";
 						var notRead = 0;
-						if(message.SENDMEMBER != '${sellerLoggedIn.sellerId}'){
+						if(message.SENDMEMBER !=  chattingId){
 							notRead = message.NOTREADCOUNT;
 						}
 						
@@ -581,7 +666,7 @@ span.srchVal{
 						mform.append(bodyForm);
 					
 					$("#messageDropdownBox").html(mform);
-					init += 1;
+					init = 1;
 				},
 				error : function(jqxhr,textStatus,errorTrown){
 					console.log("채팅 목록 가져오는중 에러 남!");
@@ -601,7 +686,7 @@ span.srchVal{
 			$("input[name=messageContent]").val("");
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
 			var message = {
-					sendId : '${sellerLoggedIn.sellerId}',
+					sendId :  chattingId,
 					sendContent : sendContent,
 					chatRoomNo : $("input[id=sendChatRoomNo]").val(),
 					
@@ -634,7 +719,7 @@ span.srchVal{
 	function sendMessage(){
 		var msg ={};
 		msg.cmd = "chat";
-		msg.sender = "${sellerLoggedIn.sellerId}";
+		msg.sender =  chattingId;
 		msg.receiver = $("#communicateWith").text();
 		msg.content =  $("input[name='messageContent']").val();
 		msg.chatRoomNo = $("input[id=sendChatRoomNo]").val();
@@ -705,7 +790,7 @@ span.srchVal{
 		 	}
 		 	var chatroominfo ={
 		 						chatRoomNo : $(this).children().eq(1).attr('value'),
-		 						sendId : $(this).children().eq(2).attr('value')!='${sellerLoggedIn.sellerId}'?$(this).children().eq(2).attr('value'):"<no>"
+		 						sendId : $(this).children().eq(2).attr('value')!=chattingId.length != 0?$(this).children().eq(2).attr('value'):"<no>"
 		 					};
 		 	$.ajax({
 		 		url : "${pageContext.request.contextPath}/chat/chattingLog.do",
@@ -732,14 +817,14 @@ span.srchVal{
 	 
 	 function successLodingChatLogs(data){
 		 	messageData = "";
-			var myId = '${sellerLoggedIn.sellerId}';
+			var myId =  chattingId;
 			var youId = (myId != data[0].SELLERID2 ? data[0].SELLERID2 : data[0].SELLERID);
 			var chatForm = $("<div style='height : 100%; padding: 0;'></div>");
 			var chatHeader;
-			if(connectUser.length != 0){
+			if(realTimeConnectUser.length != 0){
 				console.log("채팅방 목록 만들기전에 들어옴");
-				for(var j in connectUser){
-					if(connectUser[j] == youId){
+				for(var j in realTimeConnectUser){
+					if(realTimeConnectUser[j] == youId){
 						//console.log("접속중!");
 						chatHeader = $("<div class='modal-header'> <h5 class='modal-title' id='exampleModalLabel'></h5>	<div class='profileImage'><div class='status-indicator bg-success' id='memberstatus'><i class='far fa-grin' id='profileImage' ></i></div><div id='communicateWith'>"+ youId +"</div></div><button type='button' class='close' data-dismiss='modal' aria-label='Close' style='padding : 0.1em;'><span aria-hidden='true'>&times;</span></button></div>");
 						break;
@@ -782,7 +867,7 @@ span.srchVal{
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
-	var connectUser = new Array();
+	var realTimeConnectUser;
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
@@ -834,39 +919,65 @@ span.srchVal{
 		 			alertType = message[i];
 					alertMessage(alertType,"review");		 			
 		 		}else if(message[i] === "realTimeMember"){
+		 			realTimeConnectUser = new Array();
 		 			for(var j = 1; j < message.length; j++){
-		 				console.log(message[j]);
-		 				connectUser.push(message[j]);
+		 				realTimeConnectUser.push(message[j]);
 		 			}
-		 			console.log("실시간 chatUserList: "+chatUserList);
-		 			console.log("실시간 connectUser: "+connectUser);
-		 			//실시간으로 바꿔줌.
+		 		 	/* if(chatUserList.length != 0){
+		 				console.log("현재 채팅중인 사람 : "+chatUserList.length+" 명");
+		 				console.log("현재 채팅중인 사람 : "+chatUserList[0].chatPerson+" 명");
+		 			}  */
+		 			//실시간으로  상태 바꿔줌. on,off을 넣어서 on이면 온라인, off면 오프라인이라는 뜻.
 		 			for(var j = 0; j < chatUserList.length; j++){
-		 				for(var k = 0; k < connectUser.length; k++){
-		 					var chatUser = chatUserList[j];
-		 					console.log("실시간 connect "+connectUser[k]);
-			 				if(chatUser == connectUser[k]){
-			 					$("div[id^=messageView]").each(function(i){
-			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
-			 						console.log("dd : "+loginSeller);
-			 						if(loginSeller === chatUserList[j]){
-			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-success");
-			 						}
-			 					});
-			 					$("#memberstatus").attr("class","status-indicator bg-success");
-			 				}else{
-			 					$("div[id^=messageView]").each(function(i){
-			 						var loginSeller = $("#messageView"+i).children().eq(0).text();
-			 						console.log("ss : "+loginSeller);
-			 						if(loginSeller === chatUserList[j]){
-			 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-light");
-			 						}
-			 					});
-			 					$("#memberstatus").attr("class","status-indicator bg-light");
-			 				}
+		 				var currentChatUser = chatUserList[j].chatPerson;
+		 				var currentUserStatus = chatUserList[j].status;
+		 				var statusFlag = false;
+		 				for(var k = 0; k < realTimeConnectUser.length; k++){
+		 					 if(realTimeConnectUser[k] == null){//웹소켓에서 바로 삭제하면 null값이 들어간다. 따라서 null이 넘어오기 때문에 null은 걸러준다.
+		 						continue;
+		 					}
+		 					if(realTimeConnectUser[k] == currentChatUser){
+		 						statusFlag = true;
+		 						chatUserList[j].status = "on";
+		 					}
+		 				}//end of for realTimeConnectUser
+		 				if(statusFlag == false){
+		 					chatUserList[j].status = "off";
 		 				}
+		 				//채팅방 목록의 상태
+		 				if(chatUserList[j].status === "on"){
+		 					$("div[id^=messageView]").each(function(i){
+		 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+		 						console.log("dd : "+loginSeller);
+		 						if(loginSeller === currentChatUser){
+		 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-success");
+		 						}
+		 					});
+		 				}else{
+		 					$("div[id^=messageView]").each(function(i){
+		 						var loginSeller = $("#messageView"+i).children().eq(0).text();
+		 						console.log("ss : "+loginSeller);
+		 						if(loginSeller === currentChatUser){
+		 							$("#messageView"+i).children().children().eq(0).attr("class","status-indicator bg-light");
+		 						}
+		 					});
+		 				}//end of if status
+		 				//개별 채팅방의 상태를 나타내기 위한 if문
+	 					var nowChatView = $("#communicateWith").text();
+	 					console.log("현재 비활성화되어있는걸 활성화 개별 채팅방 : "+nowChatView);
+	 					if(nowChatView === currentChatUser){
+	 						//var nowStatus = $(".profileImage").children().eq(0).attr("class");
+	 						if(chatUserList[j].status === "on"){
+		 						$(".profileImage").children().eq(0).attr("class","status-indicator bg-success");
+	 						}else{
+		 						$(".profileImage").children().eq(0).attr("class","status-indicator bg-light");
+	 						}//end of if status
+	 					}//end of if(new ChatView == currentChatUser[j])
 		 			}
 		 			break;
+		 		}else if(message[i] === "forcedlogout"){
+		 			alert("현재 다른 브라우져에서 강제 로그아웃을 요청했습니다.");
+		 			location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}';
 		 		}
 		 		else
 		 			 messageType = message[i];
@@ -971,7 +1082,7 @@ span.srchVal{
 	function confirmOrNot(value){
 		var searchId = {
 				addId : $("input[name=searchPerson]").val(),
-				loginId : '${sellerLoggedIn.sellerId}'				
+				loginId : chattingId				
 		};
 		if(searchId.addId != searchId.loginId){
 			
@@ -1083,6 +1194,19 @@ span.srchVal{
 					
 				}
 			});		
+		}else{
+			//관리자일때
+			$.ajax({
+				url : '${pageContext.request.contextPath}/chat/notReadMessage.do?sellerId=admin',
+				type : 'post',
+				success : function(data){
+						var count = parseInt(data);
+						$("#messageCount").html(count);
+					
+					
+				}
+			});		
+			
 		}
 	});
 
