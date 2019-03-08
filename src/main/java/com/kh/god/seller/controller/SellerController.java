@@ -41,10 +41,8 @@ import org.springframework.web.util.WebUtils;
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
-import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
-import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
@@ -60,8 +58,22 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
 	private Map<String,WebSocketSession> memberSession ;
+//	private static Map<String,HttpSession> loginSession;
 	Logger logger = Logger.getLogger(getClass());
-	
+//	private SellerController() {
+//		loginSession = new HashMap<>();
+//	}
+//	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
+//	public static SellerController getInstance() {
+//		return LazyHolder.INSTANCE;
+//	}
+//	private static class LazyHolder{
+//		private static final SellerController INSTANCE = new SellerController();
+//	}
+	//웹소켓에서 강제 로그아웃 시킬때 필요.
+//	public Map<String,HttpSession> getLoginSession() {
+//		return loginSession;
+//	}
 	@Autowired
 	SellerService sellerService;
 	
@@ -98,7 +110,7 @@ public class SellerController {
 		
 		int result = sellerService.insertSeller(s);
 		
-		String loc = "/seller/sellerEnroll.do";
+		String loc = "/";
 		String msg = "";
 		String view = "";
 		System.out.println(result>0?"등록성공":"등록실패");
@@ -138,7 +150,6 @@ public class SellerController {
 		
 
 	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
-	     int messageCount = 0;
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {//로그인실패
@@ -152,16 +163,13 @@ public class SellerController {
 	    	  if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
 	        	 
-	        	 
-	        	 //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
-		            messageCount = sellerService.notReadMessage(memberId);
-		            logger.debug("안읽은 메세지 개수 : "+messageCount);
-		            session.setAttribute("messageCount", messageCount);
-		          
 		         //사이드바
 		            List<StoreInfo> store = sellerService.myStore(memberId);
 		            session.setAttribute("storeSideBar", store);
 		            
+	        	 session.setAttribute("loginId",s.getSellerId());
+		         //세션관리
+//		         loginSession.put(session.getId(),session);
 		         //자동로그인 설정부분
 	        	 Seller s2 = sellerService.selectOneSeller(memberId);
 	        	 session.setAttribute("sellerLoggedIn" ,s);
@@ -174,7 +182,6 @@ public class SellerController {
 	    		 }else {
 	    			dto.setUseCookie(true);
 	    		 }
-	     		 
 	     		 /*[세션추가되는부분]*/
 	     		 //1.로그인이 성공되면 
 	     		 if(dto.isUseCookie()) {
@@ -320,7 +327,7 @@ public class SellerController {
 	      
 	      
 	      
-	      
+//	      loginSession.remove(session.getId());
 	      Object obj = session.getAttribute("sellerLoggedIn");
 	        if ( obj != null ){
 	            Seller vo = (Seller)obj;
@@ -1091,7 +1098,26 @@ public class SellerController {
 		
 		return chartByWeek;
 	}
-
-	}
+    
+    @RequestMapping("/seller/askDuplicationLogin.do")
+    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav) {
+    	logger.debug("중복 검사를 하는 컨트롤러!");
+    	Seller seller = new Seller();
+    	seller.setSellerId(sellerId);
+    	mav.addObject("seller",seller);
+    	mav.setViewName("common/duplicationLoginMsg");
+    	return mav;
+    }
+    
+    @RequestMapping("/seller/goIndexPage.do")
+    public String goIndexPage() {
+    	return "index";
+    }
+    
+    //웹소켓클래스에서 강제 로그아웃시키기위해  현재 로그인되어있는 세션을 찾기위해 세션ID값 및 VO객체를 가져옴.
+    public Seller selectSellerBySellerId(String sellerId) {
+    	return sellerService.selectSellerBySellerId(sellerId);
+    }
+}
 
 

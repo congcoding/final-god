@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.exceptions.TooManyResultsException;
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.member.model.vo.WebReview;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -126,6 +128,11 @@ public class MemberDaoImpl implements MemberDao {
 		List<RAttachment> attachmentList = sqlSession.selectList("member.selectRAttachmentList", reviewNo);
 		return attachmentList;
 	}
+	
+	@Override
+	public RAttachment selectOneRattachment(int reviewNo) {
+		return sqlSession.selectOne("member.selectOneRattachment", reviewNo);
+	}
 
 	@Override
 	public double getDiscount(String eventNo) {
@@ -165,6 +172,24 @@ public class MemberDaoImpl implements MemberDao {
 	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
 		return sqlSession.selectList("member.couponListBymemberId", map);
 	}
+
+	@Override
+	public int insertWebReview(WebReview wr) {
+		return sqlSession.insert("member.insertWebReview", wr);
+	}
+
+	@Override
+	public List<WebReview> selectListWebReiveiw(int cPage, int numPerPage) {
+		RowBounds rowBounds = new RowBounds((cPage-1) * numPerPage, numPerPage);
+		return sqlSession.selectList("member.selectListWebReiveiw" , rowBounds);
+	}
+
+	@Override
+	public int selectWebReiveiwTotalContents() {
+		return sqlSession.selectOne("member.selectWebReiveiwTotalContents" );
+	}
+
+	
 
 	
 }

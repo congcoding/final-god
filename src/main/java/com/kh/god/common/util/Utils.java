@@ -175,7 +175,45 @@ public class Utils {
 			}
 			
 			pageBar += "</ul></nav>";
-		}else {
+		}else if(loc.contains("webreview.do")) {
+			//[이전]section
+			if(pageNo == 1) {
+				
+			}
+			else {
+				pageBar += "<li class='page-itme'><a class='page-link' href='"+loc+
+									 "&cPage="+(pageNo-1)+
+									 "&numPerPage="+numPerPage+"'>PREVIOUS</a><li>";
+			}
+			
+			//[페이지]section
+			while(pageNo<=endPage && pageNo<=totalPage) {
+				if(cPage == pageNo) {
+					pageBar += "<li class='page-item disabled'> <a class='page-link'>"+pageNo+"</a></li>";
+				}
+				else {
+					pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
+							   "&cPage="+pageNo+
+							   "&numPerPage="+numPerPage+"'>"+
+							   pageNo+"</a></li>";
+				}
+				pageNo++;
+			}
+
+			//[다음]section
+			if(pageNo > totalPage) {
+				
+			} 
+			else {
+				pageBar += "<li class='page-item'><a class='page-link' href='"+loc+
+						   "&cPage="+pageNo+
+						   "&numPerPage="+numPerPage+"'>NEXT</a></li>";
+			}
+			
+			pageBar += "</ul></nav>";
+		
+		
+	}else {
 		
 			//[이전]section
 			if(pageNo == 1) {

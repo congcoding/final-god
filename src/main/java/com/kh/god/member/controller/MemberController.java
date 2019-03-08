@@ -35,6 +35,7 @@ import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.member.model.vo.WebReview;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -265,20 +266,26 @@ public class MemberController {
 		
 		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = memberService.reviewList(memberId);
-		logger.debug(reviewList);
-		
+	
 		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
 		List<RAttachment> attachList = new ArrayList<>();
 		
 		if(reviewList != null) {			
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
-			for(Review r : reviewList) {			
-				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
+			for(Review r : reviewList) {	
+				
+				List<RAttachment> tempList = memberService.selectRAttachmentList(r.getReviewNo());			
+				for(RAttachment ra : tempList) {
+					attachList.add(ra);
+				}
+				
 			}			
 		}
 				
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("attachList", attachList);
+		
+		logger.debug(attachList);
 		
 		String view = "member/memberReview";
 		return view; 				
@@ -477,7 +484,7 @@ public class MemberController {
            if(loginFlag == true) {
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
                 mav.addObject("memberLoggedIn",m);
-                session.setAttribute("login",m.getMemberId());
+                session.setAttribute("loginId",m.getMemberId());
                 view = "redirect:/";
             }else {
             	msg = "비밀번호를 잘못 입력하셨습니다.";
@@ -501,7 +508,7 @@ public class MemberController {
 		}
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
-		session.setAttribute("login",null);
+		session.setAttribute("loginId",null);
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
 		//session.invalidate();
 		
@@ -702,6 +709,71 @@ public class MemberController {
 		  return map ;
 		  
 	  }
+	  
+	  @RequestMapping(value="/member/webreview.do")
+	  public String webReview(Model model ,@RequestParam(value = "cPage", defaultValue = "1") int cPage ) {
+		  
+		  	
+
+			int numPerPage = 6;
+			
+			// 1. 게시글리스트 (페이징 적용된 것)
+			System.out.println(cPage);
+			List<WebReview> wr = memberService.selectListWebReiveiw(cPage, numPerPage);
+
+			// 2. 전체컨텐츠수
+			int totalContents = memberService.selectWebReiveiwTotalContents();
+		  
+		  
+		
+		  
+			 model.addAttribute("cPage", cPage);
+			 model.addAttribute("numPerPage", numPerPage);
+			 model.addAttribute("totalContents", totalContents);
+			 model.addAttribute("wr" , wr);
+		  
+		  
+		  return "/member/webReview";
+	  }
+	  
+	
+	  @RequestMapping(value="/member/webreviewform.do") 
+	  public String webReviewForm() {
+	  
+	  return "/member/webReviewForm"; 
+	  }
+	  
+	  @RequestMapping(value="/member/webreviewformEnd.do" ,  method = RequestMethod.POST) 
+	  public String webReviewFormEnd(WebReview wr , Model model , @RequestParam("star") String star) {
+		  
+		  
+		  star = star.substring(0,1);
+		  
+		  wr.setRate(star);
+		  
+		  int result = memberService.insertWebReview(wr);
+		  
+		  String msg = "";
+		  String loc = "/member/webreview.do";
+		  String view = "/common/msg";
+		  if(result > 0) {
+			  msg = "후기가 등록되었습니다. 감사합니다.";
+		  }else {
+			  msg ="후기 등록 실패";
+		  }
+		  model.addAttribute("loc" , loc);
+		  model.addAttribute("msg" , msg);
+		  
+		  
+		  return view; 
+	  }
+	
+	  
+	  
+	  
+	  
+	  
+	  
 	
 }
 

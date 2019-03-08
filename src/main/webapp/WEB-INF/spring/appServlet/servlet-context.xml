@@ -83,8 +83,8 @@
 		<interceptor>			
 			<mapping path="/member/memberView.do" />
 			<mapping path="/member/memberUpdate.do" />
-			<mapping path="/member/memberReviewEnrollEnd.do" />
-			<mapping path="/member/memberReviewEnroll.do" />
+			<!-- <mapping path="/member/memberReviewEnrollEnd.do" /> -->
+			<!-- <mapping path="/member/memberReviewEnroll.do" /> -->
 			<mapping path="/member/bookMarkList.do" />
 			
 			<mapping path="/storeInfo/storeInfoView.do/**"/>

@@ -341,10 +341,6 @@ public class SellerDaoImpl implements SellerDao {
 	}
 		
 
-	@Override
-	public int notReadMessage(String memberId) {
-		return sqlSession.selectOne("seller.notReadMessage", memberId);
-	}
 	
 	@Override
 	public String selectSellerIdByStoreNo(String storeNo) {
@@ -363,5 +359,13 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectOne("seller.login" , s);
 	}
 
+	@Override
+	public Seller selectSellerBySellerId(String sellerId) {
+		return sqlSession.selectOne("seller.selectSellerBySellerId",sellerId);
+	}
 
+	@Override
+	public int createChatRoom(Map<String, String> chatId) {
+		return sqlSession.insert("seller.createChatRoom", chatId);
+	}
 }

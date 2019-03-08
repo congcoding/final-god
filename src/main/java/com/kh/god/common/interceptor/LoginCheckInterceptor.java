@@ -46,8 +46,7 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 			if (sellerLoggedIn == null) {
 				if (memberLoggedIn != null) { // 일반 회원으로 로그인은 했지만,
 
-					if (!memberId.equals(memberLoggedIn.getMemberId())) { // 주소와
-																		// 다른경우
+					if (!memberId.equals(memberLoggedIn.getMemberId())) { // 주소와 다른경우
 						logger.debug("memberId = " + memberId + " 세션memberId = " + memberLoggedIn.getMemberId());
 						request.setAttribute("msg", "올바른 접근이 아닙니다");
 						request.setAttribute("loc", "/");
