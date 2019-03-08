@@ -62,7 +62,7 @@
 					    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span>38</span></a>
+					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span></span></a>
 					  </li>
 					  <li class="nav-item">
 					    <a class="nav-link" id="clickInformation" href="#">정보</a>
@@ -422,11 +422,11 @@ function cartHtml(){
 	    			html += "<tr><td colspan = '3' style='text-align: left'>"+cart[i].menuName+"</td></tr>"; 
 	    			 			    	
 	    			//삭제 버튼
-	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>X</button></td>";
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>x</button></td>";
 	    					
 	    			//<i class="fas fa-times"></i>
 	    			//수량 버튼
-	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ ");"; //증가 버튼
+	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ "); "; //증가 버튼
 	    			if(cart[i].amount==9){html += "disabled";} 
 	    			html += ">+</button>";	    			
 	    			html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">"; //카트에 담긴 수량			  		
@@ -510,7 +510,6 @@ function inputCart(menuCode){
 				var cnt = 0;		
 			
 				for (var i=0; i<cart.length; i++){					
-					
 					if(menu.storeNo != cart[i].storeNo){ //새로 추가한 메뉴가 기존의 메뉴와 다른 사업자번호를 가지고 있다면
 						$('#newMenuCode').val(menu.menuCode);
 						$('#checkEmptyCart').modal(); //모달이 실행되고서 아래도 계속실행중임..
@@ -518,10 +517,14 @@ function inputCart(menuCode){
 					}else{						
 						if(menu.menuCode == cart[i].menuCode){ //꺼낸 메뉴가 cart에 이미 담겨있으면 	
 							cnt ++;
-							cart[i].amount = cart[i].amount + 1;
+							if(cart[i].amount < 9 ){
+								cart[i].amount = cart[i].amount + 1;
+							}
+							
 						}						
 					}	
-											
+									
+					
 				}//end of for (중복찾기)
 				
 				if(cnt == 0){ //중복없음

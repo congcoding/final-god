@@ -287,7 +287,12 @@ span.srchVal{
 			<c:if test="${memberLoggedIn != null}">
 			  <c:if test="${sellerLoggedIn == null}">
 			  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
-				<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+			  	<c:if test="${memberLoggedIn.memberId != 'admin'}">
+					<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+				</c:if>
+				<c:if test="${memberLoggedIn.memberId == 'admin'}">
+					${memberLoggedIn.memberName}님 안녕하세요 &nbsp;
+				</c:if>
 				<button class="btn btn-outline-sucess" type="button" 
 						onclick = "memberLogOut();">로그아웃</button>
 			  </c:if>
