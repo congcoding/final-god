@@ -116,4 +116,3 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 //       super.postHandle(request, response, handler, modelAndView);
 //   }
 }
-

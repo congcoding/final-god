@@ -143,6 +143,11 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	@Override
+	public List<StoreInfo> selectAllstoreInfo() {
+		
+		return memberDao.selectAllstoreInfo();
+	}
 
 	@Override
 	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {

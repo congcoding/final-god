@@ -341,12 +341,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 		
 
+	
 	@Override
 	public String selectSellerIdByStoreNo(String storeNo) {
 		return sqlSession.selectOne("seller.selectSellerIdByStoreNo", storeNo);
 	}
-
-	
 
 
 	@Override

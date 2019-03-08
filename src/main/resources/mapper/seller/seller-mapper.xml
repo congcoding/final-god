@@ -224,8 +224,8 @@
 	<select id="selectSellerIdByStoreNo" resultType="string">
 		select sellerid from storeinfo where storeno = #{storeNo} 
 
-
 	</select>
+
 		<!-- 자동로그인 TEST -->
 	<update id="keepLogin">
 		update seller set sessionKey = #{sessionId} , sessionLimit = #{next} where sellerId = #{sellerId}
@@ -237,10 +237,12 @@
 	</select>
 	
 
+
 	<select id="selectSellerBySellerId" resultType="seller">
 		select * from seller where sellerid = #{sellerId}
 	</select>
 	<insert id="createChatRoom">
 		insert into chatroom values(seq_chatroomno.nextval,#{sellerId},#{admin})
 	</insert>
+
 </mapper>

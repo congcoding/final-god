@@ -100,10 +100,7 @@ public interface SellerService {
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
-
 	String selectSellerIdByStoreNo(String storeNo);
-
-	
 
 	//자동로그인 TEST
 	
@@ -115,7 +112,11 @@ public interface SellerService {
 			
 	Seller login(Seller login);
 
+
 	Seller selectSellerBySellerId(String sellerId);
+
+
+
 
 
 

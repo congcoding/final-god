@@ -588,10 +588,19 @@ public class MemberController {
 	 
 	 //지역별 검색
 	 @RequestMapping("/member/searchByLoaction")
-	 public String searchByLoaction(@RequestParam("location") String location) {
-		 String[] locationArr = location.split(" ");
-		 location = locationArr[0] + locationArr[1];	 
+	 public String searchByLoaction(@RequestParam("location") String location , Model model) {
+		// String[] locationArr = location.split(" ");
+		// location = locationArr[0] + locationArr[1];
+		 //logger.info("@@@@@@@@@@@@@@@@@@@@@@@2location"+location);
 		 //List<StoreInfo> searchByLoaction = memberService.searchByLoaction(location);
+		 List<StoreInfo> storeInfoAll = memberService.selectAllstoreInfo();
+		 
+		 logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@List" + storeInfoAll);
+		 logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@Location" + location);
+		 
+		 model.addAttribute("location" , location);
+		 model.addAttribute("storeInfoList" , storeInfoAll);
+		 
 		 return "storeInfo/searchByLocation";
 	 }
 

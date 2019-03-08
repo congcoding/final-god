@@ -32,6 +32,9 @@
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> 
 
+<!-- favicon 설정 -->
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+
 <style>
 nav.navbar-light{
 	background : #117a8b;
@@ -354,7 +357,12 @@ span.srchVal{
             </ul> <!-- ul.navbar-nav ml-auto -->
 			</c:if>	
 			  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
-				<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+			  	<c:if test="${memberLoggedIn.memberId != 'admin'}">
+					<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+				</c:if>
+				<c:if test="${memberLoggedIn.memberId == 'admin'}">
+					${memberLoggedIn.memberName}님 안녕하세요 &nbsp;
+				</c:if>
 				<button class="btn btn-outline-sucess" type="button" 
 						onclick = "memberLogOut();">로그아웃</button>
 				
@@ -434,8 +442,8 @@ span.srchVal{
 			<a href="${pageContext.request.contextPath}/seller/sellerView.do">${sellerLoggedIn.sellerName}</a>&nbsp;사장님 안녕하세요 &nbsp;
 			<button class="btn loginbtn"  type="button" onclick="location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}'">로그아웃</button>
 		    &nbsp;  
-		 	<button class="btn btn-outline-success header-btn" type="button" 
-		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'">내가게</button> 
+		 	<button class="btn btn-outline-success header-btn" type="button"  id="myStore-btn"
+		 	 onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=${sellerLoggedIn.sellerId}'" >내가게</button> 
 		  </c:if>
 		</c:if>
 		

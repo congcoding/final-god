@@ -339,6 +339,7 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public Seller selectSellerBySellerId(String sellerId) {
 		return sellerDao.selectSellerBySellerId(sellerId);
+	
 	}
 
 

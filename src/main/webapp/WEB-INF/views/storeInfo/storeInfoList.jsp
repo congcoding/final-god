@@ -14,8 +14,11 @@ div.row{
     margin-left: 92px;
 }
 
-li#storeNo{
+li#STORENO{
 	display: none;
+}
+.card{
+    margin: 10px;
 }
 </style>
 <script>
@@ -50,59 +53,104 @@ $(document).ready(function(){
 	<div class="row">
 			<c:forEach items="${list }" var="list" varStatus="status">
 			
-				<c:if test="${list.storeGrade eq 'A'}">
+				<c:if test="${list.STOREGRADE eq 'A'}">
 					<div class="card" style="width: 20rem; border : 1px solid #e9fbfa; background-color:#e9fbfa;" >
 				</c:if>
-				<c:if test="${list.storeGrade eq 'B'}">
+				<c:if test="${list.STOREGRADE eq 'B'}">
 					<div class="card" style="width: 20rem; border:1px solid #26d9d0;">
 				</c:if>
-				<c:if test="${list.storeGrade eq 'C'}">
+				<c:if test="${list.STOREGRADE eq 'C'}">
 					<div class="card" style="width: 20rem;"  style="border:red;">
 				</c:if>
-					<img class="card-img-top" src="" alt="StoreInfo Thumbnail">
+					<!-- 썸네일이 존재할 경우 -->
+					<c:if test="${not empty list.RENAMEDFILENAME}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/menu/${list.RENAMEDFILENAME }" alt="StoreInfo Thumbnail">
+					</c:if>
+					
+					<!-- 카테고리가 치킨이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==1}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/chicken.jpg" alt="썸네일">
+					</c:if>
+					
+					<!-- 카테고리가 피자이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==2}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/pizza.png" alt="썸네일">
+					</c:if>
+					
+					<!-- 카테고리가 보쌈/족발이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==3}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/bossam.jpg" alt="썸네일">
+					</c:if>
+					
+										
+					<!-- 카테고리가 분식이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==4}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/bunsik.jpeg" alt="썸네일">
+					</c:if>
+					
+										
+					<!-- 카테고리가 중식이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==5}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/chineseFood.jpg" alt="썸네일">
+					</c:if>
+					
+					<!-- 카테고리가 일식이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==6}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/japaneseFood.jpeg" alt="썸네일">
+					</c:if>
+					
+					<!-- 카테고리가 중식이고, 썸네일이 없을 때 -->
+					<c:if test="${empty list.RENAMEDFILENAME && list.CATEGORYNO==7}">					
+					<img class="card-img-top" style="width:319px; height:208px;" src="${pageContext.request.contextPath}/resources/upload/storeInfo/thumbNail/koreanFood.jpg" alt="썸네일">
+					</c:if>
+					
+					
+					
+					
+					
 					<div class="card-body">
 						<h5 class="card-title" style="font-weight: bold;">
-							<c:out value="${list.storeName }" />
+							<c:out value="${list.STORENAME }" />
 						</h5>
 						<p class="card-text">
-							<c:out value="${list.storeIntro }" />
+							<c:out value="${list.STOREINTRO }" />
 						</p>
 					</div>
 					
 						<ul class="list-group list-group-flush">
 					
-					<c:if test="${list.storeGrade eq 'A'}">
-						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+					<c:if test="${list.STOREGRADE eq 'A'}">
+						<li id="STORENO" ><c:out value="${list.STORENO }"></c:out></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>영업시간 </strong> <c:out
-								value="${list.operatingHours }" /></li>
+								value="${list.OPERATINGHOURS }" /></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>전화번호 </strong> <c:out
-								value="${list.storeTel }" /></li>
+								value="${list.STORETEL }" /></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa; background-color:#e9fbfa;"><strong>배달최소금액 </strong> <c:out
-								value="${list.deliveryMinPrice }" /></li>
+								value="${list.DELIVERYMINPRICE }" /></li>
 					</c:if>
 					
-					<c:if test="${list.storeGrade eq 'B'}">
-						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+					<c:if test="${list.STOREGRADE eq 'B'}">
+						<li id="STORENO" ><c:out value="${list.STORENO }"></c:out></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>영업시간 </strong> <c:out
-								value="${list.operatingHours }" /></li>
+								value="${list.OPERATINGHOURS }" /></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>전화번호 </strong> <c:out
-								value="${list.storeTel }" /></li>
+								value="${list.STORETEL }" /></li>
 						<li class="list-group-item" style="border:1px solid #e9fbfa;"><strong>배달최소금액 </strong> <c:out
-								value="${list.deliveryMinPrice }" /></li>
+								value="${list.DELIVERYMINPRICE }" /></li>
 					</c:if>
 					
-					<c:if test="${list.storeGrade eq 'C'}">
-						<li id="storeNo" ><c:out value="${list.storeNo }"></c:out></li>
+					<c:if test="${list.STOREGRADE eq 'C'}">
+						<li id="STORENO" ><c:out value="${list.STORENO }"></c:out></li>
 						<li class="list-group-item" ><strong>영업시간 </strong> <c:out
-								value="${list.operatingHours }" /></li>
+								value="${list.OPERATINGHOURS }" /></li>
 						<li class="list-group-item" ><strong>전화번호 </strong> <c:out
-								value="${list.storeTel }" /></li>
+								value="${list.STORETEL }" /></li>
 						<li class="list-group-item" ><strong>배달최소금액 </strong> <c:out
-								value="${list.deliveryMinPrice }" /></li>
+								value="${list.DELIVERYMINPRICE }" /></li>
 					</c:if>
 						</ul>
 					<div class="card-body">
-						<a class="btn btn-primary" href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${list.storeNo }">주문하기</a>
+						<a class="btn btn-primary" href="${pageContext.request.contextPath }/menu/menuList.do?storeNo=${list.STORENO}">주문하기</a>
 					</div>
 				</div>
 		
