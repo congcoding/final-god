@@ -142,7 +142,6 @@ div#memberViewFrm-container{
 								<th>내용</th>
 								<td>${review.content }</td>
 							</tr>
-						
 							<!-- 리뷰 첨부파일 꺼내기 -->
 							<c:if test="${not empty attachList}">	
 								<tr style="border-bottom : 1px solid #dddfeb;">

@@ -110,8 +110,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.sellerfindId(email);	
 	}
 
+	@Override
 	public List<RAttachment> selectRAttachmentList(int reviewNo) {
 		return memberDao.selectRAttachmentList(reviewNo);
+	}
+
+	@Override
+	public RAttachment selectOneRattachment(int reviewNo) {
+		return memberDao.selectOneRattachment(reviewNo);
 	}
 
 
@@ -153,6 +159,8 @@ public class MemberServiceImpl implements MemberService {
 	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
 		return memberDao.couponListBymemberId(map);
 	}
+
+
 
 
 

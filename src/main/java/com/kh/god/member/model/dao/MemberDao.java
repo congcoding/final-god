@@ -60,5 +60,7 @@ public interface MemberDao {
 
 	List<StoreInfo> selectAllstoreInfo();
 
+	RAttachment selectOneRattachment(int reviewNo);
+
 
 }

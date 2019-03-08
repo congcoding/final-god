@@ -66,8 +66,13 @@ public class MenuController {
 		
 		if(reviewList != null) {			
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
-			for(Review r : reviewList) {			
-				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
+			for(Review r : reviewList) {	
+				
+				List<RAttachment> tempList = memberService.selectRAttachmentList(r.getReviewNo());			
+				for(RAttachment ra : tempList) {
+					attachList.add(ra);
+				}
+				
 			}			
 		}
 		
@@ -87,6 +92,8 @@ public class MenuController {
 		
 		model.addAttribute("reviewList",reviewList);//매장 후기리스트
 		model.addAttribute("attachList", attachList); // 후기 첨부파일 리스트
+		
+		logger.debug(attachList);
 		
 		model.addAttribute("checkedBookMark",checkedBookMark); //북마크여부
 		

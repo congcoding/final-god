@@ -48,6 +48,8 @@ public interface MemberService {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	RAttachment selectOneRattachment(int reviewNo);
+	
 	Seller selectOneSeller(String id);
 
 	int updateFindPwd(Seller s);
@@ -59,6 +61,7 @@ public interface MemberService {
 	int deleteMemberReview(String reviewNo);
 
 	List<StoreInfo> selectAllstoreInfo();
+
 
 
 }

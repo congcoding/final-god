@@ -265,20 +265,26 @@ public class MemberController {
 		
 		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = memberService.reviewList(memberId);
-		logger.debug(reviewList);
-		
+	
 		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
 		List<RAttachment> attachList = new ArrayList<>();
 		
 		if(reviewList != null) {			
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
-			for(Review r : reviewList) {			
-				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
+			for(Review r : reviewList) {	
+				
+				List<RAttachment> tempList = memberService.selectRAttachmentList(r.getReviewNo());			
+				for(RAttachment ra : tempList) {
+					attachList.add(ra);
+				}
+				
 			}			
 		}
 				
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("attachList", attachList);
+		
+		logger.debug(attachList);
 		
 		String view = "member/memberReview";
 		return view; 				
