@@ -9,6 +9,14 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
+<!-- 지도 관련 -->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f71510449902565d91fe4cae2a1eecd&libraries=services"></script>
+<!-- 페이지 스크롤 해도 지도 튀어나오지 않게 하기 -->
+<style>
+#map{
+	z-index: -1;
+}
+</style>
 
 <!-- 매장 요약----------------------------------------------------------->
 <div id="menuThumb-container" class="card">
@@ -166,13 +174,28 @@
 				<table class="table" id="sellerInformation">
 					<c:forEach items="${storeInfo}" var="storeInfo">		
 						<thead><tr><th scope="col">가게명</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeName}</td></tr></tbody>						  				  
+						<tbody><tr><td id="mapStoreName">${storeInfo.storeName}</td></tr></tbody>						  				  
 						
 						<thead><tr><th scope="col">가게소개</th></tr></thead>
 						<tbody><tr><td>${storeInfo.storeIntro}</td></tr></tbody>
 						
 						<thead><tr><th scope="col">가게주소</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeAddress}</td></tr></tbody>			  
+						<tbody>
+							<tr>
+								<td>
+									<p style="margin-top: -12px">
+										<em class="link"> 
+											<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
+												혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요. 
+											</a>
+										</em>
+									</p>
+									<div id="map" style="width:100%;height:350px;"></div>
+								</td>
+									
+							</tr>
+							<tr><td id="mapStoreAddr">${storeInfo.storeAddress}</td></tr>
+						</tbody>			  
 						
 						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
 						<tbody><tr><td>${storeInfo.storeTel}</td></tr></tbody>			 
@@ -601,6 +624,45 @@ function checkSelect(){
 	$("#report-frm").submit();
 	}
 };
+
+/* 가게 위치 지도 */
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new daum.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new daum.maps.services.Geocoder();
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch($("#mapStoreAddr").text(), function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === daum.maps.services.Status.OK) {
+
+        var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new daum.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new daum.maps.InfoWindow({
+            content: '<div class="mapPin" style="width:150px; text-align:center; padding:1px; font-size:70%;">'+$("#mapStoreName").text()+'</div>'
+            // content: '<div class ="label"><span class="left"></span><span class="center">' + $("#mapStoreName").text() + '</span><span class="right"></span></div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});
 
 </script>
 

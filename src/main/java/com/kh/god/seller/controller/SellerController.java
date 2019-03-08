@@ -578,7 +578,8 @@ public class SellerController {
     }
     
 	@RequestMapping("/seller/myStoreMenu.do")
-	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
+	public String myStoreMenu(@RequestParam("storeNo") String storeNo, 
+							  @RequestParam("sellerId") String sellerId, Model model) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("myStoreMenu() 요청!"); 
 		}
@@ -588,16 +589,29 @@ public class SellerController {
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
 		StoreInfo storeInfo = sellerService.selectStoreInfo(storeNo);
+		String view = "";
+		String msg = "접근 권한이 없습니다.";
 
-		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
+		if (!sellerId.equals(storeInfo.getSellerId())) {
 
-		model.addAttribute("menu", menu);
-		model.addAttribute("storeNo", storeNo);
-		model.addAttribute("categoryNo", storeInfo.getCategoryNo());
-		
-		logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
+			String loc = "/";
+			view = "common/msg";
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
 
-		return "/seller/myStoreMenu";
+		} else {
+
+			logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
+
+			model.addAttribute("menu", menu);
+			model.addAttribute("storeNo", storeNo);
+			model.addAttribute("categoryNo", storeInfo.getCategoryNo());
+
+			logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
+			view = "/seller/myStoreMenu";
+		}
+
+		return view;
 	}
 	
 	@RequestMapping("/seller/goUpdateMenu.do")
