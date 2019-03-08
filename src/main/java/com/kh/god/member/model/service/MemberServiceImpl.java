@@ -10,6 +10,7 @@ import com.kh.god.member.model.dao.MemberDao;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.member.model.vo.WebReview;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -158,6 +159,24 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
 		return memberDao.couponListBymemberId(map);
+	}
+
+
+	@Override
+	public int insertWebReview(WebReview wr) {
+		return memberDao.insertWebReview(wr);
+	}
+
+
+	@Override
+	public List<WebReview> selectListWebReiveiw(int cPage, int numPerPage) {
+		return memberDao.selectListWebReiveiw(cPage , numPerPage);
+	}
+
+
+	@Override
+	public int selectWebReiveiwTotalContents() {
+		return memberDao.selectWebReiveiwTotalContents();
 	}
 
 
