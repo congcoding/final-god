@@ -76,7 +76,7 @@ public interface SellerDao {
 
 	int updateMenu(Map<String, Object> map);
 
-	int deleteMenu(String menuCode);
+	int deleteMenu(Map<String, Object> map);
 
 	int insertOrder(Map<String, Object> map);
 
@@ -101,7 +101,6 @@ public interface SellerDao {
 
 	Map<String, String> getStoreName(Map<String, String> map);
 
-
 	int insertMenu(Menu menu);
 
 	int insertMenuAttachment(MenuAttachment a);
@@ -118,6 +117,8 @@ public interface SellerDao {
 	int notReadMessage(String memberId);
 
 	String selectSellerIdByStoreNo(String storeNo);
+
+
 
 
 

@@ -187,8 +187,8 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public int deleteMenu(String menuCode) {
-		return sqlSession.delete("menu.deleteMenu", menuCode);
+	public int deleteMenu(Map<String, Object> map) {
+		return sqlSession.update("menu.deleteMenu", map);
 	}
 
 	@Override
@@ -362,4 +362,6 @@ public class SellerDaoImpl implements SellerDao {
 	public Seller login(Seller s) {
 		return sqlSession.selectOne("seller.login" , s);
 	}
+
+
 }
