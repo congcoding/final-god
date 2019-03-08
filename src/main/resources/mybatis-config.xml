@@ -59,6 +59,9 @@
 				   
 		<typeAlias type="com.kh.god.admin.model.vo.Report"
 				   alias="report" />
+		
+		<typeAlias type="com.kh.god.member.model.vo.WebReview"
+				   alias="webReview" />
 
 	</typeAliases>
 	

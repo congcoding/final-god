@@ -117,5 +117,17 @@
 	<update id="updateMemberFindPwd">
 		update seller set password = #{password} where memberid = #{memberId}
 	</update>
+	
+	<insert id="insertWebReview">
+		insert into webreview (boardno , title , writer , content , writedate , rate) values(SEQUENCE_webreview_bno.nextval , #{title} , #{writer} , #{content} , default , #{rate})
+	</insert>
+	
+	<select id="selectListWebReiveiw" resultType="WebReview">
+		select * from webreview 
+	</select>
+	
+	<select id="selectWebReiveiwTotalContents" resultType="_int">
+		SELECT COUNT(*) FROM webreview
+	</select>
 
 </mapper>
