@@ -32,6 +32,9 @@
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script> 
 
+<!-- favicon 설정 -->
+<link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
+
 <style>
 nav.navbar-light{
 	background : #117a8b;
