@@ -24,31 +24,35 @@
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
 		    ${storeInfo.storeName}
+		    <span style="float: right;">
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    <span style="float : right">
-		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
-					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
 					</a>
 				</c:if>
 				<c:if test="${checkedBookMark == 1}">
-					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.storeNo}','${memberLoggedIn.memberId}');">
+					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
 					</a>	
 				</c:if>
 		    </span>
+		    </span>
 	    </li>
-	    <input type="hidden" value="${storeInfo.storeNo}" id="storeNoForPayment">
-	    <input type="hidden" value=" ${storeInfo.deliveryMinPrice}" id="deliveryMinPrice">
+	    <input type="hidden" value="${storeInfo.STORENO}" id="storeNoForPayment">
+	    <input type="hidden" value=" ${storeInfo.DELIVERYMINPRICE}" id="deliveryMinPrice">
 	    <input type="hidden" id="checkSum">
 
 	    <li class="list-group-item">
-	    	<!-- 사진이 pizza로 고정되어있으니 나중에 판매팀에서 고쳐주시면 감사하겠습니다 ㅎ▽ㅎ! -->
-	    	<div><img src="${pageContext.request.contextPath }/resources/images/pizza.png"></div>
-	    	<div class="introduce">최소주문금액  ${storeInfo.deliveryMinPrice}</div>
+		    <div>
+		    <c:if test="${not empty storeInfo.RENAMEDFILENAME}"><img src="${pageContext.request.contextPath }/resources/upload/menu/${storeInfo.RENAMEDFILENAME}"></c:if>
+		    <c:if test="${empty storeInfo.RENAMEDFILENAME}"></c:if>  	
+		    </div>
+	    	<div class="introduce">최소주문금액  ${storeInfo.DELIVERYMINPRICE}</div>
 	    	<div class="introduce">결제수단 카드결제,만나서결제</div>
 	    </li>	    
-	    <li class="list-group-item">가게소개 : ${storeInfo.storeIntro}</li>
+	    <li class="list-group-item">가게소개 : ${storeInfo.STOREINTRO}</li>
 	</c:forEach>	
   </ul>
 </div> 
@@ -63,13 +67,13 @@
 			<div id="MenuNavi">		
 				<ul class="nav nav-tabs">
 					  <li class="nav-item">
-					    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
+					    <a class="nav-link active" id="clickMenu">메뉴 <span>${menuTotalCount}</span>개</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span>38</span></a>
+					    <a class="nav-link" id="clickreview">클린리뷰  <span></span></a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickInformation" href="#">정보</a>
+					    <a class="nav-link" id="clickInformation">정보</a>
 					  </li>
 				</ul>
 			</div>
@@ -85,13 +89,18 @@
 					  <thead><tr><th scope="col" colspan="3">주메뉴</th></tr></thead>
 					  <tbody>
 						  <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'M')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'M')}">
 							    <tr id="main-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm"
-											onclick = "inputCart('${menuList.menuCode}');">
+											onclick = "inputCart('${menuList.MENUCODE}');">
 										주문담기
 									</button>
 								  </td>    
@@ -104,13 +113,18 @@
 					  <thead><tr><th scope="col" colspan="3">사이드메뉴</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'S')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'S')}">
 							    <tr id="side-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm" 
-											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+											onclick = "inputCart('${menuList.MENUCODE}');">주문담기</button>
 								  </td>     
 							    </tr>
 							 </c:if>
@@ -121,13 +135,20 @@
 					  <thead><tr><th scope="col" colspan="3">음료</th></tr></thead>
 					  <tbody>
 					    <c:forEach items="${menuList}" var="menuList">
-							<c:if test = "${fn : contains(menuList.menuCode, 'D')}">
+							<c:if test = "${fn : contains(menuList.MENUCODE, 'D')}">
 							    <tr id="drink-menu">
-							      <td>${menuList.menuName}</td>
-							      <td>${menuList.menuPrice}</td>
+							      <td>${menuList.MENUNAME}</td>
+							      <td>
+							      
+							      <c:if test="${menuList.RENAMEDFILENAME!=null}">
+							      <img class="card-img-top" style="width:100px; height:100px;" src="${pageContext.request.contextPath}/resources/upload/menu/${menuList.RENAMEDFILENAME}" alt="썸네일">
+							      </c:if>
+							      
+							      </td>
+							      <td>${menuList.MENUPRICE}</td>
 								  <td>
 								  	<button type="button" class="btn header-btn btn-primary btn-sm"
-											onclick = "inputCart('${menuList.menuCode}');">주문담기</button>
+											onclick = "inputCart('${menuList.MENUCODE}');">주문담기</button>
 								  </td>      
 							    </tr>
 							 </c:if>
@@ -138,7 +159,7 @@
 				</table> <!-- menuTable -->
 		
 				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
-				<div class="inner_border" style="height: 800px;">
+				<div class="inner_border">
 				<table class="table" id="sellerReviewList">
 					<c:if test="${empty reviewList}">
 						<tr style="border-bottom:0.2px solid lightgray;">
@@ -174,10 +195,12 @@
 				<table class="table" id="sellerInformation">
 					<c:forEach items="${storeInfo}" var="storeInfo">		
 						<thead><tr><th scope="col">가게명</th></tr></thead>
-						<tbody><tr><td id="mapStoreName">${storeInfo.storeName}</td></tr></tbody>						  				  
+						<tbody><tr><td id="mapStoreName">${storeInfo.STORENAME}</td></tr></tbody>						  				  
+						<thead><tr><th scope="col">사업자번호</th></tr></thead>
+						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>		  				  
 						
 						<thead><tr><th scope="col">가게소개</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeIntro}</td></tr></tbody>
+						<tbody><tr><td>${storeInfo.STOREINTRO}</td></tr></tbody>
 						
 						<thead><tr><th scope="col">가게주소</th></tr></thead>
 						<tbody>
@@ -194,17 +217,17 @@
 								</td>
 									
 							</tr>
-							<tr><td id="mapStoreAddr">${storeInfo.storeAddress}</td></tr>
+							<tr><td id="mapStoreAddr">${storeInfo.STOREADDRESS}</td></tr>
 						</tbody>			  
 						
 						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
-						<tbody><tr><td>${storeInfo.storeTel}</td></tr></tbody>			 
+						<tbody><tr><td>${storeInfo.STORETEL}</td></tr></tbody>			 
 						
 						<thead><tr><th scope="col">휴무일</th></tr></thead>
-						<tbody><tr><td>${storeInfo.personalDay}</td></tr></tbody>			 
+						<tbody><tr><td>${storeInfo.PERSONALDAY}</td></tr></tbody>			 
 						
 						<thead><tr><th scope="col">영업시간</th></tr></thead>
-						<tbody><tr><td>${storeInfo.operatingHours}</td></tr></tbody>
+						<tbody><tr><td>${storeInfo.OPERATINGHOURS}</td></tr></tbody>
 					</c:forEach> <!-- end of ${storeInfo} -->
 				</table> <!-- end of table#sellerInformation -->
 				
@@ -296,6 +319,8 @@
 						    <option value="배달시간 초과">배달시간 초과</option>
 						    <option value="기타" id="ect">기타</option>
 						</select>
+						<br />
+		          	<input type="text" name="reportReason" id="reportReason" class="form-control" placeholder="기타 사유를 작성해주세요" style="display: none;" />
 		          </div>
 		        </c:forEach>
 	      </div>
@@ -328,7 +353,8 @@ $(document).ready(function() {
     //가게정보숨기기
 	$("#sellerInformation").hide();
     //리뷰숨기기
-    
+    $("#sellerReviewList").hide();
+
     cartHtml();
 });
 
@@ -421,11 +447,11 @@ function cartHtml(){
 	    			html += "<tr><td colspan = '3' style='text-align: left'>"+cart[i].menuName+"</td></tr>"; 
 	    			 			    	
 	    			//삭제 버튼
-	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>ㅍ</button></td>";
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>x</button></td>";
 	    					
 	    			//<i class="fas fa-times"></i>
 	    			//수량 버튼
-	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ ");"; //증가 버튼
+	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ "); "; //증가 버튼
 	    			if(cart[i].amount==9){html += "disabled";} 
 	    			html += ">+</button>";	    			
 	    			html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">"; //카트에 담긴 수량			  		
@@ -509,7 +535,6 @@ function inputCart(menuCode){
 				var cnt = 0;		
 			
 				for (var i=0; i<cart.length; i++){					
-					
 					if(menu.storeNo != cart[i].storeNo){ //새로 추가한 메뉴가 기존의 메뉴와 다른 사업자번호를 가지고 있다면
 						$('#newMenuCode').val(menu.menuCode);
 						$('#checkEmptyCart').modal(); //모달이 실행되고서 아래도 계속실행중임..
@@ -517,10 +542,14 @@ function inputCart(menuCode){
 					}else{						
 						if(menu.menuCode == cart[i].menuCode){ //꺼낸 메뉴가 cart에 이미 담겨있으면 	
 							cnt ++;
-							cart[i].amount = cart[i].amount + 1;
+							if(cart[i].amount < 9 ){
+								cart[i].amount = cart[i].amount + 1;
+							}
+							
 						}						
 					}	
-											
+									
+					
 				}//end of for (중복찾기)
 				
 				if(cnt == 0){ //중복없음
@@ -584,7 +613,7 @@ $("#clickreview").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	
 	//클린리뷰 보이기
-	
+	$("#sellerReviewList").show();
 	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
@@ -599,6 +628,7 @@ $("#clickMenu").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	//메뉴테이블 보이기
 	$("#menuTable").show();
+	$("#sellerReviewList").hide();
 	//가게정보 숨기기
 	$("#sellerInformation").hide();
 });
@@ -610,8 +640,11 @@ $("#clickInformation").click("on", function(){
 	$("#clickreview").removeClass("active");
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
+	//리뷰테이블
+	$("#sellerReviewList").hide();
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
+
 });
 
 function checkSelect(){
@@ -620,10 +653,24 @@ function checkSelect(){
 		alert("신고사유를 선택해주세요.");
 		return false;
 	}else{
-	
-	$("#report-frm").submit();
+		if($("#reportReason").val() != ""){
+			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
+		}
+		$("#report-frm").submit();
 	}
 };
+$("[name=reportDetails]").change( function(){
+	var state = $('[name=reportDetails] option:selected').val();
+	
+	if(state == '기타'){
+		$("#reportReason").show();
+		
+	}else{
+		$("#reportReason").hide();
+	}
+
+});
+
 
 /* 가게 위치 지도 */
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 

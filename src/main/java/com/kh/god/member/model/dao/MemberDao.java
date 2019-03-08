@@ -58,5 +58,7 @@ public interface MemberDao {
 
 	int deleteMemberReview(String reviewNo);
 
+	List<StoreInfo> selectAllstoreInfo();
+
 
 }

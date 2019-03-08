@@ -86,6 +86,9 @@ public class LoginCheckInterceptor extends HandlerInterceptorAdapter {
 				}
 			}
 		}
+		
+
+		
 
 		return super.preHandle(request, response, handler); // 이 값은 항상 트루
 	}

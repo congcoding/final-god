@@ -7,7 +7,7 @@
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <fmt:requestEncoding value="UTF-8"/>
 <jsp:include page="/WEB-INF/views/common/header.jsp">
-	<jsp:param value="" name="pageTitle"/>
+	<jsp:param value="배달의신" name="pageTitle"/>
 </jsp:include>
 <style>
 
@@ -132,6 +132,12 @@ span#passworderror3{
     top: -31px;
     left: 49px;
     display : none;
+}
+#myStore-btn{
+	display: block;
+	background-color: #117a8b;
+	border-color: white;
+	color : white;
 }
 </style>
 
@@ -326,12 +332,12 @@ span#passworderror3{
 				<!-- 사업자등록증 사본등록 -->
 			<div class="form-group row input-group mb-3">
 			<label for="upfile1" class="col-sm-3">사업자등록증 사본등록</label>
-			  <div class="input-group-prepend form-inline" style="padding:0px;">
+			  <div class="input-group-prepend form-inline " style="padding:0px;">
 			   <!-- <span class="input-group-text" >첨부파일1</span>  -->
 			  </div>
 			  <div class="custom-file">
-			    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-			    <label class="custom-file-label filelabel" for="upFile1" style="overflow: hidden; border-radius: 3px;">파일을 선택하세요</label>
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple />
+			    <label class="custom-file-label filelabel" for="upFile1" style="overflow: hidden; border-radius: 3px;z-index: -1;">파일을 선택하세요</label>
 			  </div>
 			</div>
 			
@@ -342,8 +348,8 @@ span#passworderror3{
 			    <!-- <span class="input-group-text" >첨부파일2</span> -->
 			  </div>
 			  <div class="custom-file">
-			    <input type="file" class="custom-file-input" name="upFile" id="upFile2" multiple >
-			    <label class="custom-file-label filelabel" for="upFile2" style="overflow: hidden; border-radius: 3px;">파일을 선택하세요</label>
+			    <input type="file" class="custom-file-input" name="upFile" id="upFile2" multiple />
+			    <label class="custom-file-label filelabel" for="upFile2" style="overflow: hidden; border-radius: 3px; z-index: -1;">파일을 선택하세요</label>
 			  </div>
 			</div>
 			<!--사업장 이름 -->
@@ -763,6 +769,9 @@ function storeModify(storeNo, sellerId){
 	location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoView.do?storeNo="+storeNo+"&sellerId="+sellerId;
 	
 };
+
+
+
 
 </script>
 

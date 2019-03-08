@@ -58,4 +58,7 @@ public interface MemberService {
 
 	int deleteMemberReview(String reviewNo);
 
+	List<StoreInfo> selectAllstoreInfo();
+
+
 }

@@ -117,6 +117,8 @@ public interface SellerDao {
 
 	int notReadMessage(String memberId);
 
+	String selectSellerIdByStoreNo(String storeNo);
+
 
 
 }

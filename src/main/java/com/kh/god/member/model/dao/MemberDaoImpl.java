@@ -158,8 +158,13 @@ public class MemberDaoImpl implements MemberDao {
 	}
 
 	@Override
+	public List<StoreInfo> selectAllstoreInfo() {
+		return sqlSession.selectList("storeInfo.selectAllstoreInfo");
+	}
+
 	public List<Map<String, Object>> couponListBymemberId(Map<String, Object> map) {
 		return sqlSession.selectList("member.couponListBymemberId", map);
 	}
 
+	
 }

@@ -1,5 +1,9 @@
 package com.kh.god.common.interceptor;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -9,8 +13,10 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.util.WebUtils;
 
+import com.kh.god.common.websocket.WebSocketHandler;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 
@@ -30,42 +36,56 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 	
 	@Inject
 	private SellerService sellerService;
+	private Map<String,WebSocketSession> memberSession;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333kdfkldaklfdsdflj;al;fsdak333333");
+//		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333kdfkldaklfdsdflj;al;fsdak333333");
 		
 		
 		// 로그인한 사람 값
 //		HttpSession sessions = request.getSession();		
 //		Seller sellerLoggedIn = (Seller)sessions.getAttribute("sellerLoggedIn"); 
 
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333333333");
+//		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333333333");
 		//session객체를 가져옴
 		HttpSession session = request.getSession();
 		//login 처리를 담당하는 사용자 저보를 담고 있는 객체를 가져옴
 		Object obj = session.getAttribute("sellerLoggedIn");
-		logger.debug("alkdfkaj!@!E!@$!#$"+obj);
+//		logger.debug("alkdfkaj!@!E!@$!#$"+obj);
 		
 		if(obj == null) { //로그인된 세션이 없는경우 
 			//우리가 만들어 논 쿠키를 꺼내온다. 
 			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 //			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
-			
 			if(loginCookie != null) { //쿠키가 존재하는 경우(이전에 로그인될때 생성된 쿠키가 존재한다는 것.)
+				memberSession = WebSocketHandler.getInstance().getUserList();
 				//loginCookie의 값을 꺼내오고 -> 즉 , 저장해논 세션 ID를 꺼내오고
 				String sessionId = loginCookie.getValue();
 				 // 세션Id를 checkUserWithSessionKey에 전달해 이전에 로그인한적이 있는지 체크하는 메서드를 거쳐서
                 // 유효시간이 > now() 인 즉 아직 유효시간이 지나지 않으면서 해당 sessionId 정보를 가지고 있는 사용자 정보를 반환한다.
                 Seller userVO = sellerService.checkUserWithSessionKey(sessionId);
-                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@44444444444444444444444444");
+//                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@44444444444444444444444444"+userVO);
                 if(userVO != null) { //그런 사용자가 있다면
+                	//로그인 되어있는 중복사용자 막기위함.
+                	String sellerId = userVO.getSellerId();
+                	Set<String> keyValue = memberSession.keySet();
+                	logger.debug("keyValue : "+keyValue);
+                	Iterator<String> iterator = keyValue.iterator();
+                	while(iterator.hasNext()) {
+                		String loginId = iterator.next();
+//					logger.debug("로그인 되어있는 아이디!"+ loginId);
+                		if(sellerId.equals(loginId)) {
+                			response.sendRedirect("/god/seller/askDuplicationLogin.do");
+                			return false;
+                		}
+                	}
                 	//세션을 생성 시켜 준다. 
                 	session.setAttribute("login", userVO);
                 	session.setAttribute("sellerLoggedIn", userVO);
-                	System.out.println("@@@@@@@@@@@@@@@@@@"+userVO);
-                	logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@5555555555555555555555555");
+//                	System.out.println("@@@@@@@@@@@@@@@@@@"+userVO);
+//                	logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@5555555555555555555555555");
             		return true;
                 }
 			}
@@ -76,7 +96,7 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 			//return false; //더이상 컨트롤러 요청으로 가지 않도록  false로 반환함.
 			
 		}
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@66666666666666666666666");
+//		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@66666666666666666666666");
 		//prehandler의 return은 컨트롤러 요청으로 uri로 가도 되냐 안되냐를 허가하는 의미임.
 		//따라서 true로하면 컨트롤러 uri로 가게됨.
 		return true;
@@ -95,4 +115,3 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 //       super.postHandle(request, response, handler, modelAndView);
 //   }
 }
-
