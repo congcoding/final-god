@@ -112,7 +112,11 @@ public interface SellerService {
 			
 	Seller login(Seller login);
 
-	int notReadMessage(String memberId);
+
+	Seller selectSellerBySellerId(String sellerId);
+
+
+
 
 
 

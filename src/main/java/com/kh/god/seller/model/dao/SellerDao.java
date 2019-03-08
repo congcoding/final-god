@@ -115,9 +115,13 @@ public interface SellerDao {
 
 	Seller login(Seller s);
 
-	int notReadMessage(String memberId);
 
 	String selectSellerIdByStoreNo(String storeNo);
+
+	Seller selectSellerBySellerId(String sellerId);
+
+	int createChatRoom(Map<String, String> chatId);
+
 
 
 
