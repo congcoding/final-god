@@ -157,39 +157,58 @@
 					
 					</c:if>
 				</table> <!-- menuTable -->
-		
+				
 				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
 				<div class="inner_border">
+			
 				<table class="table" id="sellerReviewList">
+					
 					<c:if test="${empty reviewList}">
 						<tr style="border-bottom:0.2px solid lightgray;">
 							<td colspan="4" align="center" height="100px">리뷰가 없습니다.</td>
 						</tr>
 					</c:if>
 					
-					<c:if test="${not empty reviewList}">
-						<c:forEach items="${reviewList}" var="review">
-							<tr> <!-- 아이디, 작성일 -->
-								<td>
-									${review.writer } 님 | ${review.rDate }
-								</td>
-							</tr>
-							<tr> <!-- 평점 -->
-								<td>${review.rate }</td>
-							</tr>
-							<tr> <!-- 사진이 있으면 사진을 없으면 이 행은 존재하지않음 -->
-							
-							</tr>
-							<tr> <!-- review 제목 -->
-								<td>${review.title }</td>
-							</tr>
-							<tr> <!-- review 내용(제목클릭해야 보임) -->
-								<td>${review.content }</td>
-							</tr>
+					<c:if test="${not empty reviewList}">					
+						<c:forEach items="${reviewList}" var="review">														
+							<!-- 고객이 작성한 리뷰 -->									
+							<c:if test="${review.commentLevel == 1 }">							
+								<tr> 
+									<td><strong>${review.writer } 님 </strong>| ${review.rDate }</td>
+								</tr>
+								<tr> 
+									<td>
+										<c:forEach var="i" begin="1" end="${review.rate }">								
+				    						<span class="fa fa-star checked"></span>
+				      					</c:forEach>
+				      					<c:forEach var="i" begin="${review.rate+1}" end='5'>
+				      						<span class="fa fa-star"></span>
+				      					</c:forEach>									
+									</td>
+								</tr>
+								<!-- 리뷰 첨부파일 꺼내기 -->
+								<c:if test="${not empty attachList}">	
+									<tr style="border-bottom : 1px solid #dddfeb;">
+										<th>후기사진</th>
+										<td class="attachList-td">
+											<c:forEach var="a" items="${attachList }">																									
+												<c:if test="${review.reviewNo == a.reviewNo }">										
+													<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
+														 style="max-width : 100px; margin:0 10px;" >
+												</c:if>									
+											</c:forEach>
+										</td>
+									</tr>					
+								</c:if>
+								<tr class = "reviewNo${review.reviewNo }">
+									<td>${review.content }</td>
+								</tr>
+							</c:if>												
 						</c:forEach>
+						
 					</c:if>
 				</table>
-				</div>
+				</div> <!-- div inner_border -->
 			
 				<!-- 사업자정보 -->
 				<table class="table" id="sellerInformation">
@@ -349,12 +368,27 @@ $(document).ready(function() {
         );   */
     
     });  
+ 
+	<!-- 사장이 작성한 리뷰 -->
+	<c:forEach items="${reviewList}" var="review">	
+		<c:if test="${review.commentLevel == 2 }">	
+			//console.log(" ${review.rDate }");
+		
+			var html = "";
+			html += "<tr class= 'reviewAnswerTr'> <td>사장님 | ${review.rDate }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.title }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.content }</td></tr>";
+		
+			$('#sellerReviewList .reviewNo${review.reviewRef}').after(html);	//태그 넣기			
+		</c:if>
+	</c:forEach>
     
+	 //리뷰숨기기
+    $(".inner_border").hide();
     //가게정보숨기기
 	$("#sellerInformation").hide();
-    //리뷰숨기기
-    $("#sellerReviewList").hide();
-
+    
+   
     cartHtml();
 });
 
@@ -613,8 +647,7 @@ $("#clickreview").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	
 	//클린리뷰 보이기
-	$("#sellerReviewList").show();
-	
+	$(".inner_border").show();	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
 	//가게정보 숨기기
@@ -628,7 +661,8 @@ $("#clickMenu").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	//메뉴테이블 보이기
 	$("#menuTable").show();
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//가게정보 숨기기
 	$("#sellerInformation").hide();
 });
@@ -640,8 +674,8 @@ $("#clickInformation").click("on", function(){
 	$("#clickreview").removeClass("active");
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
-	//리뷰테이블
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 

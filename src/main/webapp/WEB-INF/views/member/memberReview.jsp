@@ -74,10 +74,10 @@ div#memberViewFrm-container{
 #reviewTable td{
 	border : none;
 }
+
 .checked {
   color: orange;
 }
-
 
 
 </style>
