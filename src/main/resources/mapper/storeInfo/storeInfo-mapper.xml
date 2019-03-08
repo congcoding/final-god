@@ -148,7 +148,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
    <select id="selectMenuList" resultType="menu">
 		select *
 		from menu m left join menuattachment ma on m.menuCode = ma.menuCode left join storeinfo s on m.storeno = s.storeno
-		where s.storeNo = #{storeNo}
+		where s.storeNo = #{storeNo} and m.delFlag = 'N'
    </select>
    
    <select id="getthumbAttachment" resultType="menuAttachment">

@@ -45,7 +45,7 @@
 		        <div id="collapse${store.storeNo}" class="collapse" aria-labelledby="heading${store.storeNo}" data-parent="#accordionSidebar">
 		          <div class="bg-white py-2 collapse-inner rounded">
 		            <a class="collapse-item myStoreOrder" href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}">주문내역 <span class="badge badge-primary badge-pill orderCount">14</span></a>
-		            <a class="collapse-item myStoreMenu" href="${pageContext.request.contextPath}/seller/myStoreMenu.do?storeNo=${store.storeNo}">내 가게 메뉴</a>
+		            <a class="collapse-item myStoreMenu" href="${pageContext.request.contextPath}/seller/myStoreMenu.do?storeNo=${store.storeNo}&sellerId=${store.sellerId}">내 가게 메뉴</a>
 		            <a class="collapse-item myChart" href="${pageContext.request.contextPath }/seller/myStoreChart.do?storeNo=${store.storeNo}&&sellerId=${sellerLoggedIn.sellerId}">내 가게 통계</a>
 		            <a class="collapse-item updateMyStoreInfo" href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}">내 가게 수정</a>
 		            <a class="collapse-item sellerReview" href="${pageContext.request.contextPath}/seller/goSellerReview.do?storeNo=${store.storeNo}">리뷰</a>

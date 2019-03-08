@@ -31,15 +31,23 @@ public class SellerServiceImpl implements SellerService {
 
 	@Autowired
 	SellerDao sellerDao;
-
+	
 	@Override
 	public Seller selectOneSeller(String sellerId) {
 		return sellerDao.selectOneSeller(sellerId);
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int insertSeller(Seller s) {
-		return sellerDao.insertSeller(s);
+		int result =  sellerDao.insertSeller(s);
+		if(result > 0) {
+			Map<String,String> chatId = new HashMap<>();
+			chatId.put("sellerId", s.getSellerId());
+			chatId.put("admin", "admin");
+			result = sellerDao.createChatRoom(chatId);
+		}
+		return result;
 	}
 	
 	@Override
@@ -206,10 +214,10 @@ public class SellerServiceImpl implements SellerService {
 
 		return result;
 	}
-
+	
 	@Override
-	public int deleteMenu(String menuCode) {
-		return sellerDao.deleteMenu(menuCode);
+	public int deleteMenu(Map<String, Object> map) {
+		return sellerDao.deleteMenu(map);
 	}
 
 	@Override
@@ -277,8 +285,10 @@ public class SellerServiceImpl implements SellerService {
 	@Override
 	public List<Map<String, String>> totalSaleVolume(Map<String,String> info) {
 		Map<String,String> storeName = sellerDao.getStoreName(info);
+		logger.debug("판매자의 가게 이름? : "+storeName);
 		List<Map<String,String>> week = null;
 		week = sellerDao.totalSaleVolume(info);
+		logger.debug("데이터가 있나요? : "+week);
 		if(week.size() == 0) {
 			storeName.put("originalPrice","noData");
 			week.add(storeName);
@@ -327,10 +337,12 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public int notReadMessage(String memberId) {
-		// TODO Auto-generated method stub
-		return 0;
+	public Seller selectSellerBySellerId(String sellerId) {
+		return sellerDao.selectSellerBySellerId(sellerId);
+	
 	}
+
+
 
 
 

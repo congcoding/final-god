@@ -224,7 +224,8 @@ public class StoreInfoController {
 		}
 	
 	@RequestMapping("/storeInfo/storeInfoView.do")
-	public String storeInfoView(@RequestParam("storeNo") String storeNo , Model model) {
+	public String storeInfoView(@RequestParam("storeNo") String storeNo, 
+								@RequestParam("sellerId") String sellerId, Model model) {
 		
 		StoreInfo si  = storeInfoService.selectOnebyStoreNo(storeNo);
 		List<Map<String, String>> attachmentList = null ;
@@ -232,13 +233,13 @@ public class StoreInfoController {
 		String loc = "/seller/sellerView.do";
 		String msg = "";
 		String view = "storeInfo/storeInfoView";
-		
+		if(sellerId.equals(si.getSellerId()) && storeNo.equals(si.getStoreNo())) {
 		if(si != null ) {
 			attachmentList = storeInfoService.selectAttchMentLsit(storeNo);
 			
 			if(attachmentList == null) {
 				msg = "내용을 불러 올 수 없습니다.";
-				view ="common.msg";
+				view ="common/msg";
 			}else{
 				
 			}
@@ -246,7 +247,10 @@ public class StoreInfoController {
 		
 		model.addAttribute("storeInfo" , si);
 		model.addAttribute("attachmentList" , attachmentList);
-		
+		} else {
+			
+			msg = "접근 권한이 없습니다.";
+		}
 		return view;
 	}
 	
@@ -262,7 +266,8 @@ public class StoreInfoController {
 		//logger.debug("!!!!!!!!!!!!!"+ oldfile[0]);
 		
 		
-		String loc = "/storeInfoView.do?storeNo=";
+		
+		String loc = "/storeInfo/storeInfoView.do?storeNo="+s.getStoreNo()+"&sellerId="+s.getSellerId();
 		String msg = "";
 		try {
 			

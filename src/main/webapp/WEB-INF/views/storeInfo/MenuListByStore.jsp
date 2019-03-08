@@ -9,6 +9,14 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
+<!-- 지도 관련 -->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f71510449902565d91fe4cae2a1eecd&libraries=services"></script>
+<!-- 페이지 스크롤 해도 지도 튀어나오지 않게 하기 -->
+<style>
+#map{
+	z-index: -1;
+}
+</style>
 
 <!-- 매장 요약----------------------------------------------------------->
 <div id="menuThumb-container" class="card">
@@ -59,13 +67,13 @@
 			<div id="MenuNavi">		
 				<ul class="nav nav-tabs">
 					  <li class="nav-item">
-					    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
+					    <a class="nav-link active" id="clickMenu">메뉴 <span>${menuTotalCount}</span>개</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span></span></a>
+					    <a class="nav-link" id="clickreview">클린리뷰  <span></span></a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickInformation" href="#">정보</a>
+					    <a class="nav-link" id="clickInformation">정보</a>
 					  </li>
 				</ul>
 			</div>
@@ -149,51 +157,89 @@
 					
 					</c:if>
 				</table> <!-- menuTable -->
-		
+				
 				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
 				<div class="inner_border">
+			
 				<table class="table" id="sellerReviewList">
+					
 					<c:if test="${empty reviewList}">
 						<tr style="border-bottom:0.2px solid lightgray;">
 							<td colspan="4" align="center" height="100px">리뷰가 없습니다.</td>
 						</tr>
 					</c:if>
 					
-					<c:if test="${not empty reviewList}">
-						<c:forEach items="${reviewList}" var="review">
-							<tr> <!-- 아이디, 작성일 -->
-								<td>
-									${review.writer } 님 | ${review.rDate }
-								</td>
-							</tr>
-							<tr> <!-- 평점 -->
-								<td>${review.rate }</td>
-							</tr>
-							<tr> <!-- 사진이 있으면 사진을 없으면 이 행은 존재하지않음 -->
-							
-							</tr>
-							<tr> <!-- review 제목 -->
-								<td>${review.title }</td>
-							</tr>
-							<tr> <!-- review 내용(제목클릭해야 보임) -->
-								<td>${review.content }</td>
-							</tr>
+					<c:if test="${not empty reviewList}">					
+						<c:forEach items="${reviewList}" var="review">														
+							<!-- 고객이 작성한 리뷰 -->									
+							<c:if test="${review.commentLevel == 1 }">							
+								<tr> 
+									<td><strong>${review.writer } 님 </strong>| ${review.rDate }</td>
+								</tr>
+								<tr> 
+									<td>
+										<c:forEach var="i" begin="1" end="${review.rate }">								
+				    						<span class="fa fa-star checked"></span>
+				      					</c:forEach>
+				      					<c:forEach var="i" begin="${review.rate+1}" end='5'>
+				      						<span class="fa fa-star"></span>
+				      					</c:forEach>									
+									</td>
+								</tr>
+								
+								<!-- 리뷰 첨부파일 꺼내기 -->
+								<c:if test="${not empty attachList}">	
+									<tr>
+									<td class="attachList-td">
+										<c:forEach var="a" items="${attachList }">
+											<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->															
+											<c:if test="${review.reviewNo == a.reviewNo }">										
+												<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
+													 style="max-width : 100px; margin:0 10px;" >
+											</c:if>									
+										</c:forEach>
+									</td>
+									</tr>					
+								</c:if>
+						
+								<tr class = "reviewNo${review.reviewNo }">
+									<td>${review.content }</td>
+								</tr>
+							</c:if>												
 						</c:forEach>
+						
 					</c:if>
 				</table>
-				</div>
+				</div> <!-- div inner_border -->
 			
 				<!-- 사업자정보 -->
 				<table class="table" id="sellerInformation">
 					<c:forEach items="${storeInfo}" var="storeInfo">		
 						<thead><tr><th scope="col">가게명</th></tr></thead>
-						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>						  				  
+						<tbody><tr><td id="mapStoreName">${storeInfo.STORENAME}</td></tr></tbody>						  				  
+						<thead><tr><th scope="col">사업자번호</th></tr></thead>
+						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>		  				  
 						
 						<thead><tr><th scope="col">가게소개</th></tr></thead>
 						<tbody><tr><td>${storeInfo.STOREINTRO}</td></tr></tbody>
 						
 						<thead><tr><th scope="col">가게주소</th></tr></thead>
-						<tbody><tr><td>${storeInfo.STOREADDRESS}</td></tr></tbody>			  
+						<tbody>
+							<tr>
+								<td>
+									<p style="margin-top: -12px">
+										<em class="link"> 
+											<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
+												혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요. 
+											</a>
+										</em>
+									</p>
+									<div id="map" style="width:100%;height:350px;"></div>
+								</td>
+									
+							</tr>
+							<tr><td id="mapStoreAddr">${storeInfo.STOREADDRESS}</td></tr>
+						</tbody>			  
 						
 						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
 						<tbody><tr><td>${storeInfo.STORETEL}</td></tr></tbody>			 
@@ -324,12 +370,27 @@ $(document).ready(function() {
         );   */
     
     });  
+ 
+	<!-- 사장이 작성한 리뷰 -->
+	<c:forEach items="${reviewList}" var="review">	
+		<c:if test="${review.commentLevel == 2 }">	
+			//console.log(" ${review.rDate }");
+		
+			var html = "";
+			html += "<tr class= 'reviewAnswerTr'> <td>사장님 | ${review.rDate }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.title }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.content }</td></tr>";
+		
+			$('#sellerReviewList .reviewNo${review.reviewRef}').after(html);	//태그 넣기			
+		</c:if>
+	</c:forEach>
     
+	 //리뷰숨기기
+    $(".inner_border").hide();
     //가게정보숨기기
 	$("#sellerInformation").hide();
-    //리뷰숨기기
-    $("#sellerReviewList").hide();
-
+    
+   
     cartHtml();
 });
 
@@ -588,8 +649,7 @@ $("#clickreview").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	
 	//클린리뷰 보이기
-	$("#sellerReviewList").show();
-	
+	$(".inner_border").show();	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
 	//가게정보 숨기기
@@ -603,7 +663,8 @@ $("#clickMenu").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	//메뉴테이블 보이기
 	$("#menuTable").show();
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//가게정보 숨기기
 	$("#sellerInformation").hide();
 });
@@ -615,8 +676,8 @@ $("#clickInformation").click("on", function(){
 	$("#clickreview").removeClass("active");
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
-	//리뷰테이블
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 
@@ -646,6 +707,45 @@ $("[name=reportDetails]").change( function(){
 
 });
 
+
+/* 가게 위치 지도 */
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new daum.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new daum.maps.services.Geocoder();
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch($("#mapStoreAddr").text(), function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === daum.maps.services.Status.OK) {
+
+        var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new daum.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new daum.maps.InfoWindow({
+            content: '<div class="mapPin" style="width:150px; text-align:center; padding:1px; font-size:70%;">'+$("#mapStoreName").text()+'</div>'
+            // content: '<div class ="label"><span class="left"></span><span class="center">' + $("#mapStoreName").text() + '</span><span class="right"></span></div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});
 
 </script>
 

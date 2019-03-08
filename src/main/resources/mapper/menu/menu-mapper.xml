@@ -18,9 +18,10 @@
    		WHERE MENUCODE = #{menuCode}
    </update>
    
-   <delete id="deleteMenu">
-   		delete menu where menuCode = #{menuCode}
-   </delete>
+   <update id="deleteMenu">
+   		update menu set delFlag = 'Y'
+   		where menuCode = #{menuCode}
+   </update>
    
    <select id="selectMenuNo" resultType="menu" >
    		select menuNo from menu where storeNo = #{storeNo}

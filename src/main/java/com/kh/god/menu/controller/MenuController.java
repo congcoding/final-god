@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
+import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.menu.model.service.MenuService;
 import com.kh.god.menu.model.vo.Menu;
@@ -56,7 +57,24 @@ public class MenuController {
 		List<Menu> menuList = menuService.menuList(storeNo);
 		List<StoreInfo> storeInfo = menuService.storeInfoList(storeNo);		
 		int menuTotalCount = menuService.menuCount(storeNo);
+		
+		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = storeInfoService.reviewList(storeNo);
+		
+		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
+		List<RAttachment> attachList = new ArrayList<>();
+		
+		if(reviewList != null) {			
+			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
+			for(Review r : reviewList) {	
+				
+				List<RAttachment> tempList = memberService.selectRAttachmentList(r.getReviewNo());			
+				for(RAttachment ra : tempList) {
+					attachList.add(ra);
+				}
+				
+			}			
+		}
 		
 		
 		int checkedBookMark = 0;
@@ -73,6 +91,10 @@ public class MenuController {
 		model.addAttribute("storeInfo",storeInfo);
 		
 		model.addAttribute("reviewList",reviewList);//매장 후기리스트
+		model.addAttribute("attachList", attachList); // 후기 첨부파일 리스트
+		
+		logger.debug(attachList);
+		
 		model.addAttribute("checkedBookMark",checkedBookMark); //북마크여부
 		
 		

@@ -75,7 +75,7 @@ public interface SellerService {
 
 	int updateMenu(Map<String, Object> map);
 
-	int deleteMenu(String menuCode);
+	int deleteMenu(Map<String, Object> map);
 
 	int insertOrder(Map<String, Object> map);
 
@@ -92,7 +92,6 @@ public interface SellerService {
 	List<Review> getReview1(String storeNo);
 
 	List<Review> getReview2(String storeNo);
-
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
@@ -112,7 +111,13 @@ public interface SellerService {
 			
 	Seller login(Seller login);
 
-	int notReadMessage(String memberId);
+
+	Seller selectSellerBySellerId(String sellerId);
+
+
+
+
+	
 
 
 
