@@ -478,7 +478,7 @@ public class MemberController {
            if(loginFlag == true) {
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
                 mav.addObject("memberLoggedIn",m);
-                session.setAttribute("login",m.getMemberId());
+                session.setAttribute("loginId",m.getMemberId());
                 view = "redirect:/";
             }else {
             	msg = "비밀번호를 잘못 입력하셨습니다.";
@@ -502,7 +502,7 @@ public class MemberController {
 		}
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
-		session.setAttribute("login",null);
+		session.setAttribute("loginId",null);
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
 		//session.invalidate();
 		

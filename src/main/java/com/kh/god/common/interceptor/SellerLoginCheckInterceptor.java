@@ -43,7 +43,6 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 //		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333kdfkldaklfdsdflj;al;fsdak333333");
 		
-		
 		// 로그인한 사람 값
 //		HttpSession sessions = request.getSession();		
 //		Seller sellerLoggedIn = (Seller)sessions.getAttribute("sellerLoggedIn"); 
@@ -77,10 +76,12 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
                 		String loginId = iterator.next();
 //					logger.debug("로그인 되어있는 아이디!"+ loginId);
                 		if(sellerId.equals(loginId)) {
-                			response.sendRedirect("/god/seller/askDuplicationLogin.do");
+                			response.sendRedirect("/god/seller/askDuplicationLogin.do?sellerId="+userVO.getSellerId());
                 			return false;
                 		}
                 	}
+                	//웹소켓에서 쓰기위한것.
+                	session.setAttribute("loginId",userVO.getSellerId());
                 	//세션을 생성 시켜 준다. 
                 	session.setAttribute("login", userVO);
                 	session.setAttribute("sellerLoggedIn", userVO);

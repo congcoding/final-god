@@ -39,10 +39,8 @@ import org.springframework.web.util.WebUtils;
 import com.kh.god.common.message.MessageSend;
 import com.kh.god.common.util.Utils;
 import com.kh.god.common.websocket.WebSocketHandler;
-import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.Review;
 import com.kh.god.admin.model.vo.Ad;
-import com.kh.god.common.message.MessageSend;
 import com.kh.god.menu.exception.MenuException;
 import com.kh.god.menu.model.vo.Menu;
 import com.kh.god.seller.model.service.SellerService;
@@ -58,8 +56,22 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
 	private Map<String,WebSocketSession> memberSession;
+//	private static Map<String,HttpSession> loginSession;
 	Logger logger = Logger.getLogger(getClass());
-	
+//	private SellerController() {
+//		loginSession = new HashMap<>();
+//	}
+//	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
+//	public static SellerController getInstance() {
+//		return LazyHolder.INSTANCE;
+//	}
+//	private static class LazyHolder{
+//		private static final SellerController INSTANCE = new SellerController();
+//	}
+	//웹소켓에서 강제 로그아웃 시킬때 필요.
+//	public Map<String,HttpSession> getLoginSession() {
+//		return loginSession;
+//	}
 	@Autowired
 	SellerService sellerService;
 	
@@ -96,7 +108,7 @@ public class SellerController {
 		
 		int result = sellerService.insertSeller(s);
 		
-		String loc = "/seller/sellerEnroll.do";
+		String loc = "/";
 		String msg = "";
 		String view = "";
 		System.out.println(result>0?"등록성공":"등록실패");
@@ -159,11 +171,12 @@ public class SellerController {
 	    	  if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
 	        	 
-	        	 session.setAttribute("login",s.getSellerId());
+	        	 session.setAttribute("loginId",s.getSellerId());
 		         //사이드바
 		         List<StoreInfo> store = sellerService.myStore(memberId);
 		         session.setAttribute("storeSideBar", store);
-		            
+		         //세션관리
+//		         loginSession.put(session.getId(),session);
 		         //자동로그인 설정부분
 	        	 Seller s2 = sellerService.selectOneSeller(memberId);
 	        	 session.setAttribute("sellerLoggedIn" ,s);
@@ -176,7 +189,6 @@ public class SellerController {
 	    		 }else {
 	    			dto.setUseCookie(true);
 	    		 }
-	     		 
 	     		 /*[세션추가되는부분]*/
 	     		 //1.로그인이 성공되면 
 	     		 if(dto.isUseCookie()) {
@@ -234,7 +246,7 @@ public class SellerController {
 	      
 	      
 	      
-	      
+//	      loginSession.remove(session.getId());
 	      Object obj = session.getAttribute("sellerLoggedIn");
 	        if ( obj != null ){
 	            Seller vo = (Seller)obj;
@@ -494,7 +506,8 @@ public class SellerController {
     }
     
 	@RequestMapping("/seller/myStoreMenu.do")
-	public String myStoreMenu(@RequestParam("storeNo") String storeNo, Model model) {
+	public String myStoreMenu(@RequestParam("storeNo") String storeNo, 
+							  @RequestParam("sellerId") String sellerId, Model model) {
 		if(logger.isDebugEnabled()) {
 			logger.debug("myStoreMenu() 요청!"); 
 		}
@@ -504,16 +517,29 @@ public class SellerController {
 		// 메뉴리스트
 		List<Menu> menu = sellerService.selectMenuList(storeNo);
 		StoreInfo storeInfo = sellerService.selectStoreInfo(storeNo);
+		String view = "";
+		String msg = "접근 권한이 없습니다.";
 
-		logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
+		if (!sellerId.equals(storeInfo.getSellerId())) {
 
-		model.addAttribute("menu", menu);
-		model.addAttribute("storeNo", storeNo);
-		model.addAttribute("categoryNo", storeInfo.getCategoryNo());
-		
-		logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
+			String loc = "/";
+			view = "common/msg";
+			model.addAttribute("loc", loc);
+			model.addAttribute("msg", msg);
 
-		return "/seller/myStoreMenu";
+		} else {
+
+			logger.debug("☆★☆★☆★☆★☆★메뉴 왔냐? " + menu);
+
+			model.addAttribute("menu", menu);
+			model.addAttribute("storeNo", storeNo);
+			model.addAttribute("categoryNo", storeInfo.getCategoryNo());
+
+			logger.debug("☆★☆★☆★☆★☆★카테고리 번호 왔냐? " + storeInfo.getCategoryNo());
+			view = "/seller/myStoreMenu";
+		}
+
+		return view;
 	}
 	
 	@RequestMapping("/seller/goUpdateMenu.do")
@@ -971,15 +997,22 @@ public class SellerController {
 		return chartByWeek;
 	}
     @RequestMapping("/seller/askDuplicationLogin.do")
-    public String askDuplicationLogin() {
+    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav) {
     	logger.debug("중복 검사를 하는 컨트롤러!");
-    	return "common/duplicationLoginMsg";
+    	Seller seller = new Seller();
+    	seller.setSellerId(sellerId);
+    	mav.addObject("seller",seller);
+    	mav.setViewName("common/duplicationLoginMsg");
+    	return mav;
     }
     @RequestMapping("/seller/goIndexPage.do")
     public String goIndexPage() {
     	return "index";
     }
-
+    //웹소켓클래스에서 강제 로그아웃시키기위해  현재 로그인되어있는 세션을 찾기위해 세션ID값 및 VO객체를 가져옴.
+    public Seller selectSellerBySellerId(String sellerId) {
+    	return sellerService.selectSellerBySellerId(sellerId);
+    }
 }
 
 

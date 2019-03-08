@@ -283,7 +283,7 @@ span#passworderror3{
 								</c:if> 
 								</td>
 								<td>${storeInfo.storeName }</td>
-								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}');" value="수정" class="btn btn-outline-success"  />&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" /></td>
+								<td><input type="button" onclick="storeModify('${storeInfo.storeNo}', '${storeInfo.sellerId}');" value="수정" class="btn btn-outline-success"  />&nbsp;&nbsp;<input type="button" value="삭제" class="btn btn-outline-success" onclick="storeDelete('${storeInfo.storeNo}');" /></td>
 							</tr>
 								<c:if test="${storeInfo.pmsFlag eq 'R'}">
 									<c:if test="${storeInfo.rejectInfo != null}">
@@ -764,9 +764,9 @@ $(function(){
 	
 });
 
-function storeModify(storeNo){
+function storeModify(storeNo, sellerId){
 	
-	location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoView.do?storeNo="+storeNo;
+	location.href = "${pageContext.request.contextPath}/storeInfo/storeInfoView.do?storeNo="+storeNo+"&sellerId="+sellerId;
 	
 };
 
