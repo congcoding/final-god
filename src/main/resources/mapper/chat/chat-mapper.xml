@@ -18,8 +18,11 @@
 		update chat set readflag = 'Y' where chatroomno = #{chatRoomNo}
 	</update>
 	<!-- 채팅 로그를 기록한다. -->
-	<insert id="insertChatLog">
+	<insert id="insertChatLogNotRead">
 		insert into chat values(seq_chatno.nextval,#{chatRoomNo},#{chatContent},default,#{sendMember},default)
+	</insert>
+	<insert id="insertChatLogRead">
+		insert into chat values(seq_chatno.nextval,#{chatRoomNo},#{chatContent},default,#{sendMember},'Y')
 	</insert>
 	<!-- 채팅하고자하는 사람를 찾는다. -->
 	<select id="searchPerson" resultType="seller">

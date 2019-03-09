@@ -15,7 +15,9 @@ public interface ChatDao {
 
 	List<Map<String,String>> selectChattingLogs(Map<String, String> map);
 
-	int insertChatLog(Chat chat);
+	int insertChatLogRead(Chat chat);
+	
+	int insertChatLogNotRead(Chat chat);
 
 	List<Seller> searchPerson(String searchId);
 

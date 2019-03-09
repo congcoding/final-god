@@ -44,9 +44,17 @@ public class ChatServiceImpl implements ChatService {
 		return chatDao.selectChattingLogs(map);
 	}
 	@Override
-	public int insertChatLog(Chat chat) {
-		logger.debug("DAO가기전 chat맵"+chat);
-		int result = chatDao.insertChatLog(chat);
+	public int insertChatLog(Chat chat,int currentFocusChatRoomNo) {
+		logger.debug("DAO가기전 chat맵"+chat+" : "+currentFocusChatRoomNo);
+		int result = 0;
+		logger.debug("삽입전 : chatgetNo : "+chat.getChatNo()+" : "+currentFocusChatRoomNo);
+		if(chat.getChatRoomNo() == currentFocusChatRoomNo) {
+			//방번호가 같으면 현재 받는 상대방이 보고있다는 뜻이므로 디비에는 readFlag를 'Y'로 넣기위한것.
+			result = chatDao.insertChatLogRead(chat);
+		}else {
+			result = chatDao.insertChatLogNotRead(chat);
+			
+		}
 //		List<Map<String,String>> chatLog = null;
 //		if(result > 0) {
 //			chat.put("sendId","<no>");

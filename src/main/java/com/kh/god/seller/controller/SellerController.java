@@ -56,22 +56,22 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
 	private Map<String,WebSocketSession> memberSession;
-//	private static Map<String,HttpSession> loginSession;
+	private static Map<String,String> loginSession;
 	Logger logger = Logger.getLogger(getClass());
-//	private SellerController() {
-//		loginSession = new HashMap<>();
-//	}
-//	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
-//	public static SellerController getInstance() {
-//		return LazyHolder.INSTANCE;
-//	}
-//	private static class LazyHolder{
-//		private static final SellerController INSTANCE = new SellerController();
-//	}
-	//웹소켓에서 강제 로그아웃 시킬때 필요.
-//	public Map<String,HttpSession> getLoginSession() {
-//		return loginSession;
-//	}
+	private SellerController() {
+		loginSession = new HashMap<>();
+	}
+	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
+	public static SellerController getInstance() {
+		return LazyHolder.INSTANCE;
+	}
+	private static class LazyHolder{
+		private static final SellerController INSTANCE = new SellerController();
+	}
+//	웹소켓에서 강제 로그아웃 시킬때 필요.
+	public Map<String,String> getLoginSession() {
+		return loginSession;
+	}
 	@Autowired
 	SellerService sellerService;
 	
@@ -155,7 +155,7 @@ public class SellerController {
 	      } else { //로그인 검사 
 	         // 비밀번호 비교
 	    	  memberSession = WebSocketHandler.getInstance().getUserList();
-	    	  Set<String> keyValue = memberSession.keySet();
+	    	  Set<String> keyValue = loginSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
 				while(iterator.hasNext()) {
@@ -191,6 +191,8 @@ public class SellerController {
 	    		 }
 	     		 /*[세션추가되는부분]*/
 	     		 //1.로그인이 성공되면 
+	     		 loginSession.put(s.getSellerId(),session.getId());
+	     		 logger.debug("로그인 시 : "+loginSession);
 	     		 if(dto.isUseCookie()) {
 	     			 //쿠키사용한다고 체크되어 있으면
 	     			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
@@ -232,13 +234,11 @@ public class SellerController {
 	@RequestMapping("/seller/sellerLogout.do")
 	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session,HttpServletRequest request, HttpServletResponse response)
 {
-		memberSession = WebSocketHandler.getInstance().getUserList();
-		
 //		session.setAttribute("sellerLoggedIn",null);
 //		session.removeAttribute("sellerLoggedIn");
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청!"); 
-		WebSocketHandler.getInstance().getUserList().remove(sellerId);
+		
 	      
 	      if(!sessionStatus.isComplete()) {
 	         sessionStatus.setComplete();
@@ -253,6 +253,8 @@ public class SellerController {
 	            // null이 아닐 경우 제거
 	            session.removeAttribute("sellerLoggedIn");
 	            session.invalidate(); // 세션 전체를 날려버림
+	            loginSession.remove(sellerId);
+	            logger.debug("로그아웃시 : "+loginSession);
 	            //쿠키를 가져와보고
 	            Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 	            if ( loginCookie != null ){
@@ -997,10 +999,26 @@ public class SellerController {
 		return chartByWeek;
 	}
     @RequestMapping("/seller/askDuplicationLogin.do")
-    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav) {
+    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav,HttpServletResponse response) {
     	logger.debug("중복 검사를 하는 컨트롤러!");
     	Seller seller = new Seller();
     	seller.setSellerId(sellerId);
+    	
+    		LoginDTO dto = new LoginDTO();
+        	dto.setUseCookie(true);
+        	if(dto.isUseCookie()) {
+    			 //쿠키사용한다고 체크되어 있으면
+    			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
+        		 logger.debug(loginSession.get(sellerId));
+    			 Cookie cookie = new Cookie("loginCookie" , loginSession.get(sellerId));
+    			  //쿠키를 찾을 경로를 컨텍스트 경로로 변경해 줌.
+    			 cookie.setPath("/");
+    			 int amount = 60*60*24*7;
+    			 cookie.setMaxAge(amount); //단위는 (초)임으로 7일정도로 유효시간을 서정해줌.
+    			 //쿠키적용해줌
+    			 response.addCookie(cookie);
+    		 } //end of if dto.isUseCookie
+    	
     	mav.addObject("seller",seller);
     	mav.setViewName("common/duplicationLoginMsg");
     	return mav;

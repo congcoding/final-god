@@ -691,13 +691,16 @@ span.srchVal{
 			evt.preventDefault();
 			sendMsgTime = getTimeStamp();
 			var sendContent = $("input[name=messageContent]").val();
-			$("input[name=messageContent]").val("");
+			if(socket.readyState !== 1) return;
+				sendMessage();
+			
+			
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
 			var message = {
 					sendId :  chattingId,
 					sendContent : sendContent,
 					chatRoomNo : $("input[id=sendChatRoomNo]").val(),
-					
+					currentFocusChatRoomNo : hasFocusRoom
 			};
 			//ajax를 통해서 DB에 채팅 로그를 담음.
 			 $.ajax({
@@ -705,12 +708,11 @@ span.srchVal{
 				data : message,
 				success : function(data){
 				 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
-			 		console.log(messageData);
 				 	$("#chatView").append(messageData);
 			 		setTimeout(function(){
 		 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 			},100);
-			 		
+			 		$("input[name=messageContent]").val("");
 				},
 				error : function(jqxhr,textStatus,errorTrown){
 		 			console.log("작성한 채팅을 데이터베이스에 넣을때  에러 남!");
@@ -719,9 +721,7 @@ span.srchVal{
 					console.log(errorTrown);
 		 		}
 			});//end of ajax
-			if(socket.readyState !== 1) return;
-				sendMessage();
-			}
+	}
 	});
 	//1. cmd(채팅),메세지 보낸자 ,메세지 받는자, 메세지 내용 (축소), 채팅방 번호, 보낸시간 ex) chat,sendUser,receiver,messageContent , chatRoomNo, sendTime
 	function sendMessage(){
@@ -794,7 +794,8 @@ span.srchVal{
 		 		allNotRead = 0;
 		 	}else{
 		 	 allNotRead = parseInt($("#messageCount").text());
-		 	$("#messageCount").html(allNotRead-parseInt(notRead));
+		 	 if(allNotRead > 0)
+		 		$("#messageCount").html(allNotRead-parseInt(notRead));
 		 	}
 		 	var chatroominfo ={
 		 						chatRoomNo : $(this).children().eq(1).attr('value'),
@@ -864,9 +865,29 @@ span.srchVal{
 			chatForm.append(chatBody);
 			chatForm.append(chatFooter);
 			$("#chatModalContent").html(chatForm);
-			hasFocusRoom = $("#sendChatRoomNo").val();
+			roomNo = $("#sendChatRoomNo").val();
+			console.log("채팅방 들어갈때 방번호 : "+roomNo);
+			
 	 }
-	 
+
+	//현재 사용자가 어떤 채팅방을 보고있는지 hasFocusRoom이  0이면 아무것도 보고있지않다는 뜻.
+	 $("#chatModal")[0].addEventListener("blur",function(){
+		 hasFocusRoom = 0;  
+		// console.log("Page Has Not Focus "+hasFocusRoom);
+	 });
+	 $("#chatModal")[0].addEventListener("focus",function(){
+		 hasFocusRoom = roomNo;  
+		// console.log("Page Has Focus "+hasFocusRoom);
+	 });
+	 // window.onfocus = function(){  
+	 //    has_focus = true;  
+	 //} 
+
+	/*  $(document).ready(function(){
+	    loading_time();
+	 }); */ 
+	////
+	var roomNo = 0;
 	var sendMsgTime = null;
 	var alertType = null;
 	var messageType = null;
@@ -878,7 +899,7 @@ span.srchVal{
 	var realTimeConnectUser;
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
-		console.log("메세지 전송 후 : "+alertType+" : "+messageType);
+		//console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
 			 if(messageType.sender === '${sellerLoggedIn.sellerId}'){
@@ -900,6 +921,7 @@ span.srchVal{
 		 }
 		 
 	 }
+	//리뷰,신고등 알람이 올때 실행하는 함수
    function	alertMessage(alertType,type){
 	   if(type === 'review'){
 			 $("#socketAlert").css("display","block").text(alertType.reviewWriter+"님이 "+alertType.storeName+"에("+alertType.storeNo +")리뷰를 작성");

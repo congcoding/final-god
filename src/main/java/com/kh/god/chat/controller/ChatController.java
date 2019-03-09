@@ -82,8 +82,8 @@ public class ChatController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/chat/insertChatLog.do")
-	public int insertChatLog(@RequestParam String sendId,@RequestParam String sendContent, @RequestParam String chatRoomNo){
-		logger.debug("insertChatLog 저장할  채팅 : "+sendId +": "+chatRoomNo+":"+sendContent );
+	public int insertChatLog(@RequestParam String sendId,@RequestParam String sendContent, @RequestParam String chatRoomNo, @RequestParam(name="currentFocusChatRoomNo") int currentFocusChatRoomNo){
+		logger.debug("insertChatLog 저장할  채팅 : "+sendId +": "+chatRoomNo+":"+sendContent+" : "+currentFocusChatRoomNo );
 //		Map<String,String> chat = new HashMap<>();
 //		chat.put("sendId",sendId);
 //		chat.put("sendContent",sendContent);
@@ -97,8 +97,7 @@ public class ChatController {
 		chat.setChatRoomNo(Integer.parseInt(chatRoomNo));
 		chat.setSendMember(sendId);
 		chat.setSendTime(date);
-		
-		int result = chatService.insertChatLog(chat);
+		int result = chatService.insertChatLog(chat,currentFocusChatRoomNo);
 		
 		return result;
 	}

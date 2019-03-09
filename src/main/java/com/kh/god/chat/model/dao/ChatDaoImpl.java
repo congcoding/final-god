@@ -61,8 +61,12 @@ public class ChatDaoImpl implements ChatDao {
 	 * 채팅을 보내면 DB에 저장될 메소드
 	 */
 	@Override
-	public int insertChatLog(Chat chat) {
-		return sqlSession.insert("chat.insertChatLog", chat);
+	public int insertChatLogNotRead(Chat chat) {
+		return sqlSession.insert("chat.insertChatLogNotRead", chat);
+	}
+	@Override
+	public int insertChatLogRead(Chat chat) {
+		return sqlSession.insert("chat.insertChatLogRead", chat);
 	}
 	@Override
 	public List<Seller> searchPerson(String searchId) {

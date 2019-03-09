@@ -25,10 +25,10 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	@Autowired
 	SellerController sellerController;
 	private final Logger logger = Logger.getLogger(getClass());
-//	private Map<String,HttpSession> loginSession;
+	private Map<String,String> loginSession;
 	//메세지는 날려줄 웹소켓 전용
 	private static List<WebSocketSession> sessionList;
-	//실제 로그인한 session의 아이디정보, session정보
+	//실제 로그인한 HttpServletSession의 아이디정보, session정보
 	private static Map<String,WebSocketSession> userSession;
 	//실제 session의 아이디정보 유저정보
 	private static List<String> userInfo;
@@ -52,9 +52,9 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	public List<WebSocketSession> getSessionList(){
 		return sessionList;
 	}
-	public void setUserList(String loginId,WebSocketSession session) {
-		userSession.put(loginId,session);
-	}
+//	public void setUserList(String loginId,WebSocketSession session) {
+//		userSession.put(loginId,session);
+//	}
 	//※클라이언트 연결 된 후
 		//WebSocketSession을 매개 변수로 받고 클라이언트가 연결된 후 
 		//해당 클라이언트의 정보를 가져와 연결확인 작업을한다.
@@ -70,7 +70,6 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	        userInfo.add(getId(session));
 	        logger.debug("유저목록 리스트(로그인,비로그인) : "+sessionList+" : "+userInfo);
 	        logger.debug("유저목록 리스트(로그인) : "+getUserList()+" : "+getUserList().size());
-	        
 	    }
 	    
 	 
@@ -114,9 +113,9 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    	if(!StringUtils.isEmpty(msg)) {
 	    		String[] strs = msg.split(",");
 	    		for(int i = 0; i < strs.length; i++) {
-	    			String[] d = strs[i].substring(strs[i].indexOf(":")+2).split("\"");
-	    			logger.debug(d[0]);
+	    			logger.debug(strs[i]);
 	    		}
+	    		
 	    		
 	    		
 	    		if(strs != null && strs.length == 6) {//채팅
@@ -191,12 +190,16 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    			connectInfo.add(cmd[0]);
 	    			String sendGson = gson.toJson(connectInfo);
 	    			//다른 브라우져에서 로그인 되어있는 것을 강제 로그아웃 시킨다.
+	    			userSession.put(webSocket.getId(),webSocket);
+	    			logger.debug("기존에있던 유저를 지우지않고  : "+userSession);
+	    			userSession.remove(removeId[0]);
+	    			logger.debug("기존에있던 유저를 지우고  : "+userSession);
+	    			userInfo.remove(removeId[0]);
+	    			//userSession.put(null, webSocket);
 	    			if("forcedlogout".equals(cmd[0]) && reviewSendSession != null) {
 	    				TextMessage tmpMsg = new TextMessage(sendGson);
 	    				reviewSendSession.sendMessage(tmpMsg);
 	    			}
-	    			userSession.remove(removeId[0]);
-	    			userInfo.remove(removeId[0]);
 	    			
 	    			//강제 로그아웃 시킬 아이디 값을 통해서 DB에 저장된 sessionId값을 가지고 온다.
 //	    			Seller sellerVO = sellerController.selectSellerBySellerId(removeId[0]);
@@ -205,7 +208,6 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 //	    			SessionStatus sessionStatus;
 	    			
 					//sellerController.logout(sessionStatus, sellerVO.getSellerId(), logout, request, response);
-	    			userSession.put(getId(webSocket), webSocket);
 	    		    
 	    		}
 	    		//메세지를 받았을 때 프로토콜
@@ -216,7 +218,8 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	
 
 	public String getId(WebSocketSession session) {
-		logger.debug("getId의 sessionId의 값 : "+session.getAttributes().get("loginId"));
+		loginSession = SellerController.getInstance().getLoginSession();
+		logger.debug("getId의 sessionId의 값 : "+loginSession.get(session.getAttributes().get("loginId")));
 		String loginMember = "";
 		try {
 			loginMember = (String)session.getAttributes().get("loginId");

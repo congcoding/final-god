@@ -12,7 +12,7 @@ public interface ChatService {
 
 	List<Map<String,String>> selectChattingLogs(Map<String, String> map);
 
-	int insertChatLog(Chat chat);
+	int insertChatLog(Chat chat, int currentFocusChatRoomNo);
 
 	List<Seller> searchPerson(String searchId);
 

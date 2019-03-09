@@ -21,7 +21,7 @@
         <p> 다른 브라우져를 로그아웃 시키시겠습니까?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary"  id="logoutConfirm"onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=">확인</button>
+        <button type="button" class="btn btn-primary"  id="logoutConfirm">확인</button>
         <button type="button" class="btn btn-secondary"  onclick="location.href='${pageContext.request.contextPath}/seller/goIndexPage.do'">취소</button>
       </div>
     </div>
@@ -38,7 +38,7 @@ $("#logoutConfirm").click(function(){
 	msg.cmd = "forcedlogout";
 	msg.userId = "${seller.sellerId}";
 	socket.send(JSON.stringify(msg));
-	
+	location.href='${pageContext.request.contextPath}/index.do';
 });
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	
