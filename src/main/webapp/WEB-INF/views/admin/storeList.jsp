@@ -16,14 +16,24 @@
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
 
 <style>
-table#tbl-event tr th{text-align:center;}
-table#tbl-event tr td{text-align:center;}
+table#tbl-event tr th{text-align:center; vertical-align:middle;}
+table#tbl-event tr td{text-align:center; vertical-align:middle;}
+div#searchContainer{text-align:center; padding:10px;}
+div#searchContainer select{display:inline; width:150px;}
+div#searchContainer input[type=search]{display:inline; width:200px;}
+div#searchContainer input[type=button]{display:inline; width:70px;}
 </style>
 
 <script>
 $(function(){
 	$("#storeList").addClass("active");	
 });
+
+function goSearch(){
+	var searchType = $("select[name=searchType]").val();
+	var searchKeyword = $("input[type=search]").val();
+	location.href="${pageContext.request.contextPath}/admin/storeList.do?searchType="+searchType+"&searchKeyword="+searchKeyword;
+}
 </script>
 
 <!-- Page Wrapper -->
@@ -42,6 +52,16 @@ $(function(){
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">가게 관리</h1>
+          
+          <div id="searchContainer">
+	          <select name="searchType" class="form-control">
+			    <option value="storeNo" <c:if test="${param.searchType=='storeNo'}">selected</c:if>>사업자 번호</option>
+			    <option value="storeName" <c:if test="${param.searchType=='storeName'}">selected</c:if>>가게 이름</option>
+			    <option value="sellerId" <c:if test="${param.searchType=='sellerId'}">selected</c:if>>사장님 아이디</option>
+			  </select>
+	          <input type="search" class="form-control" value="${param.searchKeyword}"/>
+	          <input type="button" class="btn btn-outline-success" value="검색" onclick="goSearch();"/>
+          </div>
           
           <table id="tbl-event" class="table table-striped table-hover">
 			<tr>
@@ -78,7 +98,7 @@ $(function(){
 			</c:if>
 			<c:if test="${empty list}">
 				<tr>
-					<td colspan="4">새로운 가게 신청이 없습니다.</td>
+					<td colspan="7">등록된 가게가 없습니다.</td>
 				</tr>
 			</c:if>
 		

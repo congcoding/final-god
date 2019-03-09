@@ -198,6 +198,7 @@ div#addReviewPhoto{
 
 <script>
 var cnt = 1;
+
 //평점 
 $('.fa-star').on("click",function(){
 
@@ -207,11 +208,11 @@ $('.fa-star').on("click",function(){
 	$('.fa-star:nth-child(-n+'+checkIndex+')').addClass( 'checked' );
 
 	cnt = $('span.checked').length;
-	
-	
+
+	$('input[name="rate"]').val(cnt);
 });
 
-$('input[name="rate"]').val(cnt);
+
 
 
 function addReviewPhoto(){

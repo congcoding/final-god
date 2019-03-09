@@ -35,6 +35,9 @@
 <!-- favicon 설정 -->
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
 
+<!-- WebSocket: stomp.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+
 <style>
 nav.navbar-light{
 	background : #117a8b;
@@ -267,6 +270,9 @@ span.srchVal{
 		      </li>
 		      <li class="nav-item">				    
 		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
+		      </li>		    
+		      <li class="nav-item">				    
+		        <a class="nav-link" href="${pageContext.request.contextPath }/member/webreview.do">배달의신평가</a>
 		      </li>		    
 		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
 		     	 <li class="nav-item">
@@ -553,6 +559,8 @@ span.srchVal{
 	    </div>
 	  </div>
 	</div>
+	
+
 	
 	<script>
 	
@@ -1250,6 +1258,9 @@ span.srchVal{
 		}
 		
 	});
+	
+	
+
 	
 
 	</script>

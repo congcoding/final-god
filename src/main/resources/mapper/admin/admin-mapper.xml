@@ -205,11 +205,17 @@
 	</select>
 	
 	<select id="selectStoreList" resultType="storeInfo">
-		select * from storeInfo where pmsflag='Y' or pmsflag='C'
+		select * from storeInfo where (pmsflag='Y' or pmsflag='C')
+		<if test="searchType != '' and searchKeyword != ''">
+			and ${searchType} like '%${searchKeyword}%'
+		</if>
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
-		select count(*) from storeInfo where pmsflag='Y' or pmsflag='C'
+		select count(*) from storeInfo where (pmsflag='Y' or pmsflag='C')
+		<if test="searchType != '' and searchKeyword != ''">
+			and ${searchType} like '%${searchKeyword}%'
+		</if>
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">

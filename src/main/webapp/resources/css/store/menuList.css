@@ -55,8 +55,8 @@ div#MenuNavi a{
 /* 매장 메뉴, 리뷰, 정보 테이블이 담긴 div*/
 div#Menu-wrapper{
 	float : left;
-	width: 50%;
-	margin-right: 60px;
+	width: 60%;
+	/* margin-right: 60px; */
 	border: 1px solid transparent;
 }
 
@@ -68,6 +68,33 @@ table#menuTable{
 table#menuTable tr td:nth-of-type(3){
 	text-align : center;
 }
+/* 리뷰 테이블 */
+.inner_border{
+	position: relative;
+    margin-bottom: 100px;
+	border : 1px solid #ddd;	
+    padding: 10px;
+}
+
+
+table#sellerReviewList{
+	
+}
+
+table#sellerReviewList td{
+	border : none;
+}
+
+.reviewAnswerTr {
+	background: #ddd;
+}
+.checked {
+  color: orange !important;
+}
+.fa-star{
+  color : #c5c5c5;
+}
+
 
 
 

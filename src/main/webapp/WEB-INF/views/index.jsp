@@ -35,7 +35,7 @@ div.card{
     cursor : pointer;
 }
 .carousel-indicators{
-	bottom:15px;
+	bottom:-8px;
 }
 </style>
 <script>
@@ -165,6 +165,39 @@ function fn_eventView(eventNo){
 	<div id="content">
 	
 	</div>
+	
+		<!-- 평가모달 (하루동안보기) -->
+<div class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer; display:none;" id="pop" data-toggle="modal" data-target="#reviewmodal" >팝업모달</div>&nbsp;
+
+<div class="modal fade popup_01 hide" id="reviewmodal" tabindex="-1" role="dialog" id="banner_rfix" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">후기를 작성해주세요</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        
+	      <div class="modal-body">
+		        
+		          <div class="form-group">
+		          	<img src="${pageContext.request.contextPath}/resources/images/delivery2.gif" style="width:200px;position: relative;top: 25px; left: 83px;" />
+		          	<br />
+		          	<br />
+		          	 <a href="${pageContext.request.contextPath}/member/webreviewform.do" style="color: gray; position: relative;left:83px;text-decoration: none;font-size: 22px;">배달의신 평가하러가기</a> 
+		          </div>
+		          <div class="form-group">
+		    
+	      </div>
+	      <div class="modal-footer">
+	      <span style="    position: relative; left: -192px;"><input type="checkbox" name="expireHourCheck" value="24" id="expireHourCheck" onclick="closeModalNotToday();"/>&nbsp;하루동안 열지 않기</span>	
+	         <button type="button" class="btn btn-secondary btclose" id="xxx" data-dismiss="modal">취소</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
 </section>	
 <script>
 function getLocation(){
@@ -199,5 +232,51 @@ function getLocation(){
 	}
 }
 getLocation();
+
+$(window).ready(function(){
+	
+
+	getCookieMobile();
+
+});
+function setCookieMobile ( name, value, expiredays ) {
+    var todayDate = new Date();
+    todayDate.setDate( todayDate.getDate() + expiredays );
+    document.cookie = name + "=" + escape( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+};
+function getCookieMobile () {
+    var cookiedata = document.cookie;
+    console.log(cookiedata);
+    if ( cookiedata.indexOf("todayCookie=done") < 0 ){
+    	$("#pop").click();
+    }
+    else {
+    	
+    }
+};
+
+function closeModalNotToday(){	             
+
+	 setCookieMobile( "todayCookie", "done" , 1);
+
+
+$("#main_modal").hide('fade');
+$("#xxx").click();
+$("#todayflag").val("0");
+
+
+} ; 
+
+var repeat  = setInterval(  function(){
+	
+	var cookiedata = document.cookie;
+ 
+    if ( cookiedata.indexOf("todayCookie=done") < 0 ){
+    	
+    }
+    else {
+    	clearInterval(repeat);
+    }
+},10000);
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
