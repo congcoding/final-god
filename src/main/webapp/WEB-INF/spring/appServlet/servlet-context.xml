@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/websocket
-		http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+		http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 
 	<!-- #5. appServlet관련 설정 -->
 	

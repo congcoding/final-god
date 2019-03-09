@@ -35,6 +35,9 @@
 <!-- favicon 설정 -->
 <link rel="shortcut icon" type="image/x-icon" href="${pageContext.request.contextPath}/resources/images/favicon.ico">
 
+<!-- WebSocket: stomp.js CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.js"></script>
+
 <style>
 nav.navbar-light{
 	background : #117a8b;
