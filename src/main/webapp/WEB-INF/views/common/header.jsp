@@ -881,12 +881,13 @@ span.srchVal{
 	//현재 사용자가 어떤 채팅방을 보고있는지 hasFocusRoom이  0이면 아무것도 보고있지않다는 뜻.
 	 $("#chatModal")[0].addEventListener("blur",function(){
 		 hasFocusRoom = 0;  
-		// console.log("Page Has Not Focus "+hasFocusRoom);
+		 //console.log("Page Has Not Focus "+hasFocusRoom);
 	 });
-	 $("#chatModal")[0].addEventListener("focus",function(){
+	 $("#chatModal")[0].addEventListener("focusin",function(){
 		 hasFocusRoom = roomNo;  
-		// console.log("Page Has Focus "+hasFocusRoom);
+		 //console.log("Page Has Focus "+hasFocusRoom);
 	 });
+	 
 	 // window.onfocus = function(){  
 	 //    has_focus = true;  
 	 //} 
@@ -907,14 +908,15 @@ span.srchVal{
 	var realTimeConnectUser;
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
+		//console.log(hasFocusRoom+" : "+messageType.chatRoomNo);
 		//console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
-			 if(messageType.sender === '${sellerLoggedIn.sellerId}'){
-				 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
-			}else{
+			// if(messageType.sender === '${sellerLoggedIn.sellerId}'){
+			//	 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
+			//}else{
 				 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
-			}
+			//}
 			 $("#chatView").append(messageData);
 			 setTimeout(function(){
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
