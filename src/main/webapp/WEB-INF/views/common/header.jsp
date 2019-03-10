@@ -311,8 +311,8 @@ span.srchVal{
                 
                 <div class="dropdown-item d-flex align-items-center">
                   <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
+                    <div class="icon-circle bg-primary" style="width : 2rem; height : 2rem; border-radius:100%;">
+                      <i class="fas fa-file-alt text-white" style="position : relative; left : 0.6em; top : 0.2em;"></i>
                     </div>
                   </div>
                   <div>
@@ -321,10 +321,10 @@ span.srchVal{
                   </div>
                 </div>
   
-                <div class="dropdown-item d-flex align-items-center" >
+                <div class="dropdown-item d-flex align-items-center"  >
                   <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-donate text-white"></i>
+                    <div class="icon-circle bg-success" style="width : 2rem; height : 2rem; border-radius:100%;">
+                      <i class="fas fa-donate text-white" style="position : relative; left : 0.5em; top : 0.2em;"></i>
                     </div>
                   </div>
                   <div>
@@ -334,8 +334,8 @@ span.srchVal{
               
                 <div class="dropdown-item d-flex align-items-center" >
                   <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
+                    <div class="icon-circle bg-warning"  style="width : 2rem; height : 2rem; border-radius:100%;">
+                      <i class="fas fa-exclamation-triangle text-white" style="position : relative; left : 0.5em; top : 0.2em;"></i>
                     </div>
                   </div>
                   <div>
@@ -344,7 +344,6 @@ span.srchVal{
                   </div>
                 </div>
                 
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
               </div>
             </li>
 
@@ -604,6 +603,7 @@ span.srchVal{
 		
 		
 	}
+	
 	//참여하는 채팅 유저
 	var chatUserList = new Array();
 	//맨처음만 채팅유저 리스트를 받아오게하려고 0일때만 작동하도록함.
@@ -765,6 +765,20 @@ span.srchVal{
 		msg.cmd = "realTimeMember";
 		socket.send(JSON.stringify(msg));
 	}
+	//4. cmd(신고),신고 작성자, 신고 유형
+	function sendReportAlert(){
+		var msg = {};
+		msg.cmd = "report";
+		if(!'$(sellerLoggedIn)'){
+			msg.writer = '${sellerLoggedIn.sellerId}';
+		}else{
+			msg.writer = '${memberLoggedIn.memberId}';
+		}
+		msg.reportType = reportType ;
+		mag.receiver = "admin";
+		console.log("현재 신고유형은? "+msg.reportType);
+		socket.send(JSON.stringify(msg));
+	}
 	function getTimeStamp() {
 		   var date = new Date();
 		   var s =
@@ -905,7 +919,11 @@ span.srchVal{
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
+	//실시간 유저 리스트를 웹소켓에서 받아오는 변수
 	var realTimeConnectUser;
+	//신고시 신고유형을 담아서 웹소켓으로 전송하기 위한 변수.
+	var reportType;
+	
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		//console.log(hasFocusRoom+" : "+messageType.chatRoomNo);
@@ -938,6 +956,14 @@ span.srchVal{
 		 	setTimeout(function(){
 		 		$("#socketAlert").css("display","none");
 		 	},3000);
+		 }else if(type === 'report'){
+			 
+				 $("#socketAlert").css("display","block").text(alertType.reportWriter+"님이  "+alertType.reportType+"를 접수함.");
+			 
+		 	setTimeout(function(){
+		 		$("#socketAlert").css("display","none");
+		 	},3000);
+			 
 		 }
 	}
 	 function connectWebSocket(){
@@ -1018,6 +1044,9 @@ span.srchVal{
 		 		}else if(message[i] === "forcedlogout"){
 		 			alert("현재 다른 브라우져에서 강제 로그아웃을 요청했습니다.");
 		 			location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}';
+		 		}else if(message[i].cmd = "report"){
+		 			alertType = message[i];
+		 			alertMessage(alertType,"report");
 		 		}
 		 		else
 		 			 messageType = message[i];

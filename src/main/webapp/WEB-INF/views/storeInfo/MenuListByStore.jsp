@@ -692,6 +692,7 @@ function checkSelect(){
 		if($("#reportReason").val() != ""){
 			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
 		}
+		reportType = "storeReport";
 		$("#report-frm").submit();
 	}
 };
