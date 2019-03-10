@@ -344,12 +344,13 @@ public class SellerController {
 	      }
 	      
 	      
-	      
+	     // session.setAttribute("sellerLoggedIn",null);
 //	      loginSession.remove(session.getId());
 	      Object obj = session.getAttribute("sellerLoggedIn");
 	        if ( obj != null ){
 	            Seller vo = (Seller)obj;
 	            // null이 아닐 경우 제거
+	          //session.removeAttribute("sellerLoggedIn");
 	            session.removeAttribute("sellerLoggedIn");
 	            session.invalidate(); // 세션 전체를 날려버림
 	            loginSession.remove(sellerId);

@@ -509,6 +509,7 @@ public class MemberController {
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
 		session.setAttribute("loginId",null);
+		//session.setAttribute("memberLoggedIn",null);
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
 		//session.invalidate();
 		
@@ -516,7 +517,7 @@ public class MemberController {
 
 		//@sessionAttribute 로 로그인 했다면, sessionStatus.setComplete() 로 무효화
 		if(!sessionStatus.isComplete()) sessionStatus.setComplete();
-		
+
 		return "redirect:/";
 	}
 

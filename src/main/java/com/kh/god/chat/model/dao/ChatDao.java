@@ -24,7 +24,12 @@ public interface ChatDao {
 	ChatRoom searchChatRoom(ChatRoom roomId) ;
 
 	int creatChatRoom(ChatRoom roomId);
-	String notReadMessage(String memberId);
+	List<Integer> notReadMessageToAdmin(String memberId);
+	List<Integer> notReadMessageToSeller(String memberId);
 
 	Seller selectSeller(String addId);
+
+	List<Map<String, String>> getAlertListToAdmin();
+
+	List<Map<String, String>> getAlertListToSeller(String userId);
 }

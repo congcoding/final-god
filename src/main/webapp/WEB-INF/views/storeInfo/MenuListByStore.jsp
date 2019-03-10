@@ -693,6 +693,8 @@ function checkSelect(){
 			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
 		}
 		reportType = "storeReport";
+		//웹소켓으로 신고 접수를 관리자에게 알리기위한 메소드.
+		sendReportAlert();
 		$("#report-frm").submit();
 	}
 };
