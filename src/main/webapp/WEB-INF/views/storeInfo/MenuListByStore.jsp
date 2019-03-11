@@ -23,22 +23,25 @@
   <ul class="list-group">
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
-		    ${storeInfo.storeName}
+		    ${storeInfo.STORENAME}
+				
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left:4px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
+		    	
 		    <span style="float: right;">
-		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
-		    <span style="float : right">
 		    	<c:if test="${checkedBookMark != 1}"> 
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
 					</a>
 				</c:if>
 				<c:if test="${checkedBookMark == 1}">
+		    	
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(1,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
 					</a>	
 				</c:if>
 		    </span>
-		    </span>
+
+		
 	    </li>
 	    <input type="hidden" value="${storeInfo.STORENO}" id="storeNoForPayment">
 	    <input type="hidden" value=" ${storeInfo.DELIVERYMINPRICE}" id="deliveryMinPrice">
