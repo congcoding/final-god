@@ -116,6 +116,11 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 	public int insertReport(Report r) {
 		return storeInfoDao.insertReport(r);
 	}
+
+	@Override
+	public int deleteStore(String storeNo) {
+		return storeInfoDao.deleteStore(storeNo);
+	}
 	
 	
 }
