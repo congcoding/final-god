@@ -201,6 +201,7 @@ function fn_eventView(eventNo){
 </section>	
 <script>
 function getLocation(){
+	
 	if(navigator.geolocation){
 		navigator.geolocation.getCurrentPosition(function(position) {
 			var lon = position.coords.latitude; //y
@@ -222,6 +223,7 @@ function getLocation(){
 			});
 		}, function(error){
 			console.log(error);
+			$("#search").val("서울시 강남구 역삼동");
 		}, {
 			enableHighAccuracy:false,
 			maximumAge:0,
