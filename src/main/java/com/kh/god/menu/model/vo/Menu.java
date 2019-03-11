@@ -18,6 +18,7 @@ public class Menu {
 	private String soldoutFlag;
 	private int menuNo;
 	private String renamedFileName;
+	private String delFlag;
 	
 	
 

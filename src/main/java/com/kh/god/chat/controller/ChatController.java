@@ -82,8 +82,8 @@ public class ChatController {
 	 */
 	@ResponseBody
 	@RequestMapping(value="/chat/insertChatLog.do")
-	public int insertChatLog(@RequestParam String sendId,@RequestParam String sendContent, @RequestParam String chatRoomNo){
-		logger.debug("insertChatLog 저장할  채팅 : "+sendId +": "+chatRoomNo+":"+sendContent );
+	public int insertChatLog(@RequestParam String sendId,@RequestParam String sendContent, @RequestParam String chatRoomNo, @RequestParam(name="currentFocusChatRoomNo") int currentFocusChatRoomNo){
+		logger.debug("insertChatLog 저장할  채팅 : "+sendId +": "+chatRoomNo+":"+sendContent+" : "+currentFocusChatRoomNo );
 //		Map<String,String> chat = new HashMap<>();
 //		chat.put("sendId",sendId);
 //		chat.put("sendContent",sendContent);
@@ -97,8 +97,7 @@ public class ChatController {
 		chat.setChatRoomNo(Integer.parseInt(chatRoomNo));
 		chat.setSendMember(sendId);
 		chat.setSendTime(date);
-		
-		int result = chatService.insertChatLog(chat);
+		int result = chatService.insertChatLog(chat,currentFocusChatRoomNo);
 		
 		return result;
 	}
@@ -123,13 +122,26 @@ public class ChatController {
 		
 		return result;
 	}
-	
+	/**
+	 * 관리자와 판매자는 로그인을 하면 채팅과 알람을 볼수가있는데 이때 읽지않은 알람의 개수와 메세지의 개수를 확인 할 수 있다.
+	 * 관리자의 알람은 총 4개로서 신고,문의사항,가게 신청, 메세지가 있고,
+	 * 판매자의 알람은 총 3개로서 주문내역,리뷰,메세지가있다.
+	 * @param sellerId
+	 * @return
+	 */
 	@ResponseBody
 	@RequestMapping(value="/chat/notReadMessage.do")
-	public String notReadMessage(@RequestParam(name="sellerId") String sellerId) {
-		String notReadCount = chatService.notReadMessage(sellerId);
+	public Map<String,Integer> notReadMessage(@RequestParam(name="sellerId") String sellerId) {
+		Map<String,Integer> notReadCount = chatService.notReadMessage(sellerId);
 		logger.debug(notReadCount);
 		return notReadCount;
+	}
+	@ResponseBody
+	@RequestMapping("/chat/getAlertList.do")
+	public List<Map<String,String>> getAlertList(@RequestParam(name="userId")String userId){
+		List<Map<String,String>> alertList = chatService.getAlertList(userId);
+		logger.debug(alertList);
+		return alertList;
 	}
 }
 

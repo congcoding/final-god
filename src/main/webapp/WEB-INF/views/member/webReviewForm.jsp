@@ -121,7 +121,7 @@ function validate(){
 <form action="${pageContext.request.contextPath}/member/webreviewformEnd.do"  method="post">
  <!--  파일 업로드 속성 추가 enctype="multipart/form-data" : 파일 업로드를 위한 필수 속성-->
   <input type="hidden" name="star" >
-	<table id="tbl-board-review">
+	<table id="tbl-board-review" class="table table-striped table-hover">
 	<tr>
 		<th class="col-sm-3">평가</th>
 		<td><input type="text"  id="reviewcategory" value="배달의신을 평가해주세요" style= " width: 194px;"readonly ></td>
@@ -142,7 +142,7 @@ function validate(){
 	<tr>
 		<th class="col-sm-3">제목</th>
 		<td>
-			 <input type="text" name="title" id="title"  style="border-top:none;border-left:none;border-right:none;" autofocus="autofocus"/>
+			 <input type="text" name="title" id="title"  style="border:none;background:#F2F2F2;"  autofocus="autofocus"/>
 		</td>
 	</tr>
 	<tr>

@@ -19,7 +19,9 @@
         <div class="container-fluid">
 
           <!-- Page Heading -->
-          <h1 class="h3 mb-4 text-gray-800">배달의 신</h1>
+          <h1 class="h3 mb-4 text-gray-800" style="position: relative;top: 28px;left: 36px;">배달의 신</h1>
+          <input  type="submit" class="btn btn-outline-success" 
+          	style="    position: relative; top: -21px;  left: 1074px;" onclick="gotoform();" value="글쓰기" >
           
           <table id="tbl-event" class="table table-striped table-hover" >
 			<tr>
@@ -33,20 +35,27 @@
          	<c:if test="${wr != null}"> 
          		<c:if test="${not empty wr}"> 
            			<c:forEach items="${wr}" var="wr" varStatus="vs">		 
-           				<tr>
+           				<tr style="background : white; text-align: center;">
            					<td><span>${vs.count}</span></td>
            				
 							<td>
 							  <div class="review-star">
-							    <span class="review-score" value ="${wr.rate}">
-							    	<img src="${pageContext.request.contextPath}/resources/images/star.png"/>
+							    <span class="review-score" value ="${wr.rate}" style="width:190px;">
+							    	<c:forEach begin="1" end="${wr.rate}" step="1">
+							    	<span><img style="width: 25px;" src="${pageContext.request.contextPath}/resources/images/빨간별.PNG"/></span>
+							    	</c:forEach>
+							    	<c:if test="${wr.rate != 5}">
+							    		<c:forEach begin="1" end="${5 - wr.rate}" step="1">
+							    	<span><img style="width: 25px;"  src="${pageContext.request.contextPath}/resources/images/회색별.PNG"/></span>
+							    	</c:forEach>
+							    	</c:if>
 							    </span>    
 							  </div>
 						  	</td>
 						  
 							<td>
 						    <div class="reviewImage">
-								<span class="post">제목:${wr.title} <br/>${wr.content}</span>
+								<span class="post" >제목:${wr.title} <br/>${wr.content}</span>
 		      				</div>
 		      				</td>
 		      				<td>
@@ -90,7 +99,14 @@
 
   </div>
   <!-- End of Page Wrapper -->
+<script>
+function gotoform(){
+	
+	location.href = "${pageContext.request.contextPath}/member/webreviewform.do";
+	
+};
 
+</script>
 
 
 		

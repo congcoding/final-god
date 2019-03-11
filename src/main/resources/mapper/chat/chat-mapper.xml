@@ -18,8 +18,11 @@
 		update chat set readflag = 'Y' where chatroomno = #{chatRoomNo}
 	</update>
 	<!-- 채팅 로그를 기록한다. -->
-	<insert id="insertChatLog">
+	<insert id="insertChatLogNotRead">
 		insert into chat values(seq_chatno.nextval,#{chatRoomNo},#{chatContent},default,#{sendMember},default)
+	</insert>
+	<insert id="insertChatLogRead">
+		insert into chat values(seq_chatno.nextval,#{chatRoomNo},#{chatContent},default,#{sendMember},'Y')
 	</insert>
 	<!-- 채팅하고자하는 사람를 찾는다. -->
 	<select id="searchPerson" resultType="seller">
@@ -54,14 +57,32 @@
 	</resultMap>
 	<resultMap type="chatRoom" id="chatRoom"></resultMap>
 	
-	<select id="notReadMessage" resultMap="count">
-		select count(*) as notread  from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
+	<select id="notReadMessageToAdmin" resultType="int">
+		select count(*) from report where reportflag = 'N' union all
+		select count(*) from storeinfo where pmsflag not like 'Y' union all
+		select count(*) from qnaboard where category = 'qna' and boardref is null union all
+		select count(*) from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
 	</select>
-	<resultMap type="String" id="count">
-		<result column="notread" property="NOTREAD" javaType="string"/>
-	</resultMap>
+	<select id="notReadMessageToSeller" resultType="int">
+		select count(*) from review where reviewref is null and storeno in (select storeno from storeinfo where sellerid = #{memberId}) union all
+		select count(*) from orderinfo where storeno in (select storeno from storeinfo where sellerid = #{memberId}) and cancelflag = 'N' and receiveflag = 'N' and deliveryflag = 'N' union all
+		select count(*) from chat C left join chatroom R on C.chatroomno = R.chatroomno where (R.sellerid = #{memberId} or R.sellerid2=#{memberId}) and C.readflag = 'N' and C.sendmember != #{memberId}
+	
+	</select>
 	<select id="selectSeller" resultType="seller">
 		select * from seller where sellerid = #{addId}
 	</select>
-	
+	<select id="getAlertListToAdmin" resultMap="getAlertToAdmin">
+		select S.storeno,S.storename,'report' as type from report R left join storeinfo S on R.storeno = S.storeno where reportflag = 'N' union all
+		select boardwriter,boardtitle,'qna' as type from qnaboard where category = 'qna' and boardref is null union all
+		select storeno,storename,'pms' as type from storeinfo where pmsflag not like 'Y' 
+	</select>
+	<select id="getAlertListToSeller" resultMap="getAlertToSeller">
+		select writer,rdate,title,storeno, 'review' as type from review where reviewref is null and storeno in (select storeno from storeinfo where sellerid = #{userId}) union all
+		select memberid,ordertime,phone,storeno ,'order' as type from orderinfo where storeno in (select storeno from storeinfo where sellerid = #{userId}) and cancelflag = 'N' and receiveflag = 'N' and deliveryflag = 'N'
+	</select>
+	<resultMap type="map" id="getAlertToAdmin"></resultMap>
+	<resultMap type="map" id="getAlertToSeller">
+		<result column="rdate" property="RDATE" javaType="string"/>
+	</resultMap>
 </mapper>

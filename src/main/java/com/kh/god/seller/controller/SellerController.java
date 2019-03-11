@@ -8,17 +8,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,23 +57,25 @@ import com.kh.god.storeInfo.model.vo.StoreInfo;
 @Controller
 @SessionAttributes(value = {"sellerLoggedIn"})
 public class SellerController {
+
 	private Map<String,WebSocketSession> memberSession;
-//	private static Map<String,HttpSession> loginSession;
+	private static Map<String,String> loginSession;
+
 	Logger logger = Logger.getLogger(getClass());
-//	private SellerController() {
-//		loginSession = new HashMap<>();
-//	}
-//	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
-//	public static SellerController getInstance() {
-//		return LazyHolder.INSTANCE;
-//	}
-//	private static class LazyHolder{
-//		private static final SellerController INSTANCE = new SellerController();
-//	}
-	//웹소켓에서 강제 로그아웃 시킬때 필요.
-//	public Map<String,HttpSession> getLoginSession() {
-//		return loginSession;
-//	}
+	private SellerController() {
+		loginSession = new HashMap<>();
+	}
+	//싱글톤 방식을쓰는데 LazyHolder이디엄을 사용.
+	public static SellerController getInstance() {
+		return LazyHolder.INSTANCE;
+	}
+	private static class LazyHolder{
+		private static final SellerController INSTANCE = new SellerController();
+	}
+//	웹소켓에서 강제 로그아웃 시킬때 필요.
+	public Map<String,String> getLoginSession() {
+		return loginSession;
+	}
 	@Autowired
 	SellerService sellerService;
 	
@@ -123,11 +127,14 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public ModelAndView SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
-			@RequestParam("autologin") String autologin,HttpSession session,ModelAndView mav) {
-
+	public String SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
+			@RequestParam("autologin") String autologin,HttpSession session) {
+		
+		
 		logger.debug("$#@$@#$@#$@#$"+autologin);
 		String returnURL = "";
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111"+ session.getAttribute("sellerLoggedIn"));
+//		Member member = null ;
 		if(session.getAttribute("sellerLoggedIn") != null) {
 			//기존에 login이란 세션값이 존재한다면
 //			Seller login = (Member)session.getAttribute("login");
@@ -135,27 +142,29 @@ public class SellerController {
 			session.removeAttribute("sellerLoggedIn"); //기존값을 제거해준다.
 			
 		}
-
-
-//		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
-
-		 String loc = "";
-	     String msg = "";
-	     String view = "common/msg";
+		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
+		
+		String loc = "/";
+	      String msg = "";
+	      String view = "common/msg";
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
+
+	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {//로그인실패
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
+	         returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         
 	      } else { //로그인 검사 
 	         // 비밀번호 비교
+
 	    	  memberSession = WebSocketHandler.getInstance().getUserList();
-	    	  Set<String> keyValue = memberSession.keySet();
+	    	  Set<String> keyValue = loginSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
 				while(iterator.hasNext()) {
@@ -168,13 +177,15 @@ public class SellerController {
 					}
 				}
 	    	  
-	    	  if(loginFlag == true) {
+
+		if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
 	        	 
-	        	 session.setAttribute("loginId",s.getSellerId());
 		         //사이드바
-		         List<StoreInfo> store = sellerService.myStore(memberId);
-		         session.setAttribute("storeSideBar", store);
+		            List<StoreInfo> store = sellerService.myStore(memberId);
+		            session.setAttribute("storeSideBar", store);
+		            
+	        	 session.setAttribute("loginId",s.getSellerId());
 		         //세션관리
 //		         loginSession.put(session.getId(),session);
 		         //자동로그인 설정부분
@@ -191,6 +202,8 @@ public class SellerController {
 	    		 }
 	     		 /*[세션추가되는부분]*/
 	     		 //1.로그인이 성공되면 
+	     		 loginSession.put(s.getSellerId(),session.getId());
+	     		 logger.debug("로그인 시 : "+loginSession);
 	     		 if(dto.isUseCookie()) {
 	     			 //쿠키사용한다고 체크되어 있으면
 	     			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
@@ -211,48 +224,137 @@ public class SellerController {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-//	                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@성공!!!");
-	                
-	     		 } //end of if dto.isUseCookie
-	     		 view = "redirect:/"; //성공시  로그인 폼으로 다시 가도록 함
-		      }else{
-		    	  msg = "비밀번호를 잘못 입력하셨습니다.";
-			      loc = "/";
-		      }// end of if password mathch
-	      }//end of if loginflag
-	      } 
-//		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
-		mav.addObject("msg", msg);
-		mav.addObject("loc", loc);
-		mav.setViewName(view);
-		return mav;
+	                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@111111111111111111111");
+
+	     			 
+	     		 }
+	         } else { //로그인 실패
+	            //비밀번호 불일치 
+	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
+		            loc = "/";
+	        	 returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
+	         }
+		      }
+	      }
+		
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
+		return "redirect:/" ;
 		
 	}
-
+//	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
+//	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
+//			ModelAndView mav , HttpSession session) {
+//		
+//		
+//		/* @RequestParam(name="autoLogin") String autoLogin , */
+//		/*
+//		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
+//		 * //기존에 LOGIN세션값 존재하면 제거 }
+//		 */
+//		
+//		
+//		
+//		
+//		
+//		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
+//		
+//		
+//		memberSession = WebSocketHandler.getInstance().getUserList();
+//		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
+//		
+//		if(logger.isDebugEnabled())
+//			logger.debug("로그인 요청!");
+//		
+//		//로그인 성공시 Seller 반환
+//		Seller s = sellerService.selectOneSeller(memberId);
+//		
+//		String loc = "/";
+//		String msg = "";
+//		String view = "common/msg";
+//		
+//		boolean loginFlag = true;
+//		
+//		if (s == null || s.getDelFlag().equals("Y")) {
+//			
+//			msg = "아이디가 존재하지 않습니다.";
+//			loc = "/";
+//			
+//		} else {//로그인 성공시 
+//			
+//			//  dto.setPassword(password);
+//			
+//			// if(dto.isUseCookie()) {
+//			
+//			//}
+//			
+//			Set<String> keyValue = memberSession.keySet();
+//			logger.debug("keyValue : "+keyValue);
+//			Iterator<String> iterator = keyValue.iterator();
+//			while(iterator.hasNext()) {
+//				String loginId = iterator.next();
+//				logger.debug("로그인 되어있는 아이디!"+ loginId);
+//				if(s.getSellerId().equals(loginId)) {
+//					msg = "이미 로그인한 아이디가 있습니다.";
+//					loc="/";
+//					loginFlag = false;
+//				}
+//				
+//			}
+////				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
+//			// 비밀번호 비교
+//			if(loginFlag == true) {
+//				if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
+//					// 비밀번호 일치했을시 세션 상태 유지
+//					mav.addObject("sellerLoggedIn", s);
+//					session.setAttribute("login",s.getSellerId());
+//					
+//					//사이드바
+//					List<StoreInfo> store = sellerService.myStore(memberId);
+//					
+//					session.setAttribute("storeSideBar", store);
+//					
+//					view = "redirect:/";
+//					
+//				} else {
+//					msg = "비밀번호를 잘못 입력하셨습니다.";
+//					loc = "/";
+//				}
+//			}
+//		}
+//		
+//		mav.addObject("loc", loc);
+//		mav.addObject("msg", msg);
+//		mav.setViewName(view);
+//		
+//		return mav;
+//		
+//	}
+	
 	@RequestMapping("/seller/sellerLogout.do")
 	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session,HttpServletRequest request, HttpServletResponse response)
 {
-		memberSession = WebSocketHandler.getInstance().getUserList();
-		
 //		session.setAttribute("sellerLoggedIn",null);
 //		session.removeAttribute("sellerLoggedIn");
 		if(logger.isDebugEnabled())
 			logger.debug("로그아웃 요청!"); 
-		WebSocketHandler.getInstance().getUserList().remove(sellerId);
+		
 	      
 	      if(!sessionStatus.isComplete()) {
 	         sessionStatus.setComplete();
 	      }
 	      
 	      
-	      
+	     // session.setAttribute("sellerLoggedIn",null);
 //	      loginSession.remove(session.getId());
 	      Object obj = session.getAttribute("sellerLoggedIn");
 	        if ( obj != null ){
 	            Seller vo = (Seller)obj;
 	            // null이 아닐 경우 제거
+	          //session.removeAttribute("sellerLoggedIn");
 	            session.removeAttribute("sellerLoggedIn");
 	            session.invalidate(); // 세션 전체를 날려버림
+	            loginSession.remove(sellerId);
+	            logger.debug("로그아웃시 : "+loginSession);
 	            //쿠키를 가져와보고
 	            Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
 	            if ( loginCookie != null ){
@@ -546,10 +648,17 @@ public class SellerController {
 	public ModelAndView updateSoldOut(@RequestParam("menuCode") String menuCode,
 									  @RequestParam("storeNo") String storeNo,
 									  @RequestParam("soldoutFlag") String soldoutFlag,
-									  ModelAndView mav) {
+									  ModelAndView mav,
+									  HttpSession session) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateSoldOut() 요청!");
 		}
+		
+		
+		Seller sellerLoggedIn = (Seller) session.getAttribute("sellerLoggedIn");
+		String sellerId = sellerLoggedIn.getSellerId();
+		
+		logger.debug("셀러셀러셀러셀러셀러==============" + sellerId);
 		
 		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
 		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
@@ -568,10 +677,10 @@ public class SellerController {
 
 		if (result > 0) {
 			msg = "품절 변경 성공";
-			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo + "&sellerId=" + sellerId;
 		} else {
 			msg = "품절 변경 실패";
-			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+			loc = "/seller/myStoreMenu.do?storeNo=" + storeNo + "$sellerId=" + sellerId;
 		}
 
 		mav.addObject("loc", loc);
@@ -594,6 +703,7 @@ public class SellerController {
 		}else if(status.equals("now")) {
 			list = sellerService.adSelectNow(cPage,numPerPage,storeNo);
 			totalContents = sellerService.countAdNow(storeNo);
+			logger.debug("wwwww");
 		}else if(status.equals("past")) {
 			list = sellerService.adSelectPast(cPage,numPerPage,storeNo);
 			totalContents = sellerService.countAdPast(storeNo);
@@ -605,7 +715,6 @@ public class SellerController {
 		model.addAttribute("totalContents",totalContents);
 		model.addAttribute("list",list);
 		model.addAttribute("status",status);
-		
 		
 		return "seller/myAd";
 		
@@ -621,7 +730,6 @@ public class SellerController {
 		}else {
 			ad.setStoreGrade("B");
 		}
-		
 		int result = sellerService.adRequest(ad);
 		
 		return "redirect:/seller/myAd.do?storeNo="+storeNo;
@@ -722,10 +830,14 @@ public class SellerController {
 								   @RequestParam(value="storeNo", required = false) String storeNo,
 								   @RequestParam(name="upFile" , required=false) MultipartFile[] upFiles, 
 								   HttpServletRequest request,
+								   HttpSession session,
 								   ModelAndView mav) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("updateMenu() 요청!");
 		}
+		
+		Seller sellerLoggedIn = (Seller) session.getAttribute("sellerLoggedIn");
+		String sellerId = sellerLoggedIn.getSellerId();
 		
 		//logger.debug("fileName = " + upFiles[0].getOriginalFilename());
 		//logger.debug("size = " + upFiles[0].getSize());
@@ -792,10 +904,10 @@ public class SellerController {
 			
 			if (result > 0) {
 				msg = "메뉴 수정 성공!";
-				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo + "&sellerId=" + sellerId;
 			} else {
 				msg = "메뉴 수정 실패!";
-				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo;
+				loc = "/seller/myStoreMenu.do?storeNo=" + storeNo + "&sellerId=" + sellerId;
 			}
 
 		} catch (Exception e) {
@@ -813,15 +925,22 @@ public class SellerController {
 	}
 	
 	@RequestMapping("/seller/deleteMenu.do")
-	public String deleteMenu(String menuCode, String storeNo) {
+	public String deleteMenu(String menuCode, String storeNo, HttpSession session) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("deleteMenu() 요청!");
 		}
 		
+		Seller sellerLoggedIn = (Seller) session.getAttribute("sellerLoggedIn");
+		String sellerId = sellerLoggedIn.getSellerId();
+		
 		logger.debug("☆★☆★☆★☆★☆★메뉴코드 왔냐? " + menuCode);
 		logger.debug("☆★☆★☆★☆★☆★사업자번호 왔냐? " + storeNo);
 		
-		int result = sellerService.deleteMenu(menuCode);
+		Map<String, Object> map = new HashMap<>();
+		map.put("menuCode", menuCode);
+		map.put("storeNo", storeNo);
+		
+		int result = sellerService.deleteMenu(map);
 		
 		String loc = "/";
 		String msg = "";
@@ -829,10 +948,10 @@ public class SellerController {
 
 		if (result > 0) {
 			msg = "메뉴 삭제 성공!";
-			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+ storeNo + "&sellerId=" + sellerId;
 		} else {
 			msg = "메뉴 삭제 실패!";
-			loc = "redirect:/seller/myStoreMenu.do?storeNo="+storeNo;
+			loc = "redirect:/seller/myStoreMenu.do?storeNo="+ storeNo + "&sellerId=" + sellerId;
 		}
 		
 		return loc;
@@ -843,10 +962,14 @@ public class SellerController {
 							 @RequestParam(name = "menuOptions") String menuOptions,
 							 @RequestParam(name = "upFile", required = false) MultipartFile[] upFiles,
 							 HttpServletRequest request,
+							 HttpSession session,
 							 Model model) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("insertMenu() 요청!");
 		}
+		
+		Seller sellerLoggedIn = (Seller) session.getAttribute("sellerLoggedIn");
+		String sellerId = sellerLoggedIn.getSellerId();
 
 		logger.debug("fileName = " + upFiles[0].getOriginalFilename());
 		logger.debug("size = " + upFiles[0].getSize());
@@ -933,7 +1056,7 @@ public class SellerController {
 		model.addAttribute("loc", loc);
 		model.addAttribute("view", view);
 
-		return "redirect:/seller/myStoreMenu.do?storeNo=" + menu.getStoreNo();
+		return "redirect:/seller/myStoreMenu.do?storeNo=" + menu.getStoreNo() + "&sellerId=" + sellerId;
 	}
 	
 	/**
@@ -942,7 +1065,7 @@ public class SellerController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/chart/totalSaleVolume.do")
+    @RequestMapping("/seller/totalSaleVolume.do")
     public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
     	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
     	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
@@ -957,11 +1080,10 @@ public class SellerController {
     	System.out.println(storeNo);
     	//댓글 가져오기
     	List<Review> review1 = sellerService.getReview1(storeNo);
-    	//답댓글 가져오기
-    	List<Review> review2 = sellerService.getReview2(storeNo);
+  
 
     	model.addAttribute("review1", review1);
-    	model.addAttribute("review2", review2);
+    	
 
     	return "seller/sellerReview";
     }
@@ -982,7 +1104,7 @@ public class SellerController {
 		return "seller/myChart";
 	}
     @ResponseBody
-	@RequestMapping("/seller/chartByPeriod.do")
+	@RequestMapping("seller/chartByPeriod.do")
 	public List<Map<String, String>> chartByPeriod(@RequestParam(name="startDate") String startDate, @RequestParam(name="endDate") String endDate, 
 												   @RequestParam(name="storeNo") String storeNo, @RequestParam(name="type") String type) {
 		logger.debug("시작날짜 : " +startDate+" , 끝 날짜 : "+endDate+", 타입 : "+type);
@@ -996,19 +1118,58 @@ public class SellerController {
 		
 		return chartByWeek;
 	}
+    
     @RequestMapping("/seller/askDuplicationLogin.do")
-    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav) {
+    public ModelAndView askDuplicationLogin(@RequestParam(name="sellerId") String sellerId,ModelAndView mav,HttpServletResponse response) {
     	logger.debug("중복 검사를 하는 컨트롤러!");
     	Seller seller = new Seller();
     	seller.setSellerId(sellerId);
+    	
+    		LoginDTO dto = new LoginDTO();
+        	dto.setUseCookie(true);
+        	if(dto.isUseCookie()) {
+    			 //쿠키사용한다고 체크되어 있으면
+    			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
+        		 logger.debug(loginSession.get(sellerId));
+    			 Cookie cookie = new Cookie("loginCookie" , loginSession.get(sellerId));
+    			  //쿠키를 찾을 경로를 컨텍스트 경로로 변경해 줌.
+    			 cookie.setPath("/");
+    			 int amount = 60*60*24*7;
+    			 cookie.setMaxAge(amount); //단위는 (초)임으로 7일정도로 유효시간을 서정해줌.
+    			 //쿠키적용해줌
+    			 response.addCookie(cookie);
+    		 } //end of if dto.isUseCookie
+    	
     	mav.addObject("seller",seller);
     	mav.setViewName("common/duplicationLoginMsg");
     	return mav;
     }
+    
     @RequestMapping("/seller/goIndexPage.do")
     public String goIndexPage() {
     	return "index";
     }
+    
+    @RequestMapping("/seller/inputComment2.do")
+    public void inputComment2(@RequestParam("reviewNo") int reviewNo,
+    		@RequestParam("reply") String reply,
+    		@RequestParam("storeNo") String storeNo,
+    		@RequestParam("sellerId") String sellerId) {
+    	logger.debug("샐러 댓글 삽입");
+
+    	Map<String,Object> map = new HashMap<>();
+    	map.put("reviewNo",reviewNo);
+    	map.put("reply",reply);
+    	map.put("storeNo",storeNo);
+    	map.put("sellerId",sellerId);
+
+
+    	int result = sellerService.inputComment2(map);
+    	System.out.println(result>0?"등록성공":"등록실패");
+
+    }
+
+
     //웹소켓클래스에서 강제 로그아웃시키기위해  현재 로그인되어있는 세션을 찾기위해 세션ID값 및 VO객체를 가져옴.
     public Seller selectSellerBySellerId(String sellerId) {
     	return sellerService.selectSellerBySellerId(sellerId);

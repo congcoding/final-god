@@ -187,8 +187,8 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
-	public int deleteMenu(String menuCode) {
-		return sqlSession.delete("menu.deleteMenu", menuCode);
+	public int deleteMenu(Map<String, Object> map) {
+		return sqlSession.update("menu.deleteMenu", map);
 	}
 
 	@Override
@@ -320,12 +320,6 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("seller.getReview1", storeNo);
 	}
 
-	@Override
-	public List<Review> getReview2(String storeNo) {
-		// TODO Auto-generated method stub
-		return sqlSession.selectList("seller.getReview2", storeNo);
-	}
-
 	//자동로그인 TEST
 	@Override
 	public void keepLogin(String sellerId, String sessionId, Date next) throws Exception{
@@ -360,6 +354,11 @@ public class SellerDaoImpl implements SellerDao {
 	}
 
 	@Override
+	public int inputComment2(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("seller.inputComment2" ,map);
+	}
+		
 	public Seller selectSellerBySellerId(String sellerId) {
 		return sqlSession.selectOne("seller.selectSellerBySellerId",sellerId);
 	}

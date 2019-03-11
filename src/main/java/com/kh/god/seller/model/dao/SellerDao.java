@@ -76,7 +76,7 @@ public interface SellerDao {
 
 	int updateMenu(Map<String, Object> map);
 
-	int deleteMenu(String menuCode);
+	int deleteMenu(Map<String, Object> map);
 
 	int insertOrder(Map<String, Object> map);
 
@@ -92,15 +92,11 @@ public interface SellerDao {
 
 	List<Review> getReview1(String storeNo);
 
-	List<Review> getReview2(String storeNo);
-
-
 	List<Map<String,String>> chartByPeriod(Map<String, String> map);
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
 	Map<String, String> getStoreName(Map<String, String> map);
-
 
 	int insertMenu(Menu menu);
 
@@ -118,9 +114,13 @@ public interface SellerDao {
 
 	String selectSellerIdByStoreNo(String storeNo);
 
+	int inputComment2(Map<String, Object> map);
+
 	Seller selectSellerBySellerId(String sellerId);
 
 	int createChatRoom(Map<String, String> chatId);
+
+
 
 
 

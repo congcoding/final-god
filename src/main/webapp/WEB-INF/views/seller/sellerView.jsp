@@ -476,7 +476,7 @@ function validate2(){
 
 	var storetelval = $("#selectStoretel").val()+"-"+$("#storetel1").val().trim()+"-"+$("#storetel1").val().trim();
 	$("[name=storeTel]").val(storetelval);
-	 
+	sendEnrollStore($("input[name=storeName]").val());
 	return true;
 };
 

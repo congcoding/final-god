@@ -35,7 +35,7 @@ div.card{
     cursor : pointer;
 }
 .carousel-indicators{
-	bottom:15px;
+	bottom:-8px;
 }
 </style>
 <script>
@@ -248,7 +248,7 @@ function getCookieMobile () {
     var cookiedata = document.cookie;
     console.log(cookiedata);
     if ( cookiedata.indexOf("todayCookie=done") < 0 ){
-    	$("#pop").click();
+    	//$("#pop").click();
     }
     else {
     	
@@ -272,7 +272,7 @@ var repeat  = setInterval(  function(){
 	var cookiedata = document.cookie;
  
     if ( cookiedata.indexOf("todayCookie=done") < 0 ){
-    	
+    	$("#pop").click();
     }
     else {
     	clearInterval(repeat);

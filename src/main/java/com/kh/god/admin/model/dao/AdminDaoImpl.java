@@ -1,6 +1,8 @@
 package com.kh.god.admin.model.dao;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -268,14 +270,14 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
+	public List<Map<String, String>> storeList(int cPage, int numPerPage, Map<String, String> map) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectStoreList", null, rowBounds);
+		return sqlSession.selectList("admin.selectStoreList", map, rowBounds);
 	}
 
 	@Override
-	public int countStoreList() {
-		return sqlSession.selectOne("admin.countStoreList");
+	public int countStoreList(Map<String, String> map) {
+		return sqlSession.selectOne("admin.countStoreList", map);
 
 	}
 	
@@ -421,5 +423,15 @@ public class AdminDaoImpl implements AdminDao {
 	@Override
 	public int updateStoreReportFlagY(Map<String, String> map) {
 		return sqlSession.update("admin.updateStoreReportFlagY", map);
+	}
+
+	@Override
+	public List<Integer> chartByFavoriteCetegory() {
+		List<String> list = new ArrayList<String>();
+	    for(int i=1 ; i < 8 ; i++) {
+	    	String a = i + "";
+	    	list.add(a);
+	    }
+		return sqlSession.selectList("admin.chartByFavoriteCetegory" , list);
 	}
 }
