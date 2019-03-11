@@ -405,11 +405,18 @@ public class StoreInfoController {
     @RequestMapping(value="/storeInfo/report.do" , method=RequestMethod.POST)
     public String stroeReport(Report r , Model model)	{
     	
-    	logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+r);
+    	
+    	
     	String loc = "/menu/menuList.do?storeNo="+r.getStoreNo();
 		String msg = "";
 		String view = "common/msg";
     	
+		
+		if(r.getReviewNo() != 0) {
+			loc = "/menu/menuList.do?storeNo="+r.getStoreNo();
+			r.setStoreNo(null);
+			logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+r);
+		}
     	
     	int result = storeInfoService.insertReport(r);
     	
@@ -418,7 +425,7 @@ public class StoreInfoController {
     	}else {
     		msg ="신고 오류 : 다시 신고해주세요.";
     	}
-    	///menu/menuList.do?storeNo=257-86-00648 성공시
+    
     	model.addAttribute("msg", msg);
 		model.addAttribute("loc", loc);
     	

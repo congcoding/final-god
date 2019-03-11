@@ -641,11 +641,12 @@ public class MemberController {
 		  
 		  Member m = memberService.selectOneMember(id) ;
 		  String userPhone="";
-		  String msg = "임시비밀번호가 핸드폰으로 발송 되었습니다.";
+		  String msg = "인증번호가 핸드폰으로 전송 되었습니다.";
 		  boolean phoneEquals ;
 		  String rndPwd ;
 		  int result ;
 		  String temp ;
+		  String rndNum = "";
 			 
 			 if(m == null) {
 				 
@@ -660,13 +661,9 @@ public class MemberController {
 							phoneEquals = userPhone.equals(phone);
 							
 							if(phoneEquals == true) {
-								rndPwd = new Utils().getRandomPassword(10);
-								temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
-								s.setPassword(temp);
-								logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
-								logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
-								result = memberService.updateFindPwd(s);
-								new MessageSend().findPwd(rndPwd , s.getPhone());
+								
+								rndNum = new Utils().getRandomNum() ;
+								new MessageSend().findPwd(rndNum , s.getPhone());
 								
 							}else {
 								msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
@@ -683,13 +680,8 @@ public class MemberController {
 						phoneEquals = userPhone.equals(phone);
 						
 						if(phoneEquals == true) {
-							rndPwd = new Utils().getRandomPassword(10);
-							temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
-							m.setPassword(temp);
-							logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
-							logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
-							result = memberService.updateMemberFindPwd(m);
-							new MessageSend().findPwd(rndPwd , m.getPhone());
+							rndNum = new Utils().getRandomNum() ;
+							new MessageSend().findPwd(rndNum , m.getPhone());
 							
 						}else {
 							msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
@@ -698,7 +690,9 @@ public class MemberController {
 					}
 				 
 			 }
+			 
 			 map.put("msg" , msg);
+			 map.put("rndNum" , rndNum);
 		  
 		  return map ;
 		  
@@ -765,8 +759,75 @@ public class MemberController {
 	  
 	  
 	  
-	  
-	  
+	  @RequestMapping(value="/member/getNewPwd.do" ,method = RequestMethod.POST )
+	  @ResponseBody 
+	  public Map<String, Object> getNewPwd(@RequestParam("id") String id , @RequestParam("phone") String phone){
+		  Map<String, Object> map = new HashMap<>();
+		  
+		  Member m = memberService.selectOneMember(id) ;
+		  String userPhone="";
+		  String msg = "임시비밀번호가 등록된 이메일로 발송 되었습니다.";
+		  boolean phoneEquals ;
+		  String rndPwd ;
+		  int result ;
+		  String temp ;
+	
+			 
+			 if(m == null) {
+				 
+				 Seller s = memberService.selectOneSeller(id);
+				 if(s == null) {
+					 msg = "등록된 아이디가 없습니다.";
+				 }else {
+					 //셀러 핸드폰으로 임시 번호 발송 및 데이터 업데이트
+					 userPhone = s.getPhone();
+					 if(userPhone.contains("-")) {
+							userPhone = userPhone.replaceAll("-", "");
+							phoneEquals = userPhone.equals(phone);
+							
+							if(phoneEquals == true) {
+								rndPwd = new Utils().getRandomPassword(10);
+								temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+								s.setPassword(temp);
+								result = memberService.updateFindPwd(s);
+								new SendEmail().mailSendingForPwd(s.getEmail() , s.getSellerName() , rndPwd);
+							
+								
+							}else {
+								msg ="새로고침 후 다시 시도하십시오.";
+							}
+							
+						}
+				 }
+				 
+			 }else {
+				 	//멤버 헨드폰으로 임시 번호 발송 및 데이터 업데이트 
+				 userPhone = m.getPhone();
+				 if(userPhone.contains("-")) {
+						userPhone = userPhone.replaceAll("-", "");
+						phoneEquals = userPhone.equals(phone);
+						
+						if(phoneEquals == true) {
+							rndPwd = new Utils().getRandomPassword(10);
+							temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
+							m.setPassword(temp);
+							result = memberService.updateMemberFindPwd(m);
+							new SendEmail().mailSendingForPwd(m.getEmail() , m.getMemberName() , rndPwd);
+							
+							
+						}else {
+							msg ="새로고침 후 다시 시도하십시오.";
+						}
+						
+					}
+				 
+			 }
+			 
+			 map.put("msg" , msg);
+			 
+		  return map ;
+		  
+	  }
 	  
 	
 }

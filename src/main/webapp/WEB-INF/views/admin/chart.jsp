@@ -61,6 +61,34 @@ function drawChartByCategory() {
   var chart = new google.visualization.PieChart(document.getElementById('chartByCategory'));
 
   chart.draw(data, options);
+  
+	 data0 = ${chartByFavoriteCetegory[0]};
+	 data1 = ${chartByFavoriteCetegory[1]};
+	 data2 = ${chartByFavoriteCetegory[2]};
+	 data3 = ${chartByFavoriteCetegory[3]};
+	 data4 = ${chartByFavoriteCetegory[4]};
+	 data5 = ${chartByFavoriteCetegory[5]};
+	 data6 = ${chartByFavoriteCetegory[6]};
+
+
+   data = google.visualization.arrayToDataTable([
+	    ['Category', 'Favorite'],
+	    ['치킨', data0],
+	    ['피자', data1],
+	    ['보쌈/족발', data2],
+	    ['분식',data3],
+	    ['중식', data4],
+	    ['일식', data5],
+	    ['한식', data6],
+
+  ]);
+
+  options = {
+  };
+
+   chart = new google.visualization.PieChart(document.getElementById('chartByFavoriteCetegory'));
+
+  chart.draw(data, options);
 }
 
 
@@ -201,6 +229,9 @@ input#getYear{float : right;}
             </div>
             <div class="card-body">
               <div id="chartByCategory" style="width:700px; height:300px;"></div>
+            </div>
+            <div class="card-body">
+              <div id="chartByFavoriteCetegory" style="width:700px; height:300px;"></div>
             </div>
           </div>
           

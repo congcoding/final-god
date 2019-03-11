@@ -405,4 +405,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminDao.updateStoreReportFlagY(map);
 	}
 
+	@Override
+	public List<Integer> chartByFavoriteCetegory() {
+		return adminDao.chartByFavoriteCetegory();
+	}
+
 }
