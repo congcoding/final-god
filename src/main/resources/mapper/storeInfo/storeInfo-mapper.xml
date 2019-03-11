@@ -4,7 +4,7 @@
 	<select id="selectStoreInfoList" resultType="map">
 select A.*,M.renamedfilename from storeInfo A LEFT OUTER JOIN
 (select storeno,renamedfilename from menuattachment where thumbflag='Y')M 
-on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
+on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and closeFlag = 'N'
 	</select>
 	
 
@@ -172,7 +172,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
    </update>
    
    <select id="selectListStorInfo" resultType="storeInfo">
-   		select * from storeinfo where sellerid = #{sellerId}
+   		select * from storeinfo where sellerid = #{sellerId} and closeFlag = 'N'
    </select>
 
    <update id="updateSoldout">
@@ -195,7 +195,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='N' and deliveryFlag='N' order by I.orderno desc
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='N' order by I.orderno desc
 	</select>
 
 	<select id="orderList3" resultType="map">
@@ -300,5 +300,9 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 	<select id="selectAllstoreInfo" resultType="storeInfo">
 		select * from storeInfo
 	</select>
+	
+	<update id="deleteStore">
+		UPDATE STOREINFO SET CLOSEFLAG = 'D' WHERE STORENO = #{storeNo}
+	</update>
 
 </mapper>

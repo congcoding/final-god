@@ -37,7 +37,8 @@
       <!-- Nav Item - Pages Collapse Menu -->
       <c:if test="${not empty storeSideBar }">
       	<c:forEach items="${storeSideBar}" var="store" varStatus="status">
-      		<li class="nav-item">
+	      	<c:if test="${store.closeFlag eq 'N' }">
+      			<li class="nav-item">
 		        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse${store.storeNo}" aria-expanded="true" aria-controls="collapse${store.storeNo}">
 		          <i class="fas fa-fw fa-folder"></i>
 		          <span>${store.storeName}</span>
@@ -53,6 +54,7 @@
 		          </div>
 		        </div>
 		      </li>
+      		</c:if>
       	</c:forEach>
       </c:if>
 

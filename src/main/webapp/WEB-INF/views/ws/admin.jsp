@@ -24,48 +24,32 @@ $(function(){
 	$("#toDoList").addClass("active");	
 });
 
-//웹소켓 선언
-//1.최초 웹소켓 생성 url: /stomp
-let stompSocket = new SockJS('<c:url value="/stomp" />');
-let stompClient = Stomp.over(stompSocket);
-
-stompClient.connect({}, function(frame) {
-	//console.log('connected stomp over sockjs');
-	//console.log(frame);
-
-	// subscribe message
-	stompClient.subscribe('/chat/admin', function(message) {
-		//console.log("receive from /chat/admin :", message);
-		//새로운 메세지가 있을때 목록 갱신을 위해서 reload함.
-		//location.reload();
-		//let messsageBody = JSON.parse(message.body);
-		//$("#data").append(messsageBody.memberId+":"+messsageBody.msg+ "<br/>");
-	});
-});
-
 function getMoment(time){
-	var date = moment("/Date("+time+")/").format("YYYY/MM/DD hh:mm:ss").toString();
+	var date = moment("/Date("+time+")/").format("YYYY/MM/DD HH:mm:ss").toString();
 	return date;
 }
-	
-function goChat(chatId){
-	
-	var chatId = chatId;
-	
-	var html = "<iframe id='frame' src=";
-	html += "${pageContext.request.contextPath}/ws/adminChat.do/"+chatId;
-	html += ' frameborder="0" width="420" height="300" marginwidth="0" marginheight="0">';
 
-	$("#chat-wrapper").html(html);
-}
-	
+$(document).ready(function() {
+	$('#exampleModal').on('show.bs.modal', function (event) {
+		var button = $(event.relatedTarget);
+		var chatId = button.data('chatid');
+		var memberId = button.data('memberid');
+		var modal = $(this);
+		modal.find('.modal-title').text(memberId);
+		modal.find('.modal-body').html('<iframe id="frame" src="/god/ws/adminChat.do/'+chatId+'" frameborder="0" width="420" height="450" marginwidth="0" marginheight="0"></iframe>')
+	}).on('hidden.bs.modal', function (event) {
+		location.reload();
+	});
+})
 </script>
 
 <style>
-div#chatroom-container{display:inline-block;}
-div#chat-wrapper{display:inline-block; margin:0 auto; width:430px; height:350px;}
+div#chatroom-container{display:inline-block; width:700px; height:500px; overflow-y:scroll}
+div#chat-wrapper{display:inline-block; margin:0 auto; width:430px; height:700px;}
 li.chatAdmin{background-color:#32aeb8; border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:right; clear:both;}
 li.chatUser{border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:left; clear:both;}
+table#chatTable th{vertical-align:middle; text-align:center;}
+table#chatTable td{vertical-align:middle;}
 </style>
 
 <!-- Page Wrapper -->
@@ -85,55 +69,46 @@ li.chatUser{border:1px solid lightgray; border-radius:10px; padding:5px; margin:
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800">채팅 문의 관리</h1>
           
-          <div id="chatroom-container" style="width:300px;">
+          <div id="chatroom-container">
           <table class="table" id="chatTable">
 			  <thead>
 			    <tr>
-			      <th scope="col">#</th>
 			      <th scope="col">회원아이디</th>
+			      <th scope="col">최근메세지</th>
 			    </tr>
 			  </thead>
 			  <tbody>
 			  <c:forEach items="${recentList }" var="m" varStatus="vs">
-			    <tr chatNo='<c:out value="${m.CHATID}.${m.MEMBERID}"/>' /><%-- el의 문자열 더하기 연산대신 jstl out태그 사용 --%>
-			      <th scope="row">${vs.count}</th>
-			      <td><a href="javascript:goChat('${m.CHATID}')">${fn:substring(m.MEMBERID,0,20) }</a> <span class="badge badge-primary badge-pill msgCount${m.CHATID }">${m.CNT }</span></td>
-			      <%-- <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">${fn:substring(m.MEMBERID,0,20) } <span class="badge badge-primary badge-pill msgCount${m.CHATID }">${m.CNT }</span></button> </td> --%>
+			    <tr>
+			      <td>
+			      	<button type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal" data-chatid="${m.CHATID}" data-memberid="${m.MEMBERID}">
+			  			${fn:substring(m.MEMBERID,0,20) } <span class="badge badge-primary badge-pill">${m.CNT }</span>
+					</button>
+			      </td>
+			      <td>
+			      	<c:if test="${fn:length(m.MSG)>22}">${fn:substring(m.MSG,0,22)}...</c:if>
+			      	<c:if test="${fn:length(m.MSG)<=22}">${m.MSG}</c:if>
+			      </td>
 			    </tr>
 			  </c:forEach>
 		  	</tbody>
 		  </table>
 		  </div>
 		  
-		  <div id="chat-wrapper">
-	  	  	
-		   </div>
-		   
-		   <!-- Modal시작 -->
+	    <!-- Modal시작 -->
 		<!-- https://getbootstrap.com/docs/4.1/components/modal/#live-demo -->
-		<!-- Button trigger modal -->
-		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-		  Launch demo modal
-		</button>
-		
 		<!-- Modal -->
 		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+		        <h5 class="modal-title" id="exampleModalLabel"></h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
-		      <div class="modal-body">
-		        
-		        <iframe id="frame" src="/god/ws/adminChat.do/chat_ll2dO09iTX7LVc7" frameborder="0" width="420" height="300" marginwidth="0" marginheight="0"></iframe>
-		        
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+		      <div class="modal-body" style="text-align:center; height:500px;">
+
 		      </div>
 		    </div>
 		  </div>

@@ -9,51 +9,53 @@
 	<jsp:param value="" name=""/>
 </jsp:include>
 <style>
-#enrollType-container{
-    margin-top: 158px;
-    margin-left: 329px;
-}
 #enrollType-container2{
 	width : 800px;
 	height :500px;
-	left : 50%;
+	margin: 200px auto;
+	display: block;
 }
-#btn1{
-margin-left: 200px; width:184px; 
-}
-#btn2{
-margin-left: 180px; width:184px; 
-}
+
 #enrollType-container2 >h1{
-	margin-left: 100px;
+	text-align: center;
+	font-size: 60px;
 }
+
+#enrollType-container2 img{
+	width : 250px;
+	height : 235px;
+}
+#enrollType-container2 .container{
+	width : 40%;
+	margin: 40px;
+	float : left;
+}
+#enrollType-container2 button{
+    display: block;
+    margin-top : 45px;
+    width: 250px;
+    height : 75px;
+}
+
 
 </style>
 
 
 <div id="enrollType-container">
-
+	
 	<div id="enrollType-container2">
-	<h1>회원가입을 환영합니다</h1>
-	<br />
-	<br />
-	<br />
-	
-	<div class="container">
-	
-	 <button type="button" id="btn1" class="btn btn-info btn-lg" 
-	  			onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">개인 회원 가입</button>
-	
-	</div>
-	<br />
-	<br />
-	
-	
-	<div class="container">
+	<h1 class= "font-weight-bold">Welcome!</h1>
+		<div class="container">
+		 <img src="${pageContext.request.contextPath }/resources/images/member.png"  alt="" />
+		 <button type="button" id="btn1" class="btn btn-info btn-lg" 
+		  		 onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do'">개인 회원 가입</button>		
+		</div>		
 		
-	&nbsp;&nbsp;&nbsp;&nbsp;	<button type="button" id="btn2" class="btn btn-info btn-lg" 
-				onclick="location.href='${pageContext.request.contextPath}/seller/sellerEnroll.do'">사업자 회원 가입</button>	
-	</div>
+		<div class="container">
+			<img src="${pageContext.request.contextPath }/resources/images/seller.png"  alt="" />
+			<button type="button" id="btn2" class="btn btn-info btn-lg" 
+					onclick="location.href='${pageContext.request.contextPath}/seller/sellerEnroll.do'">사업자 회원 가입</button>	
+		</div>
 	</div>
 </div>
 

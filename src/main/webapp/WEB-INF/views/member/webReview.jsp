@@ -16,12 +16,12 @@
       <div id="content">
 
         <!-- Begin Page Content -->
-        <div class="container-fluid">
+        <div class="container-fluid" style="margin-top: 40px; width: 1024px;">
 
           <!-- Page Heading -->
           <h1 class="h3 mb-4 text-gray-800" style="position: relative;top: 28px;left: 36px;">배달의 신</h1>
           <input  type="submit" class="btn btn-outline-success" 
-          	style="    position: relative; top: -21px;  left: 1074px;" onclick="gotoform();" value="글쓰기" >
+          	style="    position: relative; top: -21px;  left: 910px;" onclick="gotoform();" value="글쓰기" >
           
           <table id="tbl-event" class="table table-striped table-hover" >
 			<tr>

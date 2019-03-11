@@ -56,9 +56,11 @@ function drawChartByCategory() {
   ]);
 
   var options = {
+		  title : '카테고리별 누적 판매량',
+		  chartArea:{left:40, top:60, width:'100%', height:'100%'}
   };
 
-  var chart = new google.visualization.PieChart(document.getElementById('chartByCategory'));
+  var chart = new google.visualization.PieChart(document.getElementById('charByFavoriteCategory1'));
 
   chart.draw(data, options);
   
@@ -84,9 +86,11 @@ function drawChartByCategory() {
   ]);
 
   options = {
+		  title : '카테고리별 누적 선호도',
+		  chartArea:{left:40, top:60, width:'100%', height:'100%'}
   };
 
-   chart = new google.visualization.PieChart(document.getElementById('chartByFavoriteCetegory'));
+   chart = new google.visualization.PieChart(document.getElementById('charByFavoriteCategory2'));
 
   chart.draw(data, options);
 }
@@ -225,13 +229,13 @@ input#getYear{float : right;}
           <!-- 카테고리별 판매량 (파이 차트) -->
           <div class="card shadow mb-4" style="width:740px">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">카테고리별 판매량</h6>
+              <h6 class="m-0 font-weight-bold text-primary">카테고리별 통계</h6>
             </div>
             <div class="card-body">
-              <div id="chartByCategory" style="width:700px; height:300px;"></div>
-            </div>
-            <div class="card-body">
-              <div id="chartByFavoriteCetegory" style="width:700px; height:300px;"></div>
+              <div id="chartByCategory" style="width:700px; height:300px;">
+              	<div id="charByFavoriteCategory1" style="display:inline-block; width:340px; height:300px;"></div>
+              	<div id="charByFavoriteCategory2" style="display:inline-block; width:340px; height:300px;"></div>
+              </div>
             </div>
           </div>
           

@@ -209,6 +209,18 @@
 		<if test="searchType != '' and searchKeyword != ''">
 			and ${searchType} like '%${searchKeyword}%'
 		</if>
+		<if test="selectedStoreGrade != ''">
+			and storeGrade = #{selectedStoreGrade}
+		</if>
+		<if test="selectedCategory != ''">
+			and categoryno = #{selectedCategory}
+		</if>
+		<if test="selectedPMSFlag != ''">
+			and pmsFlag = #{selectedPMSFlag}
+		</if>
+		<if test="orderOption != ''">
+			order by ${orderOption}
+		</if>
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
@@ -216,10 +228,22 @@
 		<if test="searchType != '' and searchKeyword != ''">
 			and ${searchType} like '%${searchKeyword}%'
 		</if>
+		<if test="selectedStoreGrade != ''">
+			and storeGrade = #{selectedStoreGrade}
+		</if>
+		<if test="selectedCategory != ''">
+			and categoryno = #{selectedCategory}
+		</if>
+		<if test="selectedPMSFlag != ''">
+			and pmsFlag = #{selectedPMSFlag}
+		</if>
+		<if test="orderOption != ''">
+			order by ${orderOption}
+		</if>
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">
-		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
+		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default,default)
 	</insert>
 	<update id="couponAmount">
 		update event set amount = amount -1 where eventNo = #{eventNo}
@@ -307,7 +331,7 @@
 	</select>
 	
 	<select id="selectReportList" resultType="report">
-		select * from report order by reportFlag
+		select * from report order by reportFlag, reportNo
 	</select>
 	
 	<select id="countReportList" resultType="_int">
