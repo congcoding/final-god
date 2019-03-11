@@ -243,7 +243,7 @@
 	</select>
 
 	<insert id="couponDownload" parameterType="coupon">
-		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default)
+		insert into coupon values(seq_coupon_couponNo.nextval,#{eventNo},#{memberId},#{startDate},#{endDate},default,default)
 	</insert>
 	<update id="couponAmount">
 		update event set amount = amount -1 where eventNo = #{eventNo}
