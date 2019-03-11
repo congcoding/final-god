@@ -308,12 +308,6 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.getReview1(storeNo);
 	}
 
-	@Override
-	public List<Review> getReview2(String storeNo) {
-		// TODO Auto-generated method stub
-		return sellerDao.getReview2(storeNo);
-	}
-	
 	//자동로그인 TEST
 	@Override
 	public void keepLogin(String sellerId, String sessionId ,Date next) throws Exception{
@@ -337,13 +331,15 @@ public class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
+	public int inputComment2(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.inputComment2(map);
+	}
+
 	public Seller selectSellerBySellerId(String sellerId) {
 		return sellerDao.selectSellerBySellerId(sellerId);
 	
 	}
-
-
-
 
 
 	

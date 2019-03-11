@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class AdminStompController {
 		if(!"admin".equals(memberId)) throw new IllegalStateException("로그인 후 이용하세요.");
 		
 		List<Map<String, String>> recentList = stompService.findRecentList();
-		logger.info("recentList={}",recentList);
+		//logger.info("recentList={}",recentList);
 		
 		model.addAttribute("recentList", recentList);
 		
@@ -55,8 +56,17 @@ public class AdminStompController {
 		List<Msg> chatList = stompService.findChatListByChatId(chatId);
 		model.addAttribute("chatList", chatList);
 		
-		logger.info("chatList={}",chatList);
+		//logger.info("chatList={}",chatList);
 		return "ws/adminChat";
+	}
+	
+	@ResponseBody
+	@GetMapping("/admin/adminCheck.do")
+	public Map<String, Object> adminCheck(Model model) {
+		Map<String, Object> map = new HashMap<>();
+		List<Integer> adminCheckList = stompService.adminCheck();
+		map.put("adminCheckList", adminCheckList);
+		return map;
 	}
 	
 	/*@ResponseBody

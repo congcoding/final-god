@@ -2,7 +2,6 @@ package com.kh.god.stomp.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -15,7 +14,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,6 +54,13 @@ public class StompController {
 			list.add(new ChatRoom(chatId, "admin", 0, "Y", null, null));
 			list.add(new ChatRoom(chatId, memberId, 0, "Y", null, null));
 			stompService.insertChatRoom(list);
+			Msg msg = new Msg();
+			msg.setChatId(chatId);
+			msg.setMemberId("admin");
+			msg.setMsg("안녕하세요. 배달의 신 입니다. 무엇을 도와드릴까요?");
+			stompService.insertChatLogHello(msg);
+			List<Msg> chatList = stompService.findChatListByChatId(chatId);
+			model.addAttribute("chatList", chatList);
 		}
 		//chatId가 존재하는 경우, 채팅내역 조회
 		else{
@@ -63,7 +68,7 @@ public class StompController {
 			model.addAttribute("chatList", chatList);
 		}
 		
-		logger.info("memberId=[{}], chatId=[{}]",memberId, chatId);
+		//logger.info("memberId=[{}], chatId=[{}]",memberId, chatId);
 		
 		
 		//비회원일 경우, httpSessionId값을 memberId로 사용한다. 
@@ -97,42 +102,14 @@ public class StompController {
 
 	}
 	
-	/**
-	 * - @MessageMapping 을 통해 메세지를 받고,
-	 * - @SendTo 를 통해 메세지 전달. 작성된 주소를 구독하고 있는 client에게 메세지 전송
-	 * 
-	 * @param fromMessage
-	 * @return
-	 */
-	@MessageMapping("/hello")
-	@SendTo("/hello")
-	public Msg stomp(Msg fromMessage,
-					 @Header("simpSessionId") String sessionId,//WesocketSessionId값을 가져옴.
-					 SimpMessageHeaderAccessor headerAccessor//HttpSessionHandshakeInterceptor빈을 통해 httpSession의 속성에 접근 가능함.
-					 ){
-		logger.info("fromMessage={}",fromMessage);
-		logger.info("@Header sessionId={}",sessionId);
-		
-		//httpSession속성 가져오기
-		String sessionIdFromHeaderAccessor = headerAccessor.getSessionId();//@Header sessionId와 동일
-		Map<String,Object> httpSessionAttr = headerAccessor.getSessionAttributes();
-		Member member = (Member)httpSessionAttr.get("memberLoggedIn");
-		String httpSessionId = (String)httpSessionAttr.get("HTTP.SESSION.ID");//비회원인 경우 memberId로 사용함.
-		logger.info("sessionIdFromHeaderAccessor={}",sessionIdFromHeaderAccessor);
-		logger.info("httpSessionAttr={}",httpSessionAttr);
-		logger.info("memberLoggedIn={}",member);
-		
-		return fromMessage; 
-	}
-	
 	@MessageMapping("/chat/{chatId}")
 	@SendTo(value={"/chat/{chatId}", "/chat/admin"})
 	public Msg sendEcho(Msg fromMessage, 
 						@DestinationVariable String chatId, 
 						@Header("simpSessionId") String sessionId){
-		logger.info("fromMessage={}",fromMessage);
-		logger.info("chatId={}",chatId);
-		logger.info("sessionId={}",sessionId);
+//		logger.info("fromMessage={}",fromMessage);
+//		logger.info("chatId={}",chatId);
+//		logger.info("sessionId={}",sessionId);
 		
 		stompService.insertChatLog(fromMessage);
 
@@ -142,11 +119,21 @@ public class StompController {
 	@MessageMapping("/lastCheck")
 	@SendTo(value={"/chat/admin"})
 	public Msg lastCheck(@RequestBody Msg fromMessage){
-		logger.info("fromMessage={}",fromMessage);
+		//logger.info("fromMessage={}",fromMessage);
 		
 		stompService.updateLastCheck(fromMessage);
 		
 		return fromMessage; 
+	}
+	
+	@GetMapping("/ws/deleteChatRoom.do")
+	public String deleteChatRoom(Model model, 
+						  HttpSession session, 
+						  @SessionAttribute(value="memberLoggedIn", required=false) Member memberLoggedIn){
+		String memberId = Optional.ofNullable(memberLoggedIn).map(Member::getMemberId).orElse(session.getId());
+		String chatId = stompService.findChatIdByMemberId(memberId);
+		int result = stompService.deleteChatRoom(chatId);
+		return "redirect:/ws/stomp.do";
 	}
 	
 }

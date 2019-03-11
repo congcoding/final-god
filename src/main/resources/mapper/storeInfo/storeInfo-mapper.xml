@@ -4,7 +4,7 @@
 	<select id="selectStoreInfoList" resultType="map">
 select A.*,M.renamedfilename from storeInfo A LEFT OUTER JOIN
 (select storeno,renamedfilename from menuattachment where thumbflag='Y')M 
-on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
+on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and closeFlag = 'N'
 	</select>
 	
 
@@ -172,7 +172,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
    </update>
    
    <select id="selectListStorInfo" resultType="storeInfo">
-   		select * from storeinfo where sellerid = #{sellerId}
+   		select * from storeinfo where sellerid = #{sellerId} and closeFlag = 'N'
    </select>
 
    <update id="updateSoldout">
@@ -300,5 +300,9 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 	<select id="selectAllstoreInfo" resultType="storeInfo">
 		select * from storeInfo
 	</select>
+	
+	<update id="deleteStore">
+		UPDATE STOREINFO SET CLOSEFLAG = 'D' WHERE STORENO = #{storeNo}
+	</update>
 
 </mapper>

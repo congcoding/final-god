@@ -258,6 +258,49 @@ public class Utils {
      
         
 	}
+	
+	public static String getPageBar(int totalContents, int cPage, int numPerPage, String loc) {
+		
+		int totalContent = totalContents;
+		int totalPage = (int)Math.ceil((double)totalContent/numPerPage);
+		int pageBarSize = 5;
+		int startPage = ((cPage-1)/pageBarSize) * pageBarSize + 1;
+		int endPage = startPage + pageBarSize -1;
+		int pageNo = startPage;
+		
+		String pageBar = "<nav><ul class='pagination justify-content-center'>";
+		
+		//[이전]section
+		if(pageNo == 1) {
+			pageBar += "<li class='page-item disabled'><a class='page-link'>PREVIOUS</a></li>";
+		}
+		else {
+			pageBar += "<li class='page-item'><a class='page-link' href='"+loc+"&cPage="+(pageNo-1)+"'>PREVIOUS</a></li>";
+		}
+		
+		//[페이지]section
+		while(pageNo<=endPage && pageNo<=totalPage) {
+			if(cPage == pageNo) {
+				pageBar += "<li class='page-item active'><a class='page-link'>"+pageNo+"</a></li>";
+			}
+			else {
+				pageBar += "<li class='page-item'><a class='page-link' href='"+loc+"&cPage="+pageNo+"'>"+pageNo+"</a></li>";
+			}
+			pageNo++;
+		}
+		
+		//[다음]section
+		if(pageNo > totalPage) {
+			pageBar += "<li class='page-item disabled'><a class='page-link'>NEXT</a></li>";
+		}
+		else {
+			pageBar += "<li class='page-item'><a class='page-link' href='"+loc+"&cPage="+pageNo+"'>NEXT</a></li>";
+		}
+		
+		pageBar +="</ul></nav>";
+		
+		return pageBar;
+	}
 
 	public static String getRenamedFileName(String fname) {
 		//확장자 분리
