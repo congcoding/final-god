@@ -411,12 +411,15 @@ span.srchVal{
 	      <!-- 3 -->
 	      
 	      <div class="modal-footer">
-	      	<div id="modal-checkbox" style="padding-right :80px;     width: 602px;">
+	      	<div id="modal-checkbox" style="padding: 0;width: 602px;">
+	      		
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<br />
+	  
 	      		<input type="checkbox" id="autologin" value="no" /> &nbsp;로그인 상태 유지
 	      		 	<input type="hidden" id="autologin1" name="autologin" value="no"/>
+	      		 	<br />
 	      		<span style="color:red;margin: -13px;">&nbsp;회원유형을 체크하세요</span>
 		      	<br />
 	      	</div>
@@ -461,7 +464,7 @@ span.srchVal{
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">아이디/비밀번호 찾기</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
+	          <span aria-hidden="true" id="close-btn">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
@@ -469,19 +472,25 @@ span.srchVal{
 	          <div class="form-group">
 	            <label for="email" class="col-form-label">아이디 찾기</label>
 	            <input type="text" class="form-control" id="find-id" name="email" placeholder="등록했던 이메일을 입력해 주세요."/>
-	            <button class="btn btn-outline-success" onclick="findId();" style="margin-top: -7px;"> 찾기</button>
+	            <button class="btn btn-outline-success" onclick="findId();" style="margin-top: 19px;"> 찾기</button>
 	          
 	          </div>
 	          <div class="form-group">
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
-	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
-	            <button class="btn btn-outline-success" style="margin-top: -7px;" onclick="findPwd();"> 찾기</button>
+	            <input type="text" class="form-control" id="find-pwd1" style="margin-top:10px;"placeholder="핸드폰번호를 입력해주세요." name="phone" />
+	            <button class="btn btn-outline-success" style="margin-top: 19px;" onclick="findPwd();"> 찾기</button>
+	          </div>
+	          <div class="form-group" id="number-div" style="display:none;">
+	              <label for="password" class="col-form-label">인증번호입력</label>
+	              <span id="time-min"></span> : <span id="time-sec"></span>
+	            <input type="text" class="form-control" id="number" placeholder="인증번호를 입력해주세요." id="number"/>
+	            <input type="hidden" name="rndNum" id="rndNum" />
+	            <button class="btn btn-outline-success" style="margin-top: 19px;" onclick="sendPwd();">확인</button>
 	          </div>
 	      </div>
 	      <div class="modal-footer">
-	        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	        <button type="submit" class="btn btn-primary">수정</button> -->
+	       
 	      </div>
 	    </div>
 	  </div>
@@ -1283,6 +1292,9 @@ span.srchVal{
 			success: function(data){
 				console.log(data);
 				alert(data.msg);
+				$("#rndNum").val(data.rndNum);
+				$("#number-div").show();
+				dailyMissionTimer(24);	// hour base
 			},
 			error : function(){
 				console.log("ajax요청 에러!");
@@ -1342,8 +1354,69 @@ span.srchVal{
 		
 	});
 	
-	
+	////
+	function dailyMissionTimer(duration) {
+    
+    
+    var timer = duration * 7.5; 
+    var minutes, seconds;
+    
+    var interval = setInterval(function(){
+        minutes = parseInt(timer / 60 % 60, 10);
+        seconds = parseInt(timer % 60, 10);
+		
 
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+		
+
+        $('#time-min').text(minutes);
+        $('#time-sec').text(seconds);
+
+        if (--timer < 0) {
+            timer = 0;
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+
+
+function sendPwd(){
+	var id = $("#find-pwd").val().trim();
+	var phone = $("#find-pwd1").val().trim();
+	
+	if($('#time-min').text() == '00' &&  $('#time-sec').text() == '00' ){
+		alert("인증시간을 초과하셨습니다.")
+	}else{
+		var number = $("#number").val();
+		var rndNum = $("#rndNum").val();
+		
+		if(number == rndNum){
+		
+		 $.ajax({
+			url : "${pageContext.request.contextPath}/member/getNewPwd.do",
+			type : "post",
+			data : {id : id , phone : phone},
+			dataType : "json",
+			success: function(data){
+				
+				alert(data.msg);
+				$("#close-btn").click();
+		
+			},
+			error : function(){
+				console.log("ajax요청 에러!");
+			}
+		}); 
+		
+		}else{
+			alert("인증번호가 일치하지 않습니다.");
+		}
+		
+	}
+	
+};
 	
 
 	</script>

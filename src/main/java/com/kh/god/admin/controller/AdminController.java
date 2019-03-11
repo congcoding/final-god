@@ -859,8 +859,13 @@ public class AdminController {
 	
 	@RequestMapping("admin/chart.do")
 	public Model chart(Model model) {
+		
+		
 		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		List<Integer> chartByFavoriteCetegory = adminService.chartByFavoriteCetegory();
+		
 		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("chartByFavoriteCetegory", chartByFavoriteCetegory);
 		model.addAttribute("admin/chart");
 		return model;
 	}

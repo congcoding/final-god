@@ -288,7 +288,13 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 	</select>
 	
 	<insert id="insertReport">
-		insert into report values(seq_report_reportno.nextval , #{category} ,null , #{storeNo} , #{reportDetails}, default)
+		insert into report values
+		<if test="storeNo != null">
+		(seq_report_reportno.nextval , #{category} ,null , #{storeNo} , #{reportDetails}, default)
+		</if>
+		<if test="reviewNo != null">
+		(seq_report_reportno.nextval , #{category} ,#{reviewNo} , null , #{reportDetails}, default)
+		</if>
 	</insert>
 	
 	<select id="selectAllstoreInfo" resultType="storeInfo">

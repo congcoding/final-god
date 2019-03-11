@@ -356,5 +356,14 @@
 		}
 	</update>
 	
+	<select id="chartByFavoriteCetegory" resultType="_int">
+		<foreach  item="item" index="index" collection="list" separator="union all">
+			select count(*) as cnt from member 
+			<where>
+				favorite like
+   				'%${item}%'
+			</where>
+		</foreach>
+	</select>
 </mapper>
 

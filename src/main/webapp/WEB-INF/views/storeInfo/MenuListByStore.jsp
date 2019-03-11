@@ -174,7 +174,8 @@
 							<!-- 고객이 작성한 리뷰 -->									
 							<c:if test="${review.commentLevel == 1 }">							
 								<tr> 
-									<td><strong>${review.writer } 님 </strong>| ${review.rDate }</td>
+									<td><strong>${review.writer} 님 </strong>| ${review.rDate } <i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportReviewModal" onclick="setReviewNo('${review.reviewNo }','${review.writer}');"></i>&nbsp;</td>
+									
 								</tr>
 								<tr> 
 									<td>
@@ -326,8 +327,8 @@
 		          <div class="form-group">
 		            <label for="email" class="col-form-label" style="font-size:large;">상호명</label>
 		            <br />
-		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.storeName}" disabled="disabled" style="background: white;"/>
-		            <input type="hidden" name="storeNo" value="${storeInfo.storeNo}" />
+		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.STORENAME}" disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="storeNo" value="${storeInfo.STORENO}" />
 		          	<input type="hidden" name="category" value="S" />
 		          </div>
 		          <div class="form-group">
@@ -347,6 +348,50 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-primary" onclick="checkSelect();">신고</button> 
+	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+<!-- 신고 모달 -->
+<div class="modal fade" id="ReportReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">신고하기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action="${pageContext.request.contextPath}/storeInfo/report.do" method="post" id="report-frm1">
+	      <div class="modal-body">
+		        <c:forEach items="${storeInfo}" var="storeInfo">
+		          <div class="form-group">
+		            <label for="email" class="col-form-label" style="font-size:large;">아이디</label>
+		            <br />
+		            <input type="text" class="form-control" id="reportid"   disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="reviewNo" id="reviewNo" />
+		            <input type="hidden" name="storeNo" value="${storeInfo.STORENO}"/>
+		          	<input type="hidden" name="category" value="R" />
+		          </div>
+		          <div class="form-group">
+		              <label for="reportDetails" class="col-form-label" style="font-size:large;">신고사유</label>
+						<select name="reportDetails" id="reportDetalis" class="form-control" style="width:400px;">
+						    <option value="">신고사유선택</option>
+						    <option value="비방 및 욕설">비방 및 욕설</option>
+						    <option value="광고">광고</option>
+						    <option value="도배">도배</option>
+						    <option value="허위사실 유포">허위사실 유포</option>
+						    <option value="기타" id="ect">기타</option>
+						</select>
+						<br />
+		          	<input type="text" name="reportReason" id="reportReason1" class="form-control" placeholder="기타 사유를 작성해주세요" style="display: none;" />
+		          </div>
+		        </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" onclick="checkSelect1();">신고</button> 
 	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	      </div>
 	        </form>
@@ -749,6 +794,37 @@ geocoder.addressSearch($("#mapStoreAddr").text(), function(result, status) {
         map.setCenter(coords);
     } 
 });
+
+function setReviewNo(reviewNo , reportId){
+	$("#reviewNo").val(reviewNo);
+	$("#reportid").attr("placeholder" , reportId);
+	console.log(reviewNo);
+	console.log(reportId);
+	
+};
+$("#reportDetalis").change( function(){
+	var state = $('#reportDetalis option:selected').val();
+	
+	if(state == '기타'){
+		$("#reportReason1").show();
+		
+	}else{
+		$("#reportReason1").hide();
+	}
+
+});
+function checkSelect1(){
+	
+	if($("#reportDetalis option:eq(0)").is(":selected")){
+		alert("신고사유를 선택해주세요.");
+		return false;
+	}else{
+		if($("#reportReason1").val() != ""){
+			$("#reportDetalis option:eq(5)").val($("#reportReason1").val());
+		}
+		$("#report-frm1").submit();
+	}
+};
 
 </script>
 
