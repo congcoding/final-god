@@ -127,14 +127,11 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public String SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
-			@RequestParam("autologin") String autologin,HttpSession session) {
-		
-		
+	public ModelAndView SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
+			@RequestParam("autologin") String autologin,HttpSession session,ModelAndView mav) {
+
 		logger.debug("$#@$@#$@#$@#$"+autologin);
 		String returnURL = "";
-		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1111"+ session.getAttribute("sellerLoggedIn"));
-//		Member member = null ;
 		if(session.getAttribute("sellerLoggedIn") != null) {
 			//기존에 login이란 세션값이 존재한다면
 //			Seller login = (Member)session.getAttribute("login");
@@ -142,29 +139,27 @@ public class SellerController {
 			session.removeAttribute("sellerLoggedIn"); //기존값을 제거해준다.
 			
 		}
-		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
-		
-		String loc = "/";
-	      String msg = "";
-	      String view = "common/msg";
+
+
+//		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
+
+		 String loc = "";
+	     String msg = "";
+	     String view = "common/msg";
 		
 		Seller s = sellerService.selectOneSeller(memberId);
 		
-
-	     //현재 채팅방의 안읽은 메세지의 갯수를 로그인할때 가져옴.
 	     boolean loginFlag = true;
 	     
 	     if (s == null || s.getDelFlag().equals("Y")) {//로그인실패
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
-	         returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         
 	      } else { //로그인 검사 
 	         // 비밀번호 비교
-
 	    	  memberSession = WebSocketHandler.getInstance().getUserList();
-	    	  Set<String> keyValue = loginSession.keySet();
+	    	  Set<String> keyValue = memberSession.keySet();
 				logger.debug("keyValue : "+keyValue);
 				Iterator<String> iterator = keyValue.iterator();
 				while(iterator.hasNext()) {
@@ -177,15 +172,13 @@ public class SellerController {
 					}
 				}
 	    	  
-
-		if(loginFlag == true) {
+	    	  if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
 	        	 
-		         //사이드바
-		            List<StoreInfo> store = sellerService.myStore(memberId);
-		            session.setAttribute("storeSideBar", store);
-		            
 	        	 session.setAttribute("loginId",s.getSellerId());
+		         //사이드바
+		         List<StoreInfo> store = sellerService.myStore(memberId);
+		         session.setAttribute("storeSideBar", store);
 		         //세션관리
 //		         loginSession.put(session.getId(),session);
 		         //자동로그인 설정부분
@@ -202,8 +195,6 @@ public class SellerController {
 	    		 }
 	     		 /*[세션추가되는부분]*/
 	     		 //1.로그인이 성공되면 
-	     		 loginSession.put(s.getSellerId(),session.getId());
-	     		 logger.debug("로그인 시 : "+loginSession);
 	     		 if(dto.isUseCookie()) {
 	     			 //쿠키사용한다고 체크되어 있으면
 	     			 //쿠키를 생성 및 현재 로그인 되어있을때의 세션 id를 쿠키에 저장한다. 
@@ -224,23 +215,24 @@ public class SellerController {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-	                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@111111111111111111111");
-
-	     			 
-	     		 }
-	         } else { //로그인 실패
-	            //비밀번호 불일치 
-	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
-		            loc = "/";
-	        	 returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
-	         }
-		      }
-	      }
-		
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
-		return "redirect:/" ;
+//	                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@성공!!!");
+	                
+	     		 } //end of if dto.isUseCookie
+	     		 view = "redirect:/"; //성공시  로그인 폼으로 다시 가도록 함
+		      }else{
+		    	  msg = "비밀번호를 잘못 입력하셨습니다.";
+			      loc = "/";
+		      }// end of if password mathch
+	      }//end of if loginflag
+	      } 
+//		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
+		mav.addObject("msg", msg);
+		mav.addObject("loc", loc);
+		mav.setViewName(view);
+		return mav;
 		
 	}
+		
 //	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
 //	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
 //			ModelAndView mav , HttpSession session) {
