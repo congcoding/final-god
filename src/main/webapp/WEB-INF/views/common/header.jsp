@@ -268,10 +268,12 @@ span.srchVal{
 		      <li class="nav-item active">
 		        <a class="nav-link" href="${pageContext.request.contextPath}" id="sweetHome">Home <span class="sr-only">(current)</span></a>
 		      </li>
-		      <li class="nav-item">				    
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
-		      </li>		    
-		      <li class="nav-item">				    
+		      <c:if test="${memberLoggedIn.memberId ne 'admin' }">
+			      <li class="nav-item">				    
+			        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
+			      </li>		    
+		      </c:if>
+		      <li class="nav-item">
 		        <a class="nav-link" href="${pageContext.request.contextPath }/member/webreview.do">배달의신평가</a>
 		      </li>		    
 		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">

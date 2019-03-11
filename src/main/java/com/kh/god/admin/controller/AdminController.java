@@ -605,20 +605,33 @@ public class AdminController {
 	@RequestMapping("/admin/storeList.do")
 	public String storeList(Model model, @RequestParam(value="cPage", defaultValue="1") int cPage,
 										 @RequestParam(value="searchType", defaultValue="") String searchType,
-										 @RequestParam(value="searchKeyword", defaultValue="") String searchKeyword) {
+										 @RequestParam(value="searchKeyword", defaultValue="") String searchKeyword,
+										 @RequestParam(value="orderOption", defaultValue="") String orderOption,
+										 @RequestParam(value="selectedStoreGrade", defaultValue="") String selectedStoreGrade,
+										 @RequestParam(value="selectedCategory", defaultValue="") String selectedCategory,
+										 @RequestParam(value="selectedPMSFlag", defaultValue="") String selectedPMSFlag) {
 		
 		int numPerPage = 10;
 		Map<String,String> map = new HashMap<>();
 		map.put("searchType", searchType);
 		map.put("searchKeyword", searchKeyword);
+		map.put("orderOption", orderOption);
+		map.put("selectedStoreGrade", selectedStoreGrade);
+		map.put("selectedCategory", selectedCategory);
+		map.put("selectedPMSFlag", selectedPMSFlag);
 		
-//		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage);
 		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage, map);
 		int totalContents = adminService.countStoreList(map);
 		
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
 		model.addAttribute("totalContents",totalContents);
+		model.addAttribute("searchType", searchType);
+		model.addAttribute("searchKeyword", searchKeyword);
+		model.addAttribute("orderOption", orderOption);
+		model.addAttribute("selectedStoreGrade", selectedStoreGrade);
+		model.addAttribute("selectedCategory", selectedCategory);
+		model.addAttribute("selectedPMSFlag", selectedPMSFlag);
 		model.addAttribute("list",list);
 		
 		return "/admin/storeList";
