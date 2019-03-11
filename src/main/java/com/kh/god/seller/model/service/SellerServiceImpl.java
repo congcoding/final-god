@@ -352,6 +352,5 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.giveCouponBySeller2(map);
 	}
 
-
 	
 }

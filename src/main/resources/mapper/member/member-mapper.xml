@@ -36,7 +36,7 @@
     </select>
     
     <select id="couponListBymemberId" resultType="map">
-    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag,C.storeno from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberId} and useflag='N' and storeno='all' or storeno=#{storeNo}
+    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag,C.storeno from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberId} and useflag='N' and (storeno='all' or storeno=#{storeNo})
     </select>
     
     
@@ -127,7 +127,7 @@
 	</insert>
 	
 	<select id="selectListWebReiveiw" resultType="WebReview">
-		select * from webreview 
+		select * from webreview order by writeDate desc 
 	</select>
 	
 	<select id="selectWebReiveiwTotalContents" resultType="_int">
