@@ -28,7 +28,8 @@ public class Review {
 	private Date rDate;
 	private String delFlag;
 	private int commentLevel; 
-	private int reviewRef;
+	private int reviewRef; 
+
 	
 	public Date getrDate() {
 		return rDate;

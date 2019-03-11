@@ -21,20 +21,20 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 	
 		memberPhone = memberPhone.replaceAll("-", "");
 	
-		String api_key = "NCSVKGTPW3QU8AIA"; 
-		String api_secret ="DTUEHVLPZ1QRMFMUAL3XOPT7TELFSFRA"; 
+		String api_key = "NCS9DYEIIJWBG3SF"; 
+		String api_secret ="YU790DMVFQ2MMXD8WBWVRU14Q6ENAV3V"; 
 		Message coolsms = new Message(api_key,api_secret);
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		if(flag.equals("receive")) {
 			params.put("to", memberPhone); 
-			params.put("from", "01084345390");
+			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
 			params.put("text", "주문이 접수되었습니다 배달예정시간은"+howLongChecked+"입니다:) 주문해주셔서 감사합니다");
 			params.put("app_version", "test app 1.2"); // application name and version
 		}else if(flag.equals("cancel")) {
 			params.put("to", memberPhone); 
-			params.put("from", "01084345390");
+			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
 			params.put("text", "주문접수가 취소되었습니다.취소 사유는 "+howLongChecked);
 			params.put("app_version", "test app 1.2"); // application name and version
@@ -63,14 +63,14 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 			System.out.println("@@치환후 번호"+memberPhone);		
 		}
 		
-		String api_key = "NCSVKGTPW3QU8AIA"; 
-		String api_secret ="DTUEHVLPZ1QRMFMUAL3XOPT7TELFSFRA"; 
+		String api_key = "NCS9DYEIIJWBG3SF"; 
+		String api_secret ="YU790DMVFQ2MMXD8WBWVRU14Q6ENAV3V"; 
 		Message coolsms = new Message(api_key,api_secret);
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		
 			params.put("to", memberPhone); 
-			params.put("from", "01084345390");
+			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
 			params.put("text", "임시 비밀번호는 "+password+"입니다. 로그인 후 비밀번호를 바꾸시길 바랍니다.");
 			params.put("app_version", "test app 1.2"); // application name and version
@@ -89,8 +89,8 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 	}
 	
 	public static String guestPhoneCheck(String memberPhone) {
-		String api_key = "NCSVKGTPW3QU8AIA"; 
-		String api_secret ="DTUEHVLPZ1QRMFMUAL3XOPT7TELFSFRA"; 
+		String api_key = "NCS9DYEIIJWBG3SF"; 
+		String api_secret ="YU790DMVFQ2MMXD8WBWVRU14Q6ENAV3V"; 
 		Message coolsms = new Message(api_key,api_secret);
 		
 		//인증번호

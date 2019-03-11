@@ -13,15 +13,18 @@ public interface StompService {
 	int insertChatRoom(List<ChatRoom> list);
 
 	int insertChatLog(Msg fromMessage);
+	
+	int insertChatLogHello(Msg msg);
 
 	int deleteChatRoom(String chatId);
 
 	int updateLastCheck(Msg fromMessage);
-
 	
 	//관리자용
 	List<Map<String, String>> findRecentList();
 
 	List<Msg> findChatListByChatId(String chatId);
+
+	List<Integer> adminCheck();
 
 }

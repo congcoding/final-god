@@ -45,6 +45,11 @@ public class StompServiceImpl implements StompService {
 		updateLastCheck(fromMessage);
 		return stompDao.insertChatLog(fromMessage);
 	}
+	
+	@Override
+	public int insertChatLogHello(Msg msg) {
+		return stompDao.insertChatLogHello(msg);
+	}
 
 	@Override
 	public int deleteChatRoom(String chatId) {
@@ -59,6 +64,11 @@ public class StompServiceImpl implements StompService {
 	@Override
 	public List<Msg> findChatListByChatId(String chatId) {
 		return stompDao.findChatListByChatId(chatId);
+	}
+	
+	@Override
+	public List<Integer> adminCheck(){
+		return stompDao.adminCheck();
 	}
 
 	

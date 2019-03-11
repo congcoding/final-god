@@ -17,7 +17,7 @@ div#head-container{margin:70px auto; width : 900px; height:50px;}
 div#qna{margin-left : -40px; width : 450px; height : 50px; text-align : center; font-weight : bold;cursor : pointer;display: table-cell;vertical-align: middle;}
 div#asking{margin-top:-50px; margin-left : 500px; width : 450px; height : 50px; text-align : center; font-weight : bold; cursor : pointer;display: table-cell;vertical-align: middle;}
 div#pageBar{margin:35px auto;}
-div#chat-container{margin:0 auto; width:700px; height:350px; overflow:scroll;}
+div#chat-container{margin:0 auto; width:700px; height:350px; overflow-y:scroll;}
 ul#data{padding:10px;}
 li.chatMe{background-color:#32aeb8; border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:right; clear:both;}
 li.chatAdmin{border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:left; clear:both;}
@@ -43,9 +43,8 @@ function fn_goQnaList(){
 function fn_goStomp(){
 	location.href = "${pageContext.request.contextPath}/ws/stomp.do";
 }
-
 function getMoment(time){
-	var date = moment("/Date("+time+")/").format("YYYY/MM/DD hh:mm:ss").toString();
+	var date = moment("/Date("+time+")/").format("YYYY/MM/DD HH:mm:ss").toString();
 	return date;
 }
 </script>
@@ -60,6 +59,11 @@ $(document).ready(function() {
 		if (key.keyCode == 13) {// 엔터
 			sendMessage();
 			$('#message').val('')
+		}
+	});
+	$("#exitBtn").click(function() {
+		if(confirm("채팅방을 나가면 모든 내역이 사라집니다. 정말 나가시겠습니까?")){
+			location.href = "${pageContext.request.contextPath}/ws/deleteChatRoom.do";
 		}
 	});
 
@@ -119,9 +123,6 @@ function sendMessage() {
 		time : new Date().getTime(),
 		type: "MESSAGE"
 	}
-
-	//테스트용 /hello
-	//stompClient.send('<c:url value="/hello" />', {}, JSON.stringify(data));
 	
 	//채팅메세지: 1:1채팅을 위해 고유한 chatId를 서버측에서 발급해 관리한다.
 	stompClient.send('<c:url value="/chat/${chatId}" />', {}, JSON.stringify(data));
@@ -156,6 +157,11 @@ function sendMessage() {
 	  <div class="input-group-append" style="padding: 0px;">
 		<button id="sendBtn" class="btn btn-outline-secondary" type="button">전송</button>
 	  </div>
+	  <c:if test="${memberLoggedIn.memberId == null}">
+		  <div class="input-group-append" style="padding: 0px;">
+			<button id="exitBtn" class="btn btn-outline-danger" type="button">나가기</button>
+		  </div>
+	  </c:if>
 	</div>
 
 </section> 

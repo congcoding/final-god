@@ -273,10 +273,12 @@ span.srchVal{
 		      <li class="nav-item active">
 		        <a class="nav-link" href="${pageContext.request.contextPath}" id="sweetHome">Home <span class="sr-only">(current)</span></a>
 		      </li>
-		      <li class="nav-item">				    
-		        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
-		      </li>		    
-		      <li class="nav-item">				    
+		      <c:if test="${memberLoggedIn.memberId ne 'admin' }">
+			      <li class="nav-item">				    
+			        <a class="nav-link" href="${pageContext.request.contextPath }/admin/qnaboard.do">고객센터</a>
+			      </li>		    
+		      </c:if>
+		      <li class="nav-item">
 		        <a class="nav-link" href="${pageContext.request.contextPath }/member/webreview.do">배달의신평가</a>
 		      </li>		    
 		      <c:if test="${memberLoggedIn.memberId eq 'admin' }">
@@ -1094,15 +1096,17 @@ span.srchVal{
 		 		}else if(message[i] === "forcedlogout"){
 		 			alert("현재 다른 브라우져에서 강제 로그아웃을 요청했습니다.");
 		 			location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}';
-		 		}else if(message[i].cmd = "report"){
+		 		}else if(message[i].cmd === "report"){
 		 			alertType = message[i];
 		 			alertMessage(alertType,"report");
-		 		}else if(message[i].cmd = "pms"){
+		 		}else if(message[i].cmd === "pms"){
 		 			alertType = message[i];
 		 			alertMessage(alertType,"pms");
 		 		}
-		 		else
+		 		else if (message[i].cmd === "chat"){
 		 			 messageType = message[i];
+		 			 console.log("메세지 타입 : "+messageType);
+		 		}
 	 		}
 	 		if(alertType != null && messageType != null){
 	 			console.log(alertType);
@@ -1305,7 +1309,8 @@ span.srchVal{
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
-
+	var orderCount =  0;
+	var reviewCount = 0;
 	//로딩 되면 판매자일때 안읽은 메세지 뜨게함.
 	$(function(){
 		if('${sellerLoggedIn}'){
@@ -1314,11 +1319,13 @@ span.srchVal{
 				type : 'post',
 				success : function(data){
 						var messageCount = parseInt(data.message);
-						var reviewCount = parseInt(data.review);
-						var orderCount = parseInt(data.order);
-						console.log(orderCount+" : 리뷰 : "+reviewCount);
+						reviewCount = parseInt(data.review);
+						orderCount = parseInt(data.order);
+						//console.log(orderCount+" : 리뷰 : "+reviewCount);
 						$("#sellerAlertCount").html(orderCount+reviewCount);
 						$("#messageCount").html(messageCount);
+						$("#currentOrder").html(orderCount+"건");
+						$("#currentReview").html(reviewCount+"건");
 				}
 			});		
 		}else{

@@ -27,13 +27,14 @@ $(function(){
 })
 
 function getMoment(time){
-	var date = moment("/Date("+time+")/").format("YYYY/MM/DD hh:mm:ss").toString();
+	var date = moment("/Date("+time+")/").format("YYYY/MM/DD HH:mm:ss").toString();
 	return date;
 }
 </script>
 
 <style>
-div#chat-container{margin:0 auto; width:430px; height:350px;}
+div#adminChat-container{margin:0 auto; height:370px;}
+div#adminSend-container{padding-top:10px;}
 ul#data{padding:0px;}
 li.chatAdmin{background-color:#32aeb8; border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:right; clear:both;}
 li.chatUser{border:1px solid lightgray; border-radius:10px; padding:5px; margin:5px; display:table; float:left; clear:both;}
@@ -42,8 +43,7 @@ li.chatUser{border:1px solid lightgray; border-radius:10px; padding:5px; margin:
 </head>
 <body>
 
-
-<div id="#chat-container">
+<div id="adminChat-container">
 	<ul id="data">
 		<c:forEach items="${chatList}" var="m">
 		  <c:if test="${m.memberId == 'admin' }">
@@ -56,8 +56,7 @@ li.chatUser{border:1px solid lightgray; border-radius:10px; padding:5px; margin:
 	</ul>
 </div>
 
-
-<div class="input-group mb-3">
+<div class="input-group mb-3" id="adminSend-container">
   <input type="text" id="message" class="form-control" placeholder="Message">
   <div class="input-group-append" style="padding: 0px;">
     <button id="sendBtn" class="btn btn-outline-secondary" type="button">전송</button>

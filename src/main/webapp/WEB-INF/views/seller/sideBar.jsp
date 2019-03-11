@@ -38,23 +38,23 @@
       <c:if test="${not empty storeSideBar }">
       	<c:forEach items="${storeSideBar}" var="store" varStatus="status">
 	      	<c:if test="${store.closeFlag eq 'N' }">
-	      		<li class="nav-item">
-			        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse${store.storeNo}" aria-expanded="true" aria-controls="collapse${store.storeNo}">
-			          <i class="fas fa-fw fa-folder"></i>
-			          <span>${store.storeName}</span>
-			        </a>
-			        <div id="collapse${store.storeNo}" class="collapse" aria-labelledby="heading${store.storeNo}" data-parent="#accordionSidebar">
-			          <div class="bg-white py-2 collapse-inner rounded">
-			            <a class="collapse-item myStoreOrder" href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}">주문내역 <span class="badge badge-primary badge-pill orderCount">14</span></a>
-			            <a class="collapse-item myStoreMenu" href="${pageContext.request.contextPath}/seller/myStoreMenu.do?storeNo=${store.storeNo}&sellerId=${store.sellerId}">내 가게 메뉴</a>
-			            <a class="collapse-item myChart" href="${pageContext.request.contextPath }/seller/myStoreChart.do?storeNo=${store.storeNo}&&sellerId=${sellerLoggedIn.sellerId}">내 가게 통계</a>
-			            <a class="collapse-item updateMyStoreInfo" href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}">내 가게 수정</a>
-			            <a class="collapse-item sellerReview" href="${pageContext.request.contextPath}/seller/goSellerReview.do?storeNo=${store.storeNo}">리뷰</a>
-			            <a class="collapse-item myAd" href="${pageContext.request.contextPath }/seller/myAd.do?storeNo=${store.storeNo}">광고</a>
-			          </div>
-			        </div>
-			      </li>
-			</c:if>
+      			<li class="nav-item">
+		        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse${store.storeNo}" aria-expanded="true" aria-controls="collapse${store.storeNo}">
+		          <i class="fas fa-fw fa-folder"></i>
+		          <span>${store.storeName}</span>
+		        </a>
+		        <div id="collapse${store.storeNo}" class="collapse" aria-labelledby="heading${store.storeNo}" data-parent="#accordionSidebar">
+		          <div class="bg-white py-2 collapse-inner rounded">
+		            <a class="collapse-item myStoreOrder" href="${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo=${store.storeNo}">주문내역 <span class="badge badge-primary badge-pill orderCount"></span></a>
+		            <a class="collapse-item myStoreMenu" href="${pageContext.request.contextPath}/seller/myStoreMenu.do?storeNo=${store.storeNo}&sellerId=${store.sellerId}">내 가게 메뉴</a>
+		            <a class="collapse-item myChart" href="${pageContext.request.contextPath }/seller/myStoreChart.do?storeNo=${store.storeNo}&&sellerId=${sellerLoggedIn.sellerId}">내 가게 통계</a>
+		            <a class="collapse-item updateMyStoreInfo" href="${pageContext.request.contextPath}/seller/goUpdateMyStore.do?storeNo=${store.storeNo}">내 가게 수정</a>
+		            <a class="collapse-item sellerReview" href="${pageContext.request.contextPath}/seller/goSellerReview.do?storeNo=${store.storeNo}">리뷰</a>
+		            <a class="collapse-item myAd" href="${pageContext.request.contextPath }/seller/myAd.do?storeNo=${store.storeNo}">광고</a>
+		          </div>
+		        </div>
+		      </li>
+      		</c:if>
       	</c:forEach>
       </c:if>
 

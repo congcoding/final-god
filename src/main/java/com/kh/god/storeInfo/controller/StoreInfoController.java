@@ -102,8 +102,8 @@ public class StoreInfoController {
 		String brno = no ;
 
 //		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe"); //for Windows
-		String loc = "/usr/lib/chromium-browser/chromedriver"; //for Linux
-
+//		String loc = "/usr/lib/chromium-browser/chromedriver"; //for Linux
+		String loc = "/usr/bin/chromedriver";
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
 		setUp(loc);

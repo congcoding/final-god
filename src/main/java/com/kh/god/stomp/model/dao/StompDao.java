@@ -13,6 +13,8 @@ public interface StompDao {
 	int insertChatRoom(ChatRoom chatRoom);
 
 	int insertChatLog(Msg fromMessage);
+	
+	int insertChatLogHello(Msg msg);
 
 	int deleteChatRoom(String chatId);
 
@@ -22,5 +24,7 @@ public interface StompDao {
 	List<Map<String, String>> findRecentList();
 
 	List<Msg> findChatListByChatId(String chatId);
+	
+	List<Integer> adminCheck();
 
 }

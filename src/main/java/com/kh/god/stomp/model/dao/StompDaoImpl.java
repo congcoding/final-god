@@ -35,6 +35,11 @@ public class StompDaoImpl implements StompDao {
 	public int insertChatLog(Msg fromMessage) {
 		return sqlSession.insert("stomp.insertChatLog", fromMessage);
 	}
+	
+	@Override
+	public int insertChatLogHello(Msg msg) {
+		return sqlSession.insert("stomp.insertChatLogHello", msg);
+	}
 
 	@Override
 	public int deleteChatRoom(String chatId) {
@@ -49,6 +54,11 @@ public class StompDaoImpl implements StompDao {
 	@Override
 	public List<Msg> findChatListByChatId(String chatId) {
 		return sqlSession.selectList("stomp.findChatListByChatId", chatId);
+	}
+	
+	@Override
+	public List<Integer> adminCheck(){
+		return sqlSession.selectList("stomp.adminCheck");
 	}
 
 	
