@@ -203,6 +203,14 @@ span.srchVal{
 	display: inline;
 }
 
+.mLogout-btn{
+	border: none;
+	background: none;
+}
+
+.mLogout-btn:hover{
+	color: white;
+}
 </style>
 </head>
 	<!-- chatting modal -->
@@ -332,12 +340,12 @@ span.srchVal{
 			</c:if>	
 			  	<!-- onclick="location.href='${pageContext.request.contextPath}/member/memberEnroll.do' -->
 			  	<c:if test="${memberLoggedIn.memberId != 'admin'}">
-					<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
+					<a href="${pageContext.request.contextPath}/member/memberView.do?memberId=${memberLoggedIn.memberId}" style="color:white;">${memberLoggedIn.memberName}</a>님 안녕하세요 &nbsp;
 				</c:if>
 				<c:if test="${memberLoggedIn.memberId == 'admin'}">
 					${memberLoggedIn.memberName}님 안녕하세요 &nbsp;
 				</c:if>
-				<button class="btn btn-outline-sucess" type="button" 
+				<button class="btn btn-outline-sucess mLogout-btn" type="button" 
 						onclick = "memberLogOut();">로그아웃</button>
 				
 			  </c:if>

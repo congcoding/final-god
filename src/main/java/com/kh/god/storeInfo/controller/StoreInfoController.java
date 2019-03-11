@@ -102,8 +102,8 @@ public class StoreInfoController {
 		String brno = no ;
 
 //		String loc = request.getSession().getServletContext().getRealPath("/WEB-INF/lib/chromedriver.exe"); //for Windows
-		String loc = "/usr/lib/chromium-browser/chromedriver"; //for Linux
-
+//		String loc = "/usr/lib/chromium-browser/chromedriver"; //for Linux
+		String loc = "/usr/bin/chromedriver";
 		
 	//1.jsp에서 사업자 번호를 스트링에 담기.
 		setUp(loc);
@@ -427,6 +427,27 @@ public class StoreInfoController {
     	}
     
     	model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+    	
+    	return view;
+    }
+    
+    @RequestMapping("storeinfo/deleteStore.do")
+    public String deleteStore(@RequestParam("storeNo") String storeNo, Model model){
+    	
+    	int result = storeInfoService.deleteStore(storeNo);
+    
+    	String loc = "/seller/sellerView.do";
+		String msg = "";
+		String view = "common/msg";
+
+		if(result > 0) {
+    		msg = "매장 삭제가 완료되었습니다.";
+    	} else {
+    		msg = "매장 삭제 실패하였습니다.";
+    	}
+    	
+		model.addAttribute("msg", msg);
 		model.addAttribute("loc", loc);
     	
     	return view;

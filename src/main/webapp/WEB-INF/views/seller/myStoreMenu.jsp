@@ -65,47 +65,62 @@ function realUpdate(){
 
 $(function(){
 	
-	$("#insertMenuName").on("keyup", function(){
-		console.log("insertKeyup 도달");
+		var list = new Array();
+
+		<c:forEach var="itemList" items="${menu}"  >
+
+			list.push("${itemList.menuName}");
+
+		</c:forEach>
+		
+	$("#insertMenuName").keyup(function(){
 		
 		if($("#insertMenuName").val().length == 0){
 			$(".warning").css("display", "none");
 			$(".okay").css("display", "none");
+			
+			
 		}
 		
-		if($(".menuNameCheck").val() == $("#insertMenuName").val()){
-			$(".warning").css("display", "inline");
-			$(".okay").css("display", "none");
-			$("#insertMenuName").val("");
+		for(var i=0; i < list.length; i++){
+			if(list[i] == $("#insertMenuName").val()){
+				$(".warning").css("display", "inline");
+				$(".okay").css("display", "none");
+				$("#insertMenuName").val("");
+				
+			}
 		}
-		
 		
 		if(!$("#insertMenuName").val().length == 0 &&
 			$(".menuNameCheck").val() != $("#insertMenuName").val()){
 			$(".okay").css("display", "inline");
 			$(".warning").css("display", "none");
+			
 		}
 	});
 	
 	$("#updateMenuName").keyup(function(){
-		console.log("updateKeyup 도달");
 		
 		if($("#updateMenuName").val().length == 0){
 			$(".warning").css("display", "none");
 			$(".okay").css("display", "none");
+			console.log("1");
 		}
 		
-		if($(".menuNameCheck").val() == $("#updateMenuName").val()){
+		for(var i=0; i < list.length; i++){
+		if(list[i] == $("#updateMenuName").val()){
 			$(".warning").css("display", "inline");
 			$(".okay").css("display", "none");
 			$("#updateMenuName").val("");
+			console.log("2");
 		}
+	}
 		
-		
-		if(!$("#MenuName").val().length == 0 &&
+		if(!$("#updateMenuName").val().length == 0 &&
 			$(".menuNameCheck").val() != $("#updateMenuName").val()){
 			$(".okay").css("display", "inline");
 			$(".warning").css("display", "none");
+			console.log("3");
 		}
 	});
 	
@@ -281,12 +296,14 @@ $(document).ready(function(){
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form>
 	          <div class="form-group">
+	        <form>
 	          	<input type="hidden" class="form-control" id="updateMenuCode" name="menuCode"/>
 	          	<input type="hidden" class="form-control" id="updateStoreNo" name="storeNo"/>
 	          	<input type="hidden" class="form-control" value="${sellerLoggedIn.sellerId}"/>
 	            <label for="menuName" class="col-form-label">메뉴명</label>
+     	        <span class="warning">사용 할 수 없는 메뉴명입니다.</span>
+	            <span class="okay">사용 가능한 메뉴명입니다.</span>
 	            <input type="text" class="form-control" id="updateMenuName" name="menuName"/>
 	            <label for="menuPrice" class="col-form-label">메뉴가격</label>
 	            <input type="text" class="form-control" id="updateMenuPrice" name="menuPrice"/>
@@ -307,9 +324,9 @@ $(document).ready(function(){
 	        <button type="button" class="btn btn-primary" onclick="realUpdate();">수정</button>
 	      </div>
 	    </div>
+</form>
 	  </div>
 	</div>
-</form>
 
 <!-- insertMenuModal -->
 <form action="${pageContext.request.contextPath}/seller/insertMenu.do" enctype="multipart/form-data" method="post" id="realInsertFrm">
@@ -323,8 +340,8 @@ $(document).ready(function(){
 	        </button>
 	      </div>
 	      <div class="modal-body">
-	        <form>
 	          <div class="form-group">
+	        <form>
 	          	<input type="hidden" class="form-control" id="insertCategoryNo" name="categoryNo" value="${categoryNo}"/>
 	          	<input type="hidden" class="form-control" id="insertStoreNo" name="storeNo" value="${storeNo}"/>
 	          	<input type="hidden" class="form-control" value="${sellerLoggedIn.sellerId}"/>

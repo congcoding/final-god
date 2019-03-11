@@ -770,6 +770,11 @@ function storeModify(storeNo, sellerId){
 	
 };
 
+function storeDelete(storeNo){
+	location.href = "${pageContext.request.contextPath}/storeinfo/deleteStore.do?storeNo=" + storeNo; 
+};
+	
+
 
 
 
