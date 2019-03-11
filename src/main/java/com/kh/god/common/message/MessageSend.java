@@ -28,7 +28,7 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		Message coolsms = new Message(api_key,api_secret);
 		
 		HashMap<String, String> params = new HashMap<String, String>();
-	/*	if(flag.equals("receive")) {
+		if(flag.equals("receive")) {
 			params.put("to", memberPhone); 
 			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
@@ -43,7 +43,7 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		}
 		// 4 params(to, from, type, text) are mandatory. must be filled
 		
-		*/
+		
 		try { 
 			JSONObject obj = (JSONObject) coolsms.send(params);
 		    System.out.println(obj.toString()); 
@@ -104,11 +104,11 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		
 		HashMap<String, String> params = new HashMap<String, String>();
 		
-		/*	params.put("to", memberPhone); 
+		    params.put("to", memberPhone); 
 			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
 			params.put("text", "[배달의 신]인증번호는 ["+randomint+"]입니다. 정확히 입력해주세요.");
-			params.put("app_version", "test app 1.2"); // application name and version*/
+			params.put("app_version", "test app 1.2"); // application name and version
 		
 		// 4 params(to, from, type, text) are mandatory. must be filled
 		
