@@ -158,7 +158,6 @@ public class SellerController {
 
 	         msg = "아이디가 존재하지 않습니다.";
 	         loc = "/";
-	         returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         
 	      } else { //로그인 검사 
 	         // 비밀번호 비교
@@ -180,7 +179,7 @@ public class SellerController {
 
 		if(loginFlag == true) {
 	         if (bcryptPasswordEncoder.matches(password, s.getPassword())) { // 로그인 성공
-	        	 
+	        	 view = "redirect:/";
 		         //사이드바
 		            List<StoreInfo> store = sellerService.myStore(memberId);
 		            session.setAttribute("storeSideBar", store);
@@ -232,7 +231,6 @@ public class SellerController {
 	            //비밀번호 불일치 
 	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
 		            loc = "/";
-	        	 view = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         }
 		      }
 	      }
