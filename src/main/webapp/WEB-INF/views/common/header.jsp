@@ -594,7 +594,7 @@ span.srchVal{
 							}else if(alert.TYPE === 'order'){
 								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; left : 0.5em; top : 0.2em;'></i></div></div>");
 								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
-								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'> 주문이 들어왔습니다. </span>";
+								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'>"+alert.STORENO+"에 주문이 들어왔습니다. </span>";
 								content.append(alertData);
 								type.append(content);
 							}
@@ -705,7 +705,7 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCount'>"+notRead+"</span></div>";
+						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCountDetail'>"+notRead+"</span></div>";
 						
 						messageForm.append(messageData);
 						
@@ -972,23 +972,32 @@ span.srchVal{
 		//console.log("메세지 전송 후 : "+alertType+" : "+messageType);
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
-			// if(messageType.sender === '${sellerLoggedIn.sellerId}'){
-			//	 messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
-			//}else{
 				 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
-			//}
 			 $("#chatView").append(messageData);
 			 setTimeout(function(){
 		 			$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
 		 	},150);
 		 }else{
-			
-			 $("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
+			 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
+			 $("#chatView").append(messageData);
+			 
+			 console.log($("#chatModal").attr("class"));
+			 if($("#chatModal").attr("class") === 'modal fade'){
+				 console.log("dd");
+				 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
+			 		setTimeout(function(){
+			 			$("#socketAlert").css("display","none");
+			 		},3000);
+			 	$("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
+			 }
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
 		 		setTimeout(function(){
 		 			$("#socketAlert").css("display","none");
 		 		},3000); 
 		 }
+			 setTimeout(function(){
+				 $("#chatView").scrollTop($("#chatView")[0].scrollHeight);
+		 	},150);
 		 
 	 }
 	//리뷰,신고등 알람이 올때 실행하는 함수
