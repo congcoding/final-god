@@ -140,7 +140,6 @@ public class SellerController {
 			
 		}
 
-
 //		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
 
 		 String loc = "";
@@ -232,95 +231,6 @@ public class SellerController {
 		return mav;
 		
 	}
-		
-//	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-//	public ModelAndView SellerLogin(@RequestParam String memberId , @RequestParam String password, 
-//			ModelAndView mav , HttpSession session) {
-//		
-//		
-//		/* @RequestParam(name="autoLogin") String autoLogin , */
-//		/*
-//		 * if(session.getAttribute("LOGIN") != null) { session.removeAttribute("LOGIN");
-//		 * //기존에 LOGIN세션값 존재하면 제거 }
-//		 */
-//		
-//		
-//		
-//		
-//		
-//		//logger.debug("@@@@@@@22autoLogin"+ autoLogin);
-//		
-//		
-//		memberSession = WebSocketHandler.getInstance().getUserList();
-//		List<WebSocketSession> web = WebSocketHandler.getInstance().getSessionList();
-//		
-//		if(logger.isDebugEnabled())
-//			logger.debug("로그인 요청!");
-//		
-//		//로그인 성공시 Seller 반환
-//		Seller s = sellerService.selectOneSeller(memberId);
-//		
-//		String loc = "/";
-//		String msg = "";
-//		String view = "common/msg";
-//		
-//		boolean loginFlag = true;
-//		
-//		if (s == null || s.getDelFlag().equals("Y")) {
-//			
-//			msg = "아이디가 존재하지 않습니다.";
-//			loc = "/";
-//			
-//		} else {//로그인 성공시 
-//			
-//			//  dto.setPassword(password);
-//			
-//			// if(dto.isUseCookie()) {
-//			
-//			//}
-//			
-//			Set<String> keyValue = memberSession.keySet();
-//			logger.debug("keyValue : "+keyValue);
-//			Iterator<String> iterator = keyValue.iterator();
-//			while(iterator.hasNext()) {
-//				String loginId = iterator.next();
-//				logger.debug("로그인 되어있는 아이디!"+ loginId);
-//				if(s.getSellerId().equals(loginId)) {
-//					msg = "이미 로그인한 아이디가 있습니다.";
-//					loc="/";
-//					loginFlag = false;
-//				}
-//				
-//			}
-////				WebSocketHandler.getInstance().setUserList(s.getSellerId(),webSession);
-//			// 비밀번호 비교
-//			if(loginFlag == true) {
-//				if (bcryptPasswordEncoder.matches(password, s.getPassword())) {
-//					// 비밀번호 일치했을시 세션 상태 유지
-//					mav.addObject("sellerLoggedIn", s);
-//					session.setAttribute("login",s.getSellerId());
-//					
-//					//사이드바
-//					List<StoreInfo> store = sellerService.myStore(memberId);
-//					
-//					session.setAttribute("storeSideBar", store);
-//					
-//					view = "redirect:/";
-//					
-//				} else {
-//					msg = "비밀번호를 잘못 입력하셨습니다.";
-//					loc = "/";
-//				}
-//			}
-//		}
-//		
-//		mav.addObject("loc", loc);
-//		mav.addObject("msg", msg);
-//		mav.setViewName(view);
-//		
-//		return mav;
-//		
-//	}
 	
 	@RequestMapping("/seller/sellerLogout.do")
 	public String logout(SessionStatus sessionStatus,@RequestParam String sellerId,HttpSession session,HttpServletRequest request, HttpServletResponse response)
