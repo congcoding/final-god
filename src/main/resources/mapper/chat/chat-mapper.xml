@@ -79,7 +79,8 @@
 	</select>
 	<select id="getAlertListToSeller" resultMap="getAlertToSeller">
 		select writer,rdate,title,storeno, 'review' as type from review where reviewref is null and storeno in (select storeno from storeinfo where sellerid = #{userId}) union all
-		select memberid,ordertime,phone,storeno ,'order' as type from orderinfo where storeno in (select storeno from storeinfo where sellerid = #{userId}) and cancelflag = 'N' and receiveflag = 'N' and deliveryflag = 'N' order by rdate desc
+		select O.memberid,O.ordertime,S.storename,O.storeno, 'order' as type from orderinfo O left join storeinfo S on O.storeno = S.storeno where O.storeno in (select storeno from storeinfo where sellerid = 'seller1') and cancelflag = 'N' and receiveflag = 'N' and deliveryflag = 'N'
+		order by rdate desc
 	</select>
 	<resultMap type="map" id="getAlertToAdmin"></resultMap>
 	<resultMap type="map" id="getAlertToSeller">
