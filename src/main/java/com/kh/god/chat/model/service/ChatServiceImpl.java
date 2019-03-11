@@ -44,9 +44,17 @@ public class ChatServiceImpl implements ChatService {
 		return chatDao.selectChattingLogs(map);
 	}
 	@Override
-	public int insertChatLog(Chat chat) {
-		logger.debug("DAO가기전 chat맵"+chat);
-		int result = chatDao.insertChatLog(chat);
+	public int insertChatLog(Chat chat,int currentFocusChatRoomNo) {
+		logger.debug("DAO가기전 chat맵"+chat+" : "+currentFocusChatRoomNo);
+		int result = 0;
+		logger.debug("삽입전 : chatgetNo : "+chat.getChatNo()+" : "+currentFocusChatRoomNo);
+		if(chat.getChatRoomNo() == currentFocusChatRoomNo) {
+			//방번호가 같으면 현재 받는 상대방이 보고있다는 뜻이므로 디비에는 readFlag를 'Y'로 넣기위한것.
+			result = chatDao.insertChatLogRead(chat);
+		}else {
+			result = chatDao.insertChatLogNotRead(chat);
+			
+		}
 //		List<Map<String,String>> chatLog = null;
 //		if(result > 0) {
 //			chat.put("sendId","<no>");
@@ -111,7 +119,40 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	@Override
-	public String notReadMessage(String memberId) {
-		return chatDao.notReadMessage(memberId);
+	public Map<String,Integer> notReadMessage(String sellerId) {
+		Map<String,Integer> notRead = null;
+		List<Integer> notReadCountList = new ArrayList<>();
+		if(sellerId.equals("admin")) {
+			notReadCountList = chatDao.notReadMessageToAdmin(sellerId);
+			if(notReadCountList.size() != 0) {
+				notRead = new HashMap<>();
+				notRead.put("report", notReadCountList.get(0));
+				notRead.put("pms", notReadCountList.get(1));
+				notRead.put("qna", notReadCountList.get(2));
+				notRead.put("message", notReadCountList.get(3));
+			}
+		}else {
+			notReadCountList = chatDao.notReadMessageToSeller(sellerId);
+			if(notReadCountList.size() != 0) {
+				notRead = new HashMap<>();
+				notRead.put("review", notReadCountList.get(0));
+				notRead.put("order", notReadCountList.get(1));
+				notRead.put("message", notReadCountList.get(2));
+			}
+		}
+		return notRead;
+	}
+	@Override
+	public List<Map<String, String>> getAlertList(String userId) {
+		List<Map<String,String>> alertList = null;
+		if("admin".equals(userId)) {
+			alertList = new ArrayList<>();
+			alertList = chatDao.getAlertListToAdmin();
+		}else {
+			alertList = new ArrayList<>();
+			alertList = chatDao.getAlertListToSeller(userId);
+		}
+		
+		return alertList;
 	}
 }

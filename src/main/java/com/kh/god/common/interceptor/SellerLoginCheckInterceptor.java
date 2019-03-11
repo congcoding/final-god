@@ -17,6 +17,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.util.WebUtils;
 
 import com.kh.god.common.websocket.WebSocketHandler;
+import com.kh.god.seller.controller.SellerController;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 
@@ -36,13 +37,13 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 	
 	@Inject
 	private SellerService sellerService;
-	private Map<String,WebSocketSession> memberSession;
+	//private Map<String,WebSocketSession> memberSession;
+	private Map<String,String> loginSession;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 //		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@333333333333333333kdfkldaklfdsdflj;al;fsdak333333");
-		
 		
 		// 로그인한 사람 값
 //		HttpSession sessions = request.getSession();		
@@ -58,29 +59,35 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 		if(obj == null) { //로그인된 세션이 없는경우 
 			//우리가 만들어 논 쿠키를 꺼내온다. 
 			Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-//			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
+			if(loginCookie != null) {
+				logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@akjdfjaodjfijaidf"+loginCookie.getValue());
+			}
 			if(loginCookie != null) { //쿠키가 존재하는 경우(이전에 로그인될때 생성된 쿠키가 존재한다는 것.)
-				memberSession = WebSocketHandler.getInstance().getUserList();
+				loginSession = SellerController.getInstance().getLoginSession();
 				//loginCookie의 값을 꺼내오고 -> 즉 , 저장해논 세션 ID를 꺼내오고
 				String sessionId = loginCookie.getValue();
 				 // 세션Id를 checkUserWithSessionKey에 전달해 이전에 로그인한적이 있는지 체크하는 메서드를 거쳐서
                 // 유효시간이 > now() 인 즉 아직 유효시간이 지나지 않으면서 해당 sessionId 정보를 가지고 있는 사용자 정보를 반환한다.
                 Seller userVO = sellerService.checkUserWithSessionKey(sessionId);
-//                logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@44444444444444444444444444"+userVO);
+               // logger.debug("null아님");
+             //  logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@44444444444444444444444444"+userVO);
                 if(userVO != null) { //그런 사용자가 있다면
                 	//로그인 되어있는 중복사용자 막기위함.
                 	String sellerId = userVO.getSellerId();
-                	Set<String> keyValue = memberSession.keySet();
+                	Set<String> keyValue = loginSession.keySet();
                 	logger.debug("keyValue : "+keyValue);
                 	Iterator<String> iterator = keyValue.iterator();
                 	while(iterator.hasNext()) {
                 		String loginId = iterator.next();
 //					logger.debug("로그인 되어있는 아이디!"+ loginId);
                 		if(sellerId.equals(loginId)) {
-                			response.sendRedirect("/god/seller/askDuplicationLogin.do");
+                			response.sendRedirect("/god/seller/askDuplicationLogin.do?sellerId="+userVO.getSellerId());
                 			return false;
                 		}
                 	}
+                	
+                	//웹소켓에서 쓰기위한것.
+                	session.setAttribute("loginId",userVO.getSellerId());
                 	//세션을 생성 시켜 준다. 
                 	session.setAttribute("login", userVO);
                 	session.setAttribute("sellerLoggedIn", userVO);
@@ -115,4 +122,3 @@ public class SellerLoginCheckInterceptor extends HandlerInterceptorAdapter {
 //       super.postHandle(request, response, handler, modelAndView);
 //   }
 }
-

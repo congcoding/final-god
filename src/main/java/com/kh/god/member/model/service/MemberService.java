@@ -6,6 +6,7 @@ import java.util.Map;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.member.model.vo.WebReview;
 import com.kh.god.seller.model.vo.OrderInfo;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -48,6 +49,8 @@ public interface MemberService {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	RAttachment selectOneRattachment(int reviewNo);
+	
 	Seller selectOneSeller(String id);
 
 	int updateFindPwd(Seller s);
@@ -57,6 +60,15 @@ public interface MemberService {
 	List<Map<String, String>> selectOrderMenuList(String orderNo);
 
 	int deleteMemberReview(String reviewNo);
+
+	List<StoreInfo> selectAllstoreInfo();
+
+	int insertWebReview(WebReview wr);
+
+	List<WebReview> selectListWebReiveiw(int cPage, int numPerPage);
+
+	int selectWebReiveiwTotalContents();
+
 
 
 }

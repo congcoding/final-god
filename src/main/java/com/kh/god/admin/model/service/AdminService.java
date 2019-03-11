@@ -111,9 +111,9 @@ public interface AdminService {
 
 	int countStorePMSList();
 
-	List<Map<String, String>> storeList(int cPage, int numPerPage);
+	List<Map<String, String>> storeList(int cPage, int numPerPage, Map<String, String> map);
 
-	int countStoreList();
+	int countStoreList(Map<String, String> map);
 	
 	List<OrderInfo> timeChart();
 	
@@ -171,5 +171,7 @@ public interface AdminService {
 	Seller storeReportSellerView(String sellerId);
 
 	int updateStoreReportFlagY(Map<String, String> map);
+
+	List<Integer> chartByFavoriteCetegory();
 
 }

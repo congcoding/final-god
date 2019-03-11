@@ -21,7 +21,7 @@
         <p> 다른 브라우져를 로그아웃 시키시겠습니까?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary"  onclick="location.href='${pageContext.request.contextPath}/seller/goMyStore.do?sellerId=">확인</button>
+        <button type="button" class="btn btn-primary"  id="logoutConfirm">확인</button>
         <button type="button" class="btn btn-secondary"  onclick="location.href='${pageContext.request.contextPath}/seller/goIndexPage.do'">취소</button>
       </div>
     </div>
@@ -32,6 +32,13 @@ $(document).ready(function(){
 	$('#loginDuplication').modal('show');
 
 });
-
+$("#logoutConfirm").click(function(){
+	//기존에 로그인 되어있던 브라우저를 로그아웃 시킴.
+	var msg = {};
+	msg.cmd = "forcedlogout";
+	msg.userId = "${seller.sellerId}";
+	socket.send(JSON.stringify(msg));
+	location.href='${pageContext.request.contextPath}/index.do';
+});
 </script>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>	

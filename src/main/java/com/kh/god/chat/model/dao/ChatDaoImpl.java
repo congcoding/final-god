@@ -61,8 +61,12 @@ public class ChatDaoImpl implements ChatDao {
 	 * 채팅을 보내면 DB에 저장될 메소드
 	 */
 	@Override
-	public int insertChatLog(Chat chat) {
-		return sqlSession.insert("chat.insertChatLog", chat);
+	public int insertChatLogNotRead(Chat chat) {
+		return sqlSession.insert("chat.insertChatLogNotRead", chat);
+	}
+	@Override
+	public int insertChatLogRead(Chat chat) {
+		return sqlSession.insert("chat.insertChatLogRead", chat);
 	}
 	@Override
 	public List<Seller> searchPerson(String searchId) {
@@ -79,12 +83,24 @@ public class ChatDaoImpl implements ChatDao {
 		return sqlSession.insert("chat.createChatRoom", roomId);
 	}
 	@Override
-	public String notReadMessage(String memberId) {
-		return sqlSession.selectOne("chat.notReadMessage", memberId);
+	public List<Integer> notReadMessageToAdmin(String memberId) {
+		return sqlSession.selectList("chat.notReadMessageToAdmin", memberId);
+	}
+	@Override
+	public List<Integer> notReadMessageToSeller(String memberId){
+		return sqlSession.selectList("chat.notReadMessageToSeller", memberId);
 	}
 	@Override
 	public Seller selectSeller(String addId) {
 		return sqlSession.selectOne("chat.selectSeller", addId);
+	}
+	@Override
+	public List<Map<String, String>> getAlertListToAdmin() {
+		return sqlSession.selectList("chat.getAlertListToAdmin");
+	}
+	@Override
+	public List<Map<String, String>> getAlertListToSeller(String userId) {
+		return sqlSession.selectList("chat.getAlertListToSeller",userId);
 	}
 	
 }

@@ -25,6 +25,9 @@ width: 543px;
     left: 85%;
     top: -38px;
 }
+.card{
+margin: 30px;
+}
 </style>
 <!-- Custom fonts for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
@@ -79,7 +82,10 @@ $(function(){
 		      <c:if test="${review1.commentLevel==1}">
 		        <li class="list-group-item list-group-item-light">${review1.content}</li>
 		      </c:if>
-		     	<li class="list-group-item list-group-item-primary reply">감사합니다! 다음에 또 주문해주세요:) !</li>    		     		
+		      
+		      <c:if test="${review1.commentLevel==2}">
+		        <li class="list-group-item list-group-item-primary reply">${review1.content}</li>
+		      </c:if>
 		      </div>
 		      <!-- 리뷰답댓 -->     
 		      <br>
@@ -100,9 +106,16 @@ $(function(){
       </div>
       <div class="modal-body">
         <form>
-          <div class="form-group">
-            <label for="recipient-name" class="form-control-label">쿠폰명</label>
-            <input type="text" class="form-control" id="recipient-name">
+          <div class="form-group">            
+            <span style="color: green;"> "[가게명] + 대상 + 할인금액" 으로 고객님께 지급됩니다.</span>  
+            <br> 
+             <br>          
+            <label for="recipient-name" class="form-control-label">대상</label> 
+            	<select class="form-control form-control-sm">
+				  <option>단골고객</option>
+				  <option>감사고객</option>
+				  <option>신규고객</option>
+				</select>
           </div>
           
          <div class="form-group">

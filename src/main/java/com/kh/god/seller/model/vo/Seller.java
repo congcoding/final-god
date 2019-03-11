@@ -23,6 +23,6 @@ public class Seller {
 	private String delFlag;
 	private String blackFlag;
 	private String password;
-	private String sessionkey;
-	private String sessionlimit;
+	private String sessionKey;
+	private String sessionLimit;
 }
