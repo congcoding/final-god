@@ -1065,7 +1065,7 @@ public class SellerController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/chart/totalSaleVolume.do")
+    @RequestMapping("/seller/totalSaleVolume.do")
     public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
     	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
     	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);

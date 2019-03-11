@@ -1293,7 +1293,8 @@ span.srchVal{
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
-
+	var orderCount =  0;
+	var reviewCount = 0;
 	//로딩 되면 판매자일때 안읽은 메세지 뜨게함.
 	$(function(){
 		if('${sellerLoggedIn}'){
@@ -1302,11 +1303,13 @@ span.srchVal{
 				type : 'post',
 				success : function(data){
 						var messageCount = parseInt(data.message);
-						var reviewCount = parseInt(data.review);
-						var orderCount = parseInt(data.order);
-						console.log(orderCount+" : 리뷰 : "+reviewCount);
+						reviewCount = parseInt(data.review);
+						orderCount = parseInt(data.order);
+						//console.log(orderCount+" : 리뷰 : "+reviewCount);
 						$("#sellerAlertCount").html(orderCount+reviewCount);
 						$("#messageCount").html(messageCount);
+						$("#currentOrder").html(orderCount+"건");
+						$("#currentReview").html(reviewCount+"건");
 				}
 			});		
 		}else{
