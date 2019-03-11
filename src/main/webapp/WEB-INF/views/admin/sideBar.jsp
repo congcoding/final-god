@@ -7,6 +7,26 @@
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 <link href="${pageContext.request.contextPath }/resources/css/sb-admin-2.css" rel="stylesheet">
+<script>
+$(function(){
+
+	$.ajax({
+		url : "${pageContext.request.contextPath}/admin/adminCheck.do",
+		success : function(data){
+			for(var i=0; i<6; i++){
+				$("#adminCheck"+i).text(data.adminCheckList[i]);
+			}
+		}
+	});		
+	
+});
+
+
+//location.href = "${pageContext.request.contextPath}/admin/adminCheck.do";
+//console.log(adminCheckList);
+
+</script>
+
 <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-god sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -30,16 +50,16 @@
       <li class="nav-item" id="toDoList">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-folder"></i>
-          <span>할 일</span>
+          <span>할 일 <span id="adminCheck0" class="badge badge-primary badge-pill"></span></span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" id="storeControl" href="${pageContext.request.contextPath}/admin/storePMSList.do">가게 신청 관리</a>
-            <a class="collapse-item" id="adControl" href="${pageContext.request.contextPath }/admin/adControl.do">광고 관리</a>
+            <a class="collapse-item" id="storeControl" href="${pageContext.request.contextPath}/admin/storePMSList.do">가게 신청 관리 <span id="adminCheck1" class="badge badge-primary badge-pill"></span></a> 
+            <a class="collapse-item" id="adControl" href="${pageContext.request.contextPath }/admin/adControl.do">광고 관리</a> 
             <a class="collapse-item" id="eventControl" href="${pageContext.request.contextPath }/admin/eventList.do">이벤트 관리</a>
-            <a class="collapse-item" id="qnaControl" href="${pageContext.request.contextPath }/admin/qnaControl.do">문의글 관리</a>
-            <a class="collapse-item" id="stompControl" href="${pageContext.request.contextPath }/ws/admin.do">채팅 문의 관리</a>
-            <a class="collapse-item" id="reportControl" href="${pageContext.request.contextPath }/admin/reportList.do">신고 관리</a>
+            <a class="collapse-item" id="qnaControl" href="${pageContext.request.contextPath }/admin/qnaControl.do">문의글 관리 <span id="adminCheck2" class="badge badge-primary badge-pill"></span></a>
+            <a class="collapse-item" id="stompControl" href="${pageContext.request.contextPath }/ws/admin.do">채팅 문의 관리 <span id="adminCheck3" class="badge badge-primary badge-pill"></span> <span id="adminCheck4" class="badge badge-primary badge-pill"></span> </a>
+            <a class="collapse-item" id="reportControl" href="${pageContext.request.contextPath }/admin/reportList.do">신고 관리 <span id="adminCheck5" class="badge badge-primary badge-pill"></span> </a>
           </div>
         </div>
       </li>

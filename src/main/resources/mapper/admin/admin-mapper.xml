@@ -209,12 +209,36 @@
 		<if test="searchType != '' and searchKeyword != ''">
 			and ${searchType} like '%${searchKeyword}%'
 		</if>
+		<if test="selectedStoreGrade != ''">
+			and storeGrade = #{selectedStoreGrade}
+		</if>
+		<if test="selectedCategory != ''">
+			and categoryno = #{selectedCategory}
+		</if>
+		<if test="selectedPMSFlag != ''">
+			and pmsFlag = #{selectedPMSFlag}
+		</if>
+		<if test="orderOption != ''">
+			order by ${orderOption}
+		</if>
 	</select>
 	
 	<select id="countStoreList" resultType="_int">
 		select count(*) from storeInfo where (pmsflag='Y' or pmsflag='C')
 		<if test="searchType != '' and searchKeyword != ''">
 			and ${searchType} like '%${searchKeyword}%'
+		</if>
+		<if test="selectedStoreGrade != ''">
+			and storeGrade = #{selectedStoreGrade}
+		</if>
+		<if test="selectedCategory != ''">
+			and categoryno = #{selectedCategory}
+		</if>
+		<if test="selectedPMSFlag != ''">
+			and pmsFlag = #{selectedPMSFlag}
+		</if>
+		<if test="orderOption != ''">
+			order by ${orderOption}
 		</if>
 	</select>
 
@@ -307,7 +331,7 @@
 	</select>
 	
 	<select id="selectReportList" resultType="report">
-		select * from report order by reportFlag
+		select * from report order by reportFlag, reportNo
 	</select>
 	
 	<select id="countReportList" resultType="_int">

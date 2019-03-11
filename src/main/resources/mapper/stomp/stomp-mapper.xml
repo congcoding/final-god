@@ -18,6 +18,11 @@
 		INSERT INTO STOMPCHATLOG (CHATNO, CHATID, MEMBERID, MSG, TIME)
 		VALUES(SEQ_STOMPCHATLOG.NEXTVAL, #{chatId}, #{memberId}, #{msg}, #{time})
 	</insert>
+	<insert id="insertChatLogHello">
+		INSERT INTO STOMPCHATLOG (CHATNO, CHATID, MEMBERID, MSG, TIME)
+		VALUES(SEQ_STOMPCHATLOG.NEXTVAL, #{chatId}, #{memberId}, #{msg},
+		(select trunc(extract(day from intvl) * 24 * 60 * 60 + extract(hour from intvl) * 60 * 60 + extract(minute from intvl) * 60 + extract(second from intvl))*1000 from (select SYS_EXTRACT_UTC(CURRENT_TIMESTAMP) - to_timestamp('19700101', 'YYYYMMDDHHMISS') intvl from dual)))
+	</insert>
 	<update id="deleteChatRoom">
 		UPDATE STOMPCHATROOM SET STATUS = 'N', ENDDATE=SYSDATE
 		WHERE CHATID = #{chatId}
@@ -57,5 +62,79 @@
 		from stompchatlog
 		where chatid = #{chatId}
 		order by chatno
+	</select>
+	<select id="adminCheck" resultType="_int">
+		select sum(cnt) from
+		(select count(*) cnt from storeInfo where pmsflag='N' or pmsflag='R'
+		union all
+		select count(*) from qnaboard where boardno not in (select boardref from qnaboard where boardlevel=2) and category='qna'
+		union all
+		select count(*)
+				from (
+				    select chatno,
+				           A.chatid, 
+				           (select memberid from stompchatroom where A.chatid = chatid and memberid != 'admin') memberid, 
+				           msg, 
+				           time,
+				           count(*) over(partition by A.chatid,A.memberid) cnt,
+				           rank() over(partition by A.chatid order by time desc) rank 
+				    from stompchatlog A left join stompchatroom B
+				        on A.chatid = B.chatid and A.memberid = B.memberid
+				    where time > (select lastcheck from stompchatroom C where C.chatid = A.chatid and memberid = 'admin')
+				    order by time desc)A
+		        where rank = 1
+		union all 
+		select sum(cnt)
+				from (
+				    select chatno,
+				           A.chatid, 
+				           (select memberid from stompchatroom where A.chatid = chatid and memberid != 'admin') memberid, 
+				           msg, 
+				           time,
+				           count(*) over(partition by A.chatid,A.memberid) cnt,
+				           rank() over(partition by A.chatid order by time desc) rank 
+				    from stompchatlog A left join stompchatroom B
+				        on A.chatid = B.chatid and A.memberid = B.memberid
+				    where time > (select lastcheck from stompchatroom C where C.chatid = A.chatid and memberid = 'admin')
+				    order by time desc)A
+		        where rank = 1
+		union all
+		select count(*) from report where reportflag='N')
+		union all
+		select count(*) from storeInfo where pmsflag='N' or pmsflag='R'
+		union all
+		select count(*) from qnaboard where boardno not in (select boardref from qnaboard where boardlevel=2) and category='qna'
+		union all
+		select count(*)
+				from (
+				    select chatno,
+				           A.chatid, 
+				           (select memberid from stompchatroom where A.chatid = chatid and memberid != 'admin') memberid, 
+				           msg, 
+				           time,
+				           count(*) over(partition by A.chatid,A.memberid) cnt,
+				           rank() over(partition by A.chatid order by time desc) rank 
+				    from stompchatlog A left join stompchatroom B
+				        on A.chatid = B.chatid and A.memberid = B.memberid
+				    where time > (select lastcheck from stompchatroom C where C.chatid = A.chatid and memberid = 'admin')
+				    order by time desc)A
+		        where rank = 1
+		union all 
+		select sum(cnt)
+				from (
+				    select chatno,
+				           A.chatid, 
+				           (select memberid from stompchatroom where A.chatid = chatid and memberid != 'admin') memberid, 
+				           msg, 
+				           time,
+				           count(*) over(partition by A.chatid,A.memberid) cnt,
+				           rank() over(partition by A.chatid order by time desc) rank 
+				    from stompchatlog A left join stompchatroom B
+				        on A.chatid = B.chatid and A.memberid = B.memberid
+				    where time > (select lastcheck from stompchatroom C where C.chatid = A.chatid and memberid = 'admin')
+				    order by time desc)A
+		        where rank = 1
+		union all
+		select count(*) from report where reportflag='N'
 	</select>
 </mapper>

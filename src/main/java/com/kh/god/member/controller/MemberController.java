@@ -116,7 +116,7 @@ public class MemberController {
 	        
 			if(result>0) {
 				msg = "회원가입성공"; 
-				loc = "/member/memberView.do?memberId="+m.getMemberId(); 				
+				loc = "/"; 				
 			}else {
 				msg="회원가입실패!";
 			}
@@ -182,7 +182,7 @@ public class MemberController {
 	     
 	     if(result>0) {
 	    	 msg = "회원정보 수정완료";
-	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();	    	 
+	    	 loc = "/member/memberView.do?memberId="+m.getMemberId();	 
 	     }
 	     else {
 	    	 msg = "회원정보 수정실패";
