@@ -214,10 +214,10 @@ public class SellerServiceImpl implements SellerService {
 
 		return result;
 	}
-
+	
 	@Override
-	public int deleteMenu(String menuCode) {
-		return sellerDao.deleteMenu(menuCode);
+	public int deleteMenu(Map<String, Object> map) {
+		return sellerDao.deleteMenu(map);
 	}
 
 	@Override
@@ -341,6 +341,8 @@ public class SellerServiceImpl implements SellerService {
 		return sellerDao.selectSellerBySellerId(sellerId);
 	
 	}
+
+
 
 
 

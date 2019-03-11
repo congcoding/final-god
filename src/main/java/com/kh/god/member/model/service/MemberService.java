@@ -49,6 +49,8 @@ public interface MemberService {
 
 	List<RAttachment> selectRAttachmentList(int reviewNo);
 
+	RAttachment selectOneRattachment(int reviewNo);
+	
 	Seller selectOneSeller(String id);
 
 	int updateFindPwd(Seller s);
@@ -66,6 +68,7 @@ public interface MemberService {
 	List<WebReview> selectListWebReiveiw(int cPage, int numPerPage);
 
 	int selectWebReiveiwTotalContents();
+
 
 
 }

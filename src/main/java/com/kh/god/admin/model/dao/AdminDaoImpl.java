@@ -270,14 +270,14 @@ public class AdminDaoImpl implements AdminDao {
 	}
 
 	@Override
-	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
+	public List<Map<String, String>> storeList(int cPage, int numPerPage, Map<String, String> map) {
 		RowBounds rowBounds = new RowBounds((cPage-1)*numPerPage,numPerPage);
-		return sqlSession.selectList("admin.selectStoreList", null, rowBounds);
+		return sqlSession.selectList("admin.selectStoreList", map, rowBounds);
 	}
 
 	@Override
-	public int countStoreList() {
-		return sqlSession.selectOne("admin.countStoreList");
+	public int countStoreList(Map<String, String> map) {
+		return sqlSession.selectOne("admin.countStoreList", map);
 
 	}
 	

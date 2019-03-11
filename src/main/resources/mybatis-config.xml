@@ -63,6 +63,8 @@
 		<typeAlias type="com.kh.god.member.model.vo.WebReview"
 				   alias="webReview" />
 
+		<typeAlias type="com.kh.god.stomp.model.vo.Msg"
+				   alias="msg" />
 	</typeAliases>
 	
 	

@@ -64,7 +64,7 @@
 	<select id="orderList" resultType="map">
 		select o.*, r.reviewNo
 		from orderInfo o left join review r on o.orderNo = r.orderNo
-		where memberid = #{memberId} and DELIVERYFLAG = 'Y'
+		where memberid = #{memberId} and RECEIVEFLAG = 'Y'
 	</select>
 		
 	<resultMap type="orderInfo" id="orderInfoMap"></resultMap>
@@ -86,6 +86,10 @@
 		WHERE REVIEWNO = #{reviewNo}
 	</select>
 	
+	<select id="selectOneRattachment" resultType="RAttachment">
+		SELECT * FROM RATTACHMENT WHERE REVIEWNO = #{reviewNo}
+	</select>
+	
 	<insert id="insertMemberReview">
 		INSERT INTO review (REVIEWNO, STORENO, ORDERNO, TITLE, WRITER, CONTENT, RATE, GOOD, HATE, RDATE, DELFLAG, COMMENTLEVEL)     
 		VALUES (SEQ_REVIEWNO.nextval, #{storeNo}, #{orderNo}, #{title}, #{writer}, #{content}, #{rate}, default, default, sysdate, default, 1)
@@ -97,8 +101,8 @@
 	</select>
 		
 	<insert id="insertRAttachment">
-		INSERT INTO RAttachment (ATTACHMENTNO, REVIEWNO, ORIGINALFILENAME, RENAMEDFILENAME, UPLOADDATE, DOWNLOADCOUNT, STATUS)
-		VALUES(seq_rattachmentno.nextval, #{reviewNo}, #{originalFileName}, #{renamedFileName}, sysdate, default, default)
+		INSERT INTO RAttachment (ATTACHMENTNO, REVIEWNO, ORIGINALFILENAME, RENAMEDFILENAME, UPLOADDATE, STATUS)
+		VALUES(seq_rattachmentno.nextval, #{reviewNo}, #{originalFileName}, #{renamedFileName}, sysdate, default)
 	</insert>
 			
 	<update id="deleteMemberReview">

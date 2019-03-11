@@ -306,6 +306,13 @@
 			<version>1.4.7</version>
 		</dependency>
 		
+		<!-- Stomp 관련 의존 -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-messaging</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
+		
    </dependencies>
    
     <build>

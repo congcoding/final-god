@@ -35,7 +35,7 @@ div.card{
     cursor : pointer;
 }
 .carousel-indicators{
-	bottom:15px;
+	bottom:-8px;
 }
 </style>
 <script>

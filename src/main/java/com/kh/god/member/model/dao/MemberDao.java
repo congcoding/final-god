@@ -61,6 +61,8 @@ public interface MemberDao {
 
 	List<StoreInfo> selectAllstoreInfo();
 
+	RAttachment selectOneRattachment(int reviewNo);
+
 	int insertWebReview(WebReview wr);
 
 	List<WebReview> selectListWebReiveiw(int cPage, int numPerPage);

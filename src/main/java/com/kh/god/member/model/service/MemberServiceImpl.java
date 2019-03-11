@@ -111,8 +111,14 @@ public class MemberServiceImpl implements MemberService {
 		return memberDao.sellerfindId(email);	
 	}
 
+	@Override
 	public List<RAttachment> selectRAttachmentList(int reviewNo) {
 		return memberDao.selectRAttachmentList(reviewNo);
+	}
+
+	@Override
+	public RAttachment selectOneRattachment(int reviewNo) {
+		return memberDao.selectOneRattachment(reviewNo);
 	}
 
 
@@ -172,6 +178,8 @@ public class MemberServiceImpl implements MemberService {
 	public int selectWebReiveiwTotalContents() {
 		return memberDao.selectWebReiveiwTotalContents();
 	}
+
+
 
 
 

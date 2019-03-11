@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/websocket
-		http://www.springframework.org/schema/websocket/spring-websocket.xsd">
+		http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd">
 
 	<!-- #5. appServlet관련 설정 -->
 	
@@ -83,8 +83,8 @@
 		<interceptor>			
 			<mapping path="/member/memberView.do" />
 			<mapping path="/member/memberUpdate.do" />
-			<mapping path="/member/memberReviewEnrollEnd.do" />
-			<mapping path="/member/memberReviewEnroll.do" />
+			<!-- <mapping path="/member/memberReviewEnrollEnd.do" /> -->
+			<!-- <mapping path="/member/memberReviewEnroll.do" /> -->
 			<mapping path="/member/bookMarkList.do" />
 			
 			<mapping path="/storeInfo/storeInfoView.do/**"/>
@@ -107,7 +107,7 @@
 		<interceptor>
 			<mapping path="/seller/sellerView.do"/>
 			<mapping path="/seller/sellerUpdate.do"/>
-			<mapping path="/index.do"/>			
+			<mapping path="/index.do"/>		
 			<beans:bean id="sellerloginCheckInterceptor" class="com.kh.god.common.interceptor.SellerLoginCheckInterceptor" />
 		</interceptor>	
 		

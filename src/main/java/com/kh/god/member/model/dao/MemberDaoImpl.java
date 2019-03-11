@@ -128,6 +128,11 @@ public class MemberDaoImpl implements MemberDao {
 		List<RAttachment> attachmentList = sqlSession.selectList("member.selectRAttachmentList", reviewNo);
 		return attachmentList;
 	}
+	
+	@Override
+	public RAttachment selectOneRattachment(int reviewNo) {
+		return sqlSession.selectOne("member.selectOneRattachment", reviewNo);
+	}
 
 	@Override
 	public double getDiscount(String eventNo) {
@@ -183,6 +188,8 @@ public class MemberDaoImpl implements MemberDao {
 	public int selectWebReiveiwTotalContents() {
 		return sqlSession.selectOne("member.selectWebReiveiwTotalContents" );
 	}
+
+	
 
 	
 }

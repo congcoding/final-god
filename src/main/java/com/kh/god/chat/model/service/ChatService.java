@@ -12,10 +12,12 @@ public interface ChatService {
 
 	List<Map<String,String>> selectChattingLogs(Map<String, String> map);
 
-	int insertChatLog(Chat chat);
+	int insertChatLog(Chat chat, int currentFocusChatRoomNo);
 
 	List<Seller> searchPerson(String searchId);
 
 	List<Map<String,String>> addPerson(ChatRoom roomId) ;
-	String notReadMessage(String memberId);
+	Map<String,Integer> notReadMessage(String sellerId);
+
+	List<Map<String, String>> getAlertList(String userId);
 }

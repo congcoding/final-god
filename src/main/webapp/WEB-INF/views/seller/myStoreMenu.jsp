@@ -3,6 +3,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="com.kh.god.seller.model.vo.*" %>
+<%
+	Seller sellerLoggedIn = (Seller) session.getAttribute("sellerLoggedIn");
+	if (sellerLoggedIn != null) {
+		System.out.println("myStoreMenu.jsp sellerId 있니..?" + sellerLoggedIn.getSellerId());
+	}
+%>
 <fmt:requestEncoding value="UTF-8" />
 <jsp:include page="/WEB-INF/views/common/header.jsp">
 	<jsp:param value="배달의 신" name="pageTitle" />
@@ -95,7 +102,7 @@ $(function(){
 		}
 		
 		
-		if(!$("#updateMenuName").val().length == 0 &&
+		if(!$("#MenuName").val().length == 0 &&
 			$(".menuNameCheck").val() != $("#updateMenuName").val()){
 			$(".okay").css("display", "inline");
 			$(".warning").css("display", "none");
@@ -246,15 +253,16 @@ $(document).ready(function(){
 			</td>
 			<td><c:out value="${menu.menuName}" /></td>
 			<input type="hidden" class="menuNameCheck" value="${menu.menuName}" />
+			<input type="hidden" value="${sellerLoggedIn.sellerId}" />
 			<td><fmt:formatNumber value="${menu.menuPrice }"/>원</td>
 			<td>
-				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#updateMenuModal" id="menuUpdate-btn" onclick="updateMenu('${menu.menuName}', ${menu.menuPrice }, '${menu.menuCode }', '${menu.storeNo}');">수정</button>
+				<button type="button" class="btn btn-outline-info"  data-toggle="modal" data-target="#updateMenuModal" id="menuUpdate-btn" onclick="updateMenu('${menu.menuName}', ${menu.menuPrice }, '${menu.menuCode }', '${menu.storeNo}', '${sellerLoggedIn.sellerId}');">수정</button>
 				<button type="button" class="btn btn-outline-info"  id="delete-btn" onclick="deleteMenu('${menu.menuCode}', '${menu.storeNo }');">삭제</button>
 				<c:if test="${menu.soldoutFlag eq 'N'}">
-					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagY('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}');">품절</button>
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagY('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}', '${sellerLoggedIn.sellerId}');">품절</button>
 				</c:if>
 				<c:if test="${menu.soldoutFlag eq 'Y'}">
-					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagN('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}');">품절취소</button>
+					<button type="button" class="btn btn-outline-info" id="soldout-btn" onclick="soldoutFlagN('${menu.menuCode}', '${menu.storeNo}', '${menu.soldoutFlag}', '${sellerLoggedIn.sellerId}');">품절취소</button>
 				</c:if>
 			</td>
 		</tr>
@@ -277,6 +285,7 @@ $(document).ready(function(){
 	          <div class="form-group">
 	          	<input type="hidden" class="form-control" id="updateMenuCode" name="menuCode"/>
 	          	<input type="hidden" class="form-control" id="updateStoreNo" name="storeNo"/>
+	          	<input type="hidden" class="form-control" value="${sellerLoggedIn.sellerId}"/>
 	            <label for="menuName" class="col-form-label">메뉴명</label>
 	            <input type="text" class="form-control" id="updateMenuName" name="menuName"/>
 	            <label for="menuPrice" class="col-form-label">메뉴가격</label>
@@ -318,6 +327,7 @@ $(document).ready(function(){
 	          <div class="form-group">
 	          	<input type="hidden" class="form-control" id="insertCategoryNo" name="categoryNo" value="${categoryNo}"/>
 	          	<input type="hidden" class="form-control" id="insertStoreNo" name="storeNo" value="${storeNo}"/>
+	          	<input type="hidden" class="form-control" value="${sellerLoggedIn.sellerId}"/>
 	            <label for="menuName" class="col-form-label">메뉴명</label>
 	            <span class="warning">사용 할 수 없는 메뉴명입니다.</span>
 	            <span class="okay">사용 가능한 메뉴명입니다.</span>

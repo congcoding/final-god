@@ -187,20 +187,22 @@
 				      					</c:forEach>									
 									</td>
 								</tr>
+								
 								<!-- 리뷰 첨부파일 꺼내기 -->
 								<c:if test="${not empty attachList}">	
-									<tr style="border-bottom : 1px solid #dddfeb;">
-										<th>후기사진</th>
-										<td class="attachList-td">
-											<c:forEach var="a" items="${attachList }">																									
-												<c:if test="${review.reviewNo == a.reviewNo }">										
-													<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
-														 style="max-width : 100px; margin:0 10px;" >
-												</c:if>									
-											</c:forEach>
-										</td>
+									<tr>
+									<td class="attachList-td">
+										<c:forEach var="a" items="${attachList }">
+											<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->															
+											<c:if test="${review.reviewNo == a.reviewNo }">										
+												<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
+													 style="max-width : 100px; margin:0 10px;" >
+											</c:if>									
+										</c:forEach>
+									</td>
 									</tr>					
 								</c:if>
+						
 								<tr class = "reviewNo${review.reviewNo }">
 									<td>${review.content }</td>
 								</tr>
@@ -735,6 +737,9 @@ function checkSelect(){
 		if($("#reportReason").val() != ""){
 			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
 		}
+		reportType = "storeReport";
+		//웹소켓으로 신고 접수를 관리자에게 알리기위한 메소드.
+		sendReportAlert();
 		$("#report-frm").submit();
 	}
 };

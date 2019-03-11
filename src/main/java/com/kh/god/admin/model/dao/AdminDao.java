@@ -109,9 +109,9 @@ public interface AdminDao {
 
 	int countStorePMSList();
 
-	List<Map<String, String>> storeList(int cPage, int numPerPage);
+	List<Map<String, String>> storeList(int cPage, int numPerPage, Map<String, String> map);
 
-	int countStoreList();
+	int countStoreList(Map<String, String> map);
 	
 	List<OrderInfo> timeChart();
 	
