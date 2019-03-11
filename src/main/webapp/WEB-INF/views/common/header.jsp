@@ -594,15 +594,15 @@ span.srchVal{
 							var date = (alert.RDATE).substring(0,16);
 							var alertBody = $("<div class='dropdown-item d-flex align-items-center' value="+alert.STORENO+"  id='alertView'"+i+" style='cursor : pointer;'></div>")
 							if(alert.TYPE === 'review'){
-								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative; left : 0.6em; top : 0.2em;'></i></div></div>");
+								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative;'></i></div></div>");
 								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
 								var alertData = "<div class='small text-gray-500' >"+date+"  </div><span class='font-weight-bold'>"+alert.WRITER+"님 께서 "+alert.TITLE+"라는 제목의 리뷰를 남기셨습니다.</span>";
 								content.append(alertData);
 								type.append(content);
 							}else if(alert.TYPE === 'order'){
-								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; left : 0.5em; top : 0.2em;'></i></div></div>");
+								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; '></i></div></div>");
 								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
-								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'>"+alert.STORENO+"에 주문이 들어왔습니다. </span>";
+								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'>"+alert.TITLE+"("+alert.STORENO+")에 주문이 들어왔습니다. </span>";
 								content.append(alertData);
 								type.append(content);
 							}
