@@ -195,7 +195,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
-		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='N' and deliveryFlag='N' order by I.orderno desc
+		where I.orderno=Z.orderno and storeno=#{storeNo} and receiveFlag='Y' and deliveryFlag='N' order by I.orderno desc
 	</select>
 
 	<select id="orderList3" resultType="map">
