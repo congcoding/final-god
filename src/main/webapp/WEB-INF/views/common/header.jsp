@@ -132,6 +132,11 @@ div.dropdown-body{
 	overflow-y : auto;
 	max-height : 10rem;
 }
+#alertsDropdownBox{
+	overflow-y : auto;
+	max-height : 15rem;
+}
+
 div#socketAlert{
 	display : none;
 	z-index : 10;
@@ -303,50 +308,11 @@ span.srchVal{
               		<a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                <span class="badge badge-danger badge-counter" id="adminAlertCount"></span>
               </a>
               <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  Alerts Center
-                </h6>
-                
-                <div class="dropdown-item d-flex align-items-center">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 12, 2019</div>
-                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                  </div>
-                </div>
-  
-                <div class="dropdown-item d-flex align-items-center" >
-                  <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-donate text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500"></div>
-                  </div>
-                </div>
-              
-                <div class="dropdown-item d-flex align-items-center" >
-                  <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 2, 2019</div>
-                    Spending Alert: We've noticed unusually high spending for your account.
-                  </div>
-                </div>
-                
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" id="alertsDropdownBox" aria-labelledby="alertsDropdown">
+               
               </div>
             </li>
 
@@ -386,50 +352,11 @@ span.srchVal{
               <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<i class="fas fa-bell fa-fw"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter">3+</span>
+                <span class="badge badge-danger badge-counter" id="sellerAlertCount"></span>
               </a>
               <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  Alerts Center
-                </h6>
-                
-                <div class="dropdown-item d-flex align-items-center">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 12, 2019</div>
-                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                  </div>
-                </div>
-  
-                <div class="dropdown-item d-flex align-items-center" >
-                  <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-donate text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500"></div>
-                  </div>
-                </div>
-              
-                <div class="dropdown-item d-flex align-items-center" >
-                  <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 2, 2019</div>
-                    Spending Alert: We've noticed unusually high spending for your account.
-                  </div>
-                </div>
-                
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
+              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" id="alertsDropdownBox" aria-labelledby="alertsDropdown" style="width : 30rem;">
+               
               </div>
             </li>
 
@@ -486,12 +413,15 @@ span.srchVal{
 	      <!-- 3 -->
 	      
 	      <div class="modal-footer">
-	      	<div id="modal-checkbox" style="padding-right :80px;     width: 602px;">
+	      	<div id="modal-checkbox" style="padding: 0;width: 602px;">
+	      		
 	      		<input type="checkbox" name="login" value="mem" onclick="NoMultiChk(this);"/> &nbsp;회원
 	      		<input type="checkbox" name="login" value="sell" onclick="NoMultiChk(this);"/> &nbsp;사장님
 	      		<br />
+	  
 	      		<input type="checkbox" id="autologin" value="no" /> &nbsp;로그인 상태 유지
 	      		 	<input type="hidden" id="autologin1" name="autologin" value="no"/>
+	      		 	<br />
 	      		<span style="color:red;margin: -13px;">&nbsp;회원유형을 체크하세요</span>
 		      	<br />
 	      	</div>
@@ -536,7 +466,7 @@ span.srchVal{
 	      <div class="modal-header">
 	        <h5 class="modal-title" id="exampleModalLabel">아이디/비밀번호 찾기</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
+	          <span aria-hidden="true" id="close-btn">&times;</span>
 	        </button>
 	      </div>
 	      <div class="modal-body">
@@ -544,19 +474,25 @@ span.srchVal{
 	          <div class="form-group">
 	            <label for="email" class="col-form-label">아이디 찾기</label>
 	            <input type="text" class="form-control" id="find-id" name="email" placeholder="등록했던 이메일을 입력해 주세요."/>
-	            <button class="btn btn-outline-success" onclick="findId();" style="margin-top: -7px;"> 찾기</button>
+	            <button class="btn btn-outline-success" onclick="findId();" style="margin-top: 19px;"> 찾기</button>
 	          
 	          </div>
 	          <div class="form-group">
 	              <label for="password" class="col-form-label">비밀번호찾기</label>
 	            <input type="text" class="form-control" id="find-pwd" placeholder="아이디를 입력해주세요." name="id"/>
-	            <input type="text" class="form-control" id="find-pwd1" placeholder="핸드폰번호를 입력해주세요." name="phone" />
-	            <button class="btn btn-outline-success" style="margin-top: -7px;" onclick="findPwd();"> 찾기</button>
+	            <input type="text" class="form-control" id="find-pwd1" style="margin-top:10px;"placeholder="핸드폰번호를 입력해주세요." name="phone" />
+	            <button class="btn btn-outline-success" style="margin-top: 19px;" onclick="findPwd();"> 찾기</button>
+	          </div>
+	          <div class="form-group" id="number-div" style="display:none;">
+	              <label for="password" class="col-form-label">인증번호입력</label>
+	              <span id="time-min"></span> : <span id="time-sec"></span>
+	            <input type="text" class="form-control" id="number" placeholder="인증번호를 입력해주세요." id="number"/>
+	            <input type="hidden" name="rndNum" id="rndNum" />
+	            <button class="btn btn-outline-success" style="margin-top: 19px;" onclick="sendPwd();">확인</button>
 	          </div>
 	      </div>
 	      <div class="modal-footer">
-	        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-	        <button type="submit" class="btn btn-primary">수정</button> -->
+	       
 	      </div>
 	    </div>
 	  </div>
@@ -606,11 +542,105 @@ span.srchVal{
 		
 		
 	}
+	//알람 목록 가져오기
+	$("#alertsDropdown").on("click",function(){
+		if($("#alertsDropdown").attr('aria-expanded') === 'false'){
+			$.ajax({
+				url : "${pageContext.request.contextPath}/chat/getAlertList.do",
+				data : {"userId" : chattingId},
+				success : function(data){
+					if(chattingId == "admin"){
+						console.log("관리자!");
+						var alertHeader = $("<div><h6 class='dropdown-header'>Alerts Center</h6></div>");
+						for(var i in data){
+							var alert = data[i];
+							var alertBody = $("<div class='dropdown-item d-flex align-items-center' id='alertView'"+i+" style='cursor : pointer;'></div>")
+							if(alert.TYPE === 'report'){
+								var type = $("<div class='mr-3'><div class='icon-circle bg-warning' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-exclamation-triangle text-white' style='position : relative; left : 0.5em; top : 0.2em;'></i></div></div>");
+								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
+								var alertData = "<div class='small text-gray-500' >("+alert.STORENO+")"+alert.STORENAME+"</div><span class='font-weight-bold'>신고가 접수 되었습니다!</span>";
+								content.append(alertData);
+								type.append(content);
+							}else if(alert.TYPE === 'qna'){
+								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative; left : 0.6em; top : 0.2em;'></i></div></div>");
+								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
+								var alertData = "<div class='small text-gray-500' >("+alert.STORENO+") 님께서 </div><span class='font-weight-bold'>"+alert.STORENAME+" 라는 제목의 문의를 주셨습니다.</span>";
+								content.append(alertData);
+								type.append(content);
+							}else if(alert.TYPE === 'pms'){
+								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; left : 0.5em; top : 0.2em;'></i></div></div>");
+								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
+								var alertData = "<div class='small text-gray-500' >("+alert.STORENO+")"+alert.STORENAME+"</div><span class='font-weight-bold'> 가게 신청이 들어왔습니다.</span>";
+								content.append(alertData);
+								type.append(content);
+							}
+							alertBody.append(type);
+							alertHeader.append(alertBody);
+						}
+						$("#alertsDropdownBox").html(alertHeader);
+					}else{
+						console.log("판매자!");
+						var alertHeader = $("<div><h6 class='dropdown-header'>Alerts Center</h6></div>");
+						for(var i in data){
+							var alert = data[i];
+							var date = (alert.RDATE).substring(0,16);
+							var alertBody = $("<div class='dropdown-item d-flex align-items-center' value="+alert.STORENO+"  id='alertView'"+i+" style='cursor : pointer;'></div>")
+							if(alert.TYPE === 'review'){
+								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative; left : 0.6em; top : 0.2em;'></i></div></div>");
+								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
+								var alertData = "<div class='small text-gray-500' >"+date+"  </div><span class='font-weight-bold'>"+alert.WRITER+"님 께서 "+alert.TITLE+"라는 제목의 리뷰를 남기셨습니다.</span>";
+								content.append(alertData);
+								type.append(content);
+							}else if(alert.TYPE === 'order'){
+								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; left : 0.5em; top : 0.2em;'></i></div></div>");
+								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
+								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'> 주문이 들어왔습니다. </span>";
+								content.append(alertData);
+								type.append(content);
+							}
+							alertBody.append(type);
+							alertHeader.append(alertBody);
+						}
+						$("#alertsDropdownBox").html(alertHeader);
+					}
+				},
+				error : function(jqxhr,textStatus,errorTrown){
+					console.log("알람 목록 가져오는중 에러 남!");
+					console.log(jqxhr);
+					console.log(textStatus);
+					console.log(errorTrown);
+				}
+			});//end of ajax
+		}//end of if alertsDropdown aria-expanded
+	}); // end of alertsDropdown click event
+	
+	
+	//알람 div를 눌렀을 때 각각의 페이지로 보내준다.
+	 $(document).on('click', 'div[id^="alertView"]', function(){
+		 	var alertType = $(this).children().children().eq(1).attr("value");
+		 	var storeNo ;
+		 	console.log("alertType : "+alertType);
+		 	if(alertType === 'report'){
+		 		location.href= "${pageContext.request.contextPath}/admin/reportList.do";
+		 	}else if(alertType === 'qna'){
+		 		location.href = "${pageContext.request.contextPath}/admin/qnaControl.do";
+		 	}else if(alertType === 'pms'){
+		 		location.href = "${pageContext.request.contextPath}/admin/storePMSList.do";
+		 	}else if(alertType === 'review'){
+		 		storeNo = $(this).attr("value");
+		 		location.href = "${pageContext.request.contextPath}/seller/goSellerReview.do?storeNo="+storeNo;
+		 	}else if(alertType === 'order'){
+		 		storeNo = $(this).attr("value");
+		 		location.href = "${pageContext.request.contextPath}/seller/goMyStoreOrder.do?storeNo="+storeNo;
+		 	}
+	 });
+	
+	
 	//참여하는 채팅 유저
 	var chatUserList = new Array();
 	//맨처음만 채팅유저 리스트를 받아오게하려고 0일때만 작동하도록함.
 	var init = 0;
-	var chattingId = '${sellerLoggedIn}'.trim().length==0?"admin":"${sellerLoggedIn.sellerId}";
+	var chattingId = '${sellerLoggedIn}'.trim().length==0?"${memberLoggedIn.memberId}":"${sellerLoggedIn.sellerId}";
 	console.log(chattingId);
 	 //채팅방 목록 구현
 	 $("#messagesDropdown").on('click',function(){
@@ -693,19 +723,20 @@ span.srchVal{
 					console.log(errorTrown);
 				}
 			});//end of ajax
-		}
-	 });
+		}//end of if
+	 });//end of messagesDropdown click event
+	 
 	 var socket = null;
 	//채팅방에서 메세지 전송을 누르면 웹소켓을 통해서 메세지가 전달됨.
 	$(document).on('click', 'button[id="sendMessage"]', function(evt){
 			evt.preventDefault();
 			sendMsgTime = getTimeStamp();
 			var sendContent = $("input[name=messageContent]").val();
-			if(socket.readyState !== 1) return;
-				sendMessage();
 			
 			
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
+			if(socket.readyState !== 1) return;
+				sendMessage();
 			var message = {
 					sendId :  chattingId,
 					sendContent : sendContent,
@@ -765,6 +796,29 @@ span.srchVal{
 	function sendRealTimeMember(){
 		var msg = {};
 		msg.cmd = "realTimeMember";
+		socket.send(JSON.stringify(msg));
+	}
+	//4. cmd(신고),신고 작성자, 신고 유형
+	function sendReportAlert(){
+		var msg = {};
+		msg.cmd = "report";
+		if(!'$(sellerLoggedIn)'){
+			msg.writer = '${sellerLoggedIn.sellerId}';
+		}else{
+			msg.writer = '${memberLoggedIn.memberId}';
+		}
+		msg.reportType = reportType ;
+		msg.receiver = "admin";
+		console.log("현재 신고유형은? "+msg.reportType);
+		socket.send(JSON.stringify(msg));
+	}
+	function sendEnrollStore(storeName){
+		console.log("가게 신청 가게 이름 : "+storeName);
+		var msg = {};
+		msg.cmd = "pms";
+		msg.writer = '${sellerLoggedIn.sellerId}';
+		msg.storeName = storeName;
+		msg.receiver = "admin";
 		socket.send(JSON.stringify(msg));
 	}
 	function getTimeStamp() {
@@ -907,7 +961,11 @@ span.srchVal{
 	var messageData = "";
 	var timeStamp = "";
 	var messageCount = 0;
+	//실시간 유저 리스트를 웹소켓에서 받아오는 변수
 	var realTimeConnectUser;
+	//신고시 신고유형을 담아서 웹소켓으로 전송하기 위한 변수.
+	var reportType;
+	
 	//소켓으로 서버가 클라이언트한테 전달한 값을 바탕으로 만들어냄
 	function receiveMessage(alertType,messageType){
 		//console.log(hasFocusRoom+" : "+messageType.chatRoomNo);
@@ -937,9 +995,27 @@ span.srchVal{
    function	alertMessage(alertType,type){
 	   if(type === 'review'){
 			 $("#socketAlert").css("display","block").text(alertType.reviewWriter+"님이 "+alertType.storeName+"에("+alertType.storeNo +")리뷰를 작성");
+			var alertCount = parseInt( $("#sellerAlertCount").text())+1;
+			$("#sellerAlertCount").html(alertCount);
 		 	setTimeout(function(){
 		 		$("#socketAlert").css("display","none");
 		 	},3000);
+		 }else if(type === 'report'){
+			var alertCount = parseInt( $("#adminAlertCount").text())+1;
+			$("#adminAlertCount").html(alertCount);
+			$("#socketAlert").css("display","block").text(alertType.reportWriter+"님이  "+alertType.reportType+"를 접수함.");
+			 
+		 	setTimeout(function(){
+		 		$("#socketAlert").css("display","none");
+		 	},3000);
+		 }else if(type === 'pms'){
+			var alertCount = parseInt( $("#adminAlertCount").text())+1;
+			$("#adminAlertCount").html(alertCount);
+			$("#socketAlert").css("display","block").text(alertType.reportWriter+"님이  "+alertType.reportType+"라는 가게를 신청함.");
+		 	setTimeout(function(){
+		 		$("#socketAlert").css("display","none");
+		 	},3000);
+			 
 		 }
 	}
 	 function connectWebSocket(){
@@ -1020,6 +1096,12 @@ span.srchVal{
 		 		}else if(message[i] === "forcedlogout"){
 		 			alert("현재 다른 브라우져에서 강제 로그아웃을 요청했습니다.");
 		 			location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}';
+		 		}else if(message[i].cmd = "report"){
+		 			alertType = message[i];
+		 			alertMessage(alertType,"report");
+		 		}else if(message[i].cmd = "pms"){
+		 			alertType = message[i];
+		 			alertMessage(alertType,"pms");
 		 		}
 		 		else
 		 			 messageType = message[i];
@@ -1212,6 +1294,9 @@ span.srchVal{
 			success: function(data){
 				console.log(data);
 				alert(data.msg);
+				$("#rndNum").val(data.rndNum);
+				$("#number-div").show();
+				dailyMissionTimer(24);	// hour base
 			},
 			error : function(){
 				console.log("ajax요청 에러!");
@@ -1222,18 +1307,23 @@ span.srchVal{
 	$("find-pwd1").on("keyup", function(){
 		 $(this).val($(this).val().replace(/[^0-9]/g,""));
 	});
-
+	var orderCount =  0;
+	var reviewCount = 0;
 	//로딩 되면 판매자일때 안읽은 메세지 뜨게함.
 	$(function(){
-		if('$(sellerLoggedIn)' != null){
+		if('${sellerLoggedIn}'){
 			$.ajax({
 				url : '${pageContext.request.contextPath}/chat/notReadMessage.do?sellerId='+'${sellerLoggedIn.sellerId}',
 				type : 'post',
 				success : function(data){
-						var count = parseInt(data);
-						$("#messageCount").html(count);
-					
-					
+						var messageCount = parseInt(data.message);
+						reviewCount = parseInt(data.review);
+						orderCount = parseInt(data.order);
+						//console.log(orderCount+" : 리뷰 : "+reviewCount);
+						$("#sellerAlertCount").html(orderCount+reviewCount);
+						$("#messageCount").html(messageCount);
+						$("#currentOrder").html(orderCount+"건");
+						$("#currentReview").html(reviewCount+"건");
 				}
 			});		
 		}else{
@@ -1242,9 +1332,12 @@ span.srchVal{
 				url : '${pageContext.request.contextPath}/chat/notReadMessage.do?sellerId=admin',
 				type : 'post',
 				success : function(data){
-						var count = parseInt(data);
-						$("#messageCount").html(count);
-					
+						var messageCount = parseInt(data.message);
+						var reportCount = parseInt(data.report);
+						var pmsCount = parseInt(data.pms);
+						var qnaCount = parseInt(data.qna);
+						$("#messageCount").html(messageCount);
+						$("#adminAlertCount").html(reportCount+pmsCount+qnaCount);
 					
 				}
 			});		
@@ -1263,8 +1356,69 @@ span.srchVal{
 		
 	});
 	
-	
+	////
+	function dailyMissionTimer(duration) {
+    
+    
+    var timer = duration * 7.5; 
+    var minutes, seconds;
+    
+    var interval = setInterval(function(){
+        minutes = parseInt(timer / 60 % 60, 10);
+        seconds = parseInt(timer % 60, 10);
+		
 
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+		
+
+        $('#time-min').text(minutes);
+        $('#time-sec').text(seconds);
+
+        if (--timer < 0) {
+            timer = 0;
+            clearInterval(interval);
+        }
+    }, 1000);
+}
+
+
+
+function sendPwd(){
+	var id = $("#find-pwd").val().trim();
+	var phone = $("#find-pwd1").val().trim();
+	
+	if($('#time-min').text() == '00' &&  $('#time-sec').text() == '00' ){
+		alert("인증시간을 초과하셨습니다.")
+	}else{
+		var number = $("#number").val();
+		var rndNum = $("#rndNum").val();
+		
+		if(number == rndNum){
+		
+		 $.ajax({
+			url : "${pageContext.request.contextPath}/member/getNewPwd.do",
+			type : "post",
+			data : {id : id , phone : phone},
+			dataType : "json",
+			success: function(data){
+				
+				alert(data.msg);
+				$("#close-btn").click();
+		
+			},
+			error : function(){
+				console.log("ajax요청 에러!");
+			}
+		}); 
+		
+		}else{
+			alert("인증번호가 일치하지 않습니다.");
+		}
+		
+	}
+	
+};
 	
 
 	</script>

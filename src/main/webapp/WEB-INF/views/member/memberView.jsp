@@ -291,7 +291,7 @@ function validate(){
 $(function(){
 	
 	//프로필사진
-	if('${m.renamedFile}' != null){
+	if(${m.renamedFile != null}){
 		$('#imgProfile').attr('src',
 							  "${pageContext.request.contextPath }/resources/upload/member/${m.renamedFile}");
 	}else{

@@ -92,9 +92,6 @@ public interface SellerDao {
 
 	List<Review> getReview1(String storeNo);
 
-	List<Review> getReview2(String storeNo);
-
-
 	List<Map<String,String>> chartByPeriod(Map<String, String> map);
 
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
@@ -116,6 +113,8 @@ public interface SellerDao {
 
 
 	String selectSellerIdByStoreNo(String storeNo);
+
+	int inputComment2(Map<String, Object> map);
 
 	Seller selectSellerBySellerId(String sellerId);
 

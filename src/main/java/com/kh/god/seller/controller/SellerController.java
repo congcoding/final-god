@@ -344,12 +344,13 @@ public class SellerController {
 	      }
 	      
 	      
-	      
+	     // session.setAttribute("sellerLoggedIn",null);
 //	      loginSession.remove(session.getId());
 	      Object obj = session.getAttribute("sellerLoggedIn");
 	        if ( obj != null ){
 	            Seller vo = (Seller)obj;
 	            // null이 아닐 경우 제거
+	          //session.removeAttribute("sellerLoggedIn");
 	            session.removeAttribute("sellerLoggedIn");
 	            session.invalidate(); // 세션 전체를 날려버림
 	            loginSession.remove(sellerId);
@@ -1064,7 +1065,7 @@ public class SellerController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("/chart/totalSaleVolume.do")
+    @RequestMapping("/seller/totalSaleVolume.do")
     public List<Map<String,String>> totalSaleVolume(@RequestParam String sellerId,@RequestParam String type){
     	logger.debug("totalSaleVolumeofWeek Method Param : "+sellerId+" : "+type);
     	List<Map<String,String>> saleVolume = sellerService.totalSaleVolume(sellerId,type);
@@ -1079,11 +1080,10 @@ public class SellerController {
     	System.out.println(storeNo);
     	//댓글 가져오기
     	List<Review> review1 = sellerService.getReview1(storeNo);
-    	//답댓글 가져오기
-    	List<Review> review2 = sellerService.getReview2(storeNo);
+  
 
     	model.addAttribute("review1", review1);
-    	model.addAttribute("review2", review2);
+    	
 
     	return "seller/sellerReview";
     }
@@ -1150,6 +1150,26 @@ public class SellerController {
     	return "index";
     }
     
+    @RequestMapping("/seller/inputComment2.do")
+    public void inputComment2(@RequestParam("reviewNo") int reviewNo,
+    		@RequestParam("reply") String reply,
+    		@RequestParam("storeNo") String storeNo,
+    		@RequestParam("sellerId") String sellerId) {
+    	logger.debug("샐러 댓글 삽입");
+
+    	Map<String,Object> map = new HashMap<>();
+    	map.put("reviewNo",reviewNo);
+    	map.put("reply",reply);
+    	map.put("storeNo",storeNo);
+    	map.put("sellerId",sellerId);
+
+
+    	int result = sellerService.inputComment2(map);
+    	System.out.println(result>0?"등록성공":"등록실패");
+
+    }
+
+
     //웹소켓클래스에서 강제 로그아웃시키기위해  현재 로그인되어있는 세션을 찾기위해 세션ID값 및 VO객체를 가져옴.
     public Seller selectSellerBySellerId(String sellerId) {
     	return sellerService.selectSellerBySellerId(sellerId);

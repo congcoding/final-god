@@ -181,7 +181,7 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    	            sess.sendMessage(tmpMsg);
 	    	        }
 	    			
-	    		}else if(strs != null && strs.length == 2) {
+	    		}else if(strs != null && strs.length == 2) {//강제 로그아웃 요청
 	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
 	    			String[] removeId = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
 	    			WebSocketSession reviewSendSession =  userSession.get(removeId[0]);
@@ -209,6 +209,28 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    			
 					//sellerController.logout(sessionStatus, sellerVO.getSellerId(), logout, request, response);
 	    		    
+	    		}else if(strs != null && strs.length == 4) {//신고
+	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
+	    			String[] reportWriter = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
+	    			String[] reportType = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
+	    			String[] receiver = strs[3].substring(strs[3].indexOf(":")+2).split("\"");
+	    			if(cmd[0].equals("report")) {
+	    				if(reportType[0].equals("storeReport")) reportType[0] = "가게 신고";
+	    				else if(reportType[0].equals("reviewReport")) reportType[0] = "리뷰 신고";
+	    			}
+	    			logger.debug("받는 아이디 :"+receiver[0]+" 신고 타입 : "+reportType[0]);
+	    			alertMap.put("reportWriter", reportWriter[0]);
+	    			alertMap.put("cmd", cmd[0]);
+	    			//신고일 때는 신고 유형, 가게 신청일 땐 가게 이름이 된다.
+	    			alertMap.put("reportType", reportType[0]);
+	    			sendInfo.add(alertMap);
+	    			Gson gson = new Gson();
+	    			String sendGson = gson.toJson(sendInfo);
+	    			WebSocketSession reviewSendSession =  userSession.get(receiver[0]);
+	    			if("report".equals(cmd[0]) && reviewSendSession != null) {
+	    				TextMessage tmpMsg = new TextMessage(sendGson);
+	    				reviewSendSession.sendMessage(tmpMsg);
+	    			}
 	    		}
 	    		//메세지를 받았을 때 프로토콜
 	    		

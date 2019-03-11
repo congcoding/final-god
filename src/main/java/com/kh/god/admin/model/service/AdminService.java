@@ -172,4 +172,6 @@ public interface AdminService {
 
 	int updateStoreReportFlagY(Map<String, String> map);
 
+	List<Integer> chartByFavoriteCetegory();
+
 }

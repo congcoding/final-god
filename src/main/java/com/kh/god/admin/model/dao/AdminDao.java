@@ -170,4 +170,6 @@ public interface AdminDao {
 
 	int updateStoreReportFlagY(Map<String, String> map);
 
+	List<Integer> chartByFavoriteCetegory();
+
 }

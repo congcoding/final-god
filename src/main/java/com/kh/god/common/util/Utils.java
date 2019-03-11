@@ -340,9 +340,21 @@ public class Utils {
 		
 		return sb.toString();
 	}
+	
+	public static String getRandomNum() {
+		
+		int idx = 0;
+		StringBuffer sb = new StringBuffer();
+		
+		
+		for(int i = 0; i < 7; i++) {
+			idx = (int)(Math.random()*9); 
+			sb.append(idx);
+		}
+		
+		return sb.toString();
+	}
 
-	
-	
 
 
 }
