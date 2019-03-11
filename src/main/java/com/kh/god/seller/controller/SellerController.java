@@ -1018,11 +1018,10 @@ public class SellerController {
     	System.out.println(storeNo);
     	//댓글 가져오기
     	List<Review> review1 = sellerService.getReview1(storeNo);
-    	//답댓글 가져오기
-    	List<Review> review2 = sellerService.getReview2(storeNo);
+  
 
     	model.addAttribute("review1", review1);
-    	model.addAttribute("review2", review2);
+    	
 
     	return "seller/sellerReview";
     }
@@ -1065,6 +1064,25 @@ public class SellerController {
     @RequestMapping("/seller/goIndexPage.do")
     public String goIndexPage() {
     	return "index";
+    }
+    
+    @RequestMapping("/seller/inputComment2.do")
+    public void inputComment2(@RequestParam("reviewNo") int reviewNo,
+    		@RequestParam("reply") String reply,
+    		@RequestParam("storeNo") String storeNo,
+    		@RequestParam("sellerId") String sellerId) {
+    	logger.debug("샐러 댓글 삽입");
+
+    	Map<String,Object> map = new HashMap<>();
+    	map.put("reviewNo",reviewNo);
+    	map.put("reply",reply);
+    	map.put("storeNo",storeNo);
+    	map.put("sellerId",sellerId);
+
+
+    	int result = sellerService.inputComment2(map);
+    	System.out.println(result>0?"등록성공":"등록실패");
+
     }
 
 }

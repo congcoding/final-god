@@ -209,14 +209,9 @@
 	</resultMap>
 	
 	<select id="getReview1" resultType="review">
-		select * from review where storeno=#{storeNo} and commentLevel=1
+		select * from review where storeno=#{storeNo}
 	</select>
 	
-	<select id="getReview2" resultType="review">
-		select * from review where storeno=#{storeNo} and commentLevel=2
-	</select>
-	
-
 	<select id="sellerfindId" resultType="seller">
 		select * from seller where email = #{email}
 	</select>
@@ -238,6 +233,11 @@
 	
 	<select id="login" resultType="seller">
 		select * from seller where memberid = #{memberId}  and password = #{password}
+	</select>
+	
+	<select id="inputComment2">
+	insert into review (storeno, reviewno, writer,content, rdate , commentlevel , reviewref ) 
+	values (#{storeNo},seq_reviewNo.nextval,#{sellerId},#{reply},sysdate,2,#{reviewNo})
 	</select>
 
 	

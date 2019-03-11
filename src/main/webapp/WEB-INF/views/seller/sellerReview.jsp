@@ -8,10 +8,7 @@
 	<jsp:param value="배달의 신" name="pageTitle" />
 </jsp:include>
 <style>
-#reply{
-	width: 78%;
-    margin-left: 4%;
-}
+
 .comment{
 width: 543px;
     margin: 0 auto;
@@ -29,6 +26,8 @@ width: 543px;
 margin: 30px;
 }
 </style>
+
+
 <!-- Custom fonts for this template-->
 <link href="${pageContext.request.contextPath }/resources/css/fontawesome-free/css/all.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -43,6 +42,15 @@ $(function(){
 	$("#collapse"+storeNo).parent("li").addClass("active");	
 	$("#collapse"+storeNo+">div>a.sellerReview").addClass("active");	
 });
+
+	     
+function appendComment(reviewRef, content){
+ console.log(reviewRef, content);
+ var html = '<li class="list-group-item list-group-item-primary reply">'+content+'</li>';
+ $(".div"+reviewRef).append(html);
+ $(".divHide"+reviewRef).css("display","none");
+}		    	 
+
 </script>
 
 <!-- Page Wrapper -->
@@ -66,6 +74,7 @@ $(function(){
           
         <c:forEach items="${review1}" var="review1" varStatus="status">
          
+		<c:if test="${review1.commentLevel == '1'}">
 		  <div class="card">
 		    <div class="card-header" role="tab" id="headingOne">
 		      <h5 class="mb-0">
@@ -76,24 +85,38 @@ $(function(){
 				<button type="button" class="btn btn-outline-info" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>
 		        </h5>
 		    </div>
-
+		</c:if>
+		
+			
+		
 		    <div id="collapseOne" class="collapse show" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
-		      <div class="comment">
-		      <c:if test="${review1.commentLevel==1}">
-		        <li class="list-group-item list-group-item-light">${review1.content}</li>
-		      </c:if>
+		      <div class="comment div${review1.reviewNo}">
 		      
-		      <c:if test="${review1.commentLevel==2}">
-		        <li class="list-group-item list-group-item-primary reply">${review1.content}</li>
-		      </c:if>
+   		      <c:if test="${review1.commentLevel==1}">
+		        <li class="list-group-item list-group-item-light">${review1.content}</li>
+		      </c:if> 
+		  
+		       <c:if test="${review1.commentLevel==2}">  
+	      		<script type="text/javascript">appendComment("${review1.reviewRef}", "${review1.content}");</script>
+	      	   </c:if>
+		      
+		      
 		      </div>
-		      <!-- 리뷰답댓 -->     
+		      <!-- 리뷰답댓 -->   
+		      <c:if test="${review1.commentLevel==1}">		        
 		      <br>
-		      <input type="email" class="form-control" id="reply" aria-describedby="emailHelp">
-		      <button type="button" class="btn btn-info replyBtn">답글달기</button>
+		      <div class="divHide${review1.reviewNo}">   
+			      <input type="text" class="form-control replyText replyInput${review1.reviewNo}" style="width: 78%; margin-left: 4%;">
+			      <button type="button" class="btn btn-info replyBtn" onclick="goComment2('${review1.reviewNo}','${review1.storeNo}');">답글달기</button>
+			  </div>    
+		      </c:if> 
 		    </div>
   	    </div>
+  	    
+	     
   	</c:forEach>
+  	
+  	
 
 <div class="modal fade" id="giveCouponModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -146,6 +169,28 @@ $(function(){
 </div>
     
 </div>
+
+<script>
+function goComment2(reviewNo,storeNo){
+	console.log(reviewNo,storeNo);
+	var reply = $(".replyInput"+reviewNo).val();
+	console.log(reply);
+	var sellerId = '${sellerLoggedIn.sellerId}';
+	$.ajax({
+		url :"${pageContext.request.contextPath}/seller/inputComment2.do", //대댓글
+		data : {reviewNo:reviewNo,reply:reply,storeNo:storeNo,sellerId:sellerId},
+		success : function(data){
+			console.log("성공");
+		},
+		error : function(){
+			console.log("에이젝스오류");
+		}
+		
+	});
+	appendComment(reviewNo, reply);
+}
+
+</script>
           <!-- 여기부터 코드 붙여넣으면 됨 -->
 
         </div>

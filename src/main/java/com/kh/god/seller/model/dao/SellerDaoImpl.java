@@ -320,12 +320,6 @@ public class SellerDaoImpl implements SellerDao {
 		return sqlSession.selectList("seller.getReview1", storeNo);
 	}
 
-	@Override
-	public List<Review> getReview2(String storeNo) {
-		// TODO Auto-generated method stub
-		return sqlSession.selectList("seller.getReview2", storeNo);
-	}
-
 	//자동로그인 TEST
 	@Override
 	public void keepLogin(String sellerId, String sessionId, Date next) throws Exception{
@@ -358,5 +352,11 @@ public class SellerDaoImpl implements SellerDao {
 	@Override
 	public Seller login(Seller s) {
 		return sqlSession.selectOne("seller.login" , s);
+	}
+
+	@Override
+	public int inputComment2(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectOne("seller.inputComment2" ,map);
 	}
 }

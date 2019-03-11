@@ -91,9 +91,6 @@ public interface SellerService {
 
 	List<Review> getReview1(String storeNo);
 
-	List<Review> getReview2(String storeNo);
-
-
 	List<Map<String, String>> totalSaleVolume(Map<String,String> info);
 
 	List<Map<String,String>> chartByPeriod(Map<String, String> map);
@@ -114,6 +111,8 @@ public interface SellerService {
 	public Seller checkUserWithSessionKey(String sessionId);
 			
 	Seller login(Seller login);
+
+	int inputComment2(Map<String, Object> map);
 
 
 
