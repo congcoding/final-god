@@ -37,6 +37,9 @@ function fn_goAskingList(){
 function fn_goQnaList(){
 	location.href = "${pageContext.request.contextPath}/admin/qnaboard.do";
 }
+function fn_goStomp(){
+	location.href = "${pageContext.request.contextPath}/ws/stomp.do";
+}
 function validate(){
 	if("${memberLoggedIn }" != ""){
 		var memberId= "${memberLoggedIn.memberId }";
@@ -53,7 +56,7 @@ function validate(){
 <!-- 전체 게시글 출력 -->
 	
 <div id="head-container">
-	<div id="qna" class="alert-light" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div>
+	<div id="qna" class="alert-light" onclick="fn_goQnaList();">FAQ</div> <div id="asking" class="alert-info" onclick="fn_goAskingList();">1:1문의</div> <div id="asking" class="alert-light" onclick="fn_goStomp();">채팅 문의</div>
 </div>
 <section id="board-container" class="container">
 <!-- 전체 게시글 출력 -->

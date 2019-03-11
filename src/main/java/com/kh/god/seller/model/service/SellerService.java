@@ -75,7 +75,7 @@ public interface SellerService {
 
 	int updateMenu(Map<String, Object> map);
 
-	int deleteMenu(String menuCode);
+	int deleteMenu(Map<String, Object> map);
 
 	int insertOrder(Map<String, Object> map);
 
@@ -97,10 +97,7 @@ public interface SellerService {
 
 	int insertMenu(Menu menu, List<MenuAttachment> menuAttachList);
 
-
 	String selectSellerIdByStoreNo(String storeNo);
-
-	
 
 	//자동로그인 TEST
 	
@@ -113,6 +110,14 @@ public interface SellerService {
 	Seller login(Seller login);
 
 	int inputComment2(Map<String, Object> map);
+
+
+	Seller selectSellerBySellerId(String sellerId);
+
+
+
+
+	
 
 
 

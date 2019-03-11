@@ -76,7 +76,7 @@ public interface SellerDao {
 
 	int updateMenu(Map<String, Object> map);
 
-	int deleteMenu(String menuCode);
+	int deleteMenu(Map<String, Object> map);
 
 	int insertOrder(Map<String, Object> map);
 
@@ -98,7 +98,6 @@ public interface SellerDao {
 
 	Map<String, String> getStoreName(Map<String, String> map);
 
-
 	int insertMenu(Menu menu);
 
 	int insertMenuAttachment(MenuAttachment a);
@@ -112,9 +111,15 @@ public interface SellerDao {
 
 	Seller login(Seller s);
 
+
 	String selectSellerIdByStoreNo(String storeNo);
 
 	int inputComment2(Map<String, Object> map);
+
+	Seller selectSellerBySellerId(String sellerId);
+
+	int createChatRoom(Map<String, String> chatId);
+
 
 
 

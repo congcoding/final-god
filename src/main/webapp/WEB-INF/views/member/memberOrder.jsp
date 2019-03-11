@@ -86,6 +86,7 @@ div#memberViewFrm-container{
 					<thead>
 						  <tr>
 							<th>주문 번호</th>
+							<th>주문 날짜</th>
 							<th>결제 금액</th>
 							<th>리뷰</th>
 						  </tr>
@@ -94,6 +95,9 @@ div#memberViewFrm-container{
 					<c:forEach var="o" items="${orderList}">	
 						<tr>
 							<td>${o.ORDERNO}</td>
+							<td>	
+								<fmt:formatDate value="${o.ORDERTIME}" pattern="yyyy-MM-dd"/>
+							</td>
 							<td>${o.TOTALPRICE}</td>
 							<td>
 								<c:if test="${o.REVIEWNO == null}">
@@ -103,7 +107,7 @@ div#memberViewFrm-container{
 									</button>
 								</c:if>
 								<c:if test="${o.REVIEWNO != null}">
-									<a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">리뷰보기</a>
+									<%-- <a href="${pageContext.request.contextPath}/member/reviewList.do?memberId=${memberLoggedIn.memberId}">리뷰보기</a> --%>
 								</c:if>
 							</td>
 											

@@ -10,7 +10,7 @@
     </select>
     
     <insert id="insertSeller" >
-    	insert into seller values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
+    	insert into seller(sellerid,sellername,email,phone,enrolldate,delflag,blackflag,password) values(#{sellerId} , #{sellerName} , #{email}, #{phone} , sysdate , default , default , #{password} )
     </insert>
     
 	<update id="updatePwd">
@@ -184,9 +184,9 @@
 	</select>
 	
 	<select id="getStoreName" resultType="map">
-		select distinct S.storename, S.storeno
-		from orderinfo O left join storeinfo S on O.storeno = s.storeno
-		where sellerid = #{sellerId} and O.storeno = #{storeNo}
+		select storename, storeno
+		from storeinfo
+		where sellerid = #{sellerId} and storeno = #{storeNo}
 	</select>
 	<resultMap type="map" id="byMemberChart">
 		<result column="memberSum" property="MEMBERSUM" javaType="string"/>
@@ -219,8 +219,8 @@
 	<select id="selectSellerIdByStoreNo" resultType="string">
 		select sellerid from storeinfo where storeno = #{storeNo} 
 
-
 	</select>
+
 		<!-- 자동로그인 TEST -->
 	<update id="keepLogin">
 		update seller set sessionKey = #{sessionId} , sessionLimit = #{next} where sellerId = #{sellerId}
@@ -231,14 +231,19 @@
 		select * from seller where sessionKey = #{sessionId} and sessionLimit > sysdate
 	</select>
 	
-	<select id="login" resultType="seller">
-		select * from seller where memberid = #{memberId}  and password = #{password}
+
+
+	<select id="selectSellerBySellerId" resultType="seller">
+		select * from seller where sellerid = #{sellerId}
 	</select>
-	
+
 	<select id="inputComment2">
 	insert into review (storeno, reviewno, writer,content, rdate , commentlevel , reviewref ) 
 	values (#{storeNo},seq_reviewNo.nextval,#{sellerId},#{reply},sysdate,2,#{reviewNo})
 	</select>
 
-	
+	<insert id="createChatRoom">
+		insert into chatroom values(seq_chatroomno.nextval,#{sellerId},#{admin})
+	</insert>
+
 </mapper>

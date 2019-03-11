@@ -9,15 +9,24 @@
 </jsp:include>
 <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/css/store/menuList.css" />
 
+<!-- 지도 관련 -->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=5f71510449902565d91fe4cae2a1eecd&libraries=services"></script>
+<!-- 페이지 스크롤 해도 지도 튀어나오지 않게 하기 -->
+<style>
+#map{
+	z-index: -1;
+}
+</style>
 
 <!-- 매장 요약----------------------------------------------------------->
 <div id="menuThumb-container" class="card">
   <ul class="list-group">
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
-		    ${storeInfo.STORENAME}
+		    ${storeInfo.storeName}
+		    <span style="float: right;">
+		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    <span style="float : right">
-		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    	<c:if test="${checkedBookMark != 1}"> 
 					<a href="#" class="btn-checkBookMark" onclick="checkBookMark(0,'${storeInfo.STORENO}','${memberLoggedIn.memberId}');">
 						<i class='fas fa-heart' style='font-size:24px;color:gray'></i>
@@ -28,6 +37,7 @@
 						<i class='fas fa-heart' style='font-size:24px;color:red'></i>
 					</a>	
 				</c:if>
+		    </span>
 		    </span>
 	    </li>
 	    <input type="hidden" value="${storeInfo.STORENO}" id="storeNoForPayment">
@@ -57,13 +67,13 @@
 			<div id="MenuNavi">		
 				<ul class="nav nav-tabs">
 					  <li class="nav-item">
-					    <a class="nav-link active" id="clickMenu" href="#">메뉴 <span>${menuTotalCount}</span>개</a>
+					    <a class="nav-link active" id="clickMenu">메뉴 <span>${menuTotalCount}</span>개</a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickreview" href="#">클린리뷰  <span>38</span></a>
+					    <a class="nav-link" id="clickreview">클린리뷰  <span></span></a>
 					  </li>
 					  <li class="nav-item">
-					    <a class="nav-link" id="clickInformation" href="#">정보</a>
+					    <a class="nav-link" id="clickInformation">정보</a>
 					  </li>
 				</ul>
 			</div>
@@ -147,51 +157,90 @@
 					
 					</c:if>
 				</table> <!-- menuTable -->
-		
+				
 				<!-- 클린리뷰테이블 : css 수정 필요-------------------------------------------------------->
 				<div class="inner_border">
+			
 				<table class="table" id="sellerReviewList">
+					
 					<c:if test="${empty reviewList}">
 						<tr style="border-bottom:0.2px solid lightgray;">
 							<td colspan="4" align="center" height="100px">리뷰가 없습니다.</td>
 						</tr>
 					</c:if>
 					
-					<c:if test="${not empty reviewList}">
-						<c:forEach items="${reviewList}" var="review">
-							<tr> <!-- 아이디, 작성일 -->
-								<td>
-									${review.writer } 님 | ${review.rDate }
-								</td>
-							</tr>
-							<tr> <!-- 평점 -->
-								<td>${review.rate }</td>
-							</tr>
-							<tr> <!-- 사진이 있으면 사진을 없으면 이 행은 존재하지않음 -->
-							
-							</tr>
-							<tr> <!-- review 제목 -->
-								<td>${review.title }</td>
-							</tr>
-							<tr> <!-- review 내용(제목클릭해야 보임) -->
-								<td>${review.content }</td>
-							</tr>
+					<c:if test="${not empty reviewList}">					
+						<c:forEach items="${reviewList}" var="review">														
+							<!-- 고객이 작성한 리뷰 -->									
+							<c:if test="${review.commentLevel == 1 }">							
+								<tr> 
+									<td><strong>${review.writer} 님 </strong>| ${review.rDate } <i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportReviewModal" onclick="setReviewNo('${review.reviewNo }','${review.writer}');"></i>&nbsp;</td>
+									
+								</tr>
+								<tr> 
+									<td>
+										<c:forEach var="i" begin="1" end="${review.rate }">								
+				    						<span class="fa fa-star checked"></span>
+				      					</c:forEach>
+				      					<c:forEach var="i" begin="${review.rate+1}" end='5'>
+				      						<span class="fa fa-star"></span>
+				      					</c:forEach>									
+									</td>
+								</tr>
+								
+								<!-- 리뷰 첨부파일 꺼내기 -->
+								<c:if test="${not empty attachList}">	
+									<tr>
+									<td class="attachList-td">
+										<c:forEach var="a" items="${attachList }">
+											<!-- 현재 review와 review번호가 같은 첨부파일만 꺼내기 -->															
+											<c:if test="${review.reviewNo == a.reviewNo }">										
+												<img src="${pageContext.request.contextPath }/resources/upload/review/${a.renamedFileName}"
+													 style="max-width : 100px; margin:0 10px;" >
+											</c:if>									
+										</c:forEach>
+									</td>
+									</tr>					
+								</c:if>
+						
+								<tr class = "reviewNo${review.reviewNo }">
+									<td>${review.content }</td>
+								</tr>
+							</c:if>												
 						</c:forEach>
+						
 					</c:if>
 				</table>
-				</div>
+				</div> <!-- div inner_border -->
 			
 				<!-- 사업자정보 -->
 				<table class="table" id="sellerInformation">
 					<c:forEach items="${storeInfo}" var="storeInfo">		
 						<thead><tr><th scope="col">가게명</th></tr></thead>
-						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>						  				  
+						<tbody><tr><td id="mapStoreName">${storeInfo.STORENAME}</td></tr></tbody>						  				  
+						<thead><tr><th scope="col">사업자번호</th></tr></thead>
+						<tbody><tr><td>${storeInfo.STORENO}</td></tr></tbody>		  				  
 						
 						<thead><tr><th scope="col">가게소개</th></tr></thead>
 						<tbody><tr><td>${storeInfo.STOREINTRO}</td></tr></tbody>
 						
 						<thead><tr><th scope="col">가게주소</th></tr></thead>
-						<tbody><tr><td>${storeInfo.STOREADDRESS}</td></tr></tbody>			  
+						<tbody>
+							<tr>
+								<td>
+									<p style="margin-top: -12px">
+										<em class="link"> 
+											<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
+												혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요. 
+											</a>
+										</em>
+									</p>
+									<div id="map" style="width:100%;height:350px;"></div>
+								</td>
+									
+							</tr>
+							<tr><td id="mapStoreAddr">${storeInfo.STOREADDRESS}</td></tr>
+						</tbody>			  
 						
 						<thead><tr><th scope="col">가게전화번호</th></tr></thead>
 						<tbody><tr><td>${storeInfo.STORETEL}</td></tr></tbody>			 
@@ -278,8 +327,8 @@
 		          <div class="form-group">
 		            <label for="email" class="col-form-label" style="font-size:large;">상호명</label>
 		            <br />
-		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.storeName}" disabled="disabled" style="background: white;"/>
-		            <input type="hidden" name="storeNo" value="${storeInfo.storeNo}" />
+		            <input type="text" class="form-control" id="find-id" name="storeName" placeholder="${storeInfo.STORENAME}" disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="storeNo" value="${storeInfo.STORENO}" />
 		          	<input type="hidden" name="category" value="S" />
 		          </div>
 		          <div class="form-group">
@@ -292,11 +341,57 @@
 						    <option value="배달시간 초과">배달시간 초과</option>
 						    <option value="기타" id="ect">기타</option>
 						</select>
+						<br />
+		          	<input type="text" name="reportReason" id="reportReason" class="form-control" placeholder="기타 사유를 작성해주세요" style="display: none;" />
 		          </div>
 		        </c:forEach>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-primary" onclick="checkSelect();">신고</button> 
+	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+	      </div>
+	        </form>
+	    </div>
+	  </div>
+	</div>
+<!-- 신고 모달 -->
+<div class="modal fade" id="ReportReviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">신고하기</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	        <form action="${pageContext.request.contextPath}/storeInfo/report.do" method="post" id="report-frm1">
+	      <div class="modal-body">
+		        <c:forEach items="${storeInfo}" var="storeInfo">
+		          <div class="form-group">
+		            <label for="email" class="col-form-label" style="font-size:large;">아이디</label>
+		            <br />
+		            <input type="text" class="form-control" id="reportid"   disabled="disabled" style="background: white;"/>
+		            <input type="hidden" name="reviewNo" id="reviewNo" />
+		            <input type="hidden" name="storeNo" value="${storeInfo.STORENO}"/>
+		          	<input type="hidden" name="category" value="R" />
+		          </div>
+		          <div class="form-group">
+		              <label for="reportDetails" class="col-form-label" style="font-size:large;">신고사유</label>
+						<select name="reportDetails" id="reportDetalis" class="form-control" style="width:400px;">
+						    <option value="">신고사유선택</option>
+						    <option value="비방 및 욕설">비방 및 욕설</option>
+						    <option value="광고">광고</option>
+						    <option value="도배">도배</option>
+						    <option value="허위사실 유포">허위사실 유포</option>
+						    <option value="기타" id="ect">기타</option>
+						</select>
+						<br />
+		          	<input type="text" name="reportReason" id="reportReason1" class="form-control" placeholder="기타 사유를 작성해주세요" style="display: none;" />
+		          </div>
+		        </c:forEach>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" onclick="checkSelect1();">신고</button> 
 	         <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
 	      </div>
 	        </form>
@@ -320,12 +415,27 @@ $(document).ready(function() {
         );   */
     
     });  
+ 
+	<!-- 사장이 작성한 리뷰 -->
+	<c:forEach items="${reviewList}" var="review">	
+		<c:if test="${review.commentLevel == 2 }">	
+			//console.log(" ${review.rDate }");
+		
+			var html = "";
+			html += "<tr class= 'reviewAnswerTr'> <td>사장님 | ${review.rDate }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.title }</td></tr>";
+			html += "<tr class= 'reviewAnswerTr'> <td>${review.content }</td></tr>";
+		
+			$('#sellerReviewList .reviewNo${review.reviewRef}').after(html);	//태그 넣기			
+		</c:if>
+	</c:forEach>
     
+	 //리뷰숨기기
+    $(".inner_border").hide();
     //가게정보숨기기
 	$("#sellerInformation").hide();
-    //리뷰숨기기
-    $("#sellerReviewList").hide();
-
+    
+   
     cartHtml();
 });
 
@@ -418,11 +528,11 @@ function cartHtml(){
 	    			html += "<tr><td colspan = '3' style='text-align: left'>"+cart[i].menuName+"</td></tr>"; 
 	    			 			    	
 	    			//삭제 버튼
-	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>X</button></td>";
+	    			html += "<tr><td><button  type='button' class='btn-xs delete-order' onclick=deleteCartMenu('"+i+"');>x</button></td>";
 	    					
 	    			//<i class="fas fa-times"></i>
 	    			//수량 버튼
-	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ ");"; //증가 버튼
+	    			html += "<td><button type='button' class='btn-xs add-order-num' onclick=InputCartAmount('" +i+ "'," +1+ "); "; //증가 버튼
 	    			if(cart[i].amount==9){html += "disabled";} 
 	    			html += ">+</button>";	    			
 	    			html += "<input type='text' class='order-num' readonly value="+cart[i].amount+">"; //카트에 담긴 수량			  		
@@ -506,7 +616,6 @@ function inputCart(menuCode){
 				var cnt = 0;		
 			
 				for (var i=0; i<cart.length; i++){					
-					
 					if(menu.storeNo != cart[i].storeNo){ //새로 추가한 메뉴가 기존의 메뉴와 다른 사업자번호를 가지고 있다면
 						$('#newMenuCode').val(menu.menuCode);
 						$('#checkEmptyCart').modal(); //모달이 실행되고서 아래도 계속실행중임..
@@ -514,10 +623,14 @@ function inputCart(menuCode){
 					}else{						
 						if(menu.menuCode == cart[i].menuCode){ //꺼낸 메뉴가 cart에 이미 담겨있으면 	
 							cnt ++;
-							cart[i].amount = cart[i].amount + 1;
+							if(cart[i].amount < 9 ){
+								cart[i].amount = cart[i].amount + 1;
+							}
+							
 						}						
 					}	
-											
+									
+					
 				}//end of for (중복찾기)
 				
 				if(cnt == 0){ //중복없음
@@ -581,8 +694,7 @@ $("#clickreview").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	
 	//클린리뷰 보이기
-	$("#sellerReviewList").show();
-	
+	$(".inner_border").show();	
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
 	//가게정보 숨기기
@@ -596,7 +708,8 @@ $("#clickMenu").click("on", function(){
 	$("#clickInformation").removeClass("active");
 	//메뉴테이블 보이기
 	$("#menuTable").show();
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//가게정보 숨기기
 	$("#sellerInformation").hide();
 });
@@ -608,8 +721,8 @@ $("#clickInformation").click("on", function(){
 	$("#clickreview").removeClass("active");
 	//메뉴테이블 숨기기
 	$("#menuTable").hide();
-	//리뷰테이블
-	$("#sellerReviewList").hide();
+	//리뷰 숨기기
+	$(".inner_border").hide();
 	//메뉴테이블 보이기
 	$("#sellerInformation").show();
 
@@ -621,8 +734,95 @@ function checkSelect(){
 		alert("신고사유를 선택해주세요.");
 		return false;
 	}else{
+		if($("#reportReason").val() != ""){
+			$("[name=reportDetails] option:eq(5)").val($("#reportReason").val());
+		}
+		reportType = "storeReport";
+		//웹소켓으로 신고 접수를 관리자에게 알리기위한 메소드.
+		sendReportAlert();
+		$("#report-frm").submit();
+	}
+};
+$("[name=reportDetails]").change( function(){
+	var state = $('[name=reportDetails] option:selected').val();
 	
-	$("#report-frm").submit();
+	if(state == '기타'){
+		$("#reportReason").show();
+		
+	}else{
+		$("#reportReason").hide();
+	}
+
+});
+
+
+/* 가게 위치 지도 */
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = {
+        center: new daum.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };  
+
+// 지도를 생성합니다    
+var map = new daum.maps.Map(mapContainer, mapOption); 
+
+// 주소-좌표 변환 객체를 생성합니다
+var geocoder = new daum.maps.services.Geocoder();
+
+// 주소로 좌표를 검색합니다
+geocoder.addressSearch($("#mapStoreAddr").text(), function(result, status) {
+
+    // 정상적으로 검색이 완료됐으면 
+     if (status === daum.maps.services.Status.OK) {
+
+        var coords = new daum.maps.LatLng(result[0].y, result[0].x);
+
+        // 결과값으로 받은 위치를 마커로 표시합니다
+        var marker = new daum.maps.Marker({
+            map: map,
+            position: coords
+        });
+
+        // 인포윈도우로 장소에 대한 설명을 표시합니다
+        var infowindow = new daum.maps.InfoWindow({
+            content: '<div class="mapPin" style="width:150px; text-align:center; padding:1px; font-size:70%;">'+$("#mapStoreName").text()+'</div>'
+            // content: '<div class ="label"><span class="left"></span><span class="center">' + $("#mapStoreName").text() + '</span><span class="right"></span></div>'
+        });
+        infowindow.open(map, marker);
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+        map.setCenter(coords);
+    } 
+});
+
+function setReviewNo(reviewNo , reportId){
+	$("#reviewNo").val(reviewNo);
+	$("#reportid").attr("placeholder" , reportId);
+	console.log(reviewNo);
+	console.log(reportId);
+	
+};
+$("#reportDetalis").change( function(){
+	var state = $('#reportDetalis option:selected').val();
+	
+	if(state == '기타'){
+		$("#reportReason1").show();
+		
+	}else{
+		$("#reportReason1").hide();
+	}
+
+});
+function checkSelect1(){
+	
+	if($("#reportDetalis option:eq(0)").is(":selected")){
+		alert("신고사유를 선택해주세요.");
+		return false;
+	}else{
+		if($("#reportReason1").val() != ""){
+			$("#reportDetalis option:eq(5)").val($("#reportReason1").val());
+		}
+		$("#report-frm1").submit();
 	}
 };
 

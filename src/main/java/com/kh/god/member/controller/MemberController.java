@@ -35,6 +35,7 @@ import com.kh.god.member.model.service.MemberService;
 import com.kh.god.member.model.vo.Member;
 import com.kh.god.member.model.vo.RAttachment;
 import com.kh.god.member.model.vo.Review;
+import com.kh.god.member.model.vo.WebReview;
 import com.kh.god.seller.model.service.SellerService;
 import com.kh.god.seller.model.vo.Seller;
 import com.kh.god.storeInfo.model.vo.StoreInfo;
@@ -265,20 +266,26 @@ public class MemberController {
 		
 		//1. 리뷰리스트를 꺼내고
 		List<Review> reviewList = memberService.reviewList(memberId);
-		logger.debug(reviewList);
-		
+	
 		//2. 리뷰 첨부파일을 담을 리스트를 선언한다. 
 		List<RAttachment> attachList = new ArrayList<>();
 		
 		if(reviewList != null) {			
 			//리스트를 돌면서 reviewNo가 일치하는 첨부파일을 꺼내서 리스트에 담는다
-			for(Review r : reviewList) {			
-				attachList = memberService.selectRAttachmentList(r.getReviewNo());				
+			for(Review r : reviewList) {	
+				
+				List<RAttachment> tempList = memberService.selectRAttachmentList(r.getReviewNo());			
+				for(RAttachment ra : tempList) {
+					attachList.add(ra);
+				}
+				
 			}			
 		}
 				
 		model.addAttribute("reviewList", reviewList);
 		model.addAttribute("attachList", attachList);
+		
+		logger.debug(attachList);
 		
 		String view = "member/memberReview";
 		return view; 				
@@ -477,7 +484,7 @@ public class MemberController {
            if(loginFlag == true) {
             if(bCryptPasswordEncoder.matches(password, m.getPassword())) {
                 mav.addObject("memberLoggedIn",m);
-                session.setAttribute("login",m.getMemberId());
+                session.setAttribute("loginId",m.getMemberId());
                 view = "redirect:/";
             }else {
             	msg = "비밀번호를 잘못 입력하셨습니다.";
@@ -501,7 +508,8 @@ public class MemberController {
 		}
 		memberSession = WebSocketHandler.getInstance().getUserList();
 		
-		session.setAttribute("login",null);
+		session.setAttribute("loginId",null);
+		//session.setAttribute("memberLoggedIn",null);
 		//session.setAttribute() 로 로그인 했다면 session.invalidate() 로 무효화
 		//session.invalidate();
 		
@@ -509,7 +517,7 @@ public class MemberController {
 
 		//@sessionAttribute 로 로그인 했다면, sessionStatus.setComplete() 로 무효화
 		if(!sessionStatus.isComplete()) sessionStatus.setComplete();
-		
+
 		return "redirect:/";
 	}
 
@@ -588,10 +596,19 @@ public class MemberController {
 	 
 	 //지역별 검색
 	 @RequestMapping("/member/searchByLoaction")
-	 public String searchByLoaction(@RequestParam("location") String location) {
-		 String[] locationArr = location.split(" ");
-		 location = locationArr[0] + locationArr[1];	 
+	 public String searchByLoaction(@RequestParam("location") String location , Model model) {
+		// String[] locationArr = location.split(" ");
+		// location = locationArr[0] + locationArr[1];
+		 //logger.info("@@@@@@@@@@@@@@@@@@@@@@@2location"+location);
 		 //List<StoreInfo> searchByLoaction = memberService.searchByLoaction(location);
+		 List<StoreInfo> storeInfoAll = memberService.selectAllstoreInfo();
+		 
+		 logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@List" + storeInfoAll);
+		 logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@Location" + location);
+		 
+		 model.addAttribute("location" , location);
+		 model.addAttribute("storeInfoList" , storeInfoAll);
+		 
 		 return "storeInfo/searchByLocation";
 	 }
 
@@ -631,11 +648,137 @@ public class MemberController {
 		  
 		  Member m = memberService.selectOneMember(id) ;
 		  String userPhone="";
-		  String msg = "임시비밀번호가 핸드폰으로 발송 되었습니다.";
+		  String msg = "인증번호가 핸드폰으로 전송 되었습니다.";
 		  boolean phoneEquals ;
 		  String rndPwd ;
 		  int result ;
 		  String temp ;
+		  String rndNum = "";
+			 
+			 if(m == null) {
+				 
+				 Seller s = memberService.selectOneSeller(id);
+				 if(s == null) {
+					 msg = "등록된 아이디가 없습니다.";
+				 }else {
+					 //셀러 핸드폰으로 임시 번호 발송 및 데이터 업데이트
+					 userPhone = s.getPhone();
+					 if(userPhone.contains("-")) {
+							userPhone = userPhone.replaceAll("-", "");
+							phoneEquals = userPhone.equals(phone);
+							
+							if(phoneEquals == true) {
+								
+								rndNum = new Utils().getRandomNum() ;
+								new MessageSend().findPwd(rndNum , s.getPhone());
+								
+							}else {
+								msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+							}
+							
+						}
+				 }
+				 
+			 }else {
+				 	//멤버 헨드폰으로 임시 번호 발송 및 데이터 업데이트 
+				 userPhone = m.getPhone();
+				 if(userPhone.contains("-")) {
+						userPhone = userPhone.replaceAll("-", "");
+						phoneEquals = userPhone.equals(phone);
+						
+						if(phoneEquals == true) {
+							rndNum = new Utils().getRandomNum() ;
+							new MessageSend().findPwd(rndNum , m.getPhone());
+							
+						}else {
+							msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+						}
+						
+					}
+				 
+			 }
+			 
+			 map.put("msg" , msg);
+			 map.put("rndNum" , rndNum);
+		  
+		  return map ;
+		  
+	  }
+	  
+	  @RequestMapping(value="/member/webreview.do")
+	  public String webReview(Model model ,@RequestParam(value = "cPage", defaultValue = "1") int cPage ) {
+		  
+		  	
+
+			int numPerPage = 6;
+			
+			// 1. 게시글리스트 (페이징 적용된 것)
+			System.out.println(cPage);
+			List<WebReview> wr = memberService.selectListWebReiveiw(cPage, numPerPage);
+
+			// 2. 전체컨텐츠수
+			int totalContents = memberService.selectWebReiveiwTotalContents();
+		  
+		  
+		
+		  
+			 model.addAttribute("cPage", cPage);
+			 model.addAttribute("numPerPage", numPerPage);
+			 model.addAttribute("totalContents", totalContents);
+			 model.addAttribute("wr" , wr);
+		  
+		  
+		  return "/member/webReview";
+	  }
+	  
+	
+	  @RequestMapping(value="/member/webreviewform.do") 
+	  public String webReviewForm() {
+	  
+	  return "/member/webReviewForm"; 
+	  }
+	  
+	  @RequestMapping(value="/member/webreviewformEnd.do" ,  method = RequestMethod.POST) 
+	  public String webReviewFormEnd(WebReview wr , Model model , @RequestParam("star") String star) {
+		  
+		  
+		  star = star.substring(0,1);
+		  
+		  wr.setRate(star);
+		  
+		  int result = memberService.insertWebReview(wr);
+		  
+		  String msg = "";
+		  String loc = "/member/webreview.do";
+		  String view = "/common/msg";
+		  if(result > 0) {
+			  msg = "후기가 등록되었습니다. 감사합니다.";
+		  }else {
+			  msg ="후기 등록 실패";
+		  }
+		  model.addAttribute("loc" , loc);
+		  model.addAttribute("msg" , msg);
+		  
+		  
+		  return view; 
+	  }
+	
+	  
+	  
+	  
+	  @RequestMapping(value="/member/getNewPwd.do" ,method = RequestMethod.POST )
+	  @ResponseBody 
+	  public Map<String, Object> getNewPwd(@RequestParam("id") String id , @RequestParam("phone") String phone){
+		  Map<String, Object> map = new HashMap<>();
+		  
+		  Member m = memberService.selectOneMember(id) ;
+		  String userPhone="";
+		  String msg = "임시비밀번호가 등록된 이메일로 발송 되었습니다.";
+		  boolean phoneEquals ;
+		  String rndPwd ;
+		  int result ;
+		  String temp ;
+	
 			 
 			 if(m == null) {
 				 
@@ -653,13 +796,12 @@ public class MemberController {
 								rndPwd = new Utils().getRandomPassword(10);
 								temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
 								s.setPassword(temp);
-								logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
-								logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
 								result = memberService.updateFindPwd(s);
-								new MessageSend().findPwd(rndPwd , s.getPhone());
+								new SendEmail().mailSendingForPwd(s.getEmail() , s.getSellerName() , rndPwd);
+							
 								
 							}else {
-								msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+								msg ="새로고침 후 다시 시도하십시오.";
 							}
 							
 						}
@@ -676,23 +818,24 @@ public class MemberController {
 							rndPwd = new Utils().getRandomPassword(10);
 							temp = (bCryptPasswordEncoder.encode(rndPwd)) ;
 							m.setPassword(temp);
-							logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2"+rndPwd);
-							logger.debug("$$$$$$$$$$$$$$$$$$$$$$$$"+temp);
 							result = memberService.updateMemberFindPwd(m);
-							new MessageSend().findPwd(rndPwd , m.getPhone());
+							new SendEmail().mailSendingForPwd(m.getEmail() , m.getMemberName() , rndPwd);
+							
 							
 						}else {
-							msg ="핸드폰 번호가 등록된 정보와 일치하지 않습니다.";
+							msg ="새로고침 후 다시 시도하십시오.";
 						}
 						
 					}
 				 
 			 }
+			 
 			 map.put("msg" , msg);
-		  
+			 
 		  return map ;
 		  
 	  }
+	  
 	
 }
 

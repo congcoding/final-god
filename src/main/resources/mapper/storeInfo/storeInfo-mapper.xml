@@ -148,7 +148,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
    <select id="selectMenuList" resultType="menu">
 		select *
 		from menu m left join menuattachment ma on m.menuCode = ma.menuCode left join storeinfo s on m.storeno = s.storeno
-		where s.storeNo = #{storeNo}
+		where s.storeNo = #{storeNo} and m.delFlag = 'N'
    </select>
    
    <select id="getthumbAttachment" resultType="menuAttachment">
@@ -288,7 +288,17 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y'
 	</select>
 	
 	<insert id="insertReport">
-		insert into report values(seq_report_reportno.nextval , #{category} ,null , #{storeNo} , #{reportDetails}, default)
+		insert into report values
+		<if test="storeNo != null">
+		(seq_report_reportno.nextval , #{category} ,null , #{storeNo} , #{reportDetails}, default)
+		</if>
+		<if test="reviewNo != null">
+		(seq_report_reportno.nextval , #{category} ,#{reviewNo} , null , #{reportDetails}, default)
+		</if>
 	</insert>
+	
+	<select id="selectAllstoreInfo" resultType="storeInfo">
+		select * from storeInfo
+	</select>
 
 </mapper>

@@ -603,11 +603,18 @@ public class AdminController {
 	}
 	
 	@RequestMapping("/admin/storeList.do")
-	public String storeList(@RequestParam(value="cPage", defaultValue="1") int cPage, Model model) {
+	public String storeList(Model model, @RequestParam(value="cPage", defaultValue="1") int cPage,
+										 @RequestParam(value="searchType", defaultValue="") String searchType,
+										 @RequestParam(value="searchKeyword", defaultValue="") String searchKeyword) {
 		
 		int numPerPage = 10;
-		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage);
-		int totalContents = adminService.countStoreList();
+		Map<String,String> map = new HashMap<>();
+		map.put("searchType", searchType);
+		map.put("searchKeyword", searchKeyword);
+		
+//		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage);
+		List<Map<String,String>> list = adminService.storeList(cPage, numPerPage, map);
+		int totalContents = adminService.countStoreList(map);
 		
 		model.addAttribute("cPage",cPage);
 		model.addAttribute("numPerPage",numPerPage);
@@ -852,8 +859,13 @@ public class AdminController {
 	
 	@RequestMapping("admin/chart.do")
 	public Model chart(Model model) {
+		
+		
 		List<Integer> chartByCategory = adminService.chartByCategory(); 
+		List<Integer> chartByFavoriteCetegory = adminService.chartByFavoriteCetegory();
+		
 		model.addAttribute("chartByCategoryList", chartByCategory);
+		model.addAttribute("chartByFavoriteCetegory", chartByFavoriteCetegory);
 		model.addAttribute("admin/chart");
 		return model;
 	}

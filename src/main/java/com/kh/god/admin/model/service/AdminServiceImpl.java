@@ -254,13 +254,13 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public List<Map<String, String>> storeList(int cPage, int numPerPage) {
-		return adminDao.storeList(cPage, numPerPage);
+	public List<Map<String, String>> storeList(int cPage, int numPerPage, Map<String, String> map) {
+		return adminDao.storeList(cPage, numPerPage, map);
 	}
 
 	@Override
-	public int countStoreList() {
-		return adminDao.countStoreList();
+	public int countStoreList(Map<String, String> map) {
+		return adminDao.countStoreList(map);
 	}
 	
 	@Override
@@ -403,6 +403,11 @@ public class AdminServiceImpl implements AdminService {
 	@Override
 	public int updateStoreReportFlagY(Map<String, String> map) {
 		return adminDao.updateStoreReportFlagY(map);
+	}
+
+	@Override
+	public List<Integer> chartByFavoriteCetegory() {
+		return adminDao.chartByFavoriteCetegory();
 	}
 
 }

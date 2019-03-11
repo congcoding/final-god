@@ -15,14 +15,21 @@ public interface ChatDao {
 
 	List<Map<String,String>> selectChattingLogs(Map<String, String> map);
 
-	int insertChatLog(Chat chat);
+	int insertChatLogRead(Chat chat);
+	
+	int insertChatLogNotRead(Chat chat);
 
 	List<Seller> searchPerson(String searchId);
 
 	ChatRoom searchChatRoom(ChatRoom roomId) ;
 
 	int creatChatRoom(ChatRoom roomId);
-	String notReadMessage(String memberId);
+	List<Integer> notReadMessageToAdmin(String memberId);
+	List<Integer> notReadMessageToSeller(String memberId);
 
 	Seller selectSeller(String addId);
+
+	List<Map<String, String>> getAlertListToAdmin();
+
+	List<Map<String, String>> getAlertListToSeller(String userId);
 }
