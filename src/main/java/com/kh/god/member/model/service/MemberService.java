@@ -69,6 +69,8 @@ public interface MemberService {
 
 	int selectWebReiveiwTotalContents();
 
+	int couponUseFlag(String eventNo);
+
 
 
 }

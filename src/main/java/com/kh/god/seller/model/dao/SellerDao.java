@@ -120,6 +120,10 @@ public interface SellerDao {
 
 	int createChatRoom(Map<String, String> chatId);
 
+	int giveCouponBySeller(Map<String, Object> map);
+
+	int giveCouponBySeller2(Map<String, Object> map);
+
 
 
 

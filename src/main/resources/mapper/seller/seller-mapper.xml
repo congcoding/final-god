@@ -246,8 +246,21 @@
 		insert into chatroom values(seq_chatroomno.nextval,#{sellerId},#{admin})
 	</insert>
 	
+
 	<update id="couponUseFlag">
 		update coupon set userFlag = 'Y' where couponNo = #{couponNo}
 	</update>
+
+	<insert id="giveCouponBySeller">
+	insert into event values(seq_event_eventno.nextval,#{couponName} ,#{discount}, null, null, null, #{amount} , null)
+	<selectKey resultType="_int" keyProperty="eventNo" order="AFTER">
+	   select seq_event_eventno.currval from dual
+	</selectKey>
+	</insert>
+	
+	<insert id="giveCouponBySeller2">
+		insert into coupon values (seq_coupon_couponno.nextval, #{eventNo}, #{memberId}, sysdate, sysdate+#{day}, 'N', #{storeNo})
+	</insert>
+
 
 </mapper>

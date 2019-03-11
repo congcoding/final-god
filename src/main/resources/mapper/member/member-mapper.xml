@@ -133,5 +133,9 @@
 	<select id="selectWebReiveiwTotalContents" resultType="_int">
 		SELECT COUNT(*) FROM webreview
 	</select>
+	
+	<update id="couponUseFlag">
+		update coupon set useflag = 'Y' where eventno = #{eventNo}
+	</update>
 
 </mapper>

@@ -23,7 +23,7 @@
   <ul class="list-group">
 	<c:forEach items="${storeInfo}" var="storeInfo">
 	    <li class="list-group-item" id=storeName>
-		    ${storeInfo.storeName}
+		    ${storeInfo.STORENAME}
 		    <span style="float: right;">
 		    	<i class="fas fa-concierge-bell" style="font-size:27px;color:gray; cursor:pointer;padding-left: 319px;" data-toggle="modal" data-target="#ReportModal" ></i>&nbsp;
 		    <span style="float : right">
@@ -660,25 +660,24 @@ function emptyCart(newMenuCode){
 /* 각 메뉴->카트 확인 모달영역 */
 function checkOrder(){
 	var memberid= "${memberLoggedIn.memberId}";
-	var deliveryMinPrice = $("#deliveryMinPrice").val();
-	var checkSum = $("#checkSum").val();
+	var deliveryMinPrice = parseInt($("#deliveryMinPrice").val());
+	var checkSum = parseInt($("#checkSum").val());
 	
-	console.log("외않되죠deliveryMinPrice..?",deliveryMinPrice);
-	console.log("외않되죠checkSum..?",checkSum);
-
 	var bool = "";
 	if(memberid==""){
-		bool =  confirm("비회원으로 주문 하시겠습니까?");
 		if(checkSum<deliveryMinPrice){
 			alert("최소금액을 주문하셔야합니다.");
 			return;
+		}else {	
+			bool =  confirm("비회원으로 주문 하시겠습니까?");
 		}
 	} else {
-		bool =  confirm("주문 하시겠습니까?");
-		if(checkSum<deliveryMinPrice){
+		if(checkSum>deliveryMinPrice){
 			alert("최소금액을 주문하셔야합니다.");
 			return;
-		}
+		}else {	
+			bool =  confirm("주문 하시겠습니까?");
+		}		
 	}
 	
 	if(bool){
