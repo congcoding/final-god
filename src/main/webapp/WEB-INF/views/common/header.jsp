@@ -1094,15 +1094,17 @@ span.srchVal{
 		 		}else if(message[i] === "forcedlogout"){
 		 			alert("현재 다른 브라우져에서 강제 로그아웃을 요청했습니다.");
 		 			location.href='${pageContext.request.contextPath}/seller/sellerLogout.do?sellerId=${sellerLoggedIn.sellerId}';
-		 		}else if(message[i].cmd = "report"){
+		 		}else if(message[i].cmd === "report"){
 		 			alertType = message[i];
 		 			alertMessage(alertType,"report");
-		 		}else if(message[i].cmd = "pms"){
+		 		}else if(message[i].cmd === "pms"){
 		 			alertType = message[i];
 		 			alertMessage(alertType,"pms");
 		 		}
-		 		else
+		 		else if (message[i].cmd === "chat"){
 		 			 messageType = message[i];
+		 			 console.log("메세지 타입 : "+messageType);
+		 		}
 	 		}
 	 		if(alertType != null && messageType != null){
 	 			console.log(alertType);

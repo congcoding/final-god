@@ -127,8 +127,8 @@ public class SellerController {
 	}
 	
 	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
-	public String SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
-			@RequestParam("autologin") String autologin,HttpSession session) {
+	public ModelAndView SellerLogin( HttpServletResponse response ,@RequestParam String memberId , @RequestParam String password, 
+			@RequestParam("autologin") String autologin,HttpSession session,ModelAndView mav) {
 		
 		
 		logger.debug("$#@$@#$@#$@#$"+autologin);
@@ -144,7 +144,7 @@ public class SellerController {
 		}
 		logger.debug("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!222"+ session.getAttribute("sellerLoggedIn"));
 		
-		String loc = "/";
+		  String loc = "/";
 	      String msg = "";
 	      String view = "common/msg";
 		
@@ -232,13 +232,15 @@ public class SellerController {
 	            //비밀번호 불일치 
 	        	 msg = "비밀번호를 잘못 입력하셨습니다.";
 		            loc = "/";
-	        	 returnURL = "redirect:/"; // 로그인 폼으로 다시 가도록 함
+	        	 view = "redirect:/"; // 로그인 폼으로 다시 가도록 함
 	         }
 		      }
 	      }
-		
+	     mav.addObject("msg", msg);
+			mav.addObject("loc", loc);
+			mav.setViewName(view);
 		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2222222222222222222222222");
-		return "redirect:/" ;
+		return mav ;
 		
 	}
 //	@RequestMapping(value = "/seller/sellerLogin.do" ,method = RequestMethod.POST)
