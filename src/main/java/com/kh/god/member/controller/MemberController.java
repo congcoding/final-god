@@ -550,6 +550,7 @@ public class MemberController {
 
 		 Map<String,Object>map = new HashMap<>();
 		 double discount = memberService.getDiscount(eventNo); 
+		 int couponUseFlag = memberService.couponUseFlag(eventNo); 
 		 if(discount<1) {
 			 price = (int) (price*discount);
 		 } else {

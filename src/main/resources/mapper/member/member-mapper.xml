@@ -36,7 +36,7 @@
     </select>
     
     <select id="couponListBymemberId" resultType="map">
-    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag,C.storeno from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberId} and useflag='N' and storeno='all' or storeno=#{storeNo}
+    	select A.* from (select E.eventNo,E.eventTitle,E.discount,C.memberId,C.useFlag,C.storeno from coupon C,event E where C.eventno = E.eventno) A where memberid=#{memberId} and useflag='N' and (storeno='all' or storeno=#{storeNo})
     </select>
     
     
@@ -133,5 +133,9 @@
 	<select id="selectWebReiveiwTotalContents" resultType="_int">
 		SELECT COUNT(*) FROM webreview
 	</select>
+	
+	<update id="couponUseFlag">
+		update coupon set useflag = 'Y' where eventno = #{eventNo}
+	</update>
 
 </mapper>
