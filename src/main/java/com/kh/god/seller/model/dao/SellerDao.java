@@ -123,6 +123,4 @@ public interface SellerDao {
 
 
 
-
-
 }

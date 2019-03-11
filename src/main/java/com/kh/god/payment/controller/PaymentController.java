@@ -152,7 +152,7 @@ public class PaymentController {
 		orderInfoMap.put("paymentId",!paymentId.equals("")?paymentId:"");
 		orderInfoMap.put("priceWay", paymentMethod.equals("now_card")?"Y":paymentMethod);
 
-		
+	
 	    int orderInfo=sellerService.insertOrderInfo(orderInfoMap);
 		System.out.println(orderInfo>0?"오더인포성공":"실패");
 

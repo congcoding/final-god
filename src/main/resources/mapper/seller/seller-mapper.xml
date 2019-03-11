@@ -245,5 +245,9 @@
 	<insert id="createChatRoom">
 		insert into chatroom values(seq_chatroomno.nextval,#{sellerId},#{admin})
 	</insert>
+	
+	<update id="couponUseFlag">
+		update coupon set userFlag = 'Y' where couponNo = #{couponNo}
+	</update>
 
 </mapper>
