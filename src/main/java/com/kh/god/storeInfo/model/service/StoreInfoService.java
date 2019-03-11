@@ -30,6 +30,8 @@ public interface StoreInfoService {
 
 	int insertReport(Report r);
 
+	int deleteStore(String storeNo);
+
 	
 
 }

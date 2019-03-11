@@ -77,6 +77,11 @@ public class StoreInfoDaoImpl implements StoreInfoDao {
 		return sqlSession.insert("storeInfo.insertReport" , r);
 	}
 
+	@Override
+	public int deleteStore(String storeNo) {
+		return sqlSession.update("storeInfo.deleteStore", storeNo);
+	}
+
 
 	
 

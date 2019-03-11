@@ -432,6 +432,27 @@ public class StoreInfoController {
     	return view;
     }
     
+    @RequestMapping("storeinfo/deleteStore.do")
+    public String deleteStore(@RequestParam("storeNo") String storeNo, Model model){
+    	
+    	int result = storeInfoService.deleteStore(storeNo);
+    
+    	String loc = "/seller/sellerView.do";
+		String msg = "";
+		String view = "common/msg";
+
+		if(result > 0) {
+    		msg = "매장 삭제가 완료되었습니다.";
+    	} else {
+    		msg = "매장 삭제 실패하였습니다.";
+    	}
+    	
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+    	
+    	return view;
+    }
+    
     
     
 	

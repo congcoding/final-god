@@ -32,6 +32,8 @@ public interface StoreInfoDao {
 
 	int insertReport(Report r);
 
+	int deleteStore(String storeNo);
+
 
 
 
