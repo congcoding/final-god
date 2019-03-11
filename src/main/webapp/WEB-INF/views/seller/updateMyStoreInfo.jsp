@@ -51,8 +51,8 @@ $(function(){
       <div class="col-sm-10">
       
       	<c:forEach items="${store}" var="store">
-        <input type="text" class="form-control" id="storeName" value="${store.storeName}" readonly>
-      	<input type="hidden" class="form-control" id="storeNo" name="storeNo" value="${store.storeNo}">
+        <input type="text" class="form-control" id="storeName" value="${store.STORENAME}" readonly>
+      	<input type="hidden" class="form-control" id="storeNo" name="storeNo" value="${store.STORENO}">
       	
       </div>
     </div>
@@ -60,7 +60,7 @@ $(function(){
       <label for="inputEmail3" class="col-sm-2 col-form-label">영업시간</label>
       <div class="col-sm-10">
       <!-- 오전~오후 -->
-        <input type="text" class="form-control" name="operatingHours" value="${store.operatingHours}" id="operatingHours" placeholder="고객들에게 소개될 영업시간 입니다">  
+        <input type="text" class="form-control" name="operatingHours" value="${store.OPERATINGHOURS}" id="operatingHours" placeholder="고객들에게 소개될 영업시간 입니다">  
       </div>
       
     </div>
@@ -70,27 +70,27 @@ $(function(){
       	<!--지역번호  -->
          	<select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="locationStartNum" name="locationStartNum">
 
-		    	<option value="02" <c:if test="${fn:substring(store.storeTel, 0, 2)=='02'}">selected="selected"</c:if>>02</option>
-		    	<option value="031"<c:if test="${fn:substring(store.storeTel, 0, 2)=='031'}">selected="selected"</c:if>>031</option>
-		    	<option value="032"<c:if test="${fn:substring(store.storeTel, 0, 2)=='032'}">selected="selected"</c:if>>032</option>
-		    	<option value="033"<c:if test="${fn:substring(store.storeTel, 0, 2)=='033'}">selected="selected"</c:if>>033</option>
-		    	<option value="041"<c:if test="${fn:substring(store.storeTel, 0, 2)=='041'}">selected="selected"</c:if>>041</option>
-		    	<option value="042"<c:if test="${fn:substring(store.storeTel, 0, 2)=='042'}">selected="selected"</c:if>>042</option>
-		    	<option value="043"<c:if test="${fn:substring(store.storeTel, 0, 2)=='043'}">selected="selected"</c:if>>043</option>
-		    	<option value="044"<c:if test="${fn:substring(store.storeTel, 0, 2)=='044'}">selected="selected"</c:if>>044</option>
-		    	<option value="051"<c:if test="${fn:substring(store.storeTel, 0, 2)=='051'}">selected="selected"</c:if>>051</option>
-		    	<option value="052"<c:if test="${fn:substring(store.storeTel, 0, 2)=='052'}">selected="selected"</c:if>>052</option>
-		    	<option value="053"<c:if test="${fn:substring(store.storeTel, 0, 2)=='053'}">selected="selected"</c:if>>053</option>
-   			    <option value="054"<c:if test="${fn:substring(store.storeTel, 0, 2)=='054'}">selected="selected"</c:if>>054</option>
-   			    <option value="055"<c:if test="${fn:substring(store.storeTel, 0, 2)=='055'}">selected="selected"</c:if>>055</option>
-   			    <option value="061"<c:if test="${fn:substring(store.storeTel, 0, 2)=='061'}">selected="selected"</c:if>>061</option>
-   			    <option value="062"<c:if test="${fn:substring(store.storeTel, 0, 2)=='062'}">selected="selected"</c:if>>062</option>
-   			    <option value="063"<c:if test="${fn:substring(store.storeTel, 0, 2)=='063'}">selected="selected"</c:if>>063</option>
-   			    <option value="064"<c:if test="${fn:substring(store.storeTel, 0, 2)=='064'}">selected="selected"</c:if>>064</option>
+		    	<option value="02" <c:if test="${fn:substring(store.STORETEL, 0, 2)=='02'}">selected="selected"</c:if>>02</option>
+		    	<option value="031"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='031'}">selected="selected"</c:if>>031</option>
+		    	<option value="032"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='032'}">selected="selected"</c:if>>032</option>
+		    	<option value="033"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='033'}">selected="selected"</c:if>>033</option>
+		    	<option value="041"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='041'}">selected="selected"</c:if>>041</option>
+		    	<option value="042"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='042'}">selected="selected"</c:if>>042</option>
+		    	<option value="043"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='043'}">selected="selected"</c:if>>043</option>
+		    	<option value="044"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='044'}">selected="selected"</c:if>>044</option>
+		    	<option value="051"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='051'}">selected="selected"</c:if>>051</option>
+		    	<option value="052"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='052'}">selected="selected"</c:if>>052</option>
+		    	<option value="053"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='053'}">selected="selected"</c:if>>053</option>
+   			    <option value="054"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='054'}">selected="selected"</c:if>>054</option>
+   			    <option value="055"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='055'}">selected="selected"</c:if>>055</option>
+   			    <option value="061"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='061'}">selected="selected"</c:if>>061</option>
+   			    <option value="062"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='062'}">selected="selected"</c:if>>062</option>
+   			    <option value="063"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='063'}">selected="selected"</c:if>>063</option>
+   			    <option value="064"<c:if test="${fn:substring(store.STORETEL, 0, 2)=='064'}">selected="selected"</c:if>>064</option>
 	 	    </select>
-	 	   <input type="num" class="form-control storeName"  id="tel1" name="tel1" value="${fn:substring(store.storeTel, 3, 7)}">
+	 	   <input type="num" class="form-control storeName"  id="tel1" name="tel1" value="${fn:substring(store.STORETEL, 3, 7)}">
 	 	   <span id="tel2">-</span>
-           <input type="num" class="form-control storeName" id="tel3" name="tel2" value="${fn:substring(store.storeTel, 8, 12)}">    
+           <input type="num" class="form-control storeName" id="tel3" name="tel2" value="${fn:substring(store.STORETEL, 8, 12)}">    
       </div>
      </c:forEach>
       
@@ -100,13 +100,13 @@ $(function(){
         <button type="button" id="updateAddressBtn" class="btn btn-outline-info">주소수정</button>
         <br>
         <c:forEach items="${store}" var="store">
-        <input type="text" class="form-control" id="fixedAddress" name="address1" value="${store.storeAddress}" readonly>  
+        <input type="text" class="form-control" id="fixedAddress" name="address1" value="${store.STOREADDRESS}" readonly>  
         <br>
         <input type="text" class="form-control" id="address" name="address2" placeholder="상세주소를 입력해주세요">    
     </div> 
     <div id="personalday-container">   
   		<label for="inputEmail3" class="col-sm-2 col-form-label">휴무일</label>
-        <input type="text" class="form-control" name="personalday" value="${store.personalDay}" id="storeName" placeholder="고객들에게 소개될 휴무일 입니다">  
+        <input type="text" class="form-control" name="personalday" value="${store.PERSONALDAY}" id="storeName" placeholder="고객들에게 소개될 휴무일 입니다">  
         </c:forEach>    
 	</div>
 	<br>

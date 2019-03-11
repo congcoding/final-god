@@ -180,6 +180,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 
+	@Override
+	public int couponUseFlag(String eventNo) {
+		// TODO Auto-generated method stub
+		return  memberDao.couponUseFlag(eventNo);
+	}
+
+
 
 
 

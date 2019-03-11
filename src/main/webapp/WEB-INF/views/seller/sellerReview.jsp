@@ -79,10 +79,11 @@ function appendComment(reviewRef, content){
 		    <div class="card-header" role="tab" id="headingOne">
 		      <h5 class="mb-0">
 		        <a data-toggle="collapse" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-		          '<span>${review1.writer}</span>'님의 리뷰
+		         <input type="hidden" value='${review1.writer}' class="memberId">
+		          '<span class="memberId">${review1.writer}</span>'님의 리뷰
 		        </a>
 		        &nbsp;&nbsp;
-				<button type="button" class="btn btn-outline-info" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>
+				<button type="button" class="btn btn-outline-info couponBtn" data-target="#giveCouponModal" data-toggle="modal">쿠폰지급</button>
 		        </h5>
 		    </div>
 		</c:if>
@@ -128,13 +129,20 @@ function appendComment(reviewRef, content){
         </button>
       </div>
       <div class="modal-body">
-        <form>
+<form name="couponFrm" action="${pageContext.request.contextPath}/seller/giveCouponBySeller">
+        <!-- 가게명 -->
+        <input type="hidden" value="${param.storeName}" name="storeName" id="storeName">
+        <!-- 사업자번호 -->
+        <input type="hidden" value="${param.storeNo}" name="storeNo" id="storeNo">
+        <!-- 회원아이디 -->
+        <input type="hidden" name="memberIdForCoupon" id="memberIdForCoupon">
+        
           <div class="form-group">            
             <span style="color: green;"> "[가게명] + 대상 + 할인금액" 으로 고객님께 지급됩니다.</span>  
             <br> 
              <br>          
             <label for="recipient-name" class="form-control-label">대상</label> 
-            	<select class="form-control form-control-sm">
+            	<select class="form-control form-control-sm to" name="to" id="to">
 				  <option>단골고객</option>
 				  <option>감사고객</option>
 				  <option>신규고객</option>
@@ -143,7 +151,7 @@ function appendComment(reviewRef, content){
           
          <div class="form-group">
             <label for="message-text" class="form-control-label">할인금액</label>
-				<select class="form-control form-control-sm">
+				<select class="form-control form-control-sm howMuch" name="howMuch" id="howMuch">
 				  <option>10%할인쿠폰</option>
 				  <option>1000원할인쿠폰</option>
 				  <option>2000원할인쿠폰</option>
@@ -152,23 +160,26 @@ function appendComment(reviewRef, content){
           
           <div class="form-group">
             <label for="message-text" class="form-control-label">사용기한</label>
-				<select class="form-control form-control-sm">
+				<select class="form-control form-control-sm howLong" name="howLong" id="howLong">
 				  <option>3일</option>
 				  <option>7일</option>
 				  <option>10일</option>
 				</select>
           </div>
-        </form>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">쿠폰지급</button>
+        <button type="submit" class="btn btn-primary giveCoupon">쿠폰지급</button>
       </div>
+          
+	</form>
+      
     </div>
   </div>
 </div>
-    
 </div>
+   
 
 <script>
 function goComment2(reviewNo,storeNo){
@@ -189,6 +200,11 @@ function goComment2(reviewNo,storeNo){
 	});
 	appendComment(reviewNo, reply);
 }
+$(".couponBtn").on("click", function(){
+	var memberId = $(".memberId").val();
+	$("#memberIdForCoupon").val(memberId);
+	
+});
 
 </script>
           <!-- 여기부터 코드 붙여넣으면 됨 -->

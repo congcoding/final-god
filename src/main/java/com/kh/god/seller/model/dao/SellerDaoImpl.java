@@ -367,4 +367,16 @@ public class SellerDaoImpl implements SellerDao {
 	public int createChatRoom(Map<String, String> chatId) {
 		return sqlSession.insert("seller.createChatRoom", chatId);
 	}
+
+	@Override
+	public int giveCouponBySeller(Map<String, Object> map) {
+		logger.debug("----->"+map.get("amount"));
+		return sqlSession.insert("seller.giveCouponBySeller", map);
+	}
+
+	@Override
+	public int giveCouponBySeller2(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sqlSession.insert("seller.giveCouponBySeller2", map);
+	}
 }

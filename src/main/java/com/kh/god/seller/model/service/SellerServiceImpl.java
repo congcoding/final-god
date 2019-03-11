@@ -341,6 +341,17 @@ public class SellerServiceImpl implements SellerService {
 	
 	}
 
+	@Override
+	public int giveCouponBySeller(Map<String, Object> map) {
+		return sellerDao.giveCouponBySeller(map);
+	}
+
+	@Override
+	public int giveCouponBySeller2(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return sellerDao.giveCouponBySeller2(map);
+	}
+
 
 	
 }

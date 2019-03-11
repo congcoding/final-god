@@ -189,6 +189,12 @@ public class MemberDaoImpl implements MemberDao {
 		return sqlSession.selectOne("member.selectWebReiveiwTotalContents" );
 	}
 
+	@Override
+	public int couponUseFlag(String eventNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.update("member.couponUseFlag",eventNo);
+	}
+
 	
 
 	

@@ -69,5 +69,7 @@ public interface MemberDao {
 
 	int selectWebReiveiwTotalContents();
 
+	int couponUseFlag(String eventNo);
+
 
 }

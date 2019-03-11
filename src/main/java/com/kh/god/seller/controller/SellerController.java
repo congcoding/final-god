@@ -1174,6 +1174,69 @@ public class SellerController {
     public Seller selectSellerBySellerId(String sellerId) {
     	return sellerService.selectSellerBySellerId(sellerId);
     }
+    
+    @RequestMapping("/seller/giveCouponBySeller")
+    public String giveCouponBySeller(
+    		Model model,
+    		@RequestParam(name="storeName", required=false) String storeName,
+    		@RequestParam(name="storeNo", required=false) String storeNo,
+    		@RequestParam(name="to", required=false) String to,
+    		@RequestParam(name="howMuch", required=false) String howMuch,
+    		@RequestParam(name="howLong", required=false) String howLong,
+    		@RequestParam("memberIdForCoupon") String memberId) {
+    	
+    	
+		String loc = "/";
+		String msg = "";
+		String view = "common/msg";
+    	
+    	String couponName = "["+storeName+"]"+to+" "+howMuch;
+    	String discount = "";
+    	switch(howMuch) {
+    	case "10%할인쿠폰" : discount = "0.9" ;
+    	break;
+    	case "1000원할인쿠폰" : discount = "1000" ;
+    	break;
+    	case "2000원할인쿠폰" : discount = "2000" ;
+    	break;
+    	}
+    	    	
+    	String day = "";
+      	switch(howLong) {
+    	case "3일" : day = "3" ;
+    	break;
+    	case "7일" : day = "7" ;
+    	break;
+    	case "10일" : day = "10" ;
+    	break;
+    	}
+      	
+    	Map<String,Object> map = new HashMap<>();
+    	map.put("couponName",couponName);
+    	map.put("discount",discount);
+    	map.put("couponName",couponName);
+    	map.put("day",day);
+    	map.put("memberId",memberId);
+    	map.put("amount",2);
+    	map.put("storeNo",storeNo);
+
+    	int result = sellerService.giveCouponBySeller(map);
+    	int result2 = sellerService.giveCouponBySeller2(map);
+
+    	if(result>0 && result2>0 ) {
+    		msg="쿠폰발급이 성공적으로 진행되었습니다";
+    		loc="/seller/goSellerReview.do?storeNo="+storeNo+"&storeName="+storeName;
+    	}else {
+    		msg="쿠폰발급 실패";
+    		loc="/seller/goSellerReview.do?storeNo="+storeNo+"&storeName="+storeName;
+    	}
+    	
+		model.addAttribute("msg", msg);
+		model.addAttribute("loc", loc);
+
+		return view;
+ 
+    }
 }
 
 

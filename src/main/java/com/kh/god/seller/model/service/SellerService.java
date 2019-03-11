@@ -114,6 +114,10 @@ public interface SellerService {
 
 	Seller selectSellerBySellerId(String sellerId);
 
+	int giveCouponBySeller(Map<String, Object> map);
+
+	int giveCouponBySeller2(Map<String, Object> map);
+
 
 
 
