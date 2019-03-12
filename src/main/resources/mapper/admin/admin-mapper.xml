@@ -331,7 +331,7 @@
 	</select>
 	
 	<select id="selectReportList" resultType="report">
-		select * from report order by reportFlag, reportNo
+		select * from report order by reportFlag asc, reportNo desc
 	</select>
 	
 	<select id="countReportList" resultType="_int">
