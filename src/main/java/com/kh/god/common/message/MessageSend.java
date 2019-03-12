@@ -18,7 +18,9 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		//flag=receive 일 경우 howLongChecked => 얼마나 걸릴지
 	    //flag=cancel 일 경우 howLongChecked => 취소 사유
 
-	
+		System.out.println("☆★☆★☆★☆★☆★메시지 센드 왔냐?");
+		System.out.println("☆★☆★☆★☆★☆★memberPhone"+memberPhone);
+
 		memberPhone = memberPhone.replaceAll("-", "");
 	
 		String api_key = "NCS9DYEIIJWBG3SF"; 
@@ -92,16 +94,18 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		String api_key = "NCS9DYEIIJWBG3SF"; 
 		String api_secret ="YU790DMVFQ2MMXD8WBWVRU14Q6ENAV3V"; 
 		Message coolsms = new Message(api_key,api_secret);
-		
+		System.out.println("☆★☆★☆★☆★☆★메시지 센드 왔냐?");
+		System.out.println("☆★☆★☆★☆★☆★memberPhone"+memberPhone);
+
 		//인증번호
 		int randomint = (int)(Math.random() * 1000000) + 1; 
 		String randomString = Integer.toString(randomint);
 		System.out.println("randomint=>"+randomint);
 		
-		/*HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, String> params = new HashMap<String, String>();
 		
-			params.put("to", memberPhone); 
-			params.put("from", "01084345390");
+		    params.put("to", memberPhone); 
+			params.put("from", "01048728372");
 			params.put("type", "SMS"); 
 			params.put("text", "[배달의 신]인증번호는 ["+randomint+"]입니다. 정확히 입력해주세요.");
 			params.put("app_version", "test app 1.2"); // application name and version
@@ -115,7 +119,7 @@ public static void main(String howLongChecked, String memberPhone,String flag) {
 		    } catch (CoolsmsException e) {
 		    System.out.println(e.getMessage()); 
 		    System.out.println(e.getCode()); 
-		}*/
+		}
 		
 		return randomString;
 	}

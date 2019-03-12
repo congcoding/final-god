@@ -411,8 +411,9 @@ public class StoreInfoController {
 		String msg = "";
 		String view = "common/msg";
     	
+		logger.info("~~~~~~~~~~~~~~~~~~~~"+r);
 		
-		if(r.getReviewNo() != 0) {
+		if(r.getReviewNo() != null) {
 			loc = "/menu/menuList.do?storeNo="+r.getStoreNo();
 			r.setStoreNo(null);
 			logger.info("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"+r);

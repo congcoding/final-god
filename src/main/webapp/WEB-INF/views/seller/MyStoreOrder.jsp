@@ -152,11 +152,16 @@ $(function(){
 				      <td class="orderRequest"></td>
 				      </c:if>
 				      
-				      <c:if test="${orderList2.PRICEWAY=='Y'}">
+					<c:if test="${orderList2.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList2.PRICEWAY=='N'}">
-				      <td class="orderWay">만나서결제</td>
+				      
+				      <c:if test="${orderList2.PRICEWAY=='현금'}">
+				      <td class="orderWay">만나서결제(현금)</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList2.PRICEWAY=='카드'}">
+				      <td class="orderWay">만나서결제(카드)</td>
 				      </c:if>
 				     
 				      <td class="orderPrice">${orderList2.TOTALPRICE}</td>
@@ -172,6 +177,9 @@ $(function(){
 
 
 	   </div>
+	   <c:set var="now" value="<%=new java.util.Date()%>" />
+	   <c:set var="today"><fmt:formatDate value="${now}" pattern="yyyy-MM-dd" /></c:set> 
+	   
       <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
 		<!-- 배달완료된 오더들 -->
 		<table class="table table-hover" id="orderWaitng">
@@ -187,8 +195,11 @@ $(function(){
 				 
 				    </tr>
 				  </thead>
-				  <tbody>
+				  <tbody id="ajaxOrderList3">
 				    <c:forEach items="${orderList3}" var="orderList3" varStatus="var">
+				    <c:set var="deliveryEnd"><fmt:formatDate value="${orderList3.DELIVERYEND}" pattern="hh시mm분" /></c:set> 
+				    <c:set var="todayChk"><fmt:formatDate value="${orderList3.DELIVERYEND}" pattern="yyyy-MM-dd" /></c:set> 
+				    <c:if test="${todayChk==today}">
 				    <tr no="${var.count}" class="trOrderList3">
 				    <!--${fn:split('1|2|3|4|5', '|') }  -->
 				      <td class="orderMenu">
@@ -207,18 +218,24 @@ $(function(){
 				      <td class="orderRequest"></td>
 				      </c:if>
 				      
-				      <c:if test="${orderList3.PRICEWAY=='Y'}">
+					  <c:if test="${orderList3.PRICEWAY=='Y'}">
 				      <td class="orderWay">결제완료</td>
 				      </c:if>
-				      <c:if test="${orderList3.PRICEWAY=='N'}">
-				      <td class="orderWay">만나서결제</td>
+				      
+				      <c:if test="${orderList3.PRICEWAY=='현금'}">
+				      <td class="orderWay">만나서결제(현금)</td>
+				      </c:if>
+				      
+				      <c:if test="${orderList3.PRICEWAY=='카드'}">
+				      <td class="orderWay">만나서결제(카드)</td>
 				      </c:if>
 				     
 				      <td class="orderPrice">${orderList3.TOTALPRICE}</td>
-				      <td class="orderPrice">${orderList3.DELIVERYEND}</td>
+				      <td class="orderPrice">${deliveryEnd}</td>
 				     
 				    </tr>
-				     </c:forEach>
+				  </c:if>
+				     </c:forEach> 
 				  </tbody>
 				</table>
 
@@ -379,7 +396,6 @@ $("#receiveBtn").on("click", function(){
 			$(".trOrderList1[no="+no+"]").hide('1000'); 
 			$("#receiveModal").removeClass("show");
 			location.reload();
-
 			console.log("에이젝스성공");
 			
 		},
@@ -406,22 +422,6 @@ function cancelOrder(item,item2,item3,item4,item5,item6){
 }
 
 
-/* */
-	
-	
-/* 	$.ajax({
-		url : "${pageContext.request.contextPath}/seller/cancelOrder.do",
-		data:formData,
-		success : function(data){
-			$(".trOrderList1[no="+no+"]").hide('1000'); 
-			$('#receiveModal').modal('hide')
-			console.log("에이젝스성공");		
-		},
-		error:function(){
-			console.log("ajax오류");
-		}
-	}); */
-/* }); */
 //배달완료 버튼 눌렀을 시
  function deliveryEnd(item, item2,item3){
 	console.log(item);
@@ -433,7 +433,7 @@ function cancelOrder(item,item2,item3,item4,item5,item6){
 		data : {orderNo : item, storeNo:item2},
 		success : function(data){
 			 $(".trOrderList2[no="+item3+"]").hide('1000'); 
-			console.log("에이젝스성공");
+			 location.reload();
 		},
 		error:function(){
 			console.log("ajax오류");

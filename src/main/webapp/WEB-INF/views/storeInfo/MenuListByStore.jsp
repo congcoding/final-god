@@ -672,10 +672,10 @@ function checkOrder(){
 			alert("최소금액을 주문하셔야합니다.");
 			return;
 		}else {	
-			bool =  confirm("비회원으로 주문 하시겠습니까?");
+			bool =  confirm("비회원으로 주문 하시겠습니까? 회원가입을 하시면 더 큰 혜택으로 배달의 신을 이용하실 수 있습니다.");
 		}
 	} else {
-		if(checkSum>deliveryMinPrice){
+		if(checkSum<deliveryMinPrice){
 			alert("최소금액을 주문하셔야합니다.");
 			return;
 		}else {	

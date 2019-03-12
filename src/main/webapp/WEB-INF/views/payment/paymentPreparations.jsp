@@ -42,6 +42,7 @@
 						<div class="col-sm-10">
 						
 						<c:if test="${memberLoggedIn!=null}">
+						<input type="hidden" id="checkMemberPhone" val="${memberPhone}">
 						<input type="tel" class="form-control" id="tel" name="tel" value="${memberPhone}" placeholder="(필수)휴대전화 번호 입력(-제외한 번호만 입력해주세요)" required>
 						</c:if>
 						
@@ -256,6 +257,7 @@ function getLocation(){
 			});
 		}, function(error){
 			console.log(error);
+			$("#fixedAddress").val("서울시 강남구 역삼동");
 		}, {
 			enableHighAccuracy:false,
 			maximumAge:0,
@@ -400,6 +402,7 @@ $("#phoneCheckBtn").on("click",function(){
 		$("#phoneChk-container").show(1000);
 
 });
+
 /* 비회원일때 휴대폰인증 */
 function phoneCheck(){
 	var tel = $("#tel").val();

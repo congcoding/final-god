@@ -399,7 +399,7 @@ span#passworderror3{
 		</div>
 	<!--  주소 api -->
 		<div class="form-group row">
-			<label for="address" class="col-sm-3">주소<span style="color:red;">&nbsp;*</span></label>	
+			<label for="address" class="col-sm-3">주소</label>	
 			<input class ="form-control" type="text" name="storeAddress" id="storeAddress" onclick="execDaumPostcode();"/>		
 		</div>
 		<!-- storIntro -->

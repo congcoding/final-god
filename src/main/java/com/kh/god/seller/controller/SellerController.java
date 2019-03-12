@@ -1139,6 +1139,13 @@ public class SellerController {
 		return view;
  
     }
+    
+    @ResponseBody
+    @RequestMapping("/seller/orderList3.do")
+    public List<Map<String, Object>> orderList3(@RequestParam(name="storeNo", required=false) String storeNo) {
+    	List<Map<String, Object>> orderList3 = sellerService.orderList3(storeNo);
+    	return orderList3;
+    }
 }
 
 

@@ -160,7 +160,7 @@ span#passworderror3{
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="upFile1" multiple >
-			    <label class="custom-file-label filelabel" id="labeloldfile" for="upFile1" style="overflow: hidden; border-radius: 3px;">
+			    <label class="custom-file-label filelabel" id="labeloldfile" for="upFile1" style="overflow: hidden; border-radius: 3px; z-index: -1;">
 			    <c:if test="${attachmentList[0].originalFileName == null}">
 			    	첨부파일선택
 			    </c:if>
@@ -180,7 +180,7 @@ span#passworderror3{
 			  </div>
 			  <div class="custom-file">
 			    <input type="file" class="custom-file-input" name="upFile" id="upFile2" multiple >
-			    <label class="custom-file-label filelabel" id="labeloldfile1" for="upFile2" style="overflow: hidden; border-radius: 3px;">
+			    <label class="custom-file-label filelabel" id="labeloldfile1" for="upFile2" style="overflow: hidden; border-radius: 3px; z-index: -1;">
 			    <c:if test="${attachmentList[1].originalFileName == null}">
 			    	첨부파일선택
 			    </c:if>
