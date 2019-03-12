@@ -257,6 +257,7 @@ function getLocation(){
 			});
 		}, function(error){
 			console.log(error);
+			$("#fixedAddress").val("서울시 강남구 역삼동");
 		}, {
 			enableHighAccuracy:false,
 			maximumAge:0,
