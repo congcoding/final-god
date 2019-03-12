@@ -40,9 +40,10 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
     </select>
 
    <select id="menuList"  resultType="map">
-   	select A.*,M.renamedfilename from menu A LEFT OUTER JOIN
-	(select storeno,renamedfilename from menuattachment)M 
-	on A.storeno=M.storeno where A.storeno=#{storeNo}
+	   	SELECT *
+		FROM menu
+		LEFT JOIN menuattachment
+		ON menu.menucode = menuattachment.menucode where menu.storeno = #{storeNo} and menu.soldoutFlag='N' and menu.delFlag='N'
    </select>
    
    <select id="storeInfoList"  resultType="map">
@@ -52,7 +53,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
    </select>
 	
    <select id="menuCount"  resultType="_int">
-   	  select count(*) from menu where storeNo = #{storeNo}
+   	  select count(*) from menu where storeNo = #{storeNo} and delFlag = 'N' and soldOutFlag = 'N'
    </select>
  
    <select id="getAttachment" resultType="menuAttachment">
