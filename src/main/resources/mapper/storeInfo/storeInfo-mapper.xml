@@ -25,10 +25,10 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
 
 	<insert id="insertAttachment">
 		insert into sattachment(attachmentno , storeno ,
-		originalfilename, renamedfilename, uploaddate , downloadcount, status
+		originalfilename, renamedfilename, uploaddate , status
 		)
 		values (seq_sAttachmentno.nextval , #{storeNo} , #{originalFileName}
-		, #{renamedFileName}, default, 0 ,default )
+		, #{renamedFileName}, default, default )
 	</insert>
 
 	<select id="myStoreMenu" resultType="menu">
@@ -40,10 +40,10 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
     </select>
 
    <select id="menuList"  resultType="map">
-   	SELECT *
-FROM menu
-LEFT JOIN menuattachment
-ON menu.menucode = menuattachment.menucode where menu.storeno = #{storeNo} and menu.soldoutFlag='N' and menu.delFlag='N'
+	   	SELECT *
+		FROM menu
+		LEFT JOIN menuattachment
+		ON menu.menucode = menuattachment.menucode where menu.storeno = #{storeNo} and menu.soldoutFlag='N' and menu.delFlag='N'
    </select>
    
    <select id="storeInfoList"  resultType="map">
@@ -53,7 +53,7 @@ ON menu.menucode = menuattachment.menucode where menu.storeno = #{storeNo} and m
    </select>
 	
    <select id="menuCount"  resultType="_int">
-   	  select count(*) from menu where storeNo = #{storeNo}
+   	  select count(*) from menu where storeNo = #{storeNo} and delFlag = 'N' and soldOutFlag = 'N'
    </select>
  
    <select id="getAttachment" resultType="menuAttachment">
