@@ -199,7 +199,7 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
 	</select>
 
 	<select id="orderList3" resultType="map">
-		select I.memberid,I.storeno,I.deliveryFlag,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,I.address,I.phone,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
+		select I.memberid,I.storeno,I.deliveryFlag,I.deliveryEnd,I.cancelFlag,I.receiveFlag,I.priceway,I.paymentid,I.totalprice,I.request,I.ordertime,I.address,I.phone,Z.* from Orderinfo I,(select orderno,LISTAGG(list, '/') within group (order by orderno) name
 		from(select orderno,menuname||' '||amount||'개' as list
 		from(select O.orderno,O.storeno,O.amount,M.menuname from ordermenu O,menu M 
 		where O.menucode=M.menucode)) group by orderno) Z
