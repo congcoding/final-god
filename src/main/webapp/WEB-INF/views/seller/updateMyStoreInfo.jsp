@@ -117,14 +117,15 @@ $(function(){
 		  <div id="preview">
 <!-- thumbAttachment -->
 		  <c:forEach items="${thumbAttachment}" var="thumbAttachment">
-		  <c:if>
 		  <img id="image_section" style="width:300px;height:300px;" src='${pageContext.request.contextPath}/resources/upload/menu/${thumbAttachment.renamedFileName}' alt="your image" />
 		  <input type="hidden" name="nowThumb" value="${thumbAttachment.renamedFileName}" >
 		  </c:forEach>
 		  </div>
 		  <select class="custom-select mb-2 mr-sm-2 mb-sm-0 locationNum" id="thumb"  name="newThumb" >
 		 			<c:forEach items="${attachment}" var="attachment">
-		    			<option value= ${attachment.renamedFileName} id="renameFile">${attachment.originalFileName}</option>
+		 			<c:if test="${attachment.renamedFileName!=null}">
+		    			<option value= '${attachment.renamedFileName}' id="renameFile">${attachment.originalFileName}</option>
+		    		</c:if>
 		    		</c:forEach>
 		  </select>
 	</div>
@@ -163,7 +164,7 @@ $( "#thumb" ).change(function() {
     console.log(str);
   });
  
-  $("#image_section").attr("src","${pageContext.request.contextPath}/resources/upload/storeInfo/"+str);
+  $("#image_section").attr("src","${pageContext.request.contextPath}/resources/upload/menu/"+str);
   
 });
 
