@@ -25,10 +25,10 @@ on A.storeno=M.storeno where categoryno = #{categoryno} and pmsFlag = 'Y' and cl
 
 	<insert id="insertAttachment">
 		insert into sattachment(attachmentno , storeno ,
-		originalfilename, renamedfilename, uploaddate , downloadcount, status
+		originalfilename, renamedfilename, uploaddate , status
 		)
 		values (seq_sAttachmentno.nextval , #{storeNo} , #{originalFileName}
-		, #{renamedFileName}, default, 0 ,default )
+		, #{renamedFileName}, default, default )
 	</insert>
 
 	<select id="myStoreMenu" resultType="menu">
