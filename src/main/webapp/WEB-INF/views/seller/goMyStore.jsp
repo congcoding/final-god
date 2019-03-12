@@ -55,7 +55,7 @@ $(function(){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">일주일 판매량</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">저번주 판매량</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="lastWeekSaleVolume"></div>
                     </div>
                     <div class="col-auto">
@@ -72,7 +72,7 @@ $(function(){
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">월간 판매량</div>
+                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">저번달 판매량</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="lastMonthSaleVolume"></div>
                     </div>
                     <div class="col-auto">
@@ -192,7 +192,11 @@ $(function(){
   
   <script>
   function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	  var num = 0;
+	  if(x > 0){
+		 num  = x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	  }
+      return num;
   }
   function saleVolume(types){
 	  $.ajax({
@@ -201,7 +205,7 @@ $(function(){
 				  type : types	
 		  },
 		  success : function(data){
-			  if(data.length != 0){ //data가 들어있는지 안들어있는지 검사하고 안들어있으면 현재 판매량이 없다고 보여줌.
+			  
 				  var totalPrice = 0;
 				  for(var i in data){
 			  		var sale = data[i];
@@ -213,10 +217,7 @@ $(function(){
 			  		$("#lastMonthSaleVolume").html(numberWithCommas(totalPrice)+'원');
 				  }
 			  	
-			  }else{
-				  var noData = $("<span id='hasData' style='position : relative; left : 8rem; top : 10rem;'><i class='far fa-dizzy'></i>&nbsp이런 아직 판매량이 없습니다!</span>");
-				  $(".timeChart").html(noData);
-			  }
+			  
 		  },
 		  erorr : function(jqxhr,textStatus,errorTrown){
 	 			console.log("판매량을 가져오는 중 에러 남!");

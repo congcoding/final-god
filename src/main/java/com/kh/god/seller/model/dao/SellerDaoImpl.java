@@ -283,10 +283,12 @@ public class SellerDaoImpl implements SellerDao {
 			resultList = new ArrayList<>();
 			resultList = sqlSession.selectList("seller.chartBy3Month",map);
 		} break;
-		case "saleVolumeOfMember" :  
+		case "saleVolumeOfMember" : 
+			logger.debug("dd"+map.get("type"));
 			if(subMonth == 0) { //3달인지 1달인지 거르기 위한 분기문. 3달이면 시작 달과 끝 달이 다르므로 0이 아닌점을 이용.
 				resultList = new ArrayList<>();
 				resultList = sqlSession.selectList("seller.byMemberChartPeriod", map);
+				logger.debug("ss"+resultList);
 			}else {
 				endMonth = endMonth == 12 ? 1:endMonth+1;//오라클에서 달로만 계산하려니 마지막달은 1일 00시까지라 그 다음달 1일 00시까지 하고 view단에서 거름.
 				map.put("startDate",map.get("startDate").substring(0,7));
