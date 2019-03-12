@@ -594,13 +594,13 @@ span.srchVal{
 							var date = (alert.RDATE).substring(0,16);
 							var alertBody = $("<div class='dropdown-item d-flex align-items-center' value="+alert.STORENO+"  id='alertView'"+i+" style='cursor : pointer;'></div>")
 							if(alert.TYPE === 'review'){
-								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative;'></i></div></div>");
+								var type = $("<div class='mr-3'><div class='icon-circle bg-primary' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-file-alt text-white' style='position : relative; left : 0.6em; top : 0.1em;'></i></div></div>");
 								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
 								var alertData = "<div class='small text-gray-500' >"+date+"  </div><span class='font-weight-bold'>"+alert.WRITER+"님 께서 "+alert.TITLE+"라는 제목의 리뷰를 남기셨습니다.</span>";
 								content.append(alertData);
 								type.append(content);
 							}else if(alert.TYPE === 'order'){
-								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; '></i></div></div>");
+								var type = $("<div class='mr-3'><div class='icon-circle bg-success' style='width : 2rem; height : 2rem; border-radius:100%;'><i class='fas fa-donate text-white' style='position : relative; left : 0.6em; top : 0.1em;'></i></div></div>");
 								var content = $("<div class='alertType' value="+alert.TYPE+"><div>");
 								var alertData = "<div class='small text-gray-500'>"+date+"</div><span class='font-weight-bold'>"+alert.TITLE+"("+alert.STORENO+")에 주문이 들어왔습니다. </span>";
 								content.append(alertData);
@@ -659,12 +659,14 @@ span.srchVal{
 				type : "get",
 				dataType : "json",
 				success : function(data){
+					//console.log(data);
 					timeStamp = "";
 					var messageForm ;
 					var mform = $("<div><h6 class='dropdown-header'>Message Center <div class='btn btn-link'  id='openChatRoom' data-toggle='modal' data-target='#createChatRoom' > <i class='fas fa-comment-dots'></i></div></h6></div>");
 					var bodyForm = $("<div class='dropdown-body'></div>");
 					for(var i in data){
 						var message = data[i];
+						console.log(message);
 						var chatPerson = "";
 						if(message.SELLERID ===  chattingId){
 							chatPerson = message.SELLERID2;
@@ -713,7 +715,7 @@ span.srchVal{
 						if(message.sendtime != null){
 							timeStamp = (message.sendtime).substring(0,16);
 						}
-						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCountDetail'>"+notRead+"</span></div>";
+						messageData = "<div class='text-truncate' id='messagePreviewContent' value="+message.chatroomno+">"+(message.CHATCONTENT != null?message.CHATCONTENT:'')+"</div> &nbsp<div class='small text-gray-500' id='sendPerson'  value="+(message.SENDMEMBER != null?message.SENDMEMBER:'')+">"+(message.SENDMEMBER !=null ?message.SENDMEMBER+" / ":'')+  timeStamp+" <span class='badge badge-danger badge-counter' id='messageCountDetail"+message.chatroomno+"'>"+notRead+"</span></div>";
 						
 						messageForm.append(messageData);
 						
@@ -997,6 +999,7 @@ span.srchVal{
 			 			$("#socketAlert").css("display","none");
 			 		},3000);
 			 	$("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
+			 	$("#messageCountDetail"+messageType.chatRoomNo).html($("#messageCountDetail").text().trim().length!=0?parseInt($("#messageCountDetail").text())+1:0+1);
 			 }
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
 		 		setTimeout(function(){
