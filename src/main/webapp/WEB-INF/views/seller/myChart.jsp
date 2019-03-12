@@ -744,8 +744,10 @@ function drawChart(data,types){
 	      		   3 : {type:'line'}}
 	    };
 		if(day.length == 2){
+			console.log("길잉 : "+day.length);
 	    chart = new google.visualization.ComboChart($(".timeChart")[0]);
 		}else if(day.length == 4){
+			console.log("길잉 : "+day.length);
 			chart = new google.visualization.ComboChart($(".timeChartOfMember")[0]);
 		}
 	    chart.draw(chartData, options);
