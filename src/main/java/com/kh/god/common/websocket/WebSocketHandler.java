@@ -5,25 +5,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpSession;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.google.gson.Gson;
+import com.kh.god.chat.controller.ChatController;
 import com.kh.god.seller.controller.SellerController;
-import com.kh.god.seller.model.vo.Seller;
 
 public class WebSocketHandler  extends TextWebSocketHandler{
 	//강제 로그아웃 때문에 필요
 	@Autowired
 	SellerController sellerController;
+	@Autowired
+	ChatController chatController;
 	private final Logger logger = Logger.getLogger(getClass());
 	private Map<String,String> loginSession;
 	//메세지는 날려줄 웹소켓 전용
@@ -112,39 +111,54 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    	logger.debug("서버에 보낸 메세지 정보 : "+msg);
 	    	if(!StringUtils.isEmpty(msg)) {
 	    		String[] strs = msg.split(",");
-	    		for(int i = 0; i < strs.length; i++) {
-	    			logger.debug(strs[i]);
-	    		}
-	    		
-	    		
-	    		
-	    		if(strs != null && strs.length == 6) {//채팅
+	    		if(strs != null && strs.length == 8) {//채팅
 	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
-	    			String[] chatSender = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
+	    			String[] sendId = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
 	    			String[] receiver = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
-	    			String[] messageContent = strs[3].substring(strs[3].indexOf(":")+2).split("\"");
+	    			String[] sendContent = strs[3].substring(strs[3].indexOf(":")+2).split("\"");
 	    			String[] chatRoomNo = strs[4].substring(strs[4].indexOf(":")+2).split("\"");
 	    			String[] sendTime = strs[5].substring(strs[5].indexOf(":")+2).split("\"");
-	    			alertMap.put("sender", chatSender[0]);
+	    			String[] currentFocusRoom = strs[6].substring(strs[6].indexOf(":")+2).split("\"");
+	    			String[] DBFlag = strs[7].substring(strs[7].indexOf(":")+2).split("\"");
+	    			alertMap.put("sender", sendId[0]);
 	    			alertMap.put("cmd", "alert");
-	    			alertMap.put("content", messageContent[0]);
-	    			messageMap.put("sender", chatSender[0]);
-	    			messageMap.put("cmd", "chat");
-	    			messageMap.put("content", messageContent[0]);
+	    			alertMap.put("content", sendContent[0]);
+	    			alertMap.put("DBFlag", DBFlag[0]);
+	    			messageMap.put("DBFlag", DBFlag[0]);
+	    			messageMap.put("sender", sendId[0]);
+	    			messageMap.put("content", sendContent[0]);
 	    			messageMap.put("chatRoomNo", chatRoomNo[0]);
+	    			messageMap.put("receiver", receiver[0]);
 	    			messageMap.put("sendTime", sendTime[0]);
-	    			sendInfo.add(messageMap);
-	    			sendInfo.add(alertMap);
-	    			Gson gson = new Gson();
-	    			String sendGson = gson.toJson(sendInfo);
-	    			logger.debug(sendGson);
-	    			WebSocketSession chatSendSession =  userSession.get(receiver[0]);
-//	    			상대방이 접속해 있을 때 바로 실시간으로 보여주기 위한 것.
-	    			if("chat".equals(cmd[0]) && chatSendSession != null) {
-	    				TextMessage tmpMsg = new TextMessage(sendGson);
-	    				logger.debug("다시 클라이언트로 보내기전 : " + tmpMsg);
-	    				chatSendSession.sendMessage(tmpMsg);
+	    			messageMap.put("currentFocusRoom", currentFocusRoom[0]);
+	    			WebSocketSession chatReceiverSession =  userSession.get(receiver[0]);
+	    			/**
+	    			 * 여기서 받는 사람이 실시간으로 접속중이라면  if문이 동작하고 갔다가 포커싱되고있는 방번호를 받아와서디비에 저장., 받는사람이 접속중이 아니라면
+	    			 * 그냥 DB에 저장 할  것이다.
+	    			 */
+	    			if("Y".equals(DBFlag[0])) {
+	    				chatController.insertChatLog(sendId[0], sendContent[0], chatRoomNo[0], Integer.parseInt(currentFocusRoom[0]));
 	    			}
+//	    			상대방이 접속해 있을 때 바로 실시간으로 보여주기 위한 것.
+	    			if("chat".equals(cmd[0]) && chatReceiverSession != null) {
+	    				//로직 설명 : 처음에 사용자가 보내서 받는이가 온라인인지 확인한다. 확인이 되면 바로 저장하는게아니라 상대방이 현재 포커싱하고 있는 방번호를 가지고 온다. 그 다음에 DB에 저장.
+	    				if("N".equals(DBFlag[0])) {
+	    					messageMap.put("cmd", "chat");
+	    					sendInfo.add(messageMap);
+	    					sendInfo.add(alertMap);
+	    					Gson gson = new Gson();
+	    					String sendGson = gson.toJson(sendInfo);
+	    					logger.debug(sendGson);
+	    					TextMessage tmpMsg = new TextMessage(sendGson);
+	    					logger.debug("다시 클라이언트로 보내기전 : " + tmpMsg);
+	    					chatReceiverSession.sendMessage(tmpMsg);
+	    				}
+	    			}else {
+	    				//offline이므로 그냥 DB에만 저장.
+	    				chatController.insertChatLog(sendId[0], sendContent[0], chatRoomNo[0], Integer.parseInt(currentFocusRoom[0]));
+	    			}
+// 					접속해 있거나  접속해있지않아도  DB에 넣음.
+	    			
 	    		}else if(strs != null && strs.length == 5) {//리뷰
 	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
 	    			String[] reviewWriter = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
@@ -230,6 +244,28 @@ public class WebSocketHandler  extends TextWebSocketHandler{
 	    			if("report".equals(cmd[0]) && reviewSendSession != null) {
 	    				TextMessage tmpMsg = new TextMessage(sendGson);
 	    				reviewSendSession.sendMessage(tmpMsg);
+	    			}
+	    		}else if(strs != null && strs.length == 3) {//상대방이 채팅방을 보고있는지(상대방이 온라인이면 상대방한테 보내고 오프라인이면 보낸이한테 다시 보냄)
+	    			String[] cmd = strs[0].substring(strs[0].indexOf(":")+2).split("\"");
+	    			String[] chatSender = strs[1].substring(strs[1].indexOf(":")+2).split("\"");
+	    			String[] receiver = strs[2].substring(strs[2].indexOf(":")+2).split("\"");
+	    			messageMap.put("cmd",cmd[0]);
+	    			messageMap.put("sender",chatSender[0]);
+	    			messageMap.put("receiver",receiver[0]);
+	    			Gson gson = new Gson();
+	    			WebSocketSession messageReceiverSession =  userSession.get(receiver[0]);
+	    			if("report".equals(cmd[0]) && messageReceiverSession != null) {//상대방이 온라인일 때
+	    				messageMap.put("onlineFlag","Y");
+	    				String sendGson = gson.toJson(messageMap);
+	    				TextMessage tmpMsg = new TextMessage(sendGson);
+	    				messageReceiverSession.sendMessage(tmpMsg);
+	    			}else {//상대방이 오프라인일 때.
+	    				WebSocketSession senderSession = userSession.get(chatSender[0]);
+	    				messageMap.put("onlineFlag","N");
+	    				String sendGson = gson.toJson(messageMap);
+	    				TextMessage tmpMsg = new TextMessage(sendGson);
+	    				senderSession.sendMessage(tmpMsg);
+	    				
 	    			}
 	    		}
 	    		//메세지를 받았을 때 프로토콜
