@@ -675,7 +675,7 @@ span.srchVal{
 						}
 						
 						if(realTimeConnectUser.length != 0){
-							console.log("채팅방 목록 만들기전에 들어옴");
+							//console.log("채팅방 목록 만들기전에 들어옴");
 							var chatUser = new Object();
 							var connectFlag = false;
 							for(var j in realTimeConnectUser){
@@ -708,6 +708,7 @@ span.srchVal{
 						}//end of if(connectUser.length != 0)
 						var messageData = "";
 						var notRead = 0;
+						//보낸사람이 자기 자신(현재로그인한 아이디)이 아니면 읽음 처리를 하고, 아니면 0으로 둬야함 
 						if(message.SENDMEMBER !=  chattingId){
 							notRead = message.NOTREADCOUNT;
 						}
@@ -746,48 +747,62 @@ span.srchVal{
 			
 			if(sendContent.trim().length != 0){//메세지 내용이 없으면 보내지 않는다.
 			if(socket.readyState !== 1) return;
-				sendMessage();
+				sendMessage(chattingId,$("#communicateWith").text(),$("input[name='messageContent']").val(),$("input[id=sendChatRoomNo]").val(), getTimeStamp(),'0','N');
 			var message = {
 					sendId :  chattingId,
 					sendContent : sendContent,
 					chatRoomNo : $("input[id=sendChatRoomNo]").val(),
 					currentFocusChatRoomNo : hasFocusRoom
 			};
-			//ajax를 통해서 DB에 채팅 로그를 담음.
-			 $.ajax({
-				url : "${pageContext.request.contextPath}/chat/insertChatLog.do",
-				data : message,
-				success : function(data){
-				 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
-				 	$("#chatView").append(messageData);
-			 		setTimeout(function(){
-		 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
-		 			},100);
-			 		$("input[name=messageContent]").val("");
-				},
-				error : function(jqxhr,textStatus,errorTrown){
-		 			console.log("작성한 채팅을 데이터베이스에 넣을때  에러 남!");
-					console.log(jqxhr);
-					console.log(textStatus);
-					console.log(errorTrown);
-		 		}
-			});//end of ajax
-	}
+			//alert("보내기전 현재 포커싱되고 있는 채팅방번호? "+message.currentFocusChatRoomNo);
+		 	messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
+		 	$("#chatView").append(messageData);
+	 		setTimeout(function(){
+ 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
+ 			},100);
+	 		$("input[name=messageContent]").val("");
+			
+		}
+	});
+	$(document).keydown('button[id="sendMessage"]', function(key){
+		if (key.keyCode == 13) {// 엔터
+		sendMsgTime = getTimeStamp();
+		var sendContent = $("input[name=messageContent]").val();
+		var message = {
+				sendId :  chattingId,
+				sendContent : sendContent,
+				chatRoomNo : $("input[id=sendChatRoomNo]").val(),
+				currentFocusChatRoomNo : hasFocusRoom
+		};
+		//console.log("message엔터 보내는사람  : "+message.sendId);
+		//console.log("messag엔터 내용: "+message.sendContent);
+		//console.log("messag엔터 채팅방 : "+message.chatRoomNo);
+		//console.log("messag엔터 현재포커싱 : "+message.currentFocusChatRoomNo);
+			if(socket.readyState !== 1) return;
+			sendMessage(chattingId,$("#communicateWith").text(),$("input[name='messageContent']").val(),$("input[id=sendChatRoomNo]").val(), getTimeStamp(),'0','N');
+			messageData = "<div class='messageFormatMyself' ><div class='text-truncate' id='messageContentShow' value="+message.chatRoomNo+">"+message.sendContent+"</div> <div class='small text-gray-500' id='sendPerson'>"+message.sendId+" / "+  sendMsgTime +"</div> </div>";
+		 	$("#chatView").append(messageData);
+	 		setTimeout(function(){
+ 				$("#chatView").scrollTop($("#chatView")[0].scrollHeight);
+ 			},100);
+			$('input[name=messageContent]').val('');
+		}
 	});
 	//1. cmd(채팅),메세지 보낸자 ,메세지 받는자, 메세지 내용 (축소), 채팅방 번호, 보낸시간 ex) chat,sendUser,receiver,messageContent , chatRoomNo, sendTime
-	function sendMessage(){
+	function sendMessage(senderId,receiverId,messageContent,chattingRoomNo,sendTime1,currentFocusingRoom,type){
 		var msg ={};
 		msg.cmd = "chat";
-		msg.sender =  chattingId;
-		msg.receiver = $("#communicateWith").text();
-		msg.content =  $("input[name='messageContent']").val();
-		msg.chatRoomNo = $("input[id=sendChatRoomNo]").val();
-		msg.sendTime = getTimeStamp();
-		sendMsgTime = msg.sendTime;
-		
+		msg.sender =  senderId;
+		msg.receiver = receiverId;
+		msg.content =  messageContent;
+		msg.chatRoomNo = chattingRoomNo;
+		msg.sendTime = sendTime1;
+		msg.currentFocusRoom = currentFocusingRoom;
+		msg.DBFlag = type;
 		socket.send(JSON.stringify(msg));
 		$("input[name=messageContent]").val("");
 	}
+	
 	//2. cmd(리뷰),리뷰 작성자, 가게이름, 가게번호, 가게사장아이디
 	function sendReviewAlert(){
 		var msg = {};
@@ -822,6 +837,7 @@ span.srchVal{
 		console.log("현재 신고유형은? "+msg.reportType);
 		socket.send(JSON.stringify(msg));
 	}
+	//5. cmd(가게 신청),작성자,가게이름,받는사람(관리자)
 	function sendEnrollStore(storeName){
 		console.log("가게 신청 가게 이름 : "+storeName);
 		var msg = {};
@@ -831,6 +847,7 @@ span.srchVal{
 		msg.receiver = "admin";
 		socket.send(JSON.stringify(msg));
 	}
+	
 	function getTimeStamp() {
 		   var date = new Date();
 		   var s =
@@ -858,11 +875,13 @@ span.srchVal{
 
 	$(document).ready(function(){
 		 connectWebSocket();
+	
 	});
 	 
 	//개별 상세 채팅방 구현
 	 $(document).on('click', 'div[id^="messageView"]', function(){
 		 	var notRead =  $(this).children().eq(2).children().text();
+		 	console.log("ㅎㅎ : "+parseInt(notRead));
 		 	var allNotRead ;
 		 	if($("#messageCount").text().trim().length == 0){
 		 		allNotRead = 0;
@@ -940,20 +959,18 @@ span.srchVal{
 			chatForm.append(chatFooter);
 			$("#chatModalContent").html(chatForm);
 			roomNo = $("#sendChatRoomNo").val();
-			console.log("채팅방 들어갈때 방번호 : "+roomNo);
+			//console.log("채팅방 들어갈때 방번호 : "+roomNo);
 			
 	 }
 
 	//현재 사용자가 어떤 채팅방을 보고있는지 hasFocusRoom이  0이면 아무것도 보고있지않다는 뜻.
 	 $("#chatModal")[0].addEventListener("blur",function(){
 		 hasFocusRoom = 0;  
-		 //console.log("Page Has Not Focus "+hasFocusRoom);
 	 });
 	 $("#chatModal")[0].addEventListener("focusin",function(){
 		 hasFocusRoom = roomNo;  
-		 //console.log("Page Has Focus "+hasFocusRoom);
 	 });
-	 
+	 	
 	 // window.onfocus = function(){  
 	 //    has_focus = true;  
 	 //} 
@@ -980,6 +997,9 @@ span.srchVal{
 	function receiveMessage(alertType,messageType){
 		//console.log(hasFocusRoom+" : "+messageType.chatRoomNo);
 		//console.log("메세지 전송 후 : "+alertType+" : "+messageType);
+		if(messageType.DBFlag === 'N'){
+			sendMessage(messageType.sender,messageType.receiver,messageType.content,messageType.chatRoomNo,messageType.sendTime,hasFocusRoom+"",'Y');
+		}
 		 // 받는 사람이 현재 그 채팅방을 보고 있으면 알람을 주지 않고 메세지를 보냄.
 		 if(hasFocusRoom === messageType.chatRoomNo){
 				 messageData = "<div class='messageFormatHim' ><div class='text-truncate' id='messageContentShow' value="+messageType.chatRoomNo+">"+messageType.content+"</div> <div class='small text-gray-500' id='sendPerson'>"+messageType.sender+" / "+  (messageType.sendTime) +"</div></div>";
@@ -998,8 +1018,9 @@ span.srchVal{
 			 		setTimeout(function(){
 			 			$("#socketAlert").css("display","none");
 			 		},3000);
+			 	//alert("ddasd : "+Number($("#messageCountDetail").text()));
 			 	$("#messageCount").html($("#messageCount").text().trim().length!=0?parseInt($("#messageCount").text())+1:0+1);
-			 	$("#messageCountDetail"+messageType.chatRoomNo).html($("#messageCountDetail").text().trim().length!=0?parseInt($("#messageCountDetail").text())+1:0+1);
+			 	$('#messageCountDetail'+messageType.chatRoomNo).html(Number($("#messageCountDetail"+messageType.chatRoomNo).text())+1);
 			 }
 			 $("#socketAlert").css("display","block").text(alertType.sender+"님이 "+alertType.content+"라고 보냄");
 		 		setTimeout(function(){
@@ -1039,7 +1060,7 @@ span.srchVal{
 		 }
 	}
 	 function connectWebSocket(){
-	 	var ws = new SockJS("<c:url value="/echo"/>"); 
+	 	var ws = new SockJS("<c:url value="/echo.do"/>"); 
 	 	socket = ws;
 	 	ws.onopen = function(){
 	 		sendRealTimeMember();
